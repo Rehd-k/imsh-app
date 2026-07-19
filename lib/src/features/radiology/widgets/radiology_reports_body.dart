@@ -7,6 +7,7 @@ import 'package:skeletonizer/skeletonizer.dart';
 import '../../../core/theme/app_design_tokens.dart';
 import '../../../core/theme/context_extensions.dart';
 import '../../../models/radiology_report_model.dart';
+import '../../../providers/auth_provider.dart';
 import '../../../providers/radiology_reports_provider.dart';
 import 'radiology_action_row.dart';
 import 'radiology_history_card.dart';
@@ -124,13 +125,15 @@ class _RadiologyReportsBodyState extends ConsumerState<RadiologyReportsBody> {
                 );
               },
               firstPageErrorIndicatorBuilder: (context) => _ErrorState(
-                message: pagingController.error?.toString() ??
-                    'Unable to load reports',
+                message: authFlowErrorMessage(
+                  pagingController.error ?? 'Unable to load reports',
+                ),
                 onRetry: pagingController.refresh,
               ),
               newPageErrorIndicatorBuilder: (context) => _ErrorState(
-                message: pagingController.error?.toString() ??
-                    'Unable to load more',
+                message: authFlowErrorMessage(
+                  pagingController.error ?? 'Unable to load more',
+                ),
                 onRetry: () => pagingController.retryLastFailedRequest(),
               ),
               firstPageProgressIndicatorBuilder: (context) =>

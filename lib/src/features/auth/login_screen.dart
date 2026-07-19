@@ -72,7 +72,12 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
         );
 
     if (!mounted || !success) return;
-    await context.router.replace(const PatientShellRoute());
+    final auth = ref.read(patientAuthProvider);
+    if (auth.isDevicePending) {
+      await context.router.replace(const DevicePendingRoute());
+    } else {
+      await context.router.replace(const PatientShellRoute());
+    }
   }
 
   void _maybeRedirectIfAuthenticated(PatientAuthState auth) {
@@ -80,7 +85,10 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
     _redirecting = true;
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       if (!mounted) return;
-      await context.router.replace(const PatientShellRoute());
+      final destination = auth.isDeviceApproved
+          ? const PatientShellRoute()
+          : const DevicePendingRoute();
+      await context.router.replace(destination);
     });
   }
 

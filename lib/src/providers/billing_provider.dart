@@ -23,12 +23,16 @@ final billingDashboardProvider = FutureProvider.autoDispose<BillingDashboard>((
     limit: billingPaymentsPageSize,
   );
 
+  final paymentsTotal = payments.total > 0
+      ? payments.total
+      : payments.data.length;
+
   return BillingDashboard(
     summary: summary,
     unpaidInvoices: unpaid.data,
     unpaidTotal: unpaid.total,
     recentPayments: payments.data,
-    paymentsTotal: payments.total,
+    paymentsTotal: paymentsTotal,
   );
 });
 
@@ -57,9 +61,10 @@ final billingPaymentsPagingControllerProvider = Provider.autoDispose((ref) {
         page: pageKey,
         limit: billingPaymentsPageSize,
       );
+      final total = response.total > 0 ? response.total : response.data.length;
       final isLastPage =
           response.data.length < billingPaymentsPageSize ||
-          pageKey * billingPaymentsPageSize >= response.total;
+          pageKey * billingPaymentsPageSize >= total;
       if (isLastPage) {
         controller.appendLastPage(response.data);
       } else {

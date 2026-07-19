@@ -3,6 +3,7 @@ import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 
 import '../models/lab_result_model.dart';
 import 'auth_provider.dart';
+import 'family_provider.dart';
 import 'service_providers.dart';
 
 const labResultsPageSize = 20;
@@ -100,11 +101,13 @@ final labResultFilterProvider = StateProvider<LabResultFilterChip>((ref) {
 final labResultDetailProvider = FutureProvider.autoDispose
     .family<LabResultDetail, String>((ref, id) async {
   final service = ref.watch(labServiceProvider);
-  return service.getLabReport(id);
+  final forPatientId = watchForPatientId(ref);
+  return service.getLabReport(id, forPatientId: forPatientId);
 });
 
 final labResultsPagingControllerProvider = Provider.autoDispose((ref) {
   final service = ref.watch(labServiceProvider);
+  final forPatientId = watchForPatientId(ref);
   final controller = PagingController<int, LabResultSummary>(
     firstPageKey: 1,
   );
@@ -114,6 +117,7 @@ final labResultsPagingControllerProvider = Provider.autoDispose((ref) {
       final response = await service.listLabReports(
         page: pageKey,
         limit: labResultsPageSize,
+        forPatientId: forPatientId,
       );
       final isLastPage =
           response.data.length < labResultsPageSize ||

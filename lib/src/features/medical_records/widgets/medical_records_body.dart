@@ -6,7 +6,9 @@ import '../../../core/theme/app_design_tokens.dart';
 import '../../../core/theme/context_extensions.dart';
 import '../../../helper/date_formatter.dart';
 import '../../../models/medical_records_dashboard_model.dart';
+import '../../../providers/auth_provider.dart';
 import '../../../providers/medical_records_provider.dart';
+import '../../../shared/widgets/family_subject_banner.dart';
 import '../../../shared/widgets/imsh_sliver_app_bar.dart';
 
 class MedicalRecordsBody extends ConsumerWidget {
@@ -23,6 +25,7 @@ class MedicalRecordsBody extends ConsumerWidget {
           physics: AlwaysScrollableScrollPhysics(),
           slivers: [
             ImshSliverAppBar(),
+            SliverToBoxAdapter(child: FamilySubjectBanner()),
             SliverFillRemaining(
               hasScrollBody: false,
               child: Center(child: CircularProgressIndicator()),
@@ -33,10 +36,11 @@ class MedicalRecordsBody extends ConsumerWidget {
           physics: const AlwaysScrollableScrollPhysics(),
           slivers: [
             const ImshSliverAppBar(),
+            const SliverToBoxAdapter(child: FamilySubjectBanner()),
             SliverFillRemaining(
               hasScrollBody: false,
               child: _ErrorState(
-                message: error.toString(),
+                message: authFlowErrorMessage(error),
                 onRetry: () => ref.invalidate(medicalRecordsDashboardProvider),
               ),
             ),
@@ -50,6 +54,7 @@ class MedicalRecordsBody extends ConsumerWidget {
             physics: const AlwaysScrollableScrollPhysics(),
             slivers: [
               const ImshSliverAppBar(),
+              const SliverToBoxAdapter(child: FamilySubjectBanner()),
               SliverPadding(
                 padding: const EdgeInsets.fromLTRB(16, 16, 16, 48),
                 sliver: SliverList(

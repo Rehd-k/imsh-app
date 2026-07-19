@@ -13,17 +13,10 @@ class AppRouter extends RootStackRouter {
 
   @override
   List<AutoRoute> get routes => [
-    AutoRoute(
-      page: SplashRoute.page,
-      path: '/splash',
-      initial: initialSplash,
-    ),
-    AutoRoute(
-      page: LoginRoute.page,
-      path: '/login',
-      initial: !initialSplash,
-    ),
+    AutoRoute(page: SplashRoute.page, path: '/splash', initial: initialSplash),
+    AutoRoute(page: LoginRoute.page, path: '/login', initial: !initialSplash),
     AutoRoute(page: SessionExpiredRoute.page, path: '/session-expired'),
+    AutoRoute(page: DevicePendingRoute.page, path: '/device-pending'),
 
     AutoRoute(
       page: PatientShellRoute.page,
@@ -58,9 +51,15 @@ class AppRouter extends RootStackRouter {
     AutoRoute(page: BillDetailRoute.page, path: '/bills/:id'),
     AutoRoute(page: ReceiptViewerRoute.page, path: '/receipts/:id'),
 
+    AutoRoute(page: PatientFeedbackRoute.page, path: '/feedback'),
+    AutoRoute(page: CreateFeedbackRoute.page, path: '/feedback/new'),
+    AutoRoute(page: FeedbackDetailRoute.page, path: '/feedback/:id'),
+    AutoRoute(page: EditFeedbackRoute.page, path: '/feedback/:id/edit'),
+
     AutoRoute(page: NotificationsRoute.page, path: '/notifications'),
     AutoRoute(page: FamilyAccountsRoute.page, path: '/family'),
-    AutoRoute(page: AddFamilyMemberRoute.page, path: '/family/add'),
+
+    AutoRoute(page: DevicesRoute.page, path: '/devices'),
 
     AutoRoute(page: HealthCardRoute.page, path: '/health-card'),
     AutoRoute(page: ProfileRoute.page, path: '/profile'),

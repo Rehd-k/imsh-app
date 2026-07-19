@@ -13,6 +13,284 @@ part of 'radiology_report_model.dart';
 T _$identity<T>(T value) => value;
 
 /// @nodoc
+mixin _$RadiologyReportImage {
+
+ String get id; String get fileName; String? get mimeType; int? get fileSize; DateTime get uploadedAt; String get fileUrl;
+/// Create a copy of RadiologyReportImage
+/// with the given fields replaced by the non-null parameter values.
+@JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+$RadiologyReportImageCopyWith<RadiologyReportImage> get copyWith => _$RadiologyReportImageCopyWithImpl<RadiologyReportImage>(this as RadiologyReportImage, _$identity);
+
+  /// Serializes this RadiologyReportImage to a JSON map.
+  Map<String, dynamic> toJson();
+
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is RadiologyReportImage&&(identical(other.id, id) || other.id == id)&&(identical(other.fileName, fileName) || other.fileName == fileName)&&(identical(other.mimeType, mimeType) || other.mimeType == mimeType)&&(identical(other.fileSize, fileSize) || other.fileSize == fileSize)&&(identical(other.uploadedAt, uploadedAt) || other.uploadedAt == uploadedAt)&&(identical(other.fileUrl, fileUrl) || other.fileUrl == fileUrl));
+}
+
+@JsonKey(includeFromJson: false, includeToJson: false)
+@override
+int get hashCode => Object.hash(runtimeType,id,fileName,mimeType,fileSize,uploadedAt,fileUrl);
+
+@override
+String toString() {
+  return 'RadiologyReportImage(id: $id, fileName: $fileName, mimeType: $mimeType, fileSize: $fileSize, uploadedAt: $uploadedAt, fileUrl: $fileUrl)';
+}
+
+
+}
+
+/// @nodoc
+abstract mixin class $RadiologyReportImageCopyWith<$Res>  {
+  factory $RadiologyReportImageCopyWith(RadiologyReportImage value, $Res Function(RadiologyReportImage) _then) = _$RadiologyReportImageCopyWithImpl;
+@useResult
+$Res call({
+ String id, String fileName, String? mimeType, int? fileSize, DateTime uploadedAt, String fileUrl
+});
+
+
+
+
+}
+/// @nodoc
+class _$RadiologyReportImageCopyWithImpl<$Res>
+    implements $RadiologyReportImageCopyWith<$Res> {
+  _$RadiologyReportImageCopyWithImpl(this._self, this._then);
+
+  final RadiologyReportImage _self;
+  final $Res Function(RadiologyReportImage) _then;
+
+/// Create a copy of RadiologyReportImage
+/// with the given fields replaced by the non-null parameter values.
+@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? fileName = null,Object? mimeType = freezed,Object? fileSize = freezed,Object? uploadedAt = null,Object? fileUrl = null,}) {
+  return _then(_self.copyWith(
+id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
+as String,fileName: null == fileName ? _self.fileName : fileName // ignore: cast_nullable_to_non_nullable
+as String,mimeType: freezed == mimeType ? _self.mimeType : mimeType // ignore: cast_nullable_to_non_nullable
+as String?,fileSize: freezed == fileSize ? _self.fileSize : fileSize // ignore: cast_nullable_to_non_nullable
+as int?,uploadedAt: null == uploadedAt ? _self.uploadedAt : uploadedAt // ignore: cast_nullable_to_non_nullable
+as DateTime,fileUrl: null == fileUrl ? _self.fileUrl : fileUrl // ignore: cast_nullable_to_non_nullable
+as String,
+  ));
+}
+
+}
+
+
+/// Adds pattern-matching-related methods to [RadiologyReportImage].
+extension RadiologyReportImagePatterns on RadiologyReportImage {
+/// A variant of `map` that fallback to returning `orElse`.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case _:
+///     return orElse();
+/// }
+/// ```
+
+@optionalTypeArgs TResult maybeMap<TResult extends Object?>(TResult Function( _RadiologyReportImage value)?  $default,{required TResult orElse(),}){
+final _that = this;
+switch (_that) {
+case _RadiologyReportImage() when $default != null:
+return $default(_that);case _:
+  return orElse();
+
+}
+}
+/// A `switch`-like method, using callbacks.
+///
+/// Callbacks receives the raw object, upcasted.
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case final Subclass2 value:
+///     return ...;
+/// }
+/// ```
+
+@optionalTypeArgs TResult map<TResult extends Object?>(TResult Function( _RadiologyReportImage value)  $default,){
+final _that = this;
+switch (_that) {
+case _RadiologyReportImage():
+return $default(_that);case _:
+  throw StateError('Unexpected subclass');
+
+}
+}
+/// A variant of `map` that fallback to returning `null`.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case _:
+///     return null;
+/// }
+/// ```
+
+@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>(TResult? Function( _RadiologyReportImage value)?  $default,){
+final _that = this;
+switch (_that) {
+case _RadiologyReportImage() when $default != null:
+return $default(_that);case _:
+  return null;
+
+}
+}
+/// A variant of `when` that fallback to an `orElse` callback.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case _:
+///     return orElse();
+/// }
+/// ```
+
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String id,  String fileName,  String? mimeType,  int? fileSize,  DateTime uploadedAt,  String fileUrl)?  $default,{required TResult orElse(),}) {final _that = this;
+switch (_that) {
+case _RadiologyReportImage() when $default != null:
+return $default(_that.id,_that.fileName,_that.mimeType,_that.fileSize,_that.uploadedAt,_that.fileUrl);case _:
+  return orElse();
+
+}
+}
+/// A `switch`-like method, using callbacks.
+///
+/// As opposed to `map`, this offers destructuring.
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case Subclass2(:final field2):
+///     return ...;
+/// }
+/// ```
+
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String id,  String fileName,  String? mimeType,  int? fileSize,  DateTime uploadedAt,  String fileUrl)  $default,) {final _that = this;
+switch (_that) {
+case _RadiologyReportImage():
+return $default(_that.id,_that.fileName,_that.mimeType,_that.fileSize,_that.uploadedAt,_that.fileUrl);case _:
+  throw StateError('Unexpected subclass');
+
+}
+}
+/// A variant of `when` that fallback to returning `null`
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case _:
+///     return null;
+/// }
+/// ```
+
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String id,  String fileName,  String? mimeType,  int? fileSize,  DateTime uploadedAt,  String fileUrl)?  $default,) {final _that = this;
+switch (_that) {
+case _RadiologyReportImage() when $default != null:
+return $default(_that.id,_that.fileName,_that.mimeType,_that.fileSize,_that.uploadedAt,_that.fileUrl);case _:
+  return null;
+
+}
+}
+
+}
+
+/// @nodoc
+@JsonSerializable()
+
+class _RadiologyReportImage implements RadiologyReportImage {
+  const _RadiologyReportImage({required this.id, required this.fileName, this.mimeType, this.fileSize, required this.uploadedAt, required this.fileUrl});
+  factory _RadiologyReportImage.fromJson(Map<String, dynamic> json) => _$RadiologyReportImageFromJson(json);
+
+@override final  String id;
+@override final  String fileName;
+@override final  String? mimeType;
+@override final  int? fileSize;
+@override final  DateTime uploadedAt;
+@override final  String fileUrl;
+
+/// Create a copy of RadiologyReportImage
+/// with the given fields replaced by the non-null parameter values.
+@override @JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+_$RadiologyReportImageCopyWith<_RadiologyReportImage> get copyWith => __$RadiologyReportImageCopyWithImpl<_RadiologyReportImage>(this, _$identity);
+
+@override
+Map<String, dynamic> toJson() {
+  return _$RadiologyReportImageToJson(this, );
+}
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _RadiologyReportImage&&(identical(other.id, id) || other.id == id)&&(identical(other.fileName, fileName) || other.fileName == fileName)&&(identical(other.mimeType, mimeType) || other.mimeType == mimeType)&&(identical(other.fileSize, fileSize) || other.fileSize == fileSize)&&(identical(other.uploadedAt, uploadedAt) || other.uploadedAt == uploadedAt)&&(identical(other.fileUrl, fileUrl) || other.fileUrl == fileUrl));
+}
+
+@JsonKey(includeFromJson: false, includeToJson: false)
+@override
+int get hashCode => Object.hash(runtimeType,id,fileName,mimeType,fileSize,uploadedAt,fileUrl);
+
+@override
+String toString() {
+  return 'RadiologyReportImage(id: $id, fileName: $fileName, mimeType: $mimeType, fileSize: $fileSize, uploadedAt: $uploadedAt, fileUrl: $fileUrl)';
+}
+
+
+}
+
+/// @nodoc
+abstract mixin class _$RadiologyReportImageCopyWith<$Res> implements $RadiologyReportImageCopyWith<$Res> {
+  factory _$RadiologyReportImageCopyWith(_RadiologyReportImage value, $Res Function(_RadiologyReportImage) _then) = __$RadiologyReportImageCopyWithImpl;
+@override @useResult
+$Res call({
+ String id, String fileName, String? mimeType, int? fileSize, DateTime uploadedAt, String fileUrl
+});
+
+
+
+
+}
+/// @nodoc
+class __$RadiologyReportImageCopyWithImpl<$Res>
+    implements _$RadiologyReportImageCopyWith<$Res> {
+  __$RadiologyReportImageCopyWithImpl(this._self, this._then);
+
+  final _RadiologyReportImage _self;
+  final $Res Function(_RadiologyReportImage) _then;
+
+/// Create a copy of RadiologyReportImage
+/// with the given fields replaced by the non-null parameter values.
+@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? fileName = null,Object? mimeType = freezed,Object? fileSize = freezed,Object? uploadedAt = null,Object? fileUrl = null,}) {
+  return _then(_RadiologyReportImage(
+id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
+as String,fileName: null == fileName ? _self.fileName : fileName // ignore: cast_nullable_to_non_nullable
+as String,mimeType: freezed == mimeType ? _self.mimeType : mimeType // ignore: cast_nullable_to_non_nullable
+as String?,fileSize: freezed == fileSize ? _self.fileSize : fileSize // ignore: cast_nullable_to_non_nullable
+as int?,uploadedAt: null == uploadedAt ? _self.uploadedAt : uploadedAt // ignore: cast_nullable_to_non_nullable
+as DateTime,fileUrl: null == fileUrl ? _self.fileUrl : fileUrl // ignore: cast_nullable_to_non_nullable
+as String,
+  ));
+}
+
+
+}
+
+
+/// @nodoc
 mixin _$RadiologyReportSummary {
 
  String get id; String get scanType; RadiologyModality get modality; DateTime get performedAt; String get radiologistName; String get referringDoctorName; RadiologyReportStatus get status; String? get pdfUrl; String? get dicomUrl; String? get thumbnailUrl;
@@ -873,7 +1151,7 @@ $RadiologyStatisticsCopyWith<$Res> get statistics {
 /// @nodoc
 mixin _$RadiologyReportDetail {
 
- String get id; String get scanType; RadiologyModality get modality; DateTime get performedAt; DateTime? get verifiedAt; String get radiologistName; String get referringDoctorName; RadiologyReportStatus get status; String? get pdfUrl; String? get dicomUrl; String? get thumbnailUrl; String? get findings; String? get impression; String? get reportBody;
+ String get id; String get scanType; RadiologyModality get modality; DateTime get performedAt; DateTime? get verifiedAt; String get radiologistName; String get referringDoctorName; RadiologyReportStatus get status; String? get pdfUrl; String? get dicomUrl; String? get thumbnailUrl; String? get findings; String? get impression; String? get recommendations; RadiologyReportSeverity? get severity; String? get reportBody; List<RadiologyReportImage> get images; bool get paymentRequired;
 /// Create a copy of RadiologyReportDetail
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -886,16 +1164,16 @@ $RadiologyReportDetailCopyWith<RadiologyReportDetail> get copyWith => _$Radiolog
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is RadiologyReportDetail&&(identical(other.id, id) || other.id == id)&&(identical(other.scanType, scanType) || other.scanType == scanType)&&(identical(other.modality, modality) || other.modality == modality)&&(identical(other.performedAt, performedAt) || other.performedAt == performedAt)&&(identical(other.verifiedAt, verifiedAt) || other.verifiedAt == verifiedAt)&&(identical(other.radiologistName, radiologistName) || other.radiologistName == radiologistName)&&(identical(other.referringDoctorName, referringDoctorName) || other.referringDoctorName == referringDoctorName)&&(identical(other.status, status) || other.status == status)&&(identical(other.pdfUrl, pdfUrl) || other.pdfUrl == pdfUrl)&&(identical(other.dicomUrl, dicomUrl) || other.dicomUrl == dicomUrl)&&(identical(other.thumbnailUrl, thumbnailUrl) || other.thumbnailUrl == thumbnailUrl)&&(identical(other.findings, findings) || other.findings == findings)&&(identical(other.impression, impression) || other.impression == impression)&&(identical(other.reportBody, reportBody) || other.reportBody == reportBody));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is RadiologyReportDetail&&(identical(other.id, id) || other.id == id)&&(identical(other.scanType, scanType) || other.scanType == scanType)&&(identical(other.modality, modality) || other.modality == modality)&&(identical(other.performedAt, performedAt) || other.performedAt == performedAt)&&(identical(other.verifiedAt, verifiedAt) || other.verifiedAt == verifiedAt)&&(identical(other.radiologistName, radiologistName) || other.radiologistName == radiologistName)&&(identical(other.referringDoctorName, referringDoctorName) || other.referringDoctorName == referringDoctorName)&&(identical(other.status, status) || other.status == status)&&(identical(other.pdfUrl, pdfUrl) || other.pdfUrl == pdfUrl)&&(identical(other.dicomUrl, dicomUrl) || other.dicomUrl == dicomUrl)&&(identical(other.thumbnailUrl, thumbnailUrl) || other.thumbnailUrl == thumbnailUrl)&&(identical(other.findings, findings) || other.findings == findings)&&(identical(other.impression, impression) || other.impression == impression)&&(identical(other.recommendations, recommendations) || other.recommendations == recommendations)&&(identical(other.severity, severity) || other.severity == severity)&&(identical(other.reportBody, reportBody) || other.reportBody == reportBody)&&const DeepCollectionEquality().equals(other.images, images)&&(identical(other.paymentRequired, paymentRequired) || other.paymentRequired == paymentRequired));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,scanType,modality,performedAt,verifiedAt,radiologistName,referringDoctorName,status,pdfUrl,dicomUrl,thumbnailUrl,findings,impression,reportBody);
+int get hashCode => Object.hash(runtimeType,id,scanType,modality,performedAt,verifiedAt,radiologistName,referringDoctorName,status,pdfUrl,dicomUrl,thumbnailUrl,findings,impression,recommendations,severity,reportBody,const DeepCollectionEquality().hash(images),paymentRequired);
 
 @override
 String toString() {
-  return 'RadiologyReportDetail(id: $id, scanType: $scanType, modality: $modality, performedAt: $performedAt, verifiedAt: $verifiedAt, radiologistName: $radiologistName, referringDoctorName: $referringDoctorName, status: $status, pdfUrl: $pdfUrl, dicomUrl: $dicomUrl, thumbnailUrl: $thumbnailUrl, findings: $findings, impression: $impression, reportBody: $reportBody)';
+  return 'RadiologyReportDetail(id: $id, scanType: $scanType, modality: $modality, performedAt: $performedAt, verifiedAt: $verifiedAt, radiologistName: $radiologistName, referringDoctorName: $referringDoctorName, status: $status, pdfUrl: $pdfUrl, dicomUrl: $dicomUrl, thumbnailUrl: $thumbnailUrl, findings: $findings, impression: $impression, recommendations: $recommendations, severity: $severity, reportBody: $reportBody, images: $images, paymentRequired: $paymentRequired)';
 }
 
 
@@ -906,7 +1184,7 @@ abstract mixin class $RadiologyReportDetailCopyWith<$Res>  {
   factory $RadiologyReportDetailCopyWith(RadiologyReportDetail value, $Res Function(RadiologyReportDetail) _then) = _$RadiologyReportDetailCopyWithImpl;
 @useResult
 $Res call({
- String id, String scanType, RadiologyModality modality, DateTime performedAt, DateTime? verifiedAt, String radiologistName, String referringDoctorName, RadiologyReportStatus status, String? pdfUrl, String? dicomUrl, String? thumbnailUrl, String? findings, String? impression, String? reportBody
+ String id, String scanType, RadiologyModality modality, DateTime performedAt, DateTime? verifiedAt, String radiologistName, String referringDoctorName, RadiologyReportStatus status, String? pdfUrl, String? dicomUrl, String? thumbnailUrl, String? findings, String? impression, String? recommendations, RadiologyReportSeverity? severity, String? reportBody, List<RadiologyReportImage> images, bool paymentRequired
 });
 
 
@@ -923,7 +1201,7 @@ class _$RadiologyReportDetailCopyWithImpl<$Res>
 
 /// Create a copy of RadiologyReportDetail
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? scanType = null,Object? modality = null,Object? performedAt = null,Object? verifiedAt = freezed,Object? radiologistName = null,Object? referringDoctorName = null,Object? status = null,Object? pdfUrl = freezed,Object? dicomUrl = freezed,Object? thumbnailUrl = freezed,Object? findings = freezed,Object? impression = freezed,Object? reportBody = freezed,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? scanType = null,Object? modality = null,Object? performedAt = null,Object? verifiedAt = freezed,Object? radiologistName = null,Object? referringDoctorName = null,Object? status = null,Object? pdfUrl = freezed,Object? dicomUrl = freezed,Object? thumbnailUrl = freezed,Object? findings = freezed,Object? impression = freezed,Object? recommendations = freezed,Object? severity = freezed,Object? reportBody = freezed,Object? images = null,Object? paymentRequired = null,}) {
   return _then(_self.copyWith(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,scanType: null == scanType ? _self.scanType : scanType // ignore: cast_nullable_to_non_nullable
@@ -938,8 +1216,12 @@ as String?,dicomUrl: freezed == dicomUrl ? _self.dicomUrl : dicomUrl // ignore: 
 as String?,thumbnailUrl: freezed == thumbnailUrl ? _self.thumbnailUrl : thumbnailUrl // ignore: cast_nullable_to_non_nullable
 as String?,findings: freezed == findings ? _self.findings : findings // ignore: cast_nullable_to_non_nullable
 as String?,impression: freezed == impression ? _self.impression : impression // ignore: cast_nullable_to_non_nullable
-as String?,reportBody: freezed == reportBody ? _self.reportBody : reportBody // ignore: cast_nullable_to_non_nullable
-as String?,
+as String?,recommendations: freezed == recommendations ? _self.recommendations : recommendations // ignore: cast_nullable_to_non_nullable
+as String?,severity: freezed == severity ? _self.severity : severity // ignore: cast_nullable_to_non_nullable
+as RadiologyReportSeverity?,reportBody: freezed == reportBody ? _self.reportBody : reportBody // ignore: cast_nullable_to_non_nullable
+as String?,images: null == images ? _self.images : images // ignore: cast_nullable_to_non_nullable
+as List<RadiologyReportImage>,paymentRequired: null == paymentRequired ? _self.paymentRequired : paymentRequired // ignore: cast_nullable_to_non_nullable
+as bool,
   ));
 }
 
@@ -1024,10 +1306,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String id,  String scanType,  RadiologyModality modality,  DateTime performedAt,  DateTime? verifiedAt,  String radiologistName,  String referringDoctorName,  RadiologyReportStatus status,  String? pdfUrl,  String? dicomUrl,  String? thumbnailUrl,  String? findings,  String? impression,  String? reportBody)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String id,  String scanType,  RadiologyModality modality,  DateTime performedAt,  DateTime? verifiedAt,  String radiologistName,  String referringDoctorName,  RadiologyReportStatus status,  String? pdfUrl,  String? dicomUrl,  String? thumbnailUrl,  String? findings,  String? impression,  String? recommendations,  RadiologyReportSeverity? severity,  String? reportBody,  List<RadiologyReportImage> images,  bool paymentRequired)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _RadiologyReportDetail() when $default != null:
-return $default(_that.id,_that.scanType,_that.modality,_that.performedAt,_that.verifiedAt,_that.radiologistName,_that.referringDoctorName,_that.status,_that.pdfUrl,_that.dicomUrl,_that.thumbnailUrl,_that.findings,_that.impression,_that.reportBody);case _:
+return $default(_that.id,_that.scanType,_that.modality,_that.performedAt,_that.verifiedAt,_that.radiologistName,_that.referringDoctorName,_that.status,_that.pdfUrl,_that.dicomUrl,_that.thumbnailUrl,_that.findings,_that.impression,_that.recommendations,_that.severity,_that.reportBody,_that.images,_that.paymentRequired);case _:
   return orElse();
 
 }
@@ -1045,10 +1327,10 @@ return $default(_that.id,_that.scanType,_that.modality,_that.performedAt,_that.v
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String id,  String scanType,  RadiologyModality modality,  DateTime performedAt,  DateTime? verifiedAt,  String radiologistName,  String referringDoctorName,  RadiologyReportStatus status,  String? pdfUrl,  String? dicomUrl,  String? thumbnailUrl,  String? findings,  String? impression,  String? reportBody)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String id,  String scanType,  RadiologyModality modality,  DateTime performedAt,  DateTime? verifiedAt,  String radiologistName,  String referringDoctorName,  RadiologyReportStatus status,  String? pdfUrl,  String? dicomUrl,  String? thumbnailUrl,  String? findings,  String? impression,  String? recommendations,  RadiologyReportSeverity? severity,  String? reportBody,  List<RadiologyReportImage> images,  bool paymentRequired)  $default,) {final _that = this;
 switch (_that) {
 case _RadiologyReportDetail():
-return $default(_that.id,_that.scanType,_that.modality,_that.performedAt,_that.verifiedAt,_that.radiologistName,_that.referringDoctorName,_that.status,_that.pdfUrl,_that.dicomUrl,_that.thumbnailUrl,_that.findings,_that.impression,_that.reportBody);case _:
+return $default(_that.id,_that.scanType,_that.modality,_that.performedAt,_that.verifiedAt,_that.radiologistName,_that.referringDoctorName,_that.status,_that.pdfUrl,_that.dicomUrl,_that.thumbnailUrl,_that.findings,_that.impression,_that.recommendations,_that.severity,_that.reportBody,_that.images,_that.paymentRequired);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -1065,10 +1347,10 @@ return $default(_that.id,_that.scanType,_that.modality,_that.performedAt,_that.v
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String id,  String scanType,  RadiologyModality modality,  DateTime performedAt,  DateTime? verifiedAt,  String radiologistName,  String referringDoctorName,  RadiologyReportStatus status,  String? pdfUrl,  String? dicomUrl,  String? thumbnailUrl,  String? findings,  String? impression,  String? reportBody)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String id,  String scanType,  RadiologyModality modality,  DateTime performedAt,  DateTime? verifiedAt,  String radiologistName,  String referringDoctorName,  RadiologyReportStatus status,  String? pdfUrl,  String? dicomUrl,  String? thumbnailUrl,  String? findings,  String? impression,  String? recommendations,  RadiologyReportSeverity? severity,  String? reportBody,  List<RadiologyReportImage> images,  bool paymentRequired)?  $default,) {final _that = this;
 switch (_that) {
 case _RadiologyReportDetail() when $default != null:
-return $default(_that.id,_that.scanType,_that.modality,_that.performedAt,_that.verifiedAt,_that.radiologistName,_that.referringDoctorName,_that.status,_that.pdfUrl,_that.dicomUrl,_that.thumbnailUrl,_that.findings,_that.impression,_that.reportBody);case _:
+return $default(_that.id,_that.scanType,_that.modality,_that.performedAt,_that.verifiedAt,_that.radiologistName,_that.referringDoctorName,_that.status,_that.pdfUrl,_that.dicomUrl,_that.thumbnailUrl,_that.findings,_that.impression,_that.recommendations,_that.severity,_that.reportBody,_that.images,_that.paymentRequired);case _:
   return null;
 
 }
@@ -1080,7 +1362,7 @@ return $default(_that.id,_that.scanType,_that.modality,_that.performedAt,_that.v
 @JsonSerializable()
 
 class _RadiologyReportDetail implements RadiologyReportDetail {
-  const _RadiologyReportDetail({required this.id, required this.scanType, required this.modality, required this.performedAt, this.verifiedAt, required this.radiologistName, required this.referringDoctorName, required this.status, this.pdfUrl, this.dicomUrl, this.thumbnailUrl, this.findings, this.impression, this.reportBody});
+  const _RadiologyReportDetail({required this.id, required this.scanType, required this.modality, required this.performedAt, this.verifiedAt, required this.radiologistName, required this.referringDoctorName, required this.status, this.pdfUrl, this.dicomUrl, this.thumbnailUrl, this.findings, this.impression, this.recommendations, this.severity, this.reportBody, final  List<RadiologyReportImage> images = const [], this.paymentRequired = false}): _images = images;
   factory _RadiologyReportDetail.fromJson(Map<String, dynamic> json) => _$RadiologyReportDetailFromJson(json);
 
 @override final  String id;
@@ -1096,7 +1378,17 @@ class _RadiologyReportDetail implements RadiologyReportDetail {
 @override final  String? thumbnailUrl;
 @override final  String? findings;
 @override final  String? impression;
+@override final  String? recommendations;
+@override final  RadiologyReportSeverity? severity;
 @override final  String? reportBody;
+ final  List<RadiologyReportImage> _images;
+@override@JsonKey() List<RadiologyReportImage> get images {
+  if (_images is EqualUnmodifiableListView) return _images;
+  // ignore: implicit_dynamic_type
+  return EqualUnmodifiableListView(_images);
+}
+
+@override@JsonKey() final  bool paymentRequired;
 
 /// Create a copy of RadiologyReportDetail
 /// with the given fields replaced by the non-null parameter values.
@@ -1111,16 +1403,16 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _RadiologyReportDetail&&(identical(other.id, id) || other.id == id)&&(identical(other.scanType, scanType) || other.scanType == scanType)&&(identical(other.modality, modality) || other.modality == modality)&&(identical(other.performedAt, performedAt) || other.performedAt == performedAt)&&(identical(other.verifiedAt, verifiedAt) || other.verifiedAt == verifiedAt)&&(identical(other.radiologistName, radiologistName) || other.radiologistName == radiologistName)&&(identical(other.referringDoctorName, referringDoctorName) || other.referringDoctorName == referringDoctorName)&&(identical(other.status, status) || other.status == status)&&(identical(other.pdfUrl, pdfUrl) || other.pdfUrl == pdfUrl)&&(identical(other.dicomUrl, dicomUrl) || other.dicomUrl == dicomUrl)&&(identical(other.thumbnailUrl, thumbnailUrl) || other.thumbnailUrl == thumbnailUrl)&&(identical(other.findings, findings) || other.findings == findings)&&(identical(other.impression, impression) || other.impression == impression)&&(identical(other.reportBody, reportBody) || other.reportBody == reportBody));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _RadiologyReportDetail&&(identical(other.id, id) || other.id == id)&&(identical(other.scanType, scanType) || other.scanType == scanType)&&(identical(other.modality, modality) || other.modality == modality)&&(identical(other.performedAt, performedAt) || other.performedAt == performedAt)&&(identical(other.verifiedAt, verifiedAt) || other.verifiedAt == verifiedAt)&&(identical(other.radiologistName, radiologistName) || other.radiologistName == radiologistName)&&(identical(other.referringDoctorName, referringDoctorName) || other.referringDoctorName == referringDoctorName)&&(identical(other.status, status) || other.status == status)&&(identical(other.pdfUrl, pdfUrl) || other.pdfUrl == pdfUrl)&&(identical(other.dicomUrl, dicomUrl) || other.dicomUrl == dicomUrl)&&(identical(other.thumbnailUrl, thumbnailUrl) || other.thumbnailUrl == thumbnailUrl)&&(identical(other.findings, findings) || other.findings == findings)&&(identical(other.impression, impression) || other.impression == impression)&&(identical(other.recommendations, recommendations) || other.recommendations == recommendations)&&(identical(other.severity, severity) || other.severity == severity)&&(identical(other.reportBody, reportBody) || other.reportBody == reportBody)&&const DeepCollectionEquality().equals(other._images, _images)&&(identical(other.paymentRequired, paymentRequired) || other.paymentRequired == paymentRequired));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,scanType,modality,performedAt,verifiedAt,radiologistName,referringDoctorName,status,pdfUrl,dicomUrl,thumbnailUrl,findings,impression,reportBody);
+int get hashCode => Object.hash(runtimeType,id,scanType,modality,performedAt,verifiedAt,radiologistName,referringDoctorName,status,pdfUrl,dicomUrl,thumbnailUrl,findings,impression,recommendations,severity,reportBody,const DeepCollectionEquality().hash(_images),paymentRequired);
 
 @override
 String toString() {
-  return 'RadiologyReportDetail(id: $id, scanType: $scanType, modality: $modality, performedAt: $performedAt, verifiedAt: $verifiedAt, radiologistName: $radiologistName, referringDoctorName: $referringDoctorName, status: $status, pdfUrl: $pdfUrl, dicomUrl: $dicomUrl, thumbnailUrl: $thumbnailUrl, findings: $findings, impression: $impression, reportBody: $reportBody)';
+  return 'RadiologyReportDetail(id: $id, scanType: $scanType, modality: $modality, performedAt: $performedAt, verifiedAt: $verifiedAt, radiologistName: $radiologistName, referringDoctorName: $referringDoctorName, status: $status, pdfUrl: $pdfUrl, dicomUrl: $dicomUrl, thumbnailUrl: $thumbnailUrl, findings: $findings, impression: $impression, recommendations: $recommendations, severity: $severity, reportBody: $reportBody, images: $images, paymentRequired: $paymentRequired)';
 }
 
 
@@ -1131,7 +1423,7 @@ abstract mixin class _$RadiologyReportDetailCopyWith<$Res> implements $Radiology
   factory _$RadiologyReportDetailCopyWith(_RadiologyReportDetail value, $Res Function(_RadiologyReportDetail) _then) = __$RadiologyReportDetailCopyWithImpl;
 @override @useResult
 $Res call({
- String id, String scanType, RadiologyModality modality, DateTime performedAt, DateTime? verifiedAt, String radiologistName, String referringDoctorName, RadiologyReportStatus status, String? pdfUrl, String? dicomUrl, String? thumbnailUrl, String? findings, String? impression, String? reportBody
+ String id, String scanType, RadiologyModality modality, DateTime performedAt, DateTime? verifiedAt, String radiologistName, String referringDoctorName, RadiologyReportStatus status, String? pdfUrl, String? dicomUrl, String? thumbnailUrl, String? findings, String? impression, String? recommendations, RadiologyReportSeverity? severity, String? reportBody, List<RadiologyReportImage> images, bool paymentRequired
 });
 
 
@@ -1148,7 +1440,7 @@ class __$RadiologyReportDetailCopyWithImpl<$Res>
 
 /// Create a copy of RadiologyReportDetail
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? scanType = null,Object? modality = null,Object? performedAt = null,Object? verifiedAt = freezed,Object? radiologistName = null,Object? referringDoctorName = null,Object? status = null,Object? pdfUrl = freezed,Object? dicomUrl = freezed,Object? thumbnailUrl = freezed,Object? findings = freezed,Object? impression = freezed,Object? reportBody = freezed,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? scanType = null,Object? modality = null,Object? performedAt = null,Object? verifiedAt = freezed,Object? radiologistName = null,Object? referringDoctorName = null,Object? status = null,Object? pdfUrl = freezed,Object? dicomUrl = freezed,Object? thumbnailUrl = freezed,Object? findings = freezed,Object? impression = freezed,Object? recommendations = freezed,Object? severity = freezed,Object? reportBody = freezed,Object? images = null,Object? paymentRequired = null,}) {
   return _then(_RadiologyReportDetail(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,scanType: null == scanType ? _self.scanType : scanType // ignore: cast_nullable_to_non_nullable
@@ -1163,8 +1455,12 @@ as String?,dicomUrl: freezed == dicomUrl ? _self.dicomUrl : dicomUrl // ignore: 
 as String?,thumbnailUrl: freezed == thumbnailUrl ? _self.thumbnailUrl : thumbnailUrl // ignore: cast_nullable_to_non_nullable
 as String?,findings: freezed == findings ? _self.findings : findings // ignore: cast_nullable_to_non_nullable
 as String?,impression: freezed == impression ? _self.impression : impression // ignore: cast_nullable_to_non_nullable
-as String?,reportBody: freezed == reportBody ? _self.reportBody : reportBody // ignore: cast_nullable_to_non_nullable
-as String?,
+as String?,recommendations: freezed == recommendations ? _self.recommendations : recommendations // ignore: cast_nullable_to_non_nullable
+as String?,severity: freezed == severity ? _self.severity : severity // ignore: cast_nullable_to_non_nullable
+as RadiologyReportSeverity?,reportBody: freezed == reportBody ? _self.reportBody : reportBody // ignore: cast_nullable_to_non_nullable
+as String?,images: null == images ? _self._images : images // ignore: cast_nullable_to_non_nullable
+as List<RadiologyReportImage>,paymentRequired: null == paymentRequired ? _self.paymentRequired : paymentRequired // ignore: cast_nullable_to_non_nullable
+as bool,
   ));
 }
 

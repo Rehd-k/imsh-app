@@ -32,6 +32,16 @@ enum RadiologyModality {
   other,
 }
 
+@JsonEnum(alwaysCreate: true)
+enum RadiologyReportSeverity {
+  @JsonValue('NORMAL')
+  normal,
+  @JsonValue('ABNORMAL')
+  abnormal,
+  @JsonValue('CRITICAL')
+  critical,
+}
+
 extension RadiologyReportStatusDisplay on RadiologyReportStatus {
   String get label => switch (this) {
         RadiologyReportStatus.pending => 'Pending',
@@ -63,6 +73,29 @@ extension RadiologyModalityDisplay on RadiologyModality {
         RadiologyModality.echo => Icons.monitor_heart_outlined,
         RadiologyModality.other => Icons.medical_information_outlined,
       };
+}
+
+extension RadiologyReportSeverityDisplay on RadiologyReportSeverity {
+  String get label => switch (this) {
+        RadiologyReportSeverity.normal => 'Normal',
+        RadiologyReportSeverity.abnormal => 'Abnormal',
+        RadiologyReportSeverity.critical => 'Critical',
+      };
+}
+
+@freezed
+abstract class RadiologyReportImage with _$RadiologyReportImage {
+  const factory RadiologyReportImage({
+    required String id,
+    required String fileName,
+    String? mimeType,
+    int? fileSize,
+    required DateTime uploadedAt,
+    required String fileUrl,
+  }) = _RadiologyReportImage;
+
+  factory RadiologyReportImage.fromJson(Map<String, dynamic> json) =>
+      _$RadiologyReportImageFromJson(json);
 }
 
 @freezed
@@ -130,7 +163,11 @@ abstract class RadiologyReportDetail with _$RadiologyReportDetail {
     String? thumbnailUrl,
     String? findings,
     String? impression,
+    String? recommendations,
+    RadiologyReportSeverity? severity,
     String? reportBody,
+    @Default([]) List<RadiologyReportImage> images,
+    @Default(false) bool paymentRequired,
   }) = _RadiologyReportDetail;
 
   factory RadiologyReportDetail.fromJson(Map<String, dynamic> json) =>

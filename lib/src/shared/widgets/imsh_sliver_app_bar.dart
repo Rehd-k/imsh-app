@@ -3,9 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:imsh/app_router.gr.dart';
 
-import '../../models/patient_model.dart';
 import '../../providers/auth_provider.dart';
 import 'logout_button.dart';
+import 'patient_avatar.dart';
 import 'theme_mode_menu_button.dart';
 
 class ImshSliverAppBar extends ConsumerWidget {
@@ -32,17 +32,7 @@ class ImshSliverAppBar extends ConsumerWidget {
         child: Center(
           child: GestureDetector(
             onTap: () => context.router.push(const ProfileRoute()),
-            child: CircleAvatar(
-              radius: 18,
-              backgroundColor: colorScheme.primaryContainer,
-              child: Text(
-                patient?.initials ?? '?',
-                style: theme.textTheme.labelLarge?.copyWith(
-                  color: colorScheme.onPrimaryContainer,
-                  fontWeight: FontWeight.w700,
-                ),
-              ),
-            ),
+            child: PatientAvatar(patient: patient, radius: 18),
           ),
         ),
       ),

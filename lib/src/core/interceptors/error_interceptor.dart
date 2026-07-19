@@ -1,11 +1,24 @@
 import 'package:dio/dio.dart';
+import 'package:flutter/foundation.dart';
+import 'package:imsh/app_router.gr.dart';
 
 import '../errors/app_exception.dart';
+import '../storage/token_storage.dart';
+import '../../services/navigation_service.dart';
+
+/// Optional hooks for Riverpod / UI to sync when session is forced to login or pending.
+class AuthSessionHooks {
+  AuthSessionHooks._();
+
+  static void Function()? onDeviceRevoked;
+  static void Function()? onDevicePendingApproval;
+}
 
 class ErrorInterceptor extends Interceptor {
   @override
   void onError(DioException err, ErrorInterceptorHandler handler) {
     final appEx = _mapError(err);
+    _handleSessionCodes(appEx);
     handler.reject(
       DioException(
         requestOptions: err.requestOptions,
@@ -15,6 +28,32 @@ class ErrorInterceptor extends Interceptor {
         message: appEx.message,
       ),
     );
+  }
+
+  void _handleSessionCodes(AppException appEx) {
+    if (appEx is UnauthorizedException && appEx.isDeviceRevoked) {
+      // Fire-and-forget; do not block the error path.
+      Future<void>(() async {
+        try {
+          await TokenStorage.clearAll();
+          AuthSessionHooks.onDeviceRevoked?.call();
+          NavigationService.router.replaceAll([const LoginRoute()]);
+        } catch (e, st) {
+          debugPrint('DEVICE_REVOKED handling failed: $e\n$st');
+        }
+      });
+      return;
+    }
+    if (appEx is ForbiddenException && appEx.isDevicePendingApproval) {
+      Future<void>(() async {
+        try {
+          AuthSessionHooks.onDevicePendingApproval?.call();
+          NavigationService.router.replaceAll([const DevicePendingRoute()]);
+        } catch (e, st) {
+          debugPrint('DEVICE_PENDING_APPROVAL handling failed: $e\n$st');
+        }
+      });
+    }
   }
 
   AppException _mapError(DioException err) {
@@ -46,15 +85,24 @@ class ErrorInterceptor extends Interceptor {
     final statusCode = response.statusCode ?? 0;
     final data = response.data;
     final message = _extractMessage(data) ?? _defaultMessage(statusCode);
+    final code = _extractCode(data);
 
     switch (statusCode) {
       case 400:
         final errors = _extractValidationErrors(data);
-        return ValidationException(message, errors: errors, statusCode: statusCode);
+        return ValidationException(
+          message,
+          errors: errors,
+          statusCode: statusCode,
+        );
       case 401:
-        return UnauthorizedException(message);
+        return code != null
+            ? UnauthorizedException.withCode(message, code: code)
+            : UnauthorizedException(message);
       case 403:
-        return ForbiddenException(message);
+        return code != null
+            ? ForbiddenException.withCode(message, code: code)
+            : ForbiddenException(message);
       case 404:
         return NotFoundException(message);
       case 409:
@@ -72,6 +120,14 @@ class ErrorInterceptor extends Interceptor {
       final msg = data['message'];
       if (msg is String) return msg;
       if (msg is List) return msg.join(', ');
+    }
+    return null;
+  }
+
+  String? _extractCode(dynamic data) {
+    if (data is Map) {
+      final code = data['code'];
+      if (code is String && code.isNotEmpty) return code;
     }
     return null;
   }

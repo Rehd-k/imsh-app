@@ -3,6 +3,7 @@ import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 
 import '../models/radiology_report_model.dart';
 import 'auth_provider.dart';
+import 'family_provider.dart';
 import 'service_providers.dart';
 
 const radiologyReportsPageSize = 20;
@@ -96,7 +97,8 @@ final radiologyReportFilterProvider =
 final radiologyReportDetailProvider = FutureProvider.autoDispose
     .family<RadiologyReportDetail, String>((ref, id) async {
   final service = ref.watch(radiologyServiceProvider);
-  return service.getRadiologyReport(id);
+  final forPatientId = watchForPatientId(ref);
+  return service.getRadiologyReport(id, forPatientId: forPatientId);
 });
 
 final radiologyStatisticsProvider =
@@ -104,6 +106,7 @@ final radiologyStatisticsProvider =
 
 final radiologyReportsPagingControllerProvider = Provider.autoDispose((ref) {
   final service = ref.watch(radiologyServiceProvider);
+  final forPatientId = watchForPatientId(ref);
   final controller = PagingController<int, RadiologyReportSummary>(
     firstPageKey: 1,
   );
@@ -113,6 +116,7 @@ final radiologyReportsPagingControllerProvider = Provider.autoDispose((ref) {
       final response = await service.listRadiologyReports(
         page: pageKey,
         limit: radiologyReportsPageSize,
+        forPatientId: forPatientId,
       );
       ref.read(radiologyStatisticsProvider.notifier).state =
           response.statistics;

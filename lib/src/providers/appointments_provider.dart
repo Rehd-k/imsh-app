@@ -2,6 +2,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../models/appointment_model.dart';
 import 'auth_provider.dart';
+import 'family_provider.dart';
 import 'service_providers.dart';
 
 final appointmentFilterProvider = StateProvider<AppointmentFilterTab>((ref) {
@@ -12,7 +13,8 @@ final appointmentsDashboardProvider = FutureProvider.autoDispose
     .family<AppointmentsDashboardResponse, AppointmentFilterTab>(
   (ref, filter) async {
     final service = ref.watch(appointmentServiceProvider);
-    return service.getDashboard(filter);
+    final forPatientId = watchForPatientId(ref);
+    return service.getDashboard(filter, forPatientId: forPatientId);
   },
 );
 
@@ -20,7 +22,8 @@ final appointmentDetailProvider =
     FutureProvider.autoDispose.family<AppointmentDetail, String>(
   (ref, id) async {
     final service = ref.watch(appointmentServiceProvider);
-    return service.getAppointment(id);
+    final forPatientId = watchForPatientId(ref);
+    return service.getAppointment(id, forPatientId: forPatientId);
   },
 );
 

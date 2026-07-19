@@ -13,7 +13,7 @@ sealed class AppException implements Exception {
 final class NetworkException extends AppException {
   const NetworkException([
     super.message =
-        'Unable to connect to the server. Check your connection and try again.',
+        "We couldn't reach the hospital server. Check your connection and try again.",
   ]);
 }
 
@@ -36,18 +36,38 @@ final class ConflictException extends AppException {
   ]) : super(statusCode: 409);
 }
 
-/// 401 – token missing or expired.
+/// 401 – token missing, expired, or device revoked.
 final class UnauthorizedException extends AppException {
   const UnauthorizedException([
     super.message = 'Session expired. Please log in again.',
-  ]) : super(statusCode: 401);
+  ]) : code = null,
+       super(statusCode: 401);
+
+  const UnauthorizedException.withCode(
+    super.message, {
+    required this.code,
+  }) : super(statusCode: 401);
+
+  final String? code;
+
+  bool get isDeviceRevoked => code == 'DEVICE_REVOKED';
 }
 
-/// 403 – authenticated but lacks permission.
+/// 403 – authenticated but lacks permission / device pending.
 final class ForbiddenException extends AppException {
   const ForbiddenException([
     super.message = 'You do not have permission to perform this action.',
-  ]) : super(statusCode: 403);
+  ]) : code = null,
+       super(statusCode: 403);
+
+  const ForbiddenException.withCode(
+    super.message, {
+    required this.code,
+  }) : super(statusCode: 403);
+
+  final String? code;
+
+  bool get isDevicePendingApproval => code == 'DEVICE_PENDING_APPROVAL';
 }
 
 /// 404 – resource not found.

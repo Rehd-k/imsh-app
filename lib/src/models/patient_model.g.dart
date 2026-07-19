@@ -20,6 +20,7 @@ _Patient _$PatientFromJson(Map<String, dynamic> json) => _Patient(
   phoneNumber: json['phoneNumber'] as String?,
   addressOfResidence: json['addressOfResidence'] as String?,
   hmo: json['hmo'] as String?,
+  avatarUrl: json['avatarUrl'] as String?,
 );
 
 Map<String, dynamic> _$PatientToJson(_Patient instance) => <String, dynamic>{
@@ -36,6 +37,7 @@ Map<String, dynamic> _$PatientToJson(_Patient instance) => <String, dynamic>{
   'phoneNumber': instance.phoneNumber,
   'addressOfResidence': instance.addressOfResidence,
   'hmo': instance.hmo,
+  'avatarUrl': instance.avatarUrl,
 };
 
 _PatientLoginResponse _$PatientLoginResponseFromJson(
@@ -43,6 +45,7 @@ _PatientLoginResponse _$PatientLoginResponseFromJson(
 ) => _PatientLoginResponse(
   accessToken: json['accessToken'] as String,
   patient: Patient.fromJson(json['patient'] as Map<String, dynamic>),
+  device: PatientDevice.fromJson(json['device'] as Map<String, dynamic>),
 );
 
 Map<String, dynamic> _$PatientLoginResponseToJson(
@@ -50,4 +53,5 @@ Map<String, dynamic> _$PatientLoginResponseToJson(
 ) => <String, dynamic>{
   'accessToken': instance.accessToken,
   'patient': instance.patient,
+  'device': instance.device,
 };

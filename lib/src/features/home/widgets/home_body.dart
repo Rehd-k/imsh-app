@@ -10,6 +10,7 @@ import '../../../models/appointment_model.dart';
 import '../../../models/medical_records_dashboard_model.dart';
 import '../../../models/medication_model.dart';
 import '../../../providers/home_provider.dart';
+import '../../../shared/widgets/family_subject_banner.dart';
 import '../../../shared/widgets/imsh_sliver_app_bar.dart';
 import 'home_billing_snippet.dart';
 import 'home_header.dart';
@@ -44,6 +45,7 @@ class HomeBody extends ConsumerWidget {
           physics: const AlwaysScrollableScrollPhysics(),
           slivers: [
             const ImshSliverAppBar(),
+            const SliverToBoxAdapter(child: FamilySubjectBanner()),
             SliverPadding(
               padding: const EdgeInsets.only(
                 bottom: AppDesignTokens.spacing2xl,

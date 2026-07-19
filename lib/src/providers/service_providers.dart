@@ -2,7 +2,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../services/appointment_service.dart';
 import '../services/billing_service.dart';
+import '../services/device_service.dart';
 import '../services/family_service.dart';
+import '../services/feedback_service.dart';
 import '../services/health_card_service.dart';
 import '../services/lab_service.dart';
 import '../services/medication_service.dart';
@@ -17,6 +19,10 @@ final profileServiceProvider = Provider<ProfileService>((ref) {
 
 final appointmentServiceProvider = Provider<AppointmentService>((ref) {
   return AppointmentService();
+});
+
+final feedbackServiceProvider = Provider<FeedbackService>((ref) {
+  return FeedbackService();
 });
 
 final labServiceProvider = Provider<LabService>((ref) {
@@ -49,4 +55,8 @@ final familyServiceProvider = Provider<FamilyService>((ref) {
 
 final healthCardServiceProvider = Provider<HealthCardService>((ref) {
   return HealthCardService();
+});
+
+final deviceServiceProvider = Provider<DeviceService>((ref) {
+  return DeviceService();
 });

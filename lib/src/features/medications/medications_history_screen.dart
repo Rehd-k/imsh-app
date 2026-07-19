@@ -7,6 +7,7 @@ import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 import '../../core/theme/app_design_tokens.dart';
 import '../../helper/date_formatter.dart';
 import '../../models/medication_model.dart';
+import '../../providers/auth_provider.dart';
 import '../../providers/medications_provider.dart';
 import '../../shared/widgets/imsh_app_bar.dart';
 
@@ -32,11 +33,15 @@ class MedicationsHistoryScreen extends ConsumerWidget {
             itemBuilder: (context, item, index) =>
                 _HistoryCard(prescription: item),
             firstPageErrorIndicatorBuilder: (context) => _HistoryError(
-              message: pagingController.error?.toString() ?? 'Something went wrong',
+              message: authFlowErrorMessage(
+                pagingController.error ?? 'Something went wrong',
+              ),
               onRetry: pagingController.refresh,
             ),
             newPageErrorIndicatorBuilder: (context) => _HistoryError(
-              message: pagingController.error?.toString() ?? 'Something went wrong',
+              message: authFlowErrorMessage(
+                pagingController.error ?? 'Something went wrong',
+              ),
               onRetry: () => pagingController.retryLastFailedRequest(),
             ),
             firstPageProgressIndicatorBuilder: (context) => const Padding(

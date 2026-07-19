@@ -9,11 +9,15 @@ class AppointmentService {
   final Dio _dio;
 
   Future<AppointmentsDashboardResponse> getDashboard(
-    AppointmentFilterTab status,
-  ) async {
+    AppointmentFilterTab status, {
+    String? forPatientId,
+  }) async {
     final resp = await _dio.get<Map<String, dynamic>>(
       '/patient/appointments/dashboard',
-      queryParameters: {'status': status.apiValue},
+      queryParameters: {
+        'status': status.apiValue,
+        if (forPatientId != null) 'forPatientId': forPatientId,
+      },
     );
     return AppointmentsDashboardResponse.fromJson(resp.data ?? {});
   }
@@ -22,6 +26,7 @@ class AppointmentService {
     required AppointmentFilterTab status,
     int page = 1,
     int limit = 20,
+    String? forPatientId,
   }) async {
     final resp = await _dio.get<Map<String, dynamic>>(
       '/patient/appointments',
@@ -29,14 +34,21 @@ class AppointmentService {
         'status': status.apiValue,
         'page': page,
         'limit': limit,
+        if (forPatientId != null) 'forPatientId': forPatientId,
       },
     );
     return AppointmentListResponse.fromJson(resp.data ?? {});
   }
 
-  Future<AppointmentDetail> getAppointment(String id) async {
+  Future<AppointmentDetail> getAppointment(
+    String id, {
+    String? forPatientId,
+  }) async {
     final resp = await _dio.get<Map<String, dynamic>>(
       '/patient/appointments/$id',
+      queryParameters: {
+        if (forPatientId != null) 'forPatientId': forPatientId,
+      },
     );
     return AppointmentDetail.fromJson(resp.data ?? {});
   }

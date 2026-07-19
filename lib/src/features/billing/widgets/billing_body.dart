@@ -163,7 +163,9 @@ class _BillingBodyState extends ConsumerState<BillingBody> {
       if (!mounted) return;
       setState(() {
         _paymentsPage = nextPage;
-        _paymentsTotal = response.total;
+        _paymentsTotal = response.total > 0
+            ? response.total
+            : (_payments ?? current).length + response.data.length;
         _payments = [...(_payments ?? current), ...response.data];
         _loadingMorePayments = false;
       });

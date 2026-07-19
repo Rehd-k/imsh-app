@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$BillingSummaryResponse {
 
- String get totalOutstanding; int get unpaidInvoiceCount; DateTime? get nextDueDate; int get daysUntilDue; String get currency;
+@ApiAmountConverter() String get totalOutstanding; int get unpaidInvoiceCount; DateTime? get nextDueDate; int get daysUntilDue; String get currency;
 /// Create a copy of BillingSummaryResponse
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -48,7 +48,7 @@ abstract mixin class $BillingSummaryResponseCopyWith<$Res>  {
   factory $BillingSummaryResponseCopyWith(BillingSummaryResponse value, $Res Function(BillingSummaryResponse) _then) = _$BillingSummaryResponseCopyWithImpl;
 @useResult
 $Res call({
- String totalOutstanding, int unpaidInvoiceCount, DateTime? nextDueDate, int daysUntilDue, String currency
+@ApiAmountConverter() String totalOutstanding, int unpaidInvoiceCount, DateTime? nextDueDate, int daysUntilDue, String currency
 });
 
 
@@ -157,7 +157,7 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String totalOutstanding,  int unpaidInvoiceCount,  DateTime? nextDueDate,  int daysUntilDue,  String currency)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@ApiAmountConverter()  String totalOutstanding,  int unpaidInvoiceCount,  DateTime? nextDueDate,  int daysUntilDue,  String currency)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _BillingSummaryResponse() when $default != null:
 return $default(_that.totalOutstanding,_that.unpaidInvoiceCount,_that.nextDueDate,_that.daysUntilDue,_that.currency);case _:
@@ -178,7 +178,7 @@ return $default(_that.totalOutstanding,_that.unpaidInvoiceCount,_that.nextDueDat
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String totalOutstanding,  int unpaidInvoiceCount,  DateTime? nextDueDate,  int daysUntilDue,  String currency)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@ApiAmountConverter()  String totalOutstanding,  int unpaidInvoiceCount,  DateTime? nextDueDate,  int daysUntilDue,  String currency)  $default,) {final _that = this;
 switch (_that) {
 case _BillingSummaryResponse():
 return $default(_that.totalOutstanding,_that.unpaidInvoiceCount,_that.nextDueDate,_that.daysUntilDue,_that.currency);case _:
@@ -198,7 +198,7 @@ return $default(_that.totalOutstanding,_that.unpaidInvoiceCount,_that.nextDueDat
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String totalOutstanding,  int unpaidInvoiceCount,  DateTime? nextDueDate,  int daysUntilDue,  String currency)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@ApiAmountConverter()  String totalOutstanding,  int unpaidInvoiceCount,  DateTime? nextDueDate,  int daysUntilDue,  String currency)?  $default,) {final _that = this;
 switch (_that) {
 case _BillingSummaryResponse() when $default != null:
 return $default(_that.totalOutstanding,_that.unpaidInvoiceCount,_that.nextDueDate,_that.daysUntilDue,_that.currency);case _:
@@ -213,11 +213,11 @@ return $default(_that.totalOutstanding,_that.unpaidInvoiceCount,_that.nextDueDat
 @JsonSerializable()
 
 class _BillingSummaryResponse implements BillingSummaryResponse {
-  const _BillingSummaryResponse({required this.totalOutstanding, required this.unpaidInvoiceCount, this.nextDueDate, this.daysUntilDue = 0, this.currency = 'NGN'});
+  const _BillingSummaryResponse({@ApiAmountConverter() this.totalOutstanding = '0', this.unpaidInvoiceCount = 0, this.nextDueDate, this.daysUntilDue = 0, this.currency = 'NGN'});
   factory _BillingSummaryResponse.fromJson(Map<String, dynamic> json) => _$BillingSummaryResponseFromJson(json);
 
-@override final  String totalOutstanding;
-@override final  int unpaidInvoiceCount;
+@override@JsonKey()@ApiAmountConverter() final  String totalOutstanding;
+@override@JsonKey() final  int unpaidInvoiceCount;
 @override final  DateTime? nextDueDate;
 @override@JsonKey() final  int daysUntilDue;
 @override@JsonKey() final  String currency;
@@ -255,7 +255,7 @@ abstract mixin class _$BillingSummaryResponseCopyWith<$Res> implements $BillingS
   factory _$BillingSummaryResponseCopyWith(_BillingSummaryResponse value, $Res Function(_BillingSummaryResponse) _then) = __$BillingSummaryResponseCopyWithImpl;
 @override @useResult
 $Res call({
- String totalOutstanding, int unpaidInvoiceCount, DateTime? nextDueDate, int daysUntilDue, String currency
+@ApiAmountConverter() String totalOutstanding, int unpaidInvoiceCount, DateTime? nextDueDate, int daysUntilDue, String currency
 });
 
 
@@ -290,7 +290,7 @@ as String,
 /// @nodoc
 mixin _$InvoiceSummary {
 
- String get id; String get invoiceNumber; String get title; BillType get billType; InvoiceStatus get status; DateTime get issuedAt; String get totalAmount; String get amountPaid; String get balance;
+ String get id; String get invoiceNumber; String get title; BillType get billType; InvoiceStatus get status; DateTime get issuedAt;@ApiAmountConverter() String get totalAmount;@ApiAmountConverter() String get amountPaid;@ApiAmountConverter() String get balance;
 /// Create a copy of InvoiceSummary
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -323,7 +323,7 @@ abstract mixin class $InvoiceSummaryCopyWith<$Res>  {
   factory $InvoiceSummaryCopyWith(InvoiceSummary value, $Res Function(InvoiceSummary) _then) = _$InvoiceSummaryCopyWithImpl;
 @useResult
 $Res call({
- String id, String invoiceNumber, String title, BillType billType, InvoiceStatus status, DateTime issuedAt, String totalAmount, String amountPaid, String balance
+ String id, String invoiceNumber, String title, BillType billType, InvoiceStatus status, DateTime issuedAt,@ApiAmountConverter() String totalAmount,@ApiAmountConverter() String amountPaid,@ApiAmountConverter() String balance
 });
 
 
@@ -436,7 +436,7 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String id,  String invoiceNumber,  String title,  BillType billType,  InvoiceStatus status,  DateTime issuedAt,  String totalAmount,  String amountPaid,  String balance)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String id,  String invoiceNumber,  String title,  BillType billType,  InvoiceStatus status,  DateTime issuedAt, @ApiAmountConverter()  String totalAmount, @ApiAmountConverter()  String amountPaid, @ApiAmountConverter()  String balance)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _InvoiceSummary() when $default != null:
 return $default(_that.id,_that.invoiceNumber,_that.title,_that.billType,_that.status,_that.issuedAt,_that.totalAmount,_that.amountPaid,_that.balance);case _:
@@ -457,7 +457,7 @@ return $default(_that.id,_that.invoiceNumber,_that.title,_that.billType,_that.st
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String id,  String invoiceNumber,  String title,  BillType billType,  InvoiceStatus status,  DateTime issuedAt,  String totalAmount,  String amountPaid,  String balance)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String id,  String invoiceNumber,  String title,  BillType billType,  InvoiceStatus status,  DateTime issuedAt, @ApiAmountConverter()  String totalAmount, @ApiAmountConverter()  String amountPaid, @ApiAmountConverter()  String balance)  $default,) {final _that = this;
 switch (_that) {
 case _InvoiceSummary():
 return $default(_that.id,_that.invoiceNumber,_that.title,_that.billType,_that.status,_that.issuedAt,_that.totalAmount,_that.amountPaid,_that.balance);case _:
@@ -477,7 +477,7 @@ return $default(_that.id,_that.invoiceNumber,_that.title,_that.billType,_that.st
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String id,  String invoiceNumber,  String title,  BillType billType,  InvoiceStatus status,  DateTime issuedAt,  String totalAmount,  String amountPaid,  String balance)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String id,  String invoiceNumber,  String title,  BillType billType,  InvoiceStatus status,  DateTime issuedAt, @ApiAmountConverter()  String totalAmount, @ApiAmountConverter()  String amountPaid, @ApiAmountConverter()  String balance)?  $default,) {final _that = this;
 switch (_that) {
 case _InvoiceSummary() when $default != null:
 return $default(_that.id,_that.invoiceNumber,_that.title,_that.billType,_that.status,_that.issuedAt,_that.totalAmount,_that.amountPaid,_that.balance);case _:
@@ -492,7 +492,7 @@ return $default(_that.id,_that.invoiceNumber,_that.title,_that.billType,_that.st
 @JsonSerializable()
 
 class _InvoiceSummary implements InvoiceSummary {
-  const _InvoiceSummary({required this.id, required this.invoiceNumber, required this.title, required this.billType, required this.status, required this.issuedAt, required this.totalAmount, required this.amountPaid, required this.balance});
+  const _InvoiceSummary({required this.id, required this.invoiceNumber, required this.title, required this.billType, required this.status, required this.issuedAt, @ApiAmountConverter() required this.totalAmount, @ApiAmountConverter() required this.amountPaid, @ApiAmountConverter() required this.balance});
   factory _InvoiceSummary.fromJson(Map<String, dynamic> json) => _$InvoiceSummaryFromJson(json);
 
 @override final  String id;
@@ -501,9 +501,9 @@ class _InvoiceSummary implements InvoiceSummary {
 @override final  BillType billType;
 @override final  InvoiceStatus status;
 @override final  DateTime issuedAt;
-@override final  String totalAmount;
-@override final  String amountPaid;
-@override final  String balance;
+@override@ApiAmountConverter() final  String totalAmount;
+@override@ApiAmountConverter() final  String amountPaid;
+@override@ApiAmountConverter() final  String balance;
 
 /// Create a copy of InvoiceSummary
 /// with the given fields replaced by the non-null parameter values.
@@ -538,7 +538,7 @@ abstract mixin class _$InvoiceSummaryCopyWith<$Res> implements $InvoiceSummaryCo
   factory _$InvoiceSummaryCopyWith(_InvoiceSummary value, $Res Function(_InvoiceSummary) _then) = __$InvoiceSummaryCopyWithImpl;
 @override @useResult
 $Res call({
- String id, String invoiceNumber, String title, BillType billType, InvoiceStatus status, DateTime issuedAt, String totalAmount, String amountPaid, String balance
+ String id, String invoiceNumber, String title, BillType billType, InvoiceStatus status, DateTime issuedAt,@ApiAmountConverter() String totalAmount,@ApiAmountConverter() String amountPaid,@ApiAmountConverter() String balance
 });
 
 
@@ -774,7 +774,7 @@ return $default(_that.data,_that.total,_that.page,_that.limit);case _:
 @JsonSerializable()
 
 class _InvoiceListResponse implements InvoiceListResponse {
-  const _InvoiceListResponse({required final  List<InvoiceSummary> data, required this.total, required this.page, required this.limit}): _data = data;
+  const _InvoiceListResponse({required final  List<InvoiceSummary> data, this.total = 0, this.page = 1, this.limit = 20}): _data = data;
   factory _InvoiceListResponse.fromJson(Map<String, dynamic> json) => _$InvoiceListResponseFromJson(json);
 
  final  List<InvoiceSummary> _data;
@@ -784,9 +784,9 @@ class _InvoiceListResponse implements InvoiceListResponse {
   return EqualUnmodifiableListView(_data);
 }
 
-@override final  int total;
-@override final  int page;
-@override final  int limit;
+@override@JsonKey() final  int total;
+@override@JsonKey() final  int page;
+@override@JsonKey() final  int limit;
 
 /// Create a copy of InvoiceListResponse
 /// with the given fields replaced by the non-null parameter values.
@@ -1130,7 +1130,7 @@ as String,
 /// @nodoc
 mixin _$BreakdownLineItem {
 
- String get id; String get description; String get unitPrice; int get quantity; String get lineTotal; String get amountPaid; String get balance; bool get isRecurringDaily; int? get billableDays; String? get usageSummary;
+ String get id; String get description;@ApiAmountConverter() String get unitPrice; int get quantity;@ApiAmountConverter() String get lineTotal;@ApiAmountConverter() String get amountPaid;@ApiAmountConverter() String get balance; bool get isRecurringDaily; int? get billableDays; String? get usageSummary;
 /// Create a copy of BreakdownLineItem
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -1163,7 +1163,7 @@ abstract mixin class $BreakdownLineItemCopyWith<$Res>  {
   factory $BreakdownLineItemCopyWith(BreakdownLineItem value, $Res Function(BreakdownLineItem) _then) = _$BreakdownLineItemCopyWithImpl;
 @useResult
 $Res call({
- String id, String description, String unitPrice, int quantity, String lineTotal, String amountPaid, String balance, bool isRecurringDaily, int? billableDays, String? usageSummary
+ String id, String description,@ApiAmountConverter() String unitPrice, int quantity,@ApiAmountConverter() String lineTotal,@ApiAmountConverter() String amountPaid,@ApiAmountConverter() String balance, bool isRecurringDaily, int? billableDays, String? usageSummary
 });
 
 
@@ -1277,7 +1277,7 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String id,  String description,  String unitPrice,  int quantity,  String lineTotal,  String amountPaid,  String balance,  bool isRecurringDaily,  int? billableDays,  String? usageSummary)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String id,  String description, @ApiAmountConverter()  String unitPrice,  int quantity, @ApiAmountConverter()  String lineTotal, @ApiAmountConverter()  String amountPaid, @ApiAmountConverter()  String balance,  bool isRecurringDaily,  int? billableDays,  String? usageSummary)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _BreakdownLineItem() when $default != null:
 return $default(_that.id,_that.description,_that.unitPrice,_that.quantity,_that.lineTotal,_that.amountPaid,_that.balance,_that.isRecurringDaily,_that.billableDays,_that.usageSummary);case _:
@@ -1298,7 +1298,7 @@ return $default(_that.id,_that.description,_that.unitPrice,_that.quantity,_that.
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String id,  String description,  String unitPrice,  int quantity,  String lineTotal,  String amountPaid,  String balance,  bool isRecurringDaily,  int? billableDays,  String? usageSummary)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String id,  String description, @ApiAmountConverter()  String unitPrice,  int quantity, @ApiAmountConverter()  String lineTotal, @ApiAmountConverter()  String amountPaid, @ApiAmountConverter()  String balance,  bool isRecurringDaily,  int? billableDays,  String? usageSummary)  $default,) {final _that = this;
 switch (_that) {
 case _BreakdownLineItem():
 return $default(_that.id,_that.description,_that.unitPrice,_that.quantity,_that.lineTotal,_that.amountPaid,_that.balance,_that.isRecurringDaily,_that.billableDays,_that.usageSummary);case _:
@@ -1318,7 +1318,7 @@ return $default(_that.id,_that.description,_that.unitPrice,_that.quantity,_that.
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String id,  String description,  String unitPrice,  int quantity,  String lineTotal,  String amountPaid,  String balance,  bool isRecurringDaily,  int? billableDays,  String? usageSummary)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String id,  String description, @ApiAmountConverter()  String unitPrice,  int quantity, @ApiAmountConverter()  String lineTotal, @ApiAmountConverter()  String amountPaid, @ApiAmountConverter()  String balance,  bool isRecurringDaily,  int? billableDays,  String? usageSummary)?  $default,) {final _that = this;
 switch (_that) {
 case _BreakdownLineItem() when $default != null:
 return $default(_that.id,_that.description,_that.unitPrice,_that.quantity,_that.lineTotal,_that.amountPaid,_that.balance,_that.isRecurringDaily,_that.billableDays,_that.usageSummary);case _:
@@ -1333,16 +1333,16 @@ return $default(_that.id,_that.description,_that.unitPrice,_that.quantity,_that.
 @JsonSerializable()
 
 class _BreakdownLineItem implements BreakdownLineItem {
-  const _BreakdownLineItem({required this.id, required this.description, required this.unitPrice, required this.quantity, required this.lineTotal, required this.amountPaid, required this.balance, this.isRecurringDaily = false, this.billableDays, this.usageSummary});
+  const _BreakdownLineItem({required this.id, required this.description, @ApiAmountConverter() required this.unitPrice, required this.quantity, @ApiAmountConverter() required this.lineTotal, @ApiAmountConverter() required this.amountPaid, @ApiAmountConverter() required this.balance, this.isRecurringDaily = false, this.billableDays, this.usageSummary});
   factory _BreakdownLineItem.fromJson(Map<String, dynamic> json) => _$BreakdownLineItemFromJson(json);
 
 @override final  String id;
 @override final  String description;
-@override final  String unitPrice;
+@override@ApiAmountConverter() final  String unitPrice;
 @override final  int quantity;
-@override final  String lineTotal;
-@override final  String amountPaid;
-@override final  String balance;
+@override@ApiAmountConverter() final  String lineTotal;
+@override@ApiAmountConverter() final  String amountPaid;
+@override@ApiAmountConverter() final  String balance;
 @override@JsonKey() final  bool isRecurringDaily;
 @override final  int? billableDays;
 @override final  String? usageSummary;
@@ -1380,7 +1380,7 @@ abstract mixin class _$BreakdownLineItemCopyWith<$Res> implements $BreakdownLine
   factory _$BreakdownLineItemCopyWith(_BreakdownLineItem value, $Res Function(_BreakdownLineItem) _then) = __$BreakdownLineItemCopyWithImpl;
 @override @useResult
 $Res call({
- String id, String description, String unitPrice, int quantity, String lineTotal, String amountPaid, String balance, bool isRecurringDaily, int? billableDays, String? usageSummary
+ String id, String description,@ApiAmountConverter() String unitPrice, int quantity,@ApiAmountConverter() String lineTotal,@ApiAmountConverter() String amountPaid,@ApiAmountConverter() String balance, bool isRecurringDaily, int? billableDays, String? usageSummary
 });
 
 
@@ -1420,7 +1420,7 @@ as String?,
 /// @nodoc
 mixin _$BreakdownCategory {
 
- ChargeCategory get category; String get label; String get subtotal; String get amountPaid; String get balance; List<BreakdownLineItem> get items;
+ ChargeCategory get category; String get label;@ApiAmountConverter() String get subtotal;@ApiAmountConverter() String get amountPaid;@ApiAmountConverter() String get balance; List<BreakdownLineItem> get items;
 /// Create a copy of BreakdownCategory
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -1453,7 +1453,7 @@ abstract mixin class $BreakdownCategoryCopyWith<$Res>  {
   factory $BreakdownCategoryCopyWith(BreakdownCategory value, $Res Function(BreakdownCategory) _then) = _$BreakdownCategoryCopyWithImpl;
 @useResult
 $Res call({
- ChargeCategory category, String label, String subtotal, String amountPaid, String balance, List<BreakdownLineItem> items
+ ChargeCategory category, String label,@ApiAmountConverter() String subtotal,@ApiAmountConverter() String amountPaid,@ApiAmountConverter() String balance, List<BreakdownLineItem> items
 });
 
 
@@ -1563,7 +1563,7 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( ChargeCategory category,  String label,  String subtotal,  String amountPaid,  String balance,  List<BreakdownLineItem> items)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( ChargeCategory category,  String label, @ApiAmountConverter()  String subtotal, @ApiAmountConverter()  String amountPaid, @ApiAmountConverter()  String balance,  List<BreakdownLineItem> items)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _BreakdownCategory() when $default != null:
 return $default(_that.category,_that.label,_that.subtotal,_that.amountPaid,_that.balance,_that.items);case _:
@@ -1584,7 +1584,7 @@ return $default(_that.category,_that.label,_that.subtotal,_that.amountPaid,_that
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( ChargeCategory category,  String label,  String subtotal,  String amountPaid,  String balance,  List<BreakdownLineItem> items)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( ChargeCategory category,  String label, @ApiAmountConverter()  String subtotal, @ApiAmountConverter()  String amountPaid, @ApiAmountConverter()  String balance,  List<BreakdownLineItem> items)  $default,) {final _that = this;
 switch (_that) {
 case _BreakdownCategory():
 return $default(_that.category,_that.label,_that.subtotal,_that.amountPaid,_that.balance,_that.items);case _:
@@ -1604,7 +1604,7 @@ return $default(_that.category,_that.label,_that.subtotal,_that.amountPaid,_that
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( ChargeCategory category,  String label,  String subtotal,  String amountPaid,  String balance,  List<BreakdownLineItem> items)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( ChargeCategory category,  String label, @ApiAmountConverter()  String subtotal, @ApiAmountConverter()  String amountPaid, @ApiAmountConverter()  String balance,  List<BreakdownLineItem> items)?  $default,) {final _that = this;
 switch (_that) {
 case _BreakdownCategory() when $default != null:
 return $default(_that.category,_that.label,_that.subtotal,_that.amountPaid,_that.balance,_that.items);case _:
@@ -1619,14 +1619,14 @@ return $default(_that.category,_that.label,_that.subtotal,_that.amountPaid,_that
 @JsonSerializable()
 
 class _BreakdownCategory implements BreakdownCategory {
-  const _BreakdownCategory({required this.category, required this.label, required this.subtotal, required this.amountPaid, required this.balance, final  List<BreakdownLineItem> items = const []}): _items = items;
+  const _BreakdownCategory({required this.category, required this.label, @ApiAmountConverter() required this.subtotal, @ApiAmountConverter() required this.amountPaid, @ApiAmountConverter() required this.balance, final  List<BreakdownLineItem> items = const []}): _items = items;
   factory _BreakdownCategory.fromJson(Map<String, dynamic> json) => _$BreakdownCategoryFromJson(json);
 
 @override final  ChargeCategory category;
 @override final  String label;
-@override final  String subtotal;
-@override final  String amountPaid;
-@override final  String balance;
+@override@ApiAmountConverter() final  String subtotal;
+@override@ApiAmountConverter() final  String amountPaid;
+@override@ApiAmountConverter() final  String balance;
  final  List<BreakdownLineItem> _items;
 @override@JsonKey() List<BreakdownLineItem> get items {
   if (_items is EqualUnmodifiableListView) return _items;
@@ -1668,7 +1668,7 @@ abstract mixin class _$BreakdownCategoryCopyWith<$Res> implements $BreakdownCate
   factory _$BreakdownCategoryCopyWith(_BreakdownCategory value, $Res Function(_BreakdownCategory) _then) = __$BreakdownCategoryCopyWithImpl;
 @override @useResult
 $Res call({
- ChargeCategory category, String label, String subtotal, String amountPaid, String balance, List<BreakdownLineItem> items
+ ChargeCategory category, String label,@ApiAmountConverter() String subtotal,@ApiAmountConverter() String amountPaid,@ApiAmountConverter() String balance, List<BreakdownLineItem> items
 });
 
 
@@ -1704,7 +1704,7 @@ as List<BreakdownLineItem>,
 /// @nodoc
 mixin _$InvoicePaymentSummary {
 
- String get id; String get amount; PaymentMethod? get method; String get methodLabel; DateTime get paidAt; String? get reference;
+ String get id;@ApiAmountConverter() String get amount;@JsonKey(unknownEnumValue: PaymentMethod.cash) PaymentMethod? get method; String get methodLabel; DateTime get paidAt; String? get reference;
 /// Create a copy of InvoicePaymentSummary
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -1737,7 +1737,7 @@ abstract mixin class $InvoicePaymentSummaryCopyWith<$Res>  {
   factory $InvoicePaymentSummaryCopyWith(InvoicePaymentSummary value, $Res Function(InvoicePaymentSummary) _then) = _$InvoicePaymentSummaryCopyWithImpl;
 @useResult
 $Res call({
- String id, String amount, PaymentMethod? method, String methodLabel, DateTime paidAt, String? reference
+ String id,@ApiAmountConverter() String amount,@JsonKey(unknownEnumValue: PaymentMethod.cash) PaymentMethod? method, String methodLabel, DateTime paidAt, String? reference
 });
 
 
@@ -1847,7 +1847,7 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String id,  String amount,  PaymentMethod? method,  String methodLabel,  DateTime paidAt,  String? reference)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String id, @ApiAmountConverter()  String amount, @JsonKey(unknownEnumValue: PaymentMethod.cash)  PaymentMethod? method,  String methodLabel,  DateTime paidAt,  String? reference)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _InvoicePaymentSummary() when $default != null:
 return $default(_that.id,_that.amount,_that.method,_that.methodLabel,_that.paidAt,_that.reference);case _:
@@ -1868,7 +1868,7 @@ return $default(_that.id,_that.amount,_that.method,_that.methodLabel,_that.paidA
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String id,  String amount,  PaymentMethod? method,  String methodLabel,  DateTime paidAt,  String? reference)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String id, @ApiAmountConverter()  String amount, @JsonKey(unknownEnumValue: PaymentMethod.cash)  PaymentMethod? method,  String methodLabel,  DateTime paidAt,  String? reference)  $default,) {final _that = this;
 switch (_that) {
 case _InvoicePaymentSummary():
 return $default(_that.id,_that.amount,_that.method,_that.methodLabel,_that.paidAt,_that.reference);case _:
@@ -1888,7 +1888,7 @@ return $default(_that.id,_that.amount,_that.method,_that.methodLabel,_that.paidA
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String id,  String amount,  PaymentMethod? method,  String methodLabel,  DateTime paidAt,  String? reference)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String id, @ApiAmountConverter()  String amount, @JsonKey(unknownEnumValue: PaymentMethod.cash)  PaymentMethod? method,  String methodLabel,  DateTime paidAt,  String? reference)?  $default,) {final _that = this;
 switch (_that) {
 case _InvoicePaymentSummary() when $default != null:
 return $default(_that.id,_that.amount,_that.method,_that.methodLabel,_that.paidAt,_that.reference);case _:
@@ -1903,13 +1903,13 @@ return $default(_that.id,_that.amount,_that.method,_that.methodLabel,_that.paidA
 @JsonSerializable()
 
 class _InvoicePaymentSummary implements InvoicePaymentSummary {
-  const _InvoicePaymentSummary({required this.id, required this.amount, this.method, required this.methodLabel, required this.paidAt, this.reference});
+  const _InvoicePaymentSummary({required this.id, @ApiAmountConverter() required this.amount, @JsonKey(unknownEnumValue: PaymentMethod.cash) this.method, this.methodLabel = '', required this.paidAt, this.reference});
   factory _InvoicePaymentSummary.fromJson(Map<String, dynamic> json) => _$InvoicePaymentSummaryFromJson(json);
 
 @override final  String id;
-@override final  String amount;
-@override final  PaymentMethod? method;
-@override final  String methodLabel;
+@override@ApiAmountConverter() final  String amount;
+@override@JsonKey(unknownEnumValue: PaymentMethod.cash) final  PaymentMethod? method;
+@override@JsonKey() final  String methodLabel;
 @override final  DateTime paidAt;
 @override final  String? reference;
 
@@ -1946,7 +1946,7 @@ abstract mixin class _$InvoicePaymentSummaryCopyWith<$Res> implements $InvoicePa
   factory _$InvoicePaymentSummaryCopyWith(_InvoicePaymentSummary value, $Res Function(_InvoicePaymentSummary) _then) = __$InvoicePaymentSummaryCopyWithImpl;
 @override @useResult
 $Res call({
- String id, String amount, PaymentMethod? method, String methodLabel, DateTime paidAt, String? reference
+ String id,@ApiAmountConverter() String amount,@JsonKey(unknownEnumValue: PaymentMethod.cash) PaymentMethod? method, String methodLabel, DateTime paidAt, String? reference
 });
 
 
@@ -1982,7 +1982,7 @@ as String?,
 /// @nodoc
 mixin _$InvoiceDetail {
 
- String get id; String get invoiceNumber; BillType get billType; InvoiceStatus get status; DateTime get issuedAt; String get totalAmount; String get amountPaid; String get balance; PatientAdmissionSummary? get admission; List<BreakdownCategory> get breakdown; List<InvoicePaymentSummary> get payments;
+ String get id; String get invoiceNumber; BillType get billType; InvoiceStatus get status; DateTime get issuedAt;@ApiAmountConverter() String get totalAmount;@ApiAmountConverter() String get amountPaid;@ApiAmountConverter() String get balance; PatientAdmissionSummary? get admission; List<BreakdownCategory> get breakdown; List<InvoicePaymentSummary> get payments;
 /// Create a copy of InvoiceDetail
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -2015,7 +2015,7 @@ abstract mixin class $InvoiceDetailCopyWith<$Res>  {
   factory $InvoiceDetailCopyWith(InvoiceDetail value, $Res Function(InvoiceDetail) _then) = _$InvoiceDetailCopyWithImpl;
 @useResult
 $Res call({
- String id, String invoiceNumber, BillType billType, InvoiceStatus status, DateTime issuedAt, String totalAmount, String amountPaid, String balance, PatientAdmissionSummary? admission, List<BreakdownCategory> breakdown, List<InvoicePaymentSummary> payments
+ String id, String invoiceNumber, BillType billType, InvoiceStatus status, DateTime issuedAt,@ApiAmountConverter() String totalAmount,@ApiAmountConverter() String amountPaid,@ApiAmountConverter() String balance, PatientAdmissionSummary? admission, List<BreakdownCategory> breakdown, List<InvoicePaymentSummary> payments
 });
 
 
@@ -2142,7 +2142,7 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String id,  String invoiceNumber,  BillType billType,  InvoiceStatus status,  DateTime issuedAt,  String totalAmount,  String amountPaid,  String balance,  PatientAdmissionSummary? admission,  List<BreakdownCategory> breakdown,  List<InvoicePaymentSummary> payments)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String id,  String invoiceNumber,  BillType billType,  InvoiceStatus status,  DateTime issuedAt, @ApiAmountConverter()  String totalAmount, @ApiAmountConverter()  String amountPaid, @ApiAmountConverter()  String balance,  PatientAdmissionSummary? admission,  List<BreakdownCategory> breakdown,  List<InvoicePaymentSummary> payments)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _InvoiceDetail() when $default != null:
 return $default(_that.id,_that.invoiceNumber,_that.billType,_that.status,_that.issuedAt,_that.totalAmount,_that.amountPaid,_that.balance,_that.admission,_that.breakdown,_that.payments);case _:
@@ -2163,7 +2163,7 @@ return $default(_that.id,_that.invoiceNumber,_that.billType,_that.status,_that.i
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String id,  String invoiceNumber,  BillType billType,  InvoiceStatus status,  DateTime issuedAt,  String totalAmount,  String amountPaid,  String balance,  PatientAdmissionSummary? admission,  List<BreakdownCategory> breakdown,  List<InvoicePaymentSummary> payments)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String id,  String invoiceNumber,  BillType billType,  InvoiceStatus status,  DateTime issuedAt, @ApiAmountConverter()  String totalAmount, @ApiAmountConverter()  String amountPaid, @ApiAmountConverter()  String balance,  PatientAdmissionSummary? admission,  List<BreakdownCategory> breakdown,  List<InvoicePaymentSummary> payments)  $default,) {final _that = this;
 switch (_that) {
 case _InvoiceDetail():
 return $default(_that.id,_that.invoiceNumber,_that.billType,_that.status,_that.issuedAt,_that.totalAmount,_that.amountPaid,_that.balance,_that.admission,_that.breakdown,_that.payments);case _:
@@ -2183,7 +2183,7 @@ return $default(_that.id,_that.invoiceNumber,_that.billType,_that.status,_that.i
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String id,  String invoiceNumber,  BillType billType,  InvoiceStatus status,  DateTime issuedAt,  String totalAmount,  String amountPaid,  String balance,  PatientAdmissionSummary? admission,  List<BreakdownCategory> breakdown,  List<InvoicePaymentSummary> payments)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String id,  String invoiceNumber,  BillType billType,  InvoiceStatus status,  DateTime issuedAt, @ApiAmountConverter()  String totalAmount, @ApiAmountConverter()  String amountPaid, @ApiAmountConverter()  String balance,  PatientAdmissionSummary? admission,  List<BreakdownCategory> breakdown,  List<InvoicePaymentSummary> payments)?  $default,) {final _that = this;
 switch (_that) {
 case _InvoiceDetail() when $default != null:
 return $default(_that.id,_that.invoiceNumber,_that.billType,_that.status,_that.issuedAt,_that.totalAmount,_that.amountPaid,_that.balance,_that.admission,_that.breakdown,_that.payments);case _:
@@ -2198,7 +2198,7 @@ return $default(_that.id,_that.invoiceNumber,_that.billType,_that.status,_that.i
 @JsonSerializable()
 
 class _InvoiceDetail implements InvoiceDetail {
-  const _InvoiceDetail({required this.id, required this.invoiceNumber, required this.billType, required this.status, required this.issuedAt, required this.totalAmount, required this.amountPaid, required this.balance, this.admission, final  List<BreakdownCategory> breakdown = const [], final  List<InvoicePaymentSummary> payments = const []}): _breakdown = breakdown,_payments = payments;
+  const _InvoiceDetail({required this.id, required this.invoiceNumber, required this.billType, required this.status, required this.issuedAt, @ApiAmountConverter() required this.totalAmount, @ApiAmountConverter() required this.amountPaid, @ApiAmountConverter() required this.balance, this.admission, final  List<BreakdownCategory> breakdown = const [], final  List<InvoicePaymentSummary> payments = const []}): _breakdown = breakdown,_payments = payments;
   factory _InvoiceDetail.fromJson(Map<String, dynamic> json) => _$InvoiceDetailFromJson(json);
 
 @override final  String id;
@@ -2206,9 +2206,9 @@ class _InvoiceDetail implements InvoiceDetail {
 @override final  BillType billType;
 @override final  InvoiceStatus status;
 @override final  DateTime issuedAt;
-@override final  String totalAmount;
-@override final  String amountPaid;
-@override final  String balance;
+@override@ApiAmountConverter() final  String totalAmount;
+@override@ApiAmountConverter() final  String amountPaid;
+@override@ApiAmountConverter() final  String balance;
 @override final  PatientAdmissionSummary? admission;
  final  List<BreakdownCategory> _breakdown;
 @override@JsonKey() List<BreakdownCategory> get breakdown {
@@ -2258,7 +2258,7 @@ abstract mixin class _$InvoiceDetailCopyWith<$Res> implements $InvoiceDetailCopy
   factory _$InvoiceDetailCopyWith(_InvoiceDetail value, $Res Function(_InvoiceDetail) _then) = __$InvoiceDetailCopyWithImpl;
 @override @useResult
 $Res call({
- String id, String invoiceNumber, BillType billType, InvoiceStatus status, DateTime issuedAt, String totalAmount, String amountPaid, String balance, PatientAdmissionSummary? admission, List<BreakdownCategory> breakdown, List<InvoicePaymentSummary> payments
+ String id, String invoiceNumber, BillType billType, InvoiceStatus status, DateTime issuedAt,@ApiAmountConverter() String totalAmount,@ApiAmountConverter() String amountPaid,@ApiAmountConverter() String balance, PatientAdmissionSummary? admission, List<BreakdownCategory> breakdown, List<InvoicePaymentSummary> payments
 });
 
 
@@ -2311,7 +2311,7 @@ $PatientAdmissionSummaryCopyWith<$Res>? get admission {
 /// @nodoc
 mixin _$PaymentHistoryItem {
 
- String get id; String get invoiceId; String get invoiceNumber; String get description; String get amount; PaymentMethod? get method; String get methodLabel; String get methodDetail; DateTime get paidAt; String get status;
+ String get id; String get invoiceId; String get invoiceNumber; String get description;@ApiAmountConverter() String get amount;@JsonKey(unknownEnumValue: PaymentMethod.cash) PaymentMethod? get method; String get methodLabel; String get methodDetail; DateTime get paidAt; String get status;
 /// Create a copy of PaymentHistoryItem
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -2344,7 +2344,7 @@ abstract mixin class $PaymentHistoryItemCopyWith<$Res>  {
   factory $PaymentHistoryItemCopyWith(PaymentHistoryItem value, $Res Function(PaymentHistoryItem) _then) = _$PaymentHistoryItemCopyWithImpl;
 @useResult
 $Res call({
- String id, String invoiceId, String invoiceNumber, String description, String amount, PaymentMethod? method, String methodLabel, String methodDetail, DateTime paidAt, String status
+ String id, String invoiceId, String invoiceNumber, String description,@ApiAmountConverter() String amount,@JsonKey(unknownEnumValue: PaymentMethod.cash) PaymentMethod? method, String methodLabel, String methodDetail, DateTime paidAt, String status
 });
 
 
@@ -2458,7 +2458,7 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String id,  String invoiceId,  String invoiceNumber,  String description,  String amount,  PaymentMethod? method,  String methodLabel,  String methodDetail,  DateTime paidAt,  String status)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String id,  String invoiceId,  String invoiceNumber,  String description, @ApiAmountConverter()  String amount, @JsonKey(unknownEnumValue: PaymentMethod.cash)  PaymentMethod? method,  String methodLabel,  String methodDetail,  DateTime paidAt,  String status)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _PaymentHistoryItem() when $default != null:
 return $default(_that.id,_that.invoiceId,_that.invoiceNumber,_that.description,_that.amount,_that.method,_that.methodLabel,_that.methodDetail,_that.paidAt,_that.status);case _:
@@ -2479,7 +2479,7 @@ return $default(_that.id,_that.invoiceId,_that.invoiceNumber,_that.description,_
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String id,  String invoiceId,  String invoiceNumber,  String description,  String amount,  PaymentMethod? method,  String methodLabel,  String methodDetail,  DateTime paidAt,  String status)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String id,  String invoiceId,  String invoiceNumber,  String description, @ApiAmountConverter()  String amount, @JsonKey(unknownEnumValue: PaymentMethod.cash)  PaymentMethod? method,  String methodLabel,  String methodDetail,  DateTime paidAt,  String status)  $default,) {final _that = this;
 switch (_that) {
 case _PaymentHistoryItem():
 return $default(_that.id,_that.invoiceId,_that.invoiceNumber,_that.description,_that.amount,_that.method,_that.methodLabel,_that.methodDetail,_that.paidAt,_that.status);case _:
@@ -2499,7 +2499,7 @@ return $default(_that.id,_that.invoiceId,_that.invoiceNumber,_that.description,_
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String id,  String invoiceId,  String invoiceNumber,  String description,  String amount,  PaymentMethod? method,  String methodLabel,  String methodDetail,  DateTime paidAt,  String status)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String id,  String invoiceId,  String invoiceNumber,  String description, @ApiAmountConverter()  String amount, @JsonKey(unknownEnumValue: PaymentMethod.cash)  PaymentMethod? method,  String methodLabel,  String methodDetail,  DateTime paidAt,  String status)?  $default,) {final _that = this;
 switch (_that) {
 case _PaymentHistoryItem() when $default != null:
 return $default(_that.id,_that.invoiceId,_that.invoiceNumber,_that.description,_that.amount,_that.method,_that.methodLabel,_that.methodDetail,_that.paidAt,_that.status);case _:
@@ -2514,17 +2514,17 @@ return $default(_that.id,_that.invoiceId,_that.invoiceNumber,_that.description,_
 @JsonSerializable()
 
 class _PaymentHistoryItem implements PaymentHistoryItem {
-  const _PaymentHistoryItem({required this.id, required this.invoiceId, required this.invoiceNumber, required this.description, required this.amount, this.method, required this.methodLabel, required this.methodDetail, required this.paidAt, this.status = 'SUCCESS'});
+  const _PaymentHistoryItem({required this.id, this.invoiceId = '', this.invoiceNumber = '', this.description = '', @ApiAmountConverter() this.amount = '0', @JsonKey(unknownEnumValue: PaymentMethod.cash) this.method, this.methodLabel = '', this.methodDetail = '', required this.paidAt, this.status = 'SUCCESS'});
   factory _PaymentHistoryItem.fromJson(Map<String, dynamic> json) => _$PaymentHistoryItemFromJson(json);
 
 @override final  String id;
-@override final  String invoiceId;
-@override final  String invoiceNumber;
-@override final  String description;
-@override final  String amount;
-@override final  PaymentMethod? method;
-@override final  String methodLabel;
-@override final  String methodDetail;
+@override@JsonKey() final  String invoiceId;
+@override@JsonKey() final  String invoiceNumber;
+@override@JsonKey() final  String description;
+@override@JsonKey()@ApiAmountConverter() final  String amount;
+@override@JsonKey(unknownEnumValue: PaymentMethod.cash) final  PaymentMethod? method;
+@override@JsonKey() final  String methodLabel;
+@override@JsonKey() final  String methodDetail;
 @override final  DateTime paidAt;
 @override@JsonKey() final  String status;
 
@@ -2561,7 +2561,7 @@ abstract mixin class _$PaymentHistoryItemCopyWith<$Res> implements $PaymentHisto
   factory _$PaymentHistoryItemCopyWith(_PaymentHistoryItem value, $Res Function(_PaymentHistoryItem) _then) = __$PaymentHistoryItemCopyWithImpl;
 @override @useResult
 $Res call({
- String id, String invoiceId, String invoiceNumber, String description, String amount, PaymentMethod? method, String methodLabel, String methodDetail, DateTime paidAt, String status
+ String id, String invoiceId, String invoiceNumber, String description,@ApiAmountConverter() String amount,@JsonKey(unknownEnumValue: PaymentMethod.cash) PaymentMethod? method, String methodLabel, String methodDetail, DateTime paidAt, String status
 });
 
 
@@ -2798,7 +2798,7 @@ return $default(_that.data,_that.total,_that.page,_that.limit);case _:
 @JsonSerializable()
 
 class _PaymentListResponse implements PaymentListResponse {
-  const _PaymentListResponse({required final  List<PaymentHistoryItem> data, required this.total, required this.page, required this.limit}): _data = data;
+  const _PaymentListResponse({required final  List<PaymentHistoryItem> data, this.total = 0, this.page = 1, this.limit = 20}): _data = data;
   factory _PaymentListResponse.fromJson(Map<String, dynamic> json) => _$PaymentListResponseFromJson(json);
 
  final  List<PaymentHistoryItem> _data;
@@ -2808,9 +2808,9 @@ class _PaymentListResponse implements PaymentListResponse {
   return EqualUnmodifiableListView(_data);
 }
 
-@override final  int total;
-@override final  int page;
-@override final  int limit;
+@override@JsonKey() final  int total;
+@override@JsonKey() final  int page;
+@override@JsonKey() final  int limit;
 
 /// Create a copy of PaymentListResponse
 /// with the given fields replaced by the non-null parameter values.
@@ -2879,7 +2879,7 @@ as int,
 /// @nodoc
 mixin _$ReceiptResponse {
 
- String get id; String get invoiceNumber; String get amount; DateTime get paidAt; PaymentMethod? get method; String get methodLabel; String? get url;
+ String get id; String get invoiceNumber;@ApiAmountConverter() String get amount; DateTime get paidAt;@JsonKey(unknownEnumValue: PaymentMethod.cash) PaymentMethod? get method; String get methodLabel; String? get url;
 /// Create a copy of ReceiptResponse
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -2912,7 +2912,7 @@ abstract mixin class $ReceiptResponseCopyWith<$Res>  {
   factory $ReceiptResponseCopyWith(ReceiptResponse value, $Res Function(ReceiptResponse) _then) = _$ReceiptResponseCopyWithImpl;
 @useResult
 $Res call({
- String id, String invoiceNumber, String amount, DateTime paidAt, PaymentMethod? method, String methodLabel, String? url
+ String id, String invoiceNumber,@ApiAmountConverter() String amount, DateTime paidAt,@JsonKey(unknownEnumValue: PaymentMethod.cash) PaymentMethod? method, String methodLabel, String? url
 });
 
 
@@ -3023,7 +3023,7 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String id,  String invoiceNumber,  String amount,  DateTime paidAt,  PaymentMethod? method,  String methodLabel,  String? url)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String id,  String invoiceNumber, @ApiAmountConverter()  String amount,  DateTime paidAt, @JsonKey(unknownEnumValue: PaymentMethod.cash)  PaymentMethod? method,  String methodLabel,  String? url)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _ReceiptResponse() when $default != null:
 return $default(_that.id,_that.invoiceNumber,_that.amount,_that.paidAt,_that.method,_that.methodLabel,_that.url);case _:
@@ -3044,7 +3044,7 @@ return $default(_that.id,_that.invoiceNumber,_that.amount,_that.paidAt,_that.met
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String id,  String invoiceNumber,  String amount,  DateTime paidAt,  PaymentMethod? method,  String methodLabel,  String? url)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String id,  String invoiceNumber, @ApiAmountConverter()  String amount,  DateTime paidAt, @JsonKey(unknownEnumValue: PaymentMethod.cash)  PaymentMethod? method,  String methodLabel,  String? url)  $default,) {final _that = this;
 switch (_that) {
 case _ReceiptResponse():
 return $default(_that.id,_that.invoiceNumber,_that.amount,_that.paidAt,_that.method,_that.methodLabel,_that.url);case _:
@@ -3064,7 +3064,7 @@ return $default(_that.id,_that.invoiceNumber,_that.amount,_that.paidAt,_that.met
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String id,  String invoiceNumber,  String amount,  DateTime paidAt,  PaymentMethod? method,  String methodLabel,  String? url)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String id,  String invoiceNumber, @ApiAmountConverter()  String amount,  DateTime paidAt, @JsonKey(unknownEnumValue: PaymentMethod.cash)  PaymentMethod? method,  String methodLabel,  String? url)?  $default,) {final _that = this;
 switch (_that) {
 case _ReceiptResponse() when $default != null:
 return $default(_that.id,_that.invoiceNumber,_that.amount,_that.paidAt,_that.method,_that.methodLabel,_that.url);case _:
@@ -3079,15 +3079,15 @@ return $default(_that.id,_that.invoiceNumber,_that.amount,_that.paidAt,_that.met
 @JsonSerializable()
 
 class _ReceiptResponse implements ReceiptResponse {
-  const _ReceiptResponse({required this.id, required this.invoiceNumber, required this.amount, required this.paidAt, this.method, required this.methodLabel, this.url});
+  const _ReceiptResponse({required this.id, required this.invoiceNumber, @ApiAmountConverter() required this.amount, required this.paidAt, @JsonKey(unknownEnumValue: PaymentMethod.cash) this.method, this.methodLabel = '', this.url});
   factory _ReceiptResponse.fromJson(Map<String, dynamic> json) => _$ReceiptResponseFromJson(json);
 
 @override final  String id;
 @override final  String invoiceNumber;
-@override final  String amount;
+@override@ApiAmountConverter() final  String amount;
 @override final  DateTime paidAt;
-@override final  PaymentMethod? method;
-@override final  String methodLabel;
+@override@JsonKey(unknownEnumValue: PaymentMethod.cash) final  PaymentMethod? method;
+@override@JsonKey() final  String methodLabel;
 @override final  String? url;
 
 /// Create a copy of ReceiptResponse
@@ -3123,7 +3123,7 @@ abstract mixin class _$ReceiptResponseCopyWith<$Res> implements $ReceiptResponse
   factory _$ReceiptResponseCopyWith(_ReceiptResponse value, $Res Function(_ReceiptResponse) _then) = __$ReceiptResponseCopyWithImpl;
 @override @useResult
 $Res call({
- String id, String invoiceNumber, String amount, DateTime paidAt, PaymentMethod? method, String methodLabel, String? url
+ String id, String invoiceNumber,@ApiAmountConverter() String amount, DateTime paidAt,@JsonKey(unknownEnumValue: PaymentMethod.cash) PaymentMethod? method, String methodLabel, String? url
 });
 
 

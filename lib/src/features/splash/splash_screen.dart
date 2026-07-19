@@ -118,9 +118,14 @@ class _SplashScreenState extends ConsumerState<SplashScreen>
     _navigating = true;
 
     final auth = ref.read(patientAuthProvider);
-    final destination = auth.isAuthenticated
-        ? const PatientShellRoute()
-        : const LoginRoute();
+    final PageRouteInfo destination;
+    if (auth.canAccessApp) {
+      destination = const PatientShellRoute();
+    } else if (auth.isAuthenticated && auth.isDevicePending) {
+      destination = const DevicePendingRoute();
+    } else {
+      destination = const LoginRoute();
+    }
 
     await context.router.replace(destination);
   }

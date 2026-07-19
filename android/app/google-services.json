@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "93126403915",
+    "project_id": "pantri-91766",
+    "storage_bucket": "pantri-91766.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:93126403915:android:10b04d110202d773696ace",
+        "android_client_info": {
+          "package_name": "org.imsh.patient"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyChfayaQ5Mobi9DDBlwpoSkHKJ-ekkUJQU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -7,6 +7,7 @@ import 'package:skeletonizer/skeletonizer.dart';
 import '../../../core/theme/app_design_tokens.dart';
 import '../../../core/theme/context_extensions.dart';
 import '../../../models/lab_result_model.dart';
+import '../../../providers/auth_provider.dart';
 import '../../../providers/lab_results_provider.dart';
 import 'lab_filter_chips.dart';
 import 'lab_history_card.dart';
@@ -21,117 +22,128 @@ class LabResultsBody extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final pagingController = ref.watch(labResultsPagingControllerProvider);
     final filter = ref.watch(labResultFilterProvider);
-    final allItems = pagingController.itemList ?? [];
-    final latest = pickLatestLabResult(allItems);
-    final latestVisible =
-        latest != null && matchesLabFilter(latest, filter);
-    final history = filterLabHistory(allItems, filter, latest: latest);
 
-    return RefreshIndicator(
-      onRefresh: () async {
-        pagingController.refresh();
-      },
-      child: CustomScrollView(
-        slivers: [
-          SliverPadding(
-            padding: const EdgeInsets.fromLTRB(
-              AppDesignTokens.containerPadding,
-              AppDesignTokens.containerPadding,
-              AppDesignTokens.containerPadding,
-              0,
-            ),
-            sliver: SliverToBoxAdapter(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  const LabPageHeader(),
-                  const Gap(AppDesignTokens.spacingMd),
-                  const LabFilterChips(),
-                  if (latestVisible) ...[
-                    const Gap(AppDesignTokens.spacingLg),
-                    LabLatestCard(result: latest),
-                  ],
-                  if (history.isEmpty &&
-                      latestVisible &&
-                      allItems.isNotEmpty) ...[
-                    const Gap(AppDesignTokens.spacingLg),
-                    const LabOfficialDocumentationCard(),
-                  ],
-                  if (history.isNotEmpty) ...[
-                    const Gap(AppDesignTokens.spacingLg),
-                  ] else if (allItems.isNotEmpty &&
-                      filter.isActive &&
-                      !latestVisible) ...[
-                    const Gap(AppDesignTokens.spacingLg),
-                    _FilteredEmptyHint(
-                      onClearFilter: () {
-                        ref.read(labResultFilterProvider.notifier).state =
-                            LabResultFilterChip.all;
-                      },
-                    ),
-                  ],
-                ],
-              ),
-            ),
-          ),
-          PagedSliverList<int, LabResultSummary>(
-            pagingController: pagingController,
-            builderDelegate: PagedChildBuilderDelegate<LabResultSummary>(
-              itemBuilder: (context, result, index) {
-                if (!history.any((r) => r.id == result.id)) {
-                  return const SizedBox.shrink();
-                }
-                final historyIndex =
-                    history.indexWhere((r) => r.id == result.id);
-                final isLast = historyIndex == history.length - 1;
+    return ListenableBuilder(
+      listenable: pagingController,
+      builder: (context, _) {
+        final allItems = pagingController.itemList ?? [];
+        final latest = pickLatestLabResult(allItems);
+        final latestVisible =
+            latest != null && matchesLabFilter(latest, filter);
+        final history = filterLabHistory(allItems, filter, latest: latest);
 
-                return Padding(
-                  padding: EdgeInsets.fromLTRB(
-                    AppDesignTokens.containerPadding,
-                    0,
-                    AppDesignTokens.containerPadding,
-                    isLast ? AppDesignTokens.spacingLg : 0,
-                  ),
+        return RefreshIndicator(
+          onRefresh: () async {
+            pagingController.refresh();
+          },
+          child: CustomScrollView(
+            slivers: [
+              SliverPadding(
+                padding: const EdgeInsets.fromLTRB(
+                  AppDesignTokens.containerPadding,
+                  AppDesignTokens.containerPadding,
+                  AppDesignTokens.containerPadding,
+                  0,
+                ),
+                sliver: SliverToBoxAdapter(
                   child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
-                      LabHistoryCard(result: result),
-                      if (isLast) ...[
+                      const LabPageHeader(),
+                      const Gap(AppDesignTokens.spacingMd),
+                      const LabFilterChips(),
+                      if (latestVisible) ...[
+                        const Gap(AppDesignTokens.spacingLg),
+                        LabLatestCard(result: latest),
+                      ],
+                      if (history.isEmpty &&
+                          latestVisible &&
+                          allItems.isNotEmpty) ...[
                         const Gap(AppDesignTokens.spacingLg),
                         const LabOfficialDocumentationCard(),
-                        const Gap(AppDesignTokens.spacingMd),
+                      ],
+                      if (history.isNotEmpty) ...[
+                        const Gap(AppDesignTokens.spacingLg),
+                      ] else if (allItems.isNotEmpty &&
+                          filter.isActive &&
+                          !latestVisible) ...[
+                        const Gap(AppDesignTokens.spacingLg),
+                        _FilteredEmptyHint(
+                          onClearFilter: () {
+                            ref.read(labResultFilterProvider.notifier).state =
+                                LabResultFilterChip.all;
+                          },
+                        ),
                       ],
                     ],
                   ),
-                );
-              },
-              firstPageErrorIndicatorBuilder: (context) => _ErrorState(
-                message: pagingController.error?.toString() ??
-                    'Unable to load results',
-                onRetry: pagingController.refresh,
+                ),
               ),
-              newPageErrorIndicatorBuilder: (context) => _ErrorState(
-                message: pagingController.error?.toString() ??
-                    'Unable to load more',
-                onRetry: () => pagingController.retryLastFailedRequest(),
+              PagedSliverList<int, LabResultSummary>(
+                pagingController: pagingController,
+                builderDelegate: PagedChildBuilderDelegate<LabResultSummary>(
+                  itemBuilder: (context, result, index) {
+                    if (!history.any((r) => r.id == result.id)) {
+                      return const SizedBox.shrink();
+                    }
+                    final historyIndex = history.indexWhere(
+                      (r) => r.id == result.id,
+                    );
+                    final isLast = historyIndex == history.length - 1;
+
+                    return Padding(
+                      padding: EdgeInsets.fromLTRB(
+                        AppDesignTokens.containerPadding,
+                        0,
+                        AppDesignTokens.containerPadding,
+                        isLast ? AppDesignTokens.spacingLg : 0,
+                      ),
+                      child: Column(
+                        children: [
+                          LabHistoryCard(result: result),
+                          if (isLast) ...[
+                            const Gap(AppDesignTokens.spacingLg),
+                            const LabOfficialDocumentationCard(),
+                            const Gap(AppDesignTokens.spacingMd),
+                          ],
+                        ],
+                      ),
+                    );
+                  },
+                  firstPageErrorIndicatorBuilder: (context) => _ErrorState(
+                    message: authFlowErrorMessage(
+                      pagingController.error ?? 'Unable to load results',
+                    ),
+                    onRetry: pagingController.refresh,
+                  ),
+                  newPageErrorIndicatorBuilder: (context) => _ErrorState(
+                    message: authFlowErrorMessage(
+                      pagingController.error ?? 'Unable to load more',
+                    ),
+                    onRetry: () => pagingController.retryLastFailedRequest(),
+                  ),
+                  firstPageProgressIndicatorBuilder: (context) =>
+                      const _LoadingPlaceholder(),
+                  newPageProgressIndicatorBuilder: (context) => const Padding(
+                    padding: EdgeInsets.symmetric(
+                      vertical: AppDesignTokens.spacingMd,
+                    ),
+                    child: Center(child: CircularProgressIndicator()),
+                  ),
+                  noItemsFoundIndicatorBuilder: (context) =>
+                      _EmptyOrFilteredState(
+                        filterActive: filter.isActive,
+                        onClearFilter: () {
+                          ref.read(labResultFilterProvider.notifier).state =
+                              LabResultFilterChip.all;
+                        },
+                      ),
+                ),
               ),
-              firstPageProgressIndicatorBuilder: (context) =>
-                  const _LoadingPlaceholder(),
-              newPageProgressIndicatorBuilder: (context) => const Padding(
-                padding:
-                    EdgeInsets.symmetric(vertical: AppDesignTokens.spacingMd),
-                child: Center(child: CircularProgressIndicator()),
-              ),
-              noItemsFoundIndicatorBuilder: (context) => _EmptyOrFilteredState(
-                filterActive: filter.isActive,
-                onClearFilter: () {
-                  ref.read(labResultFilterProvider.notifier).state =
-                      LabResultFilterChip.all;
-                },
-              ),
-            ),
+            ],
           ),
-        ],
-      ),
+        );
+      },
     );
   }
 }
@@ -257,10 +269,7 @@ class _EmptyOrFilteredState extends StatelessWidget {
 }
 
 class _ErrorState extends StatelessWidget {
-  const _ErrorState({
-    required this.message,
-    required this.onRetry,
-  });
+  const _ErrorState({required this.message, required this.onRetry});
 
   final String message;
   final VoidCallback onRetry;
@@ -274,11 +283,7 @@ class _ErrorState extends StatelessWidget {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Icon(
-            Icons.error_outline,
-            size: 48,
-            color: theme.colorScheme.error,
-          ),
+          Icon(Icons.error_outline, size: 48, color: theme.colorScheme.error),
           const Gap(AppDesignTokens.spacingMd),
           Text(
             message,
@@ -286,10 +291,7 @@ class _ErrorState extends StatelessWidget {
             textAlign: TextAlign.center,
           ),
           const Gap(AppDesignTokens.spacingMd),
-          FilledButton(
-            onPressed: onRetry,
-            child: const Text('Try again'),
-          ),
+          FilledButton(onPressed: onRetry, child: const Text('Try again')),
         ],
       ),
     );

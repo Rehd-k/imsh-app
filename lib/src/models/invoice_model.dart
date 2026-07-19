@@ -1,5 +1,7 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 
+import '../core/utils/api_amount_converter.dart';
+
 part 'invoice_model.freezed.dart';
 part 'invoice_model.g.dart';
 
@@ -73,8 +75,8 @@ extension ChargeCategoryDisplay on ChargeCategory {
 @freezed
 abstract class BillingSummaryResponse with _$BillingSummaryResponse {
   const factory BillingSummaryResponse({
-    required String totalOutstanding,
-    required int unpaidInvoiceCount,
+    @ApiAmountConverter() @Default('0') String totalOutstanding,
+    @Default(0) int unpaidInvoiceCount,
     DateTime? nextDueDate,
     @Default(0) int daysUntilDue,
     @Default('NGN') String currency,
@@ -93,9 +95,9 @@ abstract class InvoiceSummary with _$InvoiceSummary {
     required BillType billType,
     required InvoiceStatus status,
     required DateTime issuedAt,
-    required String totalAmount,
-    required String amountPaid,
-    required String balance,
+    @ApiAmountConverter() required String totalAmount,
+    @ApiAmountConverter() required String amountPaid,
+    @ApiAmountConverter() required String balance,
   }) = _InvoiceSummary;
 
   factory InvoiceSummary.fromJson(Map<String, dynamic> json) =>
@@ -106,9 +108,9 @@ abstract class InvoiceSummary with _$InvoiceSummary {
 abstract class InvoiceListResponse with _$InvoiceListResponse {
   const factory InvoiceListResponse({
     required List<InvoiceSummary> data,
-    required int total,
-    required int page,
-    required int limit,
+    @Default(0) int total,
+    @Default(1) int page,
+    @Default(20) int limit,
   }) = _InvoiceListResponse;
 
   factory InvoiceListResponse.fromJson(Map<String, dynamic> json) =>
@@ -134,11 +136,11 @@ abstract class BreakdownLineItem with _$BreakdownLineItem {
   const factory BreakdownLineItem({
     required String id,
     required String description,
-    required String unitPrice,
+    @ApiAmountConverter() required String unitPrice,
     required int quantity,
-    required String lineTotal,
-    required String amountPaid,
-    required String balance,
+    @ApiAmountConverter() required String lineTotal,
+    @ApiAmountConverter() required String amountPaid,
+    @ApiAmountConverter() required String balance,
     @Default(false) bool isRecurringDaily,
     int? billableDays,
     String? usageSummary,
@@ -153,9 +155,9 @@ abstract class BreakdownCategory with _$BreakdownCategory {
   const factory BreakdownCategory({
     required ChargeCategory category,
     required String label,
-    required String subtotal,
-    required String amountPaid,
-    required String balance,
+    @ApiAmountConverter() required String subtotal,
+    @ApiAmountConverter() required String amountPaid,
+    @ApiAmountConverter() required String balance,
     @Default([]) List<BreakdownLineItem> items,
   }) = _BreakdownCategory;
 
@@ -167,9 +169,9 @@ abstract class BreakdownCategory with _$BreakdownCategory {
 abstract class InvoicePaymentSummary with _$InvoicePaymentSummary {
   const factory InvoicePaymentSummary({
     required String id,
-    required String amount,
-    PaymentMethod? method,
-    required String methodLabel,
+    @ApiAmountConverter() required String amount,
+    @JsonKey(unknownEnumValue: PaymentMethod.cash) PaymentMethod? method,
+    @Default('') String methodLabel,
     required DateTime paidAt,
     String? reference,
   }) = _InvoicePaymentSummary;
@@ -186,9 +188,9 @@ abstract class InvoiceDetail with _$InvoiceDetail {
     required BillType billType,
     required InvoiceStatus status,
     required DateTime issuedAt,
-    required String totalAmount,
-    required String amountPaid,
-    required String balance,
+    @ApiAmountConverter() required String totalAmount,
+    @ApiAmountConverter() required String amountPaid,
+    @ApiAmountConverter() required String balance,
     PatientAdmissionSummary? admission,
     @Default([]) List<BreakdownCategory> breakdown,
     @Default([]) List<InvoicePaymentSummary> payments,
@@ -202,13 +204,13 @@ abstract class InvoiceDetail with _$InvoiceDetail {
 abstract class PaymentHistoryItem with _$PaymentHistoryItem {
   const factory PaymentHistoryItem({
     required String id,
-    required String invoiceId,
-    required String invoiceNumber,
-    required String description,
-    required String amount,
-    PaymentMethod? method,
-    required String methodLabel,
-    required String methodDetail,
+    @Default('') String invoiceId,
+    @Default('') String invoiceNumber,
+    @Default('') String description,
+    @ApiAmountConverter() @Default('0') String amount,
+    @JsonKey(unknownEnumValue: PaymentMethod.cash) PaymentMethod? method,
+    @Default('') String methodLabel,
+    @Default('') String methodDetail,
     required DateTime paidAt,
     @Default('SUCCESS') String status,
   }) = _PaymentHistoryItem;
@@ -221,9 +223,9 @@ abstract class PaymentHistoryItem with _$PaymentHistoryItem {
 abstract class PaymentListResponse with _$PaymentListResponse {
   const factory PaymentListResponse({
     required List<PaymentHistoryItem> data,
-    required int total,
-    required int page,
-    required int limit,
+    @Default(0) int total,
+    @Default(1) int page,
+    @Default(20) int limit,
   }) = _PaymentListResponse;
 
   factory PaymentListResponse.fromJson(Map<String, dynamic> json) =>
@@ -235,10 +237,10 @@ abstract class ReceiptResponse with _$ReceiptResponse {
   const factory ReceiptResponse({
     required String id,
     required String invoiceNumber,
-    required String amount,
+    @ApiAmountConverter() required String amount,
     required DateTime paidAt,
-    PaymentMethod? method,
-    required String methodLabel,
+    @JsonKey(unknownEnumValue: PaymentMethod.cash) PaymentMethod? method,
+    @Default('') String methodLabel,
     String? url,
   }) = _ReceiptResponse;
 

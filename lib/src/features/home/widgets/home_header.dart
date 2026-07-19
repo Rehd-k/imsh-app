@@ -7,6 +7,7 @@ import 'package:imsh/app_router.gr.dart';
 import '../../../core/theme/app_design_tokens.dart';
 import '../../../models/patient_model.dart';
 import '../../../providers/auth_provider.dart';
+import '../../../shared/widgets/patient_avatar.dart';
 
 class HomeHeader extends ConsumerWidget {
   const HomeHeader({super.key});
@@ -15,7 +16,6 @@ class HomeHeader extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final patient = ref.watch(currentPatientProvider);
     final theme = Theme.of(context);
-    final colorScheme = theme.colorScheme;
 
     return Padding(
       padding: const EdgeInsets.fromLTRB(
@@ -26,23 +26,13 @@ class HomeHeader extends ConsumerWidget {
       ),
       child: Row(
         children: [
-          CircleAvatar(
-            radius: 22,
-            backgroundColor: colorScheme.primaryContainer,
-            child: Text(
-              patient?.initials ?? '?',
-              style: theme.textTheme.titleSmall?.copyWith(
-                color: colorScheme.onPrimaryContainer,
-                fontWeight: FontWeight.w700,
-              ),
-            ),
-          ),
+          PatientAvatar(patient: patient, radius: 22),
           Expanded(
             child: Text(
               'Ibom Specialist',
               textAlign: TextAlign.center,
               style: theme.textTheme.titleLarge?.copyWith(
-                color: colorScheme.primary,
+                color: Theme.of(context).colorScheme.primary,
                 fontWeight: FontWeight.w700,
               ),
             ),

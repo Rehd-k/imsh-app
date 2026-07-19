@@ -43,11 +43,15 @@ class BillsScreen extends ConsumerWidget {
               ),
             ),
             firstPageErrorIndicatorBuilder: (context) => _ListError(
-              message: pagingController.error?.toString() ?? 'Unable to load bills',
+              message: authFlowErrorMessage(
+                pagingController.error ?? 'Unable to load bills',
+              ),
               onRetry: pagingController.refresh,
             ),
             newPageErrorIndicatorBuilder: (context) => _ListError(
-              message: pagingController.error?.toString() ?? 'Unable to load more',
+              message: authFlowErrorMessage(
+                pagingController.error ?? 'Unable to load more',
+              ),
               onRetry: () => pagingController.retryLastFailedRequest(),
             ),
             firstPageProgressIndicatorBuilder: (context) => const Center(

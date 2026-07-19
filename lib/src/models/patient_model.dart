@@ -1,5 +1,7 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 
+import 'device_model.dart';
+
 part 'patient_model.freezed.dart';
 part 'patient_model.g.dart';
 
@@ -19,6 +21,7 @@ abstract class Patient with _$Patient {
     String? phoneNumber,
     String? addressOfResidence,
     String? hmo,
+    String? avatarUrl,
   }) = _Patient;
 
   factory Patient.fromJson(Map<String, dynamic> json) => _$PatientFromJson(json);
@@ -29,6 +32,7 @@ abstract class PatientLoginResponse with _$PatientLoginResponse {
   const factory PatientLoginResponse({
     required String accessToken,
     required Patient patient,
+    required PatientDevice device,
   }) = _PatientLoginResponse;
 
   factory PatientLoginResponse.fromJson(Map<String, dynamic> json) =>

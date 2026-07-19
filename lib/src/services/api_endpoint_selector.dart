@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:dio/dio.dart';
 
 import '../config/api_config.dart';
+import '../core/errors/app_exception.dart';
 import '../models/server_time_model.dart';
 import 'server_time_service.dart';
 
@@ -41,15 +42,15 @@ class ApiEndpointSelector {
             completer.complete(result);
           }
         }).catchError((Object e) {
-          failures.add('$baseUrl: $e');
+          debugLogApi('ApiEndpointSelector: probe failed for $baseUrl: $e');
+          failures.add(baseUrl);
           pending--;
           if (pending == 0 && !completer.isCompleted) {
-            completer.completeError(
-              Exception(
-                'None of the configured servers responded.\n'
-                '${failures.join('\n')}',
-              ),
+            debugLogApi(
+              'ApiEndpointSelector: all probes failed '
+              '(${failures.length} candidates)',
             );
+            completer.completeError(const NetworkException());
           }
         }),
       );
@@ -91,8 +92,8 @@ class ApiEndpointSelector {
         serverTime: payload,
         latency: latency,
       );
-    } on DioException catch (e) {
-      throw Exception(e.message ?? e.type.name);
+    } on DioException {
+      throw const NetworkException();
     } finally {
       dio.close(force: true);
     }

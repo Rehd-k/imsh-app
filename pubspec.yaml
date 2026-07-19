@@ -36,9 +36,15 @@ dependencies:
   package_info_plus: ^9.0.0
   url_launcher: ^6.3.1
   flutter_pdfview: ^1.4.4
-
+  printing: ^5.14.2
+  file_picker: ^8.1.7
+  image_picker: ^1.1.2
+  image_cropper: ^9.1.0
   # Config
   envied: ^1.1.1
+  firebase_core: ^4.12.1
+  firebase_messaging: ^16.4.3
+  uuid: ^4.6.0
 
 dev_dependencies:
   flutter_test:

@@ -43,9 +43,9 @@ class QuickActionsRow extends StatelessWidget {
           ),
           child: Text(
             'Quick Actions',
-            style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                  fontWeight: FontWeight.w700,
-                ),
+            style: Theme.of(
+              context,
+            ).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w700),
           ),
         ),
         const Gap(AppDesignTokens.spacingMd),
@@ -57,8 +57,7 @@ class QuickActionsRow extends StatelessWidget {
               horizontal: AppDesignTokens.containerPadding,
             ),
             itemCount: actions.length,
-            separatorBuilder: (_, __) =>
-                const Gap(AppDesignTokens.spacingMd),
+            separatorBuilder: (_, __) => const Gap(AppDesignTokens.spacingMd),
             itemBuilder: (context, index) {
               final action = actions[index];
               return SizedBox(
@@ -123,6 +122,13 @@ class QuickActionsRow extends StatelessWidget {
         backgroundColor: muted,
         foregroundColor: mutedForeground,
         onTap: onPayBill,
+      ),
+      _QuickActionData(
+        icon: Icons.forum_outlined,
+        label: 'Feedback',
+        backgroundColor: muted,
+        foregroundColor: mutedForeground,
+        onTap: () => context.router.push(const PatientFeedbackRoute()),
       ),
       _QuickActionData(
         icon: Icons.how_to_reg_outlined,

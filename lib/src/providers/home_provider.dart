@@ -6,6 +6,7 @@ import '../models/medical_records_dashboard_model.dart';
 import '../models/medication_model.dart';
 import 'appointments_provider.dart';
 import 'auth_provider.dart';
+import 'family_provider.dart';
 import 'medications_provider.dart';
 import 'medical_records_provider.dart';
 import 'service_providers.dart';
@@ -54,11 +55,15 @@ final homeDashboardProvider =
   final medicationService = ref.watch(medicationServiceProvider);
   final medicalRecordService = ref.watch(medicalRecordServiceProvider);
   final billingService = ref.watch(billingServiceProvider);
+  final forPatientId = watchForPatientId(ref);
 
   final results = await Future.wait([
-    appointmentService.getDashboard(AppointmentFilterTab.upcoming),
+    appointmentService.getDashboard(
+      AppointmentFilterTab.upcoming,
+      forPatientId: forPatientId,
+    ),
     medicationService.getDashboard(),
-    medicalRecordService.getDashboard(),
+    medicalRecordService.getDashboard(forPatientId: forPatientId),
     billingService.getBillingSummary(),
   ]);
 

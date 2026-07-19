@@ -9,8 +9,10 @@ part of 'invoice_model.dart';
 _BillingSummaryResponse _$BillingSummaryResponseFromJson(
   Map<String, dynamic> json,
 ) => _BillingSummaryResponse(
-  totalOutstanding: json['totalOutstanding'] as String,
-  unpaidInvoiceCount: (json['unpaidInvoiceCount'] as num).toInt(),
+  totalOutstanding: json['totalOutstanding'] == null
+      ? '0'
+      : const ApiAmountConverter().fromJson(json['totalOutstanding']),
+  unpaidInvoiceCount: (json['unpaidInvoiceCount'] as num?)?.toInt() ?? 0,
   nextDueDate: json['nextDueDate'] == null
       ? null
       : DateTime.parse(json['nextDueDate'] as String),
@@ -21,7 +23,9 @@ _BillingSummaryResponse _$BillingSummaryResponseFromJson(
 Map<String, dynamic> _$BillingSummaryResponseToJson(
   _BillingSummaryResponse instance,
 ) => <String, dynamic>{
-  'totalOutstanding': instance.totalOutstanding,
+  'totalOutstanding': const ApiAmountConverter().toJson(
+    instance.totalOutstanding,
+  ),
   'unpaidInvoiceCount': instance.unpaidInvoiceCount,
   'nextDueDate': instance.nextDueDate?.toIso8601String(),
   'daysUntilDue': instance.daysUntilDue,
@@ -36,9 +40,9 @@ _InvoiceSummary _$InvoiceSummaryFromJson(Map<String, dynamic> json) =>
       billType: $enumDecode(_$BillTypeEnumMap, json['billType']),
       status: $enumDecode(_$InvoiceStatusEnumMap, json['status']),
       issuedAt: DateTime.parse(json['issuedAt'] as String),
-      totalAmount: json['totalAmount'] as String,
-      amountPaid: json['amountPaid'] as String,
-      balance: json['balance'] as String,
+      totalAmount: const ApiAmountConverter().fromJson(json['totalAmount']),
+      amountPaid: const ApiAmountConverter().fromJson(json['amountPaid']),
+      balance: const ApiAmountConverter().fromJson(json['balance']),
     );
 
 Map<String, dynamic> _$InvoiceSummaryToJson(_InvoiceSummary instance) =>
@@ -49,9 +53,9 @@ Map<String, dynamic> _$InvoiceSummaryToJson(_InvoiceSummary instance) =>
       'billType': _$BillTypeEnumMap[instance.billType]!,
       'status': _$InvoiceStatusEnumMap[instance.status]!,
       'issuedAt': instance.issuedAt.toIso8601String(),
-      'totalAmount': instance.totalAmount,
-      'amountPaid': instance.amountPaid,
-      'balance': instance.balance,
+      'totalAmount': const ApiAmountConverter().toJson(instance.totalAmount),
+      'amountPaid': const ApiAmountConverter().toJson(instance.amountPaid),
+      'balance': const ApiAmountConverter().toJson(instance.balance),
     };
 
 const _$BillTypeEnumMap = {
@@ -70,9 +74,9 @@ _InvoiceListResponse _$InvoiceListResponseFromJson(Map<String, dynamic> json) =>
       data: (json['data'] as List<dynamic>)
           .map((e) => InvoiceSummary.fromJson(e as Map<String, dynamic>))
           .toList(),
-      total: (json['total'] as num).toInt(),
-      page: (json['page'] as num).toInt(),
-      limit: (json['limit'] as num).toInt(),
+      total: (json['total'] as num?)?.toInt() ?? 0,
+      page: (json['page'] as num?)?.toInt() ?? 1,
+      limit: (json['limit'] as num?)?.toInt() ?? 20,
     );
 
 Map<String, dynamic> _$InvoiceListResponseToJson(
@@ -110,11 +114,11 @@ _BreakdownLineItem _$BreakdownLineItemFromJson(Map<String, dynamic> json) =>
     _BreakdownLineItem(
       id: json['id'] as String,
       description: json['description'] as String,
-      unitPrice: json['unitPrice'] as String,
+      unitPrice: const ApiAmountConverter().fromJson(json['unitPrice']),
       quantity: (json['quantity'] as num).toInt(),
-      lineTotal: json['lineTotal'] as String,
-      amountPaid: json['amountPaid'] as String,
-      balance: json['balance'] as String,
+      lineTotal: const ApiAmountConverter().fromJson(json['lineTotal']),
+      amountPaid: const ApiAmountConverter().fromJson(json['amountPaid']),
+      balance: const ApiAmountConverter().fromJson(json['balance']),
       isRecurringDaily: json['isRecurringDaily'] as bool? ?? false,
       billableDays: (json['billableDays'] as num?)?.toInt(),
       usageSummary: json['usageSummary'] as String?,
@@ -124,11 +128,11 @@ Map<String, dynamic> _$BreakdownLineItemToJson(_BreakdownLineItem instance) =>
     <String, dynamic>{
       'id': instance.id,
       'description': instance.description,
-      'unitPrice': instance.unitPrice,
+      'unitPrice': const ApiAmountConverter().toJson(instance.unitPrice),
       'quantity': instance.quantity,
-      'lineTotal': instance.lineTotal,
-      'amountPaid': instance.amountPaid,
-      'balance': instance.balance,
+      'lineTotal': const ApiAmountConverter().toJson(instance.lineTotal),
+      'amountPaid': const ApiAmountConverter().toJson(instance.amountPaid),
+      'balance': const ApiAmountConverter().toJson(instance.balance),
       'isRecurringDaily': instance.isRecurringDaily,
       'billableDays': instance.billableDays,
       'usageSummary': instance.usageSummary,
@@ -138,9 +142,9 @@ _BreakdownCategory _$BreakdownCategoryFromJson(Map<String, dynamic> json) =>
     _BreakdownCategory(
       category: $enumDecode(_$ChargeCategoryEnumMap, json['category']),
       label: json['label'] as String,
-      subtotal: json['subtotal'] as String,
-      amountPaid: json['amountPaid'] as String,
-      balance: json['balance'] as String,
+      subtotal: const ApiAmountConverter().fromJson(json['subtotal']),
+      amountPaid: const ApiAmountConverter().fromJson(json['amountPaid']),
+      balance: const ApiAmountConverter().fromJson(json['balance']),
       items:
           (json['items'] as List<dynamic>?)
               ?.map(
@@ -154,9 +158,9 @@ Map<String, dynamic> _$BreakdownCategoryToJson(_BreakdownCategory instance) =>
     <String, dynamic>{
       'category': _$ChargeCategoryEnumMap[instance.category]!,
       'label': instance.label,
-      'subtotal': instance.subtotal,
-      'amountPaid': instance.amountPaid,
-      'balance': instance.balance,
+      'subtotal': const ApiAmountConverter().toJson(instance.subtotal),
+      'amountPaid': const ApiAmountConverter().toJson(instance.amountPaid),
+      'balance': const ApiAmountConverter().toJson(instance.balance),
       'items': instance.items,
     };
 
@@ -172,9 +176,13 @@ _InvoicePaymentSummary _$InvoicePaymentSummaryFromJson(
   Map<String, dynamic> json,
 ) => _InvoicePaymentSummary(
   id: json['id'] as String,
-  amount: json['amount'] as String,
-  method: $enumDecodeNullable(_$PaymentMethodEnumMap, json['method']),
-  methodLabel: json['methodLabel'] as String,
+  amount: const ApiAmountConverter().fromJson(json['amount']),
+  method: $enumDecodeNullable(
+    _$PaymentMethodEnumMap,
+    json['method'],
+    unknownValue: PaymentMethod.cash,
+  ),
+  methodLabel: json['methodLabel'] as String? ?? '',
   paidAt: DateTime.parse(json['paidAt'] as String),
   reference: json['reference'] as String?,
 );
@@ -183,7 +191,7 @@ Map<String, dynamic> _$InvoicePaymentSummaryToJson(
   _InvoicePaymentSummary instance,
 ) => <String, dynamic>{
   'id': instance.id,
-  'amount': instance.amount,
+  'amount': const ApiAmountConverter().toJson(instance.amount),
   'method': _$PaymentMethodEnumMap[instance.method],
   'methodLabel': instance.methodLabel,
   'paidAt': instance.paidAt.toIso8601String(),
@@ -205,9 +213,9 @@ _InvoiceDetail _$InvoiceDetailFromJson(Map<String, dynamic> json) =>
       billType: $enumDecode(_$BillTypeEnumMap, json['billType']),
       status: $enumDecode(_$InvoiceStatusEnumMap, json['status']),
       issuedAt: DateTime.parse(json['issuedAt'] as String),
-      totalAmount: json['totalAmount'] as String,
-      amountPaid: json['amountPaid'] as String,
-      balance: json['balance'] as String,
+      totalAmount: const ApiAmountConverter().fromJson(json['totalAmount']),
+      amountPaid: const ApiAmountConverter().fromJson(json['amountPaid']),
+      balance: const ApiAmountConverter().fromJson(json['balance']),
       admission: json['admission'] == null
           ? null
           : PatientAdmissionSummary.fromJson(
@@ -237,9 +245,9 @@ Map<String, dynamic> _$InvoiceDetailToJson(_InvoiceDetail instance) =>
       'billType': _$BillTypeEnumMap[instance.billType]!,
       'status': _$InvoiceStatusEnumMap[instance.status]!,
       'issuedAt': instance.issuedAt.toIso8601String(),
-      'totalAmount': instance.totalAmount,
-      'amountPaid': instance.amountPaid,
-      'balance': instance.balance,
+      'totalAmount': const ApiAmountConverter().toJson(instance.totalAmount),
+      'amountPaid': const ApiAmountConverter().toJson(instance.amountPaid),
+      'balance': const ApiAmountConverter().toJson(instance.balance),
       'admission': instance.admission,
       'breakdown': instance.breakdown,
       'payments': instance.payments,
@@ -248,13 +256,19 @@ Map<String, dynamic> _$InvoiceDetailToJson(_InvoiceDetail instance) =>
 _PaymentHistoryItem _$PaymentHistoryItemFromJson(Map<String, dynamic> json) =>
     _PaymentHistoryItem(
       id: json['id'] as String,
-      invoiceId: json['invoiceId'] as String,
-      invoiceNumber: json['invoiceNumber'] as String,
-      description: json['description'] as String,
-      amount: json['amount'] as String,
-      method: $enumDecodeNullable(_$PaymentMethodEnumMap, json['method']),
-      methodLabel: json['methodLabel'] as String,
-      methodDetail: json['methodDetail'] as String,
+      invoiceId: json['invoiceId'] as String? ?? '',
+      invoiceNumber: json['invoiceNumber'] as String? ?? '',
+      description: json['description'] as String? ?? '',
+      amount: json['amount'] == null
+          ? '0'
+          : const ApiAmountConverter().fromJson(json['amount']),
+      method: $enumDecodeNullable(
+        _$PaymentMethodEnumMap,
+        json['method'],
+        unknownValue: PaymentMethod.cash,
+      ),
+      methodLabel: json['methodLabel'] as String? ?? '',
+      methodDetail: json['methodDetail'] as String? ?? '',
       paidAt: DateTime.parse(json['paidAt'] as String),
       status: json['status'] as String? ?? 'SUCCESS',
     );
@@ -265,7 +279,7 @@ Map<String, dynamic> _$PaymentHistoryItemToJson(_PaymentHistoryItem instance) =>
       'invoiceId': instance.invoiceId,
       'invoiceNumber': instance.invoiceNumber,
       'description': instance.description,
-      'amount': instance.amount,
+      'amount': const ApiAmountConverter().toJson(instance.amount),
       'method': _$PaymentMethodEnumMap[instance.method],
       'methodLabel': instance.methodLabel,
       'methodDetail': instance.methodDetail,
@@ -278,9 +292,9 @@ _PaymentListResponse _$PaymentListResponseFromJson(Map<String, dynamic> json) =>
       data: (json['data'] as List<dynamic>)
           .map((e) => PaymentHistoryItem.fromJson(e as Map<String, dynamic>))
           .toList(),
-      total: (json['total'] as num).toInt(),
-      page: (json['page'] as num).toInt(),
-      limit: (json['limit'] as num).toInt(),
+      total: (json['total'] as num?)?.toInt() ?? 0,
+      page: (json['page'] as num?)?.toInt() ?? 1,
+      limit: (json['limit'] as num?)?.toInt() ?? 20,
     );
 
 Map<String, dynamic> _$PaymentListResponseToJson(
@@ -296,10 +310,14 @@ _ReceiptResponse _$ReceiptResponseFromJson(Map<String, dynamic> json) =>
     _ReceiptResponse(
       id: json['id'] as String,
       invoiceNumber: json['invoiceNumber'] as String,
-      amount: json['amount'] as String,
+      amount: const ApiAmountConverter().fromJson(json['amount']),
       paidAt: DateTime.parse(json['paidAt'] as String),
-      method: $enumDecodeNullable(_$PaymentMethodEnumMap, json['method']),
-      methodLabel: json['methodLabel'] as String,
+      method: $enumDecodeNullable(
+        _$PaymentMethodEnumMap,
+        json['method'],
+        unknownValue: PaymentMethod.cash,
+      ),
+      methodLabel: json['methodLabel'] as String? ?? '',
       url: json['url'] as String?,
     );
 
@@ -307,7 +325,7 @@ Map<String, dynamic> _$ReceiptResponseToJson(_ReceiptResponse instance) =>
     <String, dynamic>{
       'id': instance.id,
       'invoiceNumber': instance.invoiceNumber,
-      'amount': instance.amount,
+      'amount': const ApiAmountConverter().toJson(instance.amount),
       'paidAt': instance.paidAt.toIso8601String(),
       'method': _$PaymentMethodEnumMap[instance.method],
       'methodLabel': instance.methodLabel,

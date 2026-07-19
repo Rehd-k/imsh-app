@@ -6,6 +6,28 @@ part of 'radiology_report_model.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
+_RadiologyReportImage _$RadiologyReportImageFromJson(
+  Map<String, dynamic> json,
+) => _RadiologyReportImage(
+  id: json['id'] as String,
+  fileName: json['fileName'] as String,
+  mimeType: json['mimeType'] as String?,
+  fileSize: (json['fileSize'] as num?)?.toInt(),
+  uploadedAt: DateTime.parse(json['uploadedAt'] as String),
+  fileUrl: json['fileUrl'] as String,
+);
+
+Map<String, dynamic> _$RadiologyReportImageToJson(
+  _RadiologyReportImage instance,
+) => <String, dynamic>{
+  'id': instance.id,
+  'fileName': instance.fileName,
+  'mimeType': instance.mimeType,
+  'fileSize': instance.fileSize,
+  'uploadedAt': instance.uploadedAt.toIso8601String(),
+  'fileUrl': instance.fileUrl,
+};
+
 _RadiologyReportSummary _$RadiologyReportSummaryFromJson(
   Map<String, dynamic> json,
 ) => _RadiologyReportSummary(
@@ -109,7 +131,18 @@ _RadiologyReportDetail _$RadiologyReportDetailFromJson(
   thumbnailUrl: json['thumbnailUrl'] as String?,
   findings: json['findings'] as String?,
   impression: json['impression'] as String?,
+  recommendations: json['recommendations'] as String?,
+  severity: $enumDecodeNullable(
+    _$RadiologyReportSeverityEnumMap,
+    json['severity'],
+  ),
   reportBody: json['reportBody'] as String?,
+  images:
+      (json['images'] as List<dynamic>?)
+          ?.map((e) => RadiologyReportImage.fromJson(e as Map<String, dynamic>))
+          .toList() ??
+      const [],
+  paymentRequired: json['paymentRequired'] as bool? ?? false,
 );
 
 Map<String, dynamic> _$RadiologyReportDetailToJson(
@@ -128,5 +161,15 @@ Map<String, dynamic> _$RadiologyReportDetailToJson(
   'thumbnailUrl': instance.thumbnailUrl,
   'findings': instance.findings,
   'impression': instance.impression,
+  'recommendations': instance.recommendations,
+  'severity': _$RadiologyReportSeverityEnumMap[instance.severity],
   'reportBody': instance.reportBody,
+  'images': instance.images,
+  'paymentRequired': instance.paymentRequired,
+};
+
+const _$RadiologyReportSeverityEnumMap = {
+  RadiologyReportSeverity.normal: 'NORMAL',
+  RadiologyReportSeverity.abnormal: 'ABNORMAL',
+  RadiologyReportSeverity.critical: 'CRITICAL',
 };

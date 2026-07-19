@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:imsh/app_router.gr.dart';
 
 import '../../providers/auth_provider.dart';
+import '../../providers/family_provider.dart';
 
 Future<void> confirmAndLogout(BuildContext context, WidgetRef ref) async {
   final confirmed = await showDialog<bool>(
@@ -26,6 +27,7 @@ Future<void> confirmAndLogout(BuildContext context, WidgetRef ref) async {
 
   if (confirmed != true || !context.mounted) return;
 
+  ref.read(familyViewProvider.notifier).clear();
   await ref.read(patientAuthProvider.notifier).logout();
   if (!context.mounted) return;
 

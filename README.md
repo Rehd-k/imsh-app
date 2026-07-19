@@ -88,8 +88,10 @@ All routes require patient JWT and return only the authenticated patient's data 
 
 | Method | Path | Description |
 |--------|------|-------------|
-| GET | `/patient/profile` | Patient profile |
+| GET | `/patient/profile` | Patient profile (includes `avatarUrl`) |
 | PUT | `/patient/profile` | Update allowed contact fields |
+| POST | `/patient/profile/photo` | Upload square profile photo (`multipart/form-data`, field `photo`) — see [docs/backend/patient-profile-photo.md](docs/backend/patient-profile-photo.md) |
+| DELETE | `/patient/profile/photo` | Remove profile photo |
 | GET | `/patient/appointments` | List appointments (`?page`, `?limit`) |
 | GET | `/patient/appointments/:id` | Appointment detail |
 | GET | `/patient/lab-reports` | Lab results list |

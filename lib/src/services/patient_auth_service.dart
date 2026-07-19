@@ -2,6 +2,7 @@ import 'package:dio/dio.dart';
 
 import '../core/errors/app_exception.dart';
 import '../core/storage/token_storage.dart';
+import '../core/utils/device_platform.dart';
 import '../models/patient_model.dart';
 import 'api_service.dart';
 
@@ -17,12 +18,18 @@ class PatientAuthService {
   Future<PatientLoginResponse> login({
     required String patientId,
     required DateTime dob,
+    String? fcmToken,
   }) async {
+    final deviceKey = await TokenStorage.getOrCreateDeviceKey();
     final resp = await _dio.post<Map<String, dynamic>>(
       loginPath,
       data: {
         'patientId': patientId.trim(),
         'dob': dob.toIso8601String().split('T').first,
+        'deviceKey': deviceKey,
+        'platform': patientApiPlatform(),
+        'deviceLabel': patientDeviceLabel(),
+        if (fcmToken != null && fcmToken.isNotEmpty) 'fcmToken': fcmToken,
       },
     );
     final data = resp.data;
@@ -51,6 +58,9 @@ class PatientAuthService {
       await TokenStorage.clearAll();
     }
   }
+
+  /// Clears JWT locally without calling logout (e.g. device revoked).
+  Future<void> clearLocalSession() => TokenStorage.clearAll();
 
   Future<bool> isAuthenticated() => TokenStorage.hasToken();
 }

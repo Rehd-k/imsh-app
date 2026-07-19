@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gap/gap.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -6,9 +7,11 @@ import '../../../core/theme/app_design_tokens.dart';
 import '../../../core/theme/context_extensions.dart';
 import '../../../helper/date_formatter.dart';
 import '../../../models/radiology_report_model.dart';
+import '../../../providers/service_providers.dart';
+import 'patient_radiology_image_carousel.dart';
 import 'radiology_status_badge.dart';
 
-class RadiologyReportDetailSections extends StatelessWidget {
+class RadiologyReportDetailSections extends ConsumerWidget {
   const RadiologyReportDetailSections({super.key, required this.detail});
 
   final RadiologyReportDetail detail;
@@ -18,19 +21,46 @@ class RadiologyReportDetailSections extends StatelessWidget {
     if (uri == null) return;
     final launched = await launchUrl(uri, mode: LaunchMode.externalApplication);
     if (!launched && context.mounted) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Could not open $label')),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text('Could not open $label')));
     }
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final radiologyService = ref.read(radiologyServiceProvider);
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
         _HeaderCard(detail: detail),
-        if (detail.pdfUrl?.isNotEmpty == true) ...[
+        if (detail.paymentRequired) ...[
+          const Gap(AppDesignTokens.spacingMd),
+          _SectionCard(
+            title: 'Results',
+            child: Text(
+              'Your imaging results will be available here once payment '
+              'for this study is completed.',
+              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                color: context.colorScheme.onSurfaceVariant,
+              ),
+            ),
+          ),
+        ],
+        if (detail.images.isNotEmpty) ...[
+          const Gap(AppDesignTokens.spacingMd),
+          _SectionCard(
+            title: 'Files',
+            child: PatientRadiologyImageCarousel(
+              service: radiologyService,
+              reportId: detail.id,
+              images: detail.images,
+              height: 220,
+            ),
+          ),
+        ],
+        if (detail.pdfUrl?.isNotEmpty == true && detail.images.isEmpty) ...[
           const Gap(AppDesignTokens.spacingMd),
           _FileActionButton(
             label: 'Download PDF report',
@@ -66,6 +96,28 @@ class RadiologyReportDetailSections extends StatelessWidget {
             ),
           ),
         ],
+        if (detail.recommendations?.isNotEmpty == true) ...[
+          const Gap(AppDesignTokens.spacingMd),
+          _SectionCard(
+            title: 'Recommendations',
+            child: Text(
+              detail.recommendations!,
+              style: Theme.of(context).textTheme.bodyMedium,
+            ),
+          ),
+        ],
+        if (detail.severity != null) ...[
+          const Gap(AppDesignTokens.spacingMd),
+          _SectionCard(
+            title: 'Severity',
+            child: Text(
+              detail.severity!.label,
+              style: Theme.of(
+                context,
+              ).textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.w500),
+            ),
+          ),
+        ],
         if (detail.reportBody?.isNotEmpty == true) ...[
           const Gap(AppDesignTokens.spacingMd),
           _SectionCard(
@@ -76,9 +128,12 @@ class RadiologyReportDetailSections extends StatelessWidget {
             ),
           ),
         ],
-        if (detail.findings == null &&
+        if (!detail.paymentRequired &&
+            detail.findings == null &&
             detail.impression == null &&
+            detail.recommendations == null &&
             detail.reportBody == null &&
+            detail.images.isEmpty &&
             !detail.status.isComplete) ...[
           const Gap(AppDesignTokens.spacingMd),
           _SectionCard(
@@ -87,8 +142,8 @@ class RadiologyReportDetailSections extends StatelessWidget {
               'Your imaging report is not available yet. Check back once '
               'processing is complete.',
               style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                    color: context.colorScheme.onSurfaceVariant,
-                  ),
+                color: context.colorScheme.onSurfaceVariant,
+              ),
             ),
           ),
         ],
@@ -134,13 +189,15 @@ class _HeaderCard extends StatelessWidget {
             ),
           ),
           const Gap(AppDesignTokens.spacingMd),
-          _LabelValueList(rows: [
-            ('Referring doctor', detail.referringDoctorName),
-            ('Modality', detail.modality.label),
-            ('Status', detail.status.label),
-            if (detail.verifiedAt != null)
-              ('Verified', DateFormatter.dateTime(detail.verifiedAt!)),
-          ]),
+          _LabelValueList(
+            rows: [
+              ('Referring doctor', detail.referringDoctorName),
+              ('Modality', detail.modality.label),
+              ('Status', detail.status.label),
+              if (detail.verifiedAt != null)
+                ('Verified', DateFormatter.dateTime(detail.verifiedAt!)),
+            ],
+          ),
         ],
       ),
     );
@@ -183,11 +240,7 @@ class _FileActionButton extends StatelessWidget {
 }
 
 class _SectionCard extends StatelessWidget {
-  const _SectionCard({
-    required this.title,
-    required this.child,
-    this.trailing,
-  });
+  const _SectionCard({required this.title, required this.child, this.trailing});
 
   final String title;
   final Widget child;
@@ -258,8 +311,7 @@ class _LabelValueList extends StatelessWidget {
               fontWeight: FontWeight.w500,
             ),
           ),
-          if ((label, value) != rows.last)
-            const Gap(AppDesignTokens.spacingSm),
+          if ((label, value) != rows.last) const Gap(AppDesignTokens.spacingSm),
         ],
       ],
     );

@@ -11,17 +11,28 @@ class LabService {
   Future<LabResultListResponse> listLabReports({
     int page = 1,
     int limit = 20,
+    String? forPatientId,
   }) async {
     final resp = await _dio.get<Map<String, dynamic>>(
       '/patient/lab-reports',
-      queryParameters: {'page': page, 'limit': limit},
+      queryParameters: {
+        'page': page,
+        'limit': limit,
+        if (forPatientId != null) 'forPatientId': forPatientId,
+      },
     );
     return LabResultListResponse.fromJson(resp.data ?? {});
   }
 
-  Future<LabResultDetail> getLabReport(String id) async {
+  Future<LabResultDetail> getLabReport(
+    String id, {
+    String? forPatientId,
+  }) async {
     final resp = await _dio.get<Map<String, dynamic>>(
       '/patient/lab-reports/$id',
+      queryParameters: {
+        if (forPatientId != null) 'forPatientId': forPatientId,
+      },
     );
     return LabResultDetail.fromJson(resp.data ?? {});
   }

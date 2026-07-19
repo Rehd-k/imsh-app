@@ -1,5 +1,6 @@
 import 'package:dio/dio.dart';
 
+import '../models/family_model.dart';
 import 'api_service.dart';
 
 class FamilyService {
@@ -7,30 +8,34 @@ class FamilyService {
 
   final Dio _dio;
 
-  Future<List<Map<String, dynamic>>> listFamilyMembers() async {
-    final resp = await _dio.get<List<dynamic>>('/patient/family-members');
-    return (resp.data ?? [])
-        .map((e) => Map<String, dynamic>.from(e as Map))
-        .toList();
+  /// Frontdesk-linked children for the authenticated parent.
+  Future<List<FamilyMember>> listFamily() async {
+    final resp = await _dio.get<dynamic>('/patient/family');
+    final list = _extractList(resp.data);
+    return list.map((e) {
+      final map = Map<String, dynamic>.from(e as Map);
+      // Nested patient object if API wraps it.
+      if (map['patient'] is Map) {
+        final patient = Map<String, dynamic>.from(map['patient'] as Map);
+        return FamilyMember.fromJson({
+          ...patient,
+          'id': patient['id'] ?? map['id'] ?? map['patientId'],
+          'relationship': map['relationship'] ?? patient['relationship'],
+        });
+      }
+      return FamilyMember.fromJson({
+        ...map,
+        'id': map['id'] ?? map['patientId'] ?? map['childId'],
+      });
+    }).toList();
   }
 
-  Future<Map<String, dynamic>> addFamilyMember({
-    required String patientId,
-    required DateTime dob,
-    required String relationship,
-  }) async {
-    final resp = await _dio.post<Map<String, dynamic>>(
-      '/patient/family-members',
-      data: {
-        'patientId': patientId,
-        'dob': dob.toIso8601String().split('T').first,
-        'relationship': relationship,
-      },
-    );
-    return resp.data ?? {};
-  }
-
-  Future<void> removeFamilyMember(String linkId) async {
-    await _dio.delete<void>('/patient/family-members/$linkId');
+  List<dynamic> _extractList(dynamic raw) {
+    if (raw is List) return raw;
+    if (raw is Map) {
+      final data = raw['data'] ?? raw['members'] ?? raw['children'];
+      if (data is List) return data;
+    }
+    return const [];
   }
 }

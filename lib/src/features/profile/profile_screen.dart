@@ -11,10 +11,7 @@ class ProfileScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return const Scaffold(
-      appBar: ImshAppBar(
-        title: Text('Profile'),
-        showLogout: true,
-      ),
+      appBar: ImshAppBar(title: Text('Profile'), showLogout: true),
       body: ProfileBody(),
     );
   }

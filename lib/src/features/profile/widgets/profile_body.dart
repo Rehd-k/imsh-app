@@ -2,9 +2,9 @@ import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gap/gap.dart';
-import 'package:imsh/app_router.gr.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 
+import '../../../../app_router.gr.dart';
 import '../../../core/theme/app_design_tokens.dart';
 import '../../../core/theme/context_extensions.dart';
 import '../../../helper/date_formatter.dart';
@@ -13,6 +13,7 @@ import '../../../providers/auth_provider.dart';
 import '../../../providers/profile_provider.dart';
 import '../../../shared/widgets/imsh_sliver_app_bar.dart';
 import '../../../shared/widgets/logout_button.dart';
+import 'profile_avatar_section.dart';
 
 extension PatientProfileDisplay on Patient {
   String get fullDisplayName {
@@ -26,10 +27,7 @@ extension PatientProfileDisplay on Patient {
 }
 
 class ProfileBody extends ConsumerWidget {
-  const ProfileBody({
-    super.key,
-    this.includeSliverAppBar = false,
-  });
+  const ProfileBody({super.key, this.includeSliverAppBar = false});
 
   final bool includeSliverAppBar;
 
@@ -140,46 +138,14 @@ class _ProfileContent extends StatelessWidget {
             const Gap(AppDesignTokens.spacingMd),
           ],
           Center(
-            child: Column(
-              children: [
-                CircleAvatar(
-                  radius: 44,
-                  backgroundColor: colorScheme.primaryContainer,
-                  child: Text(
-                    patient.initials,
-                    style: theme.textTheme.headlineMedium?.copyWith(
-                      color: colorScheme.onPrimaryContainer,
-                      fontWeight: FontWeight.w700,
-                    ),
-                  ),
-                ),
-                const Gap(AppDesignTokens.spacingMd),
-                Text(
-                  patient.fullDisplayName,
-                  textAlign: TextAlign.center,
-                  style: theme.textTheme.headlineSmall?.copyWith(
-                    fontWeight: FontWeight.w700,
-                  ),
-                ),
-                const Gap(AppDesignTokens.spacingSm),
-                Wrap(
-                  alignment: WrapAlignment.center,
-                  spacing: AppDesignTokens.spacingSm,
-                  runSpacing: AppDesignTokens.spacingSm,
-                  children: [
-                    if (patient.patientId != null &&
-                        patient.patientId!.isNotEmpty)
-                      _InfoChip(
-                        label: 'ID',
-                        value: patient.patientId!,
-                      ),
-                    if (patient.cardNo != null && patient.cardNo!.isNotEmpty)
-                      _InfoChip(
-                        label: 'Card',
-                        value: patient.cardNo!,
-                      ),
-                  ],
-                ),
+            child: ProfileAvatarSection(
+              patient: patient,
+              fullDisplayName: patient.fullDisplayName,
+              infoChips: [
+                if (patient.patientId != null && patient.patientId!.isNotEmpty)
+                  _InfoChip(label: 'ID', value: patient.patientId!),
+                if (patient.cardNo != null && patient.cardNo!.isNotEmpty)
+                  _InfoChip(label: 'Card', value: patient.cardNo!),
               ],
             ),
           ),
@@ -211,16 +177,38 @@ class _ProfileContent extends StatelessWidget {
           const Gap(AppDesignTokens.spacingLg),
           _ProfileSection(
             title: 'Insurance',
+            children: [_ProfileField(label: 'HMO', value: patient.hmo)],
+          ),
+          const Gap(AppDesignTokens.spacingLg),
+          _ProfileSection(
+            title: 'Support',
             children: [
-              _ProfileField(label: 'HMO', value: patient.hmo),
+              _ProfileAction(
+                icon: Icons.family_restroom_outlined,
+                title: 'Family accounts',
+                subtitle: 'View linked dependents records.',
+                onTap: () => context.router.push(const FamilyAccountsRoute()),
+              ),
+              _ProfileAction(
+                icon: Icons.devices_outlined,
+                title: 'Signed-in devices',
+                subtitle: 'Manage devices with portal access.',
+                onTap: () => context.router.push(const DevicesRoute()),
+              ),
+              _ProfileAction(
+                icon: Icons.forum_outlined,
+                title: 'Suggestions & complaints',
+                subtitle: 'Send feedback and follow hospital responses.',
+                onTap: () => context.router.push(const PatientFeedbackRoute()),
+              ),
             ],
           ),
-          const Gap(AppDesignTokens.spacingXl),
-          FilledButton.icon(
-            onPressed: () => context.router.push(const EditProfileRoute()),
-            icon: const Icon(Icons.edit_outlined, size: 20),
-            label: const Text('Edit profile'),
-          ),
+          // const Gap(AppDesignTokens.spacingXl),
+          // FilledButton.icon(
+          //   onPressed: () => context.router.push(const EditProfileRoute()),
+          //   icon: const Icon(Icons.edit_outlined, size: 20),
+          //   label: const Text('Edit profile'),
+          // ),
           const Gap(AppDesignTokens.spacingMd),
           const LogoutTextButton(),
         ],
@@ -230,10 +218,7 @@ class _ProfileContent extends StatelessWidget {
 }
 
 class _ProfileSection extends StatelessWidget {
-  const _ProfileSection({
-    required this.title,
-    required this.children,
-  });
+  const _ProfileSection({required this.title, required this.children});
 
   final String title;
   final List<Widget> children;
@@ -266,10 +251,7 @@ class _ProfileSection extends StatelessWidget {
 }
 
 class _ProfileField extends StatelessWidget {
-  const _ProfileField({
-    required this.label,
-    required this.value,
-  });
+  const _ProfileField({required this.label, required this.value});
 
   final String label;
   final String? value;
@@ -278,8 +260,9 @@ class _ProfileField extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final colorScheme = context.colorScheme;
-    final displayValue =
-        value != null && value!.trim().isNotEmpty ? value!.trim() : '—';
+    final displayValue = value != null && value!.trim().isNotEmpty
+        ? value!.trim()
+        : '—';
 
     return Padding(
       padding: const EdgeInsets.only(bottom: AppDesignTokens.spacingSm),
@@ -293,21 +276,41 @@ class _ProfileField extends StatelessWidget {
             ),
           ),
           const Gap(2),
-          Text(
-            displayValue,
-            style: theme.textTheme.bodyLarge,
-          ),
+          Text(displayValue, style: theme.textTheme.bodyLarge),
         ],
       ),
     );
   }
 }
 
-class _InfoChip extends StatelessWidget {
-  const _InfoChip({
-    required this.label,
-    required this.value,
+class _ProfileAction extends StatelessWidget {
+  const _ProfileAction({
+    required this.icon,
+    required this.title,
+    required this.subtitle,
+    required this.onTap,
   });
+
+  final IconData icon;
+  final String title;
+  final String subtitle;
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    return ListTile(
+      contentPadding: EdgeInsets.zero,
+      leading: Icon(icon, color: context.colorScheme.primary),
+      title: Text(title),
+      subtitle: Text(subtitle),
+      trailing: const Icon(Icons.chevron_right),
+      onTap: onTap,
+    );
+  }
+}
+
+class _InfoChip extends StatelessWidget {
+  const _InfoChip({required this.label, required this.value});
 
   final String label;
   final String value;
@@ -331,10 +334,7 @@ class _InfoChip extends StatelessWidget {
 }
 
 class _ProfileError extends StatelessWidget {
-  const _ProfileError({
-    required this.message,
-    required this.onRetry,
-  });
+  const _ProfileError({required this.message, required this.onRetry});
 
   final String message;
   final VoidCallback onRetry;

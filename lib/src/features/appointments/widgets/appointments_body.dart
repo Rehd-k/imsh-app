@@ -9,6 +9,7 @@ import '../../../core/theme/app_design_tokens.dart';
 import '../../../core/theme/context_extensions.dart';
 import '../../../models/appointment_model.dart';
 import '../../../providers/appointments_provider.dart';
+import '../../../shared/widgets/family_subject_banner.dart';
 import '../../../shared/widgets/imsh_sliver_app_bar.dart';
 import 'appointment_filter_chips.dart';
 import 'appointment_list_card.dart';
@@ -39,6 +40,7 @@ class AppointmentsBody extends ConsumerWidget {
           physics: const AlwaysScrollableScrollPhysics(),
           slivers: [
             const ImshSliverAppBar(),
+            const SliverToBoxAdapter(child: FamilySubjectBanner()),
             SliverPadding(
               padding: const EdgeInsets.all(AppDesignTokens.containerPadding),
               sliver: SliverToBoxAdapter(
