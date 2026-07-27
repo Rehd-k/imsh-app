@@ -307,8 +307,8 @@ Map<String, dynamic> _$UpdateAppointmentRequestToJson(
   'reason': instance.reason,
 };
 
-const _$AppointmentFilterTabEnumMap = {
-  AppointmentFilterTab.upcoming: 'UPCOMING',
-  AppointmentFilterTab.past: 'PAST',
-  AppointmentFilterTab.pending: 'PENDING',
-};
+// const _$AppointmentFilterTabEnumMap = {
+//   AppointmentFilterTab.upcoming: 'UPCOMING',
+//   AppointmentFilterTab.past: 'PAST',
+//   AppointmentFilterTab.pending: 'PENDING',
+// };

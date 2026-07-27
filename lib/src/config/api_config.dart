@@ -8,9 +8,9 @@ List<String> get kApiCandidateBaseUrls {
   final candidates = <String>[
     if (fromEnv.isNotEmpty) fromEnv,
     'http://api.imsh.ng',
-    'http://localhost:3000',
+    'http://192.168.2.120:3000',
     'http://192.168.1.180:3000',
-    'http://127.0.0.1:3000',
+    'http://192.168.2.121:3000',
   ];
   return candidates.toSet().toList();
 }

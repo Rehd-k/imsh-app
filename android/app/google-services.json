@@ -9,7 +9,7 @@
       "client_info": {
         "mobilesdk_app_id": "1:93126403915:android:10b04d110202d773696ace",
         "android_client_info": {
-          "package_name": "org.imsh.patient"
+          "package_name": "com.vesselstudio.imsh_patients"
         }
       },
       "oauth_client": [],
