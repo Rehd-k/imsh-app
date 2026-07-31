@@ -214,6 +214,18 @@ class FcmPushService {
         return;
       }
 
+      if (type == 'EMERGENCY_REQUEST') {
+        final requestId = data['emergencyRequestId']?.toString();
+        if (requestId != null && requestId.isNotEmpty) {
+          NavigationService.router.push(
+            EmergencyRequestDetailRoute(id: requestId),
+          );
+          return;
+        }
+        NavigationService.router.push(const EmergencyRequestsRoute());
+        return;
+      }
+
       if (type == 'APPOINTMENT') {
         final appointmentId = data['appointmentId']?.toString();
         if (appointmentId == null || appointmentId.isEmpty) {

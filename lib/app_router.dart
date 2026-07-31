@@ -56,6 +56,16 @@ class AppRouter extends RootStackRouter {
     AutoRoute(page: FeedbackDetailRoute.page, path: '/feedback/:id'),
     AutoRoute(page: EditFeedbackRoute.page, path: '/feedback/:id/edit'),
 
+    AutoRoute(page: EmergencyRequestsRoute.page, path: '/emergency'),
+    AutoRoute(
+      page: CreateEmergencyRequestRoute.page,
+      path: '/emergency/new',
+    ),
+    AutoRoute(
+      page: EmergencyRequestDetailRoute.page,
+      path: '/emergency/:id',
+    ),
+
     AutoRoute(page: NotificationsRoute.page, path: '/notifications'),
     AutoRoute(page: FamilyAccountsRoute.page, path: '/family'),
 

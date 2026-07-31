@@ -87,7 +87,15 @@ class QuickActionsRow extends StatelessWidget {
     required Color muted,
     required Color mutedForeground,
   }) {
+    final colorScheme = Theme.of(context).colorScheme;
     return [
+      _QuickActionData(
+        icon: Icons.emergency_outlined,
+        label: 'Emergency',
+        backgroundColor: colorScheme.error,
+        foregroundColor: colorScheme.onError,
+        onTap: () => context.router.push(const EmergencyRequestsRoute()),
+      ),
       _QuickActionData(
         icon: Icons.calendar_month_outlined,
         label: 'Book Appt',

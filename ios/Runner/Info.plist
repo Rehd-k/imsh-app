@@ -53,8 +53,12 @@
 	<key>UIApplicationSupportsIndirectInputEvents</key>
 	<true/>
 	<key>NSPhotoLibraryUsageDescription</key>
-	<string>IMSH needs access to your photo library so you can choose a profile photo.</string>
+	<string>IMSH needs access to your photo library so you can choose a profile photo or emergency video.</string>
 	<key>NSCameraUsageDescription</key>
-	<string>IMSH needs access to your camera so you can take a profile photo.</string>
+	<string>IMSH needs access to your camera for profile photos and emergency video notes.</string>
+	<key>NSMicrophoneUsageDescription</key>
+	<string>IMSH needs access to your microphone to record emergency voice notes.</string>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>IMSH needs your location so the emergency department can send help to you.</string>
 </dict>
 </plist>

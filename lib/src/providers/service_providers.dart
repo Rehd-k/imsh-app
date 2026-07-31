@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../services/appointment_service.dart';
 import '../services/billing_service.dart';
 import '../services/device_service.dart';
+import '../services/emergency_service.dart';
 import '../services/family_service.dart';
 import '../services/feedback_service.dart';
 import '../services/health_card_service.dart';
@@ -23,6 +24,10 @@ final appointmentServiceProvider = Provider<AppointmentService>((ref) {
 
 final feedbackServiceProvider = Provider<FeedbackService>((ref) {
   return FeedbackService();
+});
+
+final emergencyServiceProvider = Provider<EmergencyService>((ref) {
+  return EmergencyService();
 });
 
 final labServiceProvider = Provider<LabService>((ref) {
