@@ -10,15 +10,19 @@ import '../../services/navigation_service.dart';
 class AuthSessionHooks {
   AuthSessionHooks._();
 
+  /// Called when the session is cleared due to an invalid/expired token or
+  /// revoked device (401). Clears Riverpod auth state.
   static void Function()? onDeviceRevoked;
   static void Function()? onDevicePendingApproval;
 }
 
 class ErrorInterceptor extends Interceptor {
+  static bool _handlingUnauthorized = false;
+
   @override
   void onError(DioException err, ErrorInterceptorHandler handler) {
     final appEx = _mapError(err);
-    _handleSessionCodes(appEx);
+    _handleSessionCodes(appEx, path: err.requestOptions.path);
     handler.reject(
       DioException(
         requestOptions: err.requestOptions,
@@ -30,8 +34,14 @@ class ErrorInterceptor extends Interceptor {
     );
   }
 
-  void _handleSessionCodes(AppException appEx) {
-    if (appEx is UnauthorizedException && appEx.isDeviceRevoked) {
+  void _handleSessionCodes(AppException appEx, {String? path}) {
+    if (appEx is UnauthorizedException) {
+      // Login credential failures are also 401 — do not treat as session expiry.
+      if (path != null && path.contains('/patient-auth/login')) {
+        return;
+      }
+      if (_handlingUnauthorized) return;
+      _handlingUnauthorized = true;
       // Fire-and-forget; do not block the error path.
       Future<void>(() async {
         try {
@@ -39,7 +49,9 @@ class ErrorInterceptor extends Interceptor {
           AuthSessionHooks.onDeviceRevoked?.call();
           NavigationService.router.replaceAll([const LoginRoute()]);
         } catch (e, st) {
-          debugPrint('DEVICE_REVOKED handling failed: $e\n$st');
+          debugPrint('Unauthorized session handling failed: $e\n$st');
+        } finally {
+          _handlingUnauthorized = false;
         }
       });
       return;

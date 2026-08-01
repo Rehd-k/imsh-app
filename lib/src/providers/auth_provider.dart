@@ -136,7 +136,8 @@ class PatientAuthNotifier extends StateNotifier<PatientAuthState> {
     state = const PatientAuthState();
   }
 
-  /// Local clear when server reports DEVICE_REVOKED (no logout API call).
+  /// Local clear when the session is invalid (expired token / DEVICE_REVOKED).
+  /// Skips the logout API call since the token is already unusable.
   Future<void> handleDeviceRevoked() async {
     await TokenStorage.deleteFcmToken();
     await _authService.clearLocalSession();

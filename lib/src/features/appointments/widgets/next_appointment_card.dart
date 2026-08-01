@@ -3,6 +3,7 @@ import 'package:gap/gap.dart';
 
 import '../../../core/theme/app_design_tokens.dart';
 import '../../../core/theme/context_extensions.dart';
+import '../../../core/utils/api_media_url.dart';
 import '../../../helper/date_formatter.dart';
 import '../../../models/appointment_model.dart';
 import 'appointment_status_badge.dart';
@@ -21,10 +22,11 @@ class DoctorAvatar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    if (avatarUrl != null && avatarUrl!.isNotEmpty) {
+    final resolvedUrl = resolveApiMediaUrl(avatarUrl);
+    if (resolvedUrl != null && resolvedUrl.isNotEmpty) {
       return CircleAvatar(
         radius: size / 2,
-        backgroundImage: NetworkImage(avatarUrl!),
+        backgroundImage: NetworkImage(resolvedUrl),
       );
     }
 
