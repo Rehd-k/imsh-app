@@ -37,7 +37,7 @@ class AppointmentListCard extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           DoctorAvatar(
-            name: appointment.doctor.name,
+            name: appointment.doctorDisplayName,
             avatarUrl: appointment.doctor.avatarUrl,
           ),
           const Gap(AppDesignTokens.spacingMd),
@@ -46,16 +46,23 @@ class AppointmentListCard extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  appointment.doctor.name,
+                  appointment.doctorDisplayName,
                   style: theme.textTheme.titleSmall?.copyWith(
                     fontWeight: FontWeight.w700,
                   ),
                 ),
                 const Gap(2),
                 Text(
-                  appointment.doctor.specialty,
+                  appointment.specialtyLabel,
                   style: theme.textTheme.bodySmall?.copyWith(
                     color: colorScheme.primary,
+                  ),
+                ),
+                const Gap(2),
+                Text(
+                  '${appointment.visitType.label} · ${appointment.status.label}',
+                  style: theme.textTheme.labelSmall?.copyWith(
+                    color: colorScheme.onSurfaceVariant,
                   ),
                 ),
                 const Gap(AppDesignTokens.spacingSm),

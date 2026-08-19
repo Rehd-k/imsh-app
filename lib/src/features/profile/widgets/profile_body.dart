@@ -1,4 +1,5 @@
 import 'package:auto_route/auto_route.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gap/gap.dart';
@@ -11,6 +12,7 @@ import '../../../helper/date_formatter.dart';
 import '../../../models/patient_model.dart';
 import '../../../providers/auth_provider.dart';
 import '../../../providers/profile_provider.dart';
+import '../../../services/imsh_android_update_service.dart';
 import '../../../shared/widgets/imsh_sliver_app_bar.dart';
 import '../../../shared/widgets/logout_button.dart';
 import 'profile_avatar_section.dart';
@@ -201,6 +203,14 @@ class _ProfileContent extends StatelessWidget {
                 subtitle: 'Send feedback and follow hospital responses.',
                 onTap: () => context.router.push(const PatientFeedbackRoute()),
               ),
+              if (!kIsWeb &&
+                  defaultTargetPlatform == TargetPlatform.android)
+                _ProfileAction(
+                  icon: Icons.system_update_alt_outlined,
+                  title: 'Check for updates',
+                  subtitle: 'Download the latest IMSH Patient build from the hospital server.',
+                  onTap: () => ImshAndroidUpdateService.triggerCheckFromUi(),
+                ),
             ],
           ),
           // const Gap(AppDesignTokens.spacingXl),

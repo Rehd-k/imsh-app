@@ -98,7 +98,7 @@ class QuickActionsRow extends StatelessWidget {
       ),
       _QuickActionData(
         icon: Icons.calendar_month_outlined,
-        label: 'Book Appt',
+        label: 'Request Appt',
         backgroundColor: primary,
         foregroundColor: onPrimary,
         onTap: () => context.router.push(BookAppointmentRoute()),
@@ -113,13 +113,6 @@ class QuickActionsRow extends StatelessWidget {
       _QuickActionData(
         icon: Icons.medication_outlined,
         label: 'Medications',
-        backgroundColor: highlight,
-        foregroundColor: primary,
-        onTap: () => context.router.push(const MedicationsRoute()),
-      ),
-      _QuickActionData(
-        icon: Icons.replay_outlined,
-        label: 'Order Refill',
         backgroundColor: highlight,
         foregroundColor: primary,
         onTap: () => context.router.push(const MedicationsRoute()),

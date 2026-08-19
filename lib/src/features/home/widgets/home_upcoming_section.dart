@@ -86,9 +86,7 @@ class HomeUpcomingAppointmentCard extends StatelessWidget {
     final localDate = AppTimezone.toLocal(appointment.scheduledAt);
     final monthLabel = DateFormat('MMM').format(localDate).toUpperCase();
     final dayLabel = DateFormat('d').format(localDate);
-    final title = appointment.doctor.specialty.isNotEmpty
-        ? appointment.doctor.specialty
-        : 'Appointment';
+    final title = appointment.specialtyLabel;
 
     return Container(
       decoration: BoxDecoration(
@@ -190,7 +188,7 @@ class HomeUpcomingAppointmentCard extends StatelessWidget {
                                   const Gap(4),
                                   Expanded(
                                     child: Text(
-                                      appointment.doctor.name,
+                                      '${appointment.doctorDisplayName} · ${appointment.status.label}',
                                       style:
                                           theme.textTheme.bodySmall?.copyWith(
                                         color: colorScheme.onSurfaceVariant,
@@ -292,12 +290,6 @@ void openHomeReschedule(
 ) {
   ref.read(bookingWizardProvider.notifier).startReschedule(
         appointmentId: appointment.id,
-        doctor: BookableDoctor(
-          id: appointment.doctor.id,
-          name: appointment.doctor.name,
-          specialty: appointment.doctor.specialty,
-          avatarUrl: appointment.doctor.avatarUrl,
-        ),
       );
   context.router.push(
     BookAppointmentRoute(appointmentId: appointment.id),

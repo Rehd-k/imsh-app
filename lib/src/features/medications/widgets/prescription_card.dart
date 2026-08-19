@@ -5,7 +5,6 @@ import 'package:gap/gap.dart';
 import '../../../core/theme/app_design_tokens.dart';
 import '../../../core/theme/context_extensions.dart';
 import '../../../models/medication_model.dart';
-import '../../../providers/medications_provider.dart';
 
 class PrescriptionCard extends ConsumerWidget {
   const PrescriptionCard({
@@ -23,11 +22,6 @@ class PrescriptionCard extends ConsumerWidget {
     final colorScheme = theme.colorScheme;
     final isLow = prescription.supplyStatus == PrescriptionSupplyStatus.low ||
         prescription.daysRemaining <= _lowSupplyThreshold;
-    final refillNotifier = ref.watch(requestRefillProvider.notifier);
-    final isRequesting = ref.watch(requestRefillProvider).maybeWhen(
-          data: (inFlight) => inFlight.contains(prescription.id),
-          orElse: () => false,
-        );
 
     return Container(
       margin: const EdgeInsets.only(bottom: AppDesignTokens.spacingSm),
@@ -127,41 +121,6 @@ class PrescriptionCard extends ConsumerWidget {
                               color: colorScheme.onSurfaceVariant,
                             ),
                           ),
-                          if (isLow) ...[
-                            const Gap(AppDesignTokens.spacingSm),
-                            OutlinedButton.icon(
-                              onPressed: isRequesting
-                                  ? null
-                                  : () => refillNotifier
-                                      .requestRefill(prescription.id),
-                              style: OutlinedButton.styleFrom(
-                                foregroundColor: colorScheme.primary,
-                                side: BorderSide(
-                                  color: colorScheme.primary
-                                      .withValues(alpha: 0.4),
-                                ),
-                                padding: const EdgeInsets.symmetric(
-                                  horizontal: AppDesignTokens.spacingMd,
-                                  vertical: AppDesignTokens.spacingSm,
-                                ),
-                              ),
-                              icon: isRequesting
-                                  ? SizedBox(
-                                      width: 16,
-                                      height: 16,
-                                      child: CircularProgressIndicator(
-                                        strokeWidth: 2,
-                                        color: colorScheme.primary,
-                                      ),
-                                    )
-                                  : const Icon(Icons.refresh, size: 16),
-                              label: Text(
-                                isRequesting
-                                    ? 'Requesting...'
-                                    : 'Request Refill',
-                              ),
-                            ),
-                          ],
                         ],
                       ),
                     ),

@@ -9,6 +9,8 @@ extension AppointmentStatusBadgeColors on AppointmentStatus {
     ImshThemeExtension imsh,
   ) =>
       switch (this) {
+        AppointmentStatus.requested =>
+          (imsh.warningContainer, imsh.onWarningContainer),
         AppointmentStatus.confirmed =>
           (imsh.infoContainer, imsh.onInfoContainer),
         AppointmentStatus.pending =>

@@ -1,4 +1,5 @@
 import 'package:dio/dio.dart';
+import 'package:intl/intl.dart';
 
 import '../models/appointment_model.dart';
 import 'api_service.dart';
@@ -59,8 +60,9 @@ class AppointmentService {
     final resp = await _dio.post<Map<String, dynamic>>(
       '/patient/appointments',
       data: {
-        'doctorId': request.doctorId,
-        'scheduledAt': request.scheduledAt.toUtc().toIso8601String(),
+        'specialty': request.specialty,
+        'date': request.date,
+        'visitType': request.visitType.apiValue,
         if (request.reason != null) 'reason': request.reason,
       },
     );
@@ -119,4 +121,7 @@ class AppointmentService {
     );
     return AvailabilityResponse.fromJson(resp.data ?? {});
   }
+
+  static String formatPreferredDate(DateTime date) =>
+      DateFormat('yyyy-MM-dd').format(date);
 }

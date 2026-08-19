@@ -3,15 +3,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gap/gap.dart';
 import 'package:imsh/app_router.gr.dart';
-import 'package:intl/intl.dart';
 
 import '../../core/theme/app_design_tokens.dart';
 import '../../core/theme/context_extensions.dart';
 import '../../helper/date_formatter.dart';
 import '../../models/appointment_model.dart';
 import '../../providers/appointments_provider.dart';
+import '../../services/appointment_service.dart';
 import '../../shared/widgets/imsh_app_bar.dart';
-import 'widgets/next_appointment_card.dart';
 
 @RoutePage()
 class BookAppointmentScreen extends ConsumerStatefulWidget {
@@ -30,6 +29,7 @@ class BookAppointmentScreen extends ConsumerStatefulWidget {
 class _BookAppointmentScreenState extends ConsumerState<BookAppointmentScreen> {
   final _reasonController = TextEditingController();
   bool _initialized = false;
+  bool _submitting = false;
 
   @override
   void dispose() {
@@ -44,34 +44,20 @@ class _BookAppointmentScreenState extends ConsumerState<BookAppointmentScreen> {
 
     if (!_initialized && widget.appointmentId != null && !wizard.isReschedule) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
-        ref.read(appointmentDetailProvider(widget.appointmentId!).future).then(
-          (detail) {
-            if (!mounted) return;
-            ref.read(bookingWizardProvider.notifier).startReschedule(
-                  appointmentId: detail.id,
-                  doctor: BookableDoctor(
-                    id: detail.doctor.id,
-                    name: detail.doctor.name,
-                    specialty: detail.doctor.specialty,
-                    avatarUrl: detail.doctor.avatarUrl,
-                  ),
-                );
-          },
-        );
+        ref.read(bookingWizardProvider.notifier).startReschedule(
+              appointmentId: widget.appointmentId!,
+            );
       });
       _initialized = true;
     }
 
     final stepLabels = isReschedule
-        ? const ['Doctor', 'Date & Time', 'Confirm']
-        : const ['Specialty', 'Doctor', 'Date & Time', 'Confirm'];
-
-    final displayStep =
-        isReschedule ? (wizard.step - 2).clamp(0, stepLabels.length - 1) : wizard.step;
+        ? const ['Date', 'Confirm']
+        : const ['Specialty', 'Date', 'Visit type', 'Confirm'];
 
     return Scaffold(
       appBar: ImshAppBar(
-        title: Text(isReschedule ? 'Reschedule' : 'Book Appointment'),
+        title: Text(isReschedule ? 'Reschedule request' : 'Request appointment'),
       ),
       body: Column(
         children: [
@@ -79,13 +65,13 @@ class _BookAppointmentScreenState extends ConsumerState<BookAppointmentScreen> {
             padding: const EdgeInsets.all(AppDesignTokens.containerPadding),
             child: _StepIndicator(
               labels: stepLabels,
-              currentStep: displayStep.clamp(0, stepLabels.length - 1),
+              currentStep: wizard.step.clamp(0, stepLabels.length - 1),
             ),
           ),
           Expanded(
             child: _buildStepContent(wizard, isReschedule),
           ),
-          _buildBottomBar(wizard, isReschedule),
+          _buildBottomBar(wizard, isReschedule, stepLabels.length - 1),
         ],
       ),
     );
@@ -94,9 +80,18 @@ class _BookAppointmentScreenState extends ConsumerState<BookAppointmentScreen> {
   Widget _buildStepContent(BookingWizardState wizard, bool isReschedule) {
     if (isReschedule) {
       return switch (wizard.step) {
-        2 => _buildDateTimeStep(wizard),
-        3 => _buildConfirmStep(wizard),
-        _ => _buildDateTimeStep(wizard),
+        0 => _DateStep(
+            selectedDate: wizard.selectedDate ?? DateTime.now(),
+            onDateSelected: (date) {
+              ref.read(bookingWizardProvider.notifier).selectDate(date);
+            },
+          ),
+        _ => _ConfirmStep(
+            wizard: wizard,
+            isReschedule: true,
+            reasonController: _reasonController,
+            onReasonChanged: ref.read(bookingWizardProvider.notifier).setReason,
+          ),
       };
     }
 
@@ -106,86 +101,75 @@ class _BookAppointmentScreenState extends ConsumerState<BookAppointmentScreen> {
             ref.read(bookingWizardProvider.notifier).selectSpecialty(specialty);
           },
         ),
-      1 => _buildDoctorStep(wizard),
-      2 => _buildDateTimeStep(wizard),
-      3 => _buildConfirmStep(wizard),
-      _ => const SizedBox.shrink(),
+      1 => _DateStep(
+          selectedDate: wizard.selectedDate ?? DateTime.now(),
+          onDateSelected: (date) {
+            ref.read(bookingWizardProvider.notifier).selectDate(date);
+          },
+        ),
+      2 => _VisitTypeStep(
+          selected: wizard.visitType,
+          onSelected: (type) {
+            ref.read(bookingWizardProvider.notifier).selectVisitType(type);
+          },
+        ),
+      _ => _ConfirmStep(
+          wizard: wizard,
+          isReschedule: false,
+          reasonController: _reasonController,
+          onReasonChanged: ref.read(bookingWizardProvider.notifier).setReason,
+        ),
     };
   }
 
-  Widget _buildDoctorStep(BookingWizardState wizard) {
-    final specialtyId = wizard.specialty?.id;
-    if (specialtyId == null) {
-      return const Center(child: Text('Select a specialty first'));
-    }
-
-    return _DoctorStep(
-      specialtyId: specialtyId,
-      selectedDoctorId: wizard.doctor?.id,
-      onSelected: (doctor) {
-        ref.read(bookingWizardProvider.notifier).selectDoctor(doctor);
-      },
-    );
-  }
-
-  Widget _buildDateTimeStep(BookingWizardState wizard) {
-    final doctor = wizard.doctor;
-    if (doctor == null) {
-      return const Center(child: Text('Select a doctor first'));
-    }
-
-    return _DateTimeStep(
-      doctorId: doctor.id,
-      selectedDate: wizard.selectedDate ?? DateTime.now(),
-      selectedSlot: wizard.selectedSlot,
-      onDateSelected: (date) {
-        ref.read(bookingWizardProvider.notifier).selectDate(date);
-      },
-      onSlotSelected: (slot) {
-        ref.read(bookingWizardProvider.notifier).selectSlot(slot);
-      },
-    );
-  }
-
-  Widget _buildConfirmStep(BookingWizardState wizard) {
-    return _ConfirmStep(
-      wizard: wizard,
-      reasonController: _reasonController,
-      onReasonChanged: ref.read(bookingWizardProvider.notifier).setReason,
-    );
-  }
-
-  Widget _buildBottomBar(BookingWizardState wizard, bool isReschedule) {
+  Widget _buildBottomBar(
+    BookingWizardState wizard,
+    bool isReschedule,
+    int maxStep,
+  ) {
     final step = wizard.step;
-    final minStep = isReschedule ? 2 : 0;
-    final maxStep = isReschedule ? 3 : 3;
     final isConfirmStep = step == maxStep;
-    final canGoNext = _canProceed(wizard, step);
+    final canGoNext = _canProceed(wizard, step, isReschedule);
 
     return SafeArea(
       child: Padding(
         padding: const EdgeInsets.all(AppDesignTokens.containerPadding),
         child: Row(
           children: [
-            if (step > minStep)
+            if (step > 0)
               OutlinedButton(
-                onPressed: () =>
-                    ref.read(bookingWizardProvider.notifier).previousStep(),
+                onPressed: _submitting
+                    ? null
+                    : () =>
+                        ref.read(bookingWizardProvider.notifier).previousStep(),
                 child: const Text('Back'),
               ),
-            if (step > minStep) const Gap(AppDesignTokens.spacingSm),
+            if (step > 0) const Gap(AppDesignTokens.spacingSm),
             Expanded(
               child: FilledButton(
-                onPressed: canGoNext
+                onPressed: canGoNext && !_submitting
                     ? () async {
                         if (isConfirmStep) {
-                          await _submit(wizard);
+                          await _submit(wizard, isReschedule);
                         } else {
+                          if (!isReschedule &&
+                              step == 1 &&
+                              wizard.selectedDate == null) {
+                            ref
+                                .read(bookingWizardProvider.notifier)
+                                .selectDate(DateTime.now());
+                          }
                           ref.read(bookingWizardProvider.notifier).nextStep();
                         }
                       }
                     : null,
-                child: Text(isConfirmStep ? 'Confirm' : 'Continue'),
+                child: _submitting
+                    ? const SizedBox(
+                        width: 20,
+                        height: 20,
+                        child: CircularProgressIndicator(strokeWidth: 2),
+                      )
+                    : Text(isConfirmStep ? 'Submit request' : 'Continue'),
               ),
             ),
           ],
@@ -194,39 +178,69 @@ class _BookAppointmentScreenState extends ConsumerState<BookAppointmentScreen> {
     );
   }
 
-  bool _canProceed(BookingWizardState wizard, int step) {
-    if (wizard.isReschedule) {
+  bool _canProceed(
+    BookingWizardState wizard,
+    int step,
+    bool isReschedule,
+  ) {
+    if (isReschedule) {
       return switch (step) {
-        2 => wizard.selectedSlot != null,
-        3 => wizard.selectedSlot != null,
+        0 => wizard.selectedDate != null,
+        1 => wizard.selectedDate != null,
         _ => false,
       };
     }
     return switch (step) {
       0 => wizard.specialty != null,
-      1 => wizard.doctor != null,
-      2 => wizard.selectedSlot != null,
-      3 => wizard.selectedSlot != null,
+      1 => wizard.selectedDate != null,
+      2 => wizard.visitType != null,
+      3 => wizard.specialty != null &&
+          wizard.selectedDate != null &&
+          wizard.visitType != null,
       _ => false,
     };
   }
 
-  Future<void> _submit(BookingWizardState wizard) async {
-    final doctor = wizard.doctor;
-    final slot = wizard.selectedSlot;
-    if (doctor == null || slot == null) return;
-
+  Future<void> _submit(BookingWizardState wizard, bool isReschedule) async {
+    setState(() => _submitting = true);
     final reason = _reasonController.text.trim();
 
     try {
-      await ref.read(bookAppointmentProvider.notifier).submit(
-            request: CreateAppointmentRequest(
-              doctorId: doctor.id,
-              scheduledAt: slot.scheduledAt,
-              reason: reason.isEmpty ? null : reason,
-            ),
-            appointmentId: wizard.rescheduleAppointmentId,
-          );
+      if (isReschedule) {
+        final date = wizard.selectedDate;
+        final appointmentId = wizard.rescheduleAppointmentId;
+        if (date == null || appointmentId == null) return;
+
+        final scheduledAt = DateTime(date.year, date.month, date.day, 9);
+        await ref.read(bookAppointmentProvider.notifier).submit(
+              request: CreateAppointmentRequest(
+                specialty: wizard.specialty?.id ?? '',
+                date: AppointmentService.formatPreferredDate(date),
+                visitType:
+                    wizard.visitType ?? AppointmentVisitType.inPerson,
+                reason: reason.isEmpty ? null : reason,
+              ),
+              appointmentId: appointmentId,
+              updateRequest: UpdateAppointmentRequest(
+                scheduledAt: scheduledAt,
+                reason: reason.isEmpty ? null : reason,
+              ),
+            );
+      } else {
+        final specialty = wizard.specialty;
+        final date = wizard.selectedDate;
+        final visitType = wizard.visitType;
+        if (specialty == null || date == null || visitType == null) return;
+
+        await ref.read(bookAppointmentProvider.notifier).submit(
+              request: CreateAppointmentRequest(
+                specialty: specialty.id,
+                date: AppointmentService.formatPreferredDate(date),
+                visitType: visitType,
+                reason: reason.isEmpty ? null : reason,
+              ),
+            );
+      }
 
       if (!mounted) return;
 
@@ -234,18 +248,24 @@ class _BookAppointmentScreenState extends ConsumerState<BookAppointmentScreen> {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text(
-            wizard.isReschedule
-                ? 'Appointment rescheduled'
-                : 'Appointment booked',
+            isReschedule
+                ? 'Appointment request updated'
+                : 'Appointment requested',
           ),
         ),
       );
-      context.router.popUntilRouteWithName(AppointmentsRoute.name);
+      if (context.router.canPop()) {
+        context.router.pop();
+      } else {
+        context.router.replace(const PatientShellRoute());
+      }
     } catch (error) {
       if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text(appointmentErrorMessage(error))),
       );
+    } finally {
+      if (mounted) setState(() => _submitting = false);
     }
   }
 }
@@ -360,110 +380,34 @@ class _SpecialtyStep extends ConsumerWidget {
   }
 }
 
-class _DoctorStep extends ConsumerWidget {
-  const _DoctorStep({
-    required this.specialtyId,
-    required this.selectedDoctorId,
-    required this.onSelected,
-  });
-
-  final String? specialtyId;
-  final String? selectedDoctorId;
-  final void Function(BookableDoctor doctor) onSelected;
-
-  @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    if (specialtyId == null) {
-      return const Center(child: Text('Select a specialty first'));
-    }
-
-    final doctorsAsync = ref.watch(bookableDoctorsProvider(specialtyId!));
-
-    return doctorsAsync.when(
-      loading: () => const Center(child: CircularProgressIndicator()),
-      error: (error, _) => Center(
-        child: Text(appointmentErrorMessage(error)),
-      ),
-      data: (response) {
-        final colorScheme = context.colorScheme;
-
-        if (response.data.isEmpty) {
-          return const Center(child: Text('No doctors available'));
-        }
-
-        return ListView.separated(
-          padding: const EdgeInsets.all(AppDesignTokens.containerPadding),
-          itemCount: response.data.length,
-          separatorBuilder: (_, __) => const Gap(AppDesignTokens.spacingSm),
-          itemBuilder: (context, index) {
-            final doctor = response.data[index];
-            final selected = doctor.id == selectedDoctorId;
-
-            return ListTile(
-              tileColor: selected
-                  ? context.imshTheme.primaryHighlight
-                  : colorScheme.surfaceContainerLowest,
-              shape: RoundedRectangleBorder(
-                borderRadius:
-                    BorderRadius.circular(AppDesignTokens.radiusMd),
-                side: BorderSide(
-                  color: selected
-                      ? colorScheme.primary
-                      : colorScheme.outlineVariant,
-                ),
-              ),
-              leading: DoctorAvatar(
-                name: doctor.name,
-                avatarUrl: doctor.avatarUrl,
-              ),
-              title: Text(
-                doctor.name,
-                style: const TextStyle(fontWeight: FontWeight.w600),
-              ),
-              subtitle: Text(doctor.specialty),
-              onTap: () => onSelected(doctor),
-            );
-          },
-        );
-      },
-    );
-  }
-}
-
-class _DateTimeStep extends ConsumerWidget {
-  const _DateTimeStep({
-    required this.doctorId,
+class _DateStep extends StatelessWidget {
+  const _DateStep({
     required this.selectedDate,
-    required this.selectedSlot,
     required this.onDateSelected,
-    required this.onSlotSelected,
   });
 
-  final String doctorId;
   final DateTime selectedDate;
-  final AvailabilitySlot? selectedSlot;
   final void Function(DateTime date) onDateSelected;
-  final void Function(AvailabilitySlot slot) onSlotSelected;
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final dateKey = DateFormat('yyyy-MM-dd').format(selectedDate);
-    final availabilityAsync = ref.watch(
-      appointmentAvailabilityProvider(
-        (doctorId: doctorId, date: dateKey),
-      ),
-    );
-
+  Widget build(BuildContext context) {
     return ListView(
       padding: const EdgeInsets.all(AppDesignTokens.containerPadding),
       children: [
         Text(
-          'Select date',
+          'Preferred date',
           style: Theme.of(context).textTheme.titleSmall?.copyWith(
                 fontWeight: FontWeight.w700,
               ),
         ),
-        const Gap(AppDesignTokens.spacingSm),
+        const Gap(AppDesignTokens.spacingXs),
+        Text(
+          'The hospital will confirm a time after reviewing your request.',
+          style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                color: context.colorScheme.onSurfaceVariant,
+              ),
+        ),
+        const Gap(AppDesignTokens.spacingLg),
         OutlinedButton.icon(
           onPressed: () async {
             final picked = await showDatePicker(
@@ -477,41 +421,66 @@ class _DateTimeStep extends ConsumerWidget {
           icon: const Icon(Icons.calendar_today_outlined),
           label: Text(DateFormatter.appointmentCardDate(selectedDate)),
         ),
-        const Gap(AppDesignTokens.spacingLg),
+      ],
+    );
+  }
+}
+
+class _VisitTypeStep extends StatelessWidget {
+  const _VisitTypeStep({
+    required this.selected,
+    required this.onSelected,
+  });
+
+  final AppointmentVisitType? selected;
+  final void Function(AppointmentVisitType type) onSelected;
+
+  @override
+  Widget build(BuildContext context) {
+    final colorScheme = context.colorScheme;
+
+    return ListView(
+      padding: const EdgeInsets.all(AppDesignTokens.containerPadding),
+      children: [
         Text(
-          'Available times',
+          'How would you like to visit?',
           style: Theme.of(context).textTheme.titleSmall?.copyWith(
                 fontWeight: FontWeight.w700,
               ),
         ),
-        const Gap(AppDesignTokens.spacingSm),
-        availabilityAsync.when(
-          loading: () => const Center(child: CircularProgressIndicator()),
-          error: (error, _) => Text(appointmentErrorMessage(error)),
-          data: (response) {
-            final availableSlots =
-                response.slots.where((slot) => slot.available).toList();
-
-            if (availableSlots.isEmpty) {
-              return const Text('No slots available for this date.');
-            }
-
-            return Wrap(
-              spacing: AppDesignTokens.spacingSm,
-              runSpacing: AppDesignTokens.spacingSm,
-              children: availableSlots.map((slot) {
-                final selected = selectedSlot?.scheduledAt == slot.scheduledAt;
-                return ChoiceChip(
-                  label: Text(
-                    DateFormatter.appointmentCardTime(slot.scheduledAt),
-                  ),
-                  selected: selected,
-                  onSelected: (_) => onSlotSelected(slot),
-                );
-              }).toList(),
-            );
-          },
-        ),
+        const Gap(AppDesignTokens.spacingMd),
+        for (final type in AppointmentVisitType.values) ...[
+          ListTile(
+            tileColor: selected == type
+                ? context.imshTheme.primaryHighlight
+                : colorScheme.surfaceContainerLowest,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(AppDesignTokens.radiusMd),
+              side: BorderSide(
+                color: selected == type
+                    ? colorScheme.primary
+                    : colorScheme.outlineVariant,
+              ),
+            ),
+            leading: Icon(
+              type == AppointmentVisitType.telemedicine
+                  ? Icons.videocam_outlined
+                  : Icons.local_hospital_outlined,
+              color: colorScheme.primary,
+            ),
+            title: Text(
+              type.label,
+              style: const TextStyle(fontWeight: FontWeight.w600),
+            ),
+            subtitle: Text(
+              type == AppointmentVisitType.telemedicine
+                  ? 'Remote consultation by video'
+                  : 'Visit the hospital in person',
+            ),
+            onTap: () => onSelected(type),
+          ),
+          const Gap(AppDesignTokens.spacingSm),
+        ],
       ],
     );
   }
@@ -520,72 +489,73 @@ class _DateTimeStep extends ConsumerWidget {
 class _ConfirmStep extends StatelessWidget {
   const _ConfirmStep({
     required this.wizard,
+    required this.isReschedule,
     required this.reasonController,
     required this.onReasonChanged,
   });
 
   final BookingWizardState wizard;
+  final bool isReschedule;
   final TextEditingController reasonController;
   final void Function(String reason) onReasonChanged;
 
   @override
   Widget build(BuildContext context) {
     final colorScheme = context.colorScheme;
-    final doctor = wizard.doctor;
-    final slot = wizard.selectedSlot;
+    final date = wizard.selectedDate;
 
     return SingleChildScrollView(
       padding: const EdgeInsets.all(AppDesignTokens.containerPadding),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          if (doctor != null) ...[
-            Row(
+          Container(
+            padding: const EdgeInsets.all(AppDesignTokens.spacingMd),
+            decoration: BoxDecoration(
+              color: colorScheme.surfaceContainerLowest,
+              borderRadius: BorderRadius.circular(AppDesignTokens.radiusMd),
+              border: Border.all(color: colorScheme.outlineVariant),
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                DoctorAvatar(
-                  name: doctor.name,
-                  avatarUrl: doctor.avatarUrl,
-                  size: 56,
-                ),
-                const Gap(AppDesignTokens.spacingMd),
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        doctor.name,
-                        style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                              fontWeight: FontWeight.w700,
-                            ),
-                      ),
-                      Text(
-                        doctor.specialty,
-                        style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                              color: colorScheme.primary,
-                            ),
-                      ),
-                    ],
+                if (!isReschedule && wizard.specialty != null) ...[
+                  Text(
+                    wizard.specialty!.name,
+                    style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                          fontWeight: FontWeight.w700,
+                        ),
                   ),
+                  const Gap(AppDesignTokens.spacingSm),
+                ],
+                if (date != null)
+                  Text(
+                    DateFormatter.appointmentCardDate(date),
+                    style: Theme.of(context).textTheme.bodyLarge,
+                  ),
+                if (!isReschedule && wizard.visitType != null) ...[
+                  const Gap(AppDesignTokens.spacingXs),
+                  Text(
+                    wizard.visitType!.label,
+                    style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                          color: colorScheme.primary,
+                          fontWeight: FontWeight.w600,
+                        ),
+                  ),
+                ],
+                const Gap(AppDesignTokens.spacingSm),
+                Text(
+                  isReschedule
+                      ? 'Your preferred date will be updated. Staff will confirm timing.'
+                      : 'Submitted as Requested. A doctor will be assigned after review.',
+                  style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                        color: colorScheme.onSurfaceVariant,
+                      ),
                 ),
               ],
             ),
-            const Gap(AppDesignTokens.spacingLg),
-          ],
-          if (slot != null) ...[
-            Text(
-              DateFormatter.appointmentCardDate(slot.scheduledAt),
-              style: Theme.of(context).textTheme.titleSmall?.copyWith(
-                    fontWeight: FontWeight.w700,
-                  ),
-            ),
-            Text(
-              DateFormatter.appointmentCardTime(slot.scheduledAt),
-              style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                    color: colorScheme.onSurfaceVariant,
-                  ),
-            ),
-            const Gap(AppDesignTokens.spacingLg),
-          ],
+          ),
+          const Gap(AppDesignTokens.spacingLg),
           TextField(
             controller: reasonController,
             onChanged: onReasonChanged,

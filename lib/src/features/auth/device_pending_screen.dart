@@ -108,8 +108,9 @@ class _DevicePendingScreenState extends ConsumerState<DevicePendingScreen> {
                     ),
                     const Gap(AppDesignTokens.spacingMd),
                     Text(
-                      'This device needs to be approved at the hospital '
-                      'frontdesk before you can use the patient portal.',
+                      'This device needs frontdesk approval before you can '
+                      'use the patient portal. If you signed in with a '
+                      'different account on this device, approval is required again.',
                       style: theme.textTheme.bodyMedium?.copyWith(
                         color: colorScheme.onSurfaceVariant,
                       ),

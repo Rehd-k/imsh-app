@@ -35,6 +35,20 @@ class AppRouter extends RootStackRouter {
     AutoRoute(page: AppointmentDetailRoute.page, path: '/appointments/:id'),
     AutoRoute(page: BookAppointmentRoute.page, path: '/appointments/book'),
 
+    AutoRoute(page: TheatreSchedulesRoute.page, path: '/theatre'),
+    AutoRoute(page: TheatreScheduleDetailRoute.page, path: '/theatre/:id'),
+
+    AutoRoute(page: HealthCampaignsRoute.page, path: '/health/campaigns'),
+    AutoRoute(
+      page: HealthCampaignDetailRoute.page,
+      path: '/health/campaigns/:id',
+    ),
+    AutoRoute(page: HealthNewsRoute.page, path: '/health/news'),
+    AutoRoute(page: HealthNewsDetailRoute.page, path: '/health/news/:id'),
+
+    AutoRoute(page: VitalsTrendRoute.page, path: '/trends/vitals'),
+    AutoRoute(page: LabTrendRoute.page, path: '/trends/lab'),
+
     AutoRoute(page: LabResultsRoute.page, path: '/lab-results'),
     AutoRoute(page: LabResultDetailRoute.page, path: '/lab-results/:id'),
 

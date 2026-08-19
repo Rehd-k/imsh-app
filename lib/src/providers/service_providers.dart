@@ -7,12 +7,14 @@ import '../services/emergency_service.dart';
 import '../services/family_service.dart';
 import '../services/feedback_service.dart';
 import '../services/health_card_service.dart';
+import '../services/health_content_service.dart';
 import '../services/lab_service.dart';
 import '../services/medication_service.dart';
 import '../services/medical_record_service.dart';
 import '../services/notification_service.dart';
 import '../services/profile_service.dart';
 import '../services/radiology_service.dart';
+import '../services/theatre_service.dart';
 
 final profileServiceProvider = Provider<ProfileService>((ref) {
   return ProfileService();
@@ -64,4 +66,12 @@ final healthCardServiceProvider = Provider<HealthCardService>((ref) {
 
 final deviceServiceProvider = Provider<DeviceService>((ref) {
   return DeviceService();
+});
+
+final theatreServiceProvider = Provider<TheatreService>((ref) {
+  return TheatreService();
+});
+
+final healthContentServiceProvider = Provider<HealthContentService>((ref) {
+  return HealthContentService();
 });

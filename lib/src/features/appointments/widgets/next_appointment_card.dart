@@ -127,7 +127,7 @@ class NextAppointmentCard extends StatelessWidget {
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Text(
-                                    appointment.doctor.name,
+                                    appointment.doctorDisplayName,
                                     style:
                                         theme.textTheme.titleMedium?.copyWith(
                                       fontWeight: FontWeight.w700,
@@ -135,11 +135,18 @@ class NextAppointmentCard extends StatelessWidget {
                                   ),
                                   const Gap(2),
                                   Text(
-                                    appointment.doctor.specialty,
+                                    appointment.specialtyLabel,
                                     style:
                                         theme.textTheme.bodyMedium?.copyWith(
                                       color: colorScheme.primary,
                                       fontWeight: FontWeight.w500,
+                                    ),
+                                  ),
+                                  const Gap(2),
+                                  Text(
+                                    appointment.visitType.label,
+                                    style: theme.textTheme.bodySmall?.copyWith(
+                                      color: colorScheme.onSurfaceVariant,
                                     ),
                                   ),
                                 ],
@@ -162,11 +169,20 @@ class NextAppointmentCard extends StatelessWidget {
                             const Gap(AppDesignTokens.spacingSm),
                             Expanded(
                               child: _InfoTile(
-                                icon: Icons.schedule_outlined,
-                                label: 'TIME',
-                                value: DateFormatter.appointmentCardTime(
-                                  appointment.scheduledAt,
-                                ),
+                                icon: appointment.status ==
+                                        AppointmentStatus.requested
+                                    ? Icons.hourglass_top_outlined
+                                    : Icons.schedule_outlined,
+                                label: appointment.status ==
+                                        AppointmentStatus.requested
+                                    ? 'STATUS'
+                                    : 'TIME',
+                                value: appointment.status ==
+                                        AppointmentStatus.requested
+                                    ? 'Awaiting confirm'
+                                    : DateFormatter.appointmentCardTime(
+                                        appointment.scheduledAt,
+                                      ),
                               ),
                             ),
                           ],
@@ -193,7 +209,7 @@ class NextAppointmentCard extends StatelessWidget {
                               const Gap(AppDesignTokens.spacingSm),
                               Expanded(
                                 child: Text(
-                                  appointment.location,
+                                  appointment.locationLabel,
                                   style: theme.textTheme.bodyMedium?.copyWith(
                                     color: colorScheme.onSurfaceVariant,
                                   ),

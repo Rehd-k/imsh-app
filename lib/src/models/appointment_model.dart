@@ -5,6 +5,8 @@ part 'appointment_model.g.dart';
 
 @JsonEnum(alwaysCreate: true)
 enum AppointmentStatus {
+  @JsonValue('REQUESTED')
+  requested,
   @JsonValue('CONFIRMED')
   confirmed,
   @JsonValue('PENDING')
@@ -13,6 +15,14 @@ enum AppointmentStatus {
   cancelled,
   @JsonValue('COMPLETED')
   completed,
+}
+
+@JsonEnum(alwaysCreate: true)
+enum AppointmentVisitType {
+  @JsonValue('IN_PERSON')
+  inPerson,
+  @JsonValue('TELEMEDICINE')
+  telemedicine,
 }
 
 @JsonEnum(alwaysCreate: true)
@@ -39,10 +49,23 @@ enum ConsultationResultStatus {
 
 extension AppointmentStatusDisplay on AppointmentStatus {
   String get label => switch (this) {
+        AppointmentStatus.requested => 'Requested',
         AppointmentStatus.confirmed => 'Confirmed',
         AppointmentStatus.pending => 'Pending',
         AppointmentStatus.cancelled => 'Cancelled',
         AppointmentStatus.completed => 'Completed',
+      };
+}
+
+extension AppointmentVisitTypeDisplay on AppointmentVisitType {
+  String get label => switch (this) {
+        AppointmentVisitType.inPerson => 'In person',
+        AppointmentVisitType.telemedicine => 'Telemedicine',
+      };
+
+  String get apiValue => switch (this) {
+        AppointmentVisitType.inPerson => 'IN_PERSON',
+        AppointmentVisitType.telemedicine => 'TELEMEDICINE',
       };
 }
 
@@ -74,7 +97,7 @@ abstract class DoctorSummary with _$DoctorSummary {
   const factory DoctorSummary({
     required String id,
     required String name,
-    required String specialty,
+    String? specialty,
     String? avatarUrl,
   }) = _DoctorSummary;
 
@@ -88,7 +111,9 @@ abstract class AppointmentSummary with _$AppointmentSummary {
     required String id,
     required AppointmentStatus status,
     required DateTime scheduledAt,
-    required String location,
+    String? location,
+    String? specialty,
+    @Default(AppointmentVisitType.inPerson) AppointmentVisitType visitType,
     required DoctorSummary doctor,
     @Default(true) bool canReschedule,
     @Default(true) bool canCancel,
@@ -98,13 +123,50 @@ abstract class AppointmentSummary with _$AppointmentSummary {
       _$AppointmentSummaryFromJson(json);
 }
 
+extension AppointmentSummaryDisplay on AppointmentSummary {
+  String get specialtyLabel {
+    final direct = specialty?.trim();
+    if (direct != null && direct.isNotEmpty) return direct;
+    final fromDoctor = doctor.specialty?.trim();
+    if (fromDoctor != null && fromDoctor.isNotEmpty) return fromDoctor;
+    return 'Appointment';
+  }
+
+  String get doctorDisplayName {
+    final name = doctor.name.trim();
+    if (name.isEmpty || name.toLowerCase() == 'unassigned') {
+      return status == AppointmentStatus.requested
+          ? 'Doctor to be assigned'
+          : 'Unassigned';
+    }
+    return name;
+  }
+
+  bool get isUnassignedDoctor {
+    final name = doctor.name.trim().toLowerCase();
+    return name.isEmpty || name == 'unassigned' || doctor.id.isEmpty;
+  }
+
+  String get locationLabel {
+    final value = location?.trim();
+    if (value == null || value.isEmpty) {
+      return visitType == AppointmentVisitType.telemedicine
+          ? 'Telemedicine'
+          : 'Location TBD';
+    }
+    return value;
+  }
+}
+
 @freezed
 abstract class AppointmentDetail with _$AppointmentDetail {
   const factory AppointmentDetail({
     required String id,
     required AppointmentStatus status,
     required DateTime scheduledAt,
-    required String location,
+    String? location,
+    String? specialty,
+    @Default(AppointmentVisitType.inPerson) AppointmentVisitType visitType,
     required DoctorSummary doctor,
     String? reason,
     String? notes,
@@ -116,6 +178,41 @@ abstract class AppointmentDetail with _$AppointmentDetail {
 
   factory AppointmentDetail.fromJson(Map<String, dynamic> json) =>
       _$AppointmentDetailFromJson(json);
+}
+
+extension AppointmentDetailDisplay on AppointmentDetail {
+  String get specialtyLabel {
+    final direct = specialty?.trim();
+    if (direct != null && direct.isNotEmpty) return direct;
+    final fromDoctor = doctor.specialty?.trim();
+    if (fromDoctor != null && fromDoctor.isNotEmpty) return fromDoctor;
+    return 'Appointment';
+  }
+
+  String get doctorDisplayName {
+    final name = doctor.name.trim();
+    if (name.isEmpty || name.toLowerCase() == 'unassigned') {
+      return status == AppointmentStatus.requested
+          ? 'Doctor to be assigned'
+          : 'Unassigned';
+    }
+    return name;
+  }
+
+  bool get isUnassignedDoctor {
+    final name = doctor.name.trim().toLowerCase();
+    return name.isEmpty || name == 'unassigned' || doctor.id.isEmpty;
+  }
+
+  String get locationLabel {
+    final value = location?.trim();
+    if (value == null || value.isEmpty) {
+      return visitType == AppointmentVisitType.telemedicine
+          ? 'Telemedicine'
+          : 'Location TBD';
+    }
+    return value;
+  }
 }
 
 @freezed
@@ -208,7 +305,7 @@ abstract class BookableDoctor with _$BookableDoctor {
   const factory BookableDoctor({
     required String id,
     required String name,
-    required String specialty,
+    String? specialty,
     String? avatarUrl,
   }) = _BookableDoctor;
 
@@ -252,8 +349,9 @@ abstract class AvailabilityResponse with _$AvailabilityResponse {
 @freezed
 abstract class CreateAppointmentRequest with _$CreateAppointmentRequest {
   const factory CreateAppointmentRequest({
-    required String doctorId,
-    required DateTime scheduledAt,
+    required String specialty,
+    required String date,
+    required AppointmentVisitType visitType,
     String? reason,
   }) = _CreateAppointmentRequest;
 

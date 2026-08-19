@@ -118,12 +118,6 @@ class AppointmentsBody extends ConsumerWidget {
   ) {
     ref.read(bookingWizardProvider.notifier).startReschedule(
           appointmentId: appointment.id,
-          doctor: BookableDoctor(
-            id: appointment.doctor.id,
-            name: appointment.doctor.name,
-            specialty: appointment.doctor.specialty,
-            avatarUrl: appointment.doctor.avatarUrl,
-          ),
         );
     context.router.push(
       BookAppointmentRoute(appointmentId: appointment.id),

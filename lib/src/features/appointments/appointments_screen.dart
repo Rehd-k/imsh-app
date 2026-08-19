@@ -76,7 +76,7 @@ class AppointmentDetailScreen extends ConsumerWidget {
                 children: [
                   Expanded(
                     child: Text(
-                      detail.doctor.name,
+                      detail.doctorDisplayName,
                       style: Theme.of(context).textTheme.headlineSmall?.copyWith(
                             fontWeight: FontWeight.w700,
                           ),
@@ -87,17 +87,24 @@ class AppointmentDetailScreen extends ConsumerWidget {
               ),
               const Gap(AppDesignTokens.spacingXs),
               Text(
-                detail.doctor.specialty,
+                detail.specialtyLabel,
                 style: Theme.of(context).textTheme.bodyLarge?.copyWith(
                       color: colorScheme.primary,
                       fontWeight: FontWeight.w500,
+                    ),
+              ),
+              const Gap(AppDesignTokens.spacingXs),
+              Text(
+                detail.visitType.label,
+                style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                      color: colorScheme.onSurfaceVariant,
                     ),
               ),
               const Gap(AppDesignTokens.spacingLg),
               Row(
                 children: [
                   DoctorAvatar(
-                    name: detail.doctor.name,
+                    name: detail.doctorDisplayName,
                     avatarUrl: detail.doctor.avatarUrl,
                     size: 72,
                   ),
@@ -115,11 +122,17 @@ class AppointmentDetailScreen extends ConsumerWidget {
                         ),
                         const Gap(AppDesignTokens.spacingSm),
                         _DetailRow(
-                          icon: Icons.schedule_outlined,
-                          label: 'Time',
-                          value: DateFormatter.appointmentCardTime(
-                            detail.scheduledAt,
-                          ),
+                          icon: detail.status == AppointmentStatus.requested
+                              ? Icons.hourglass_top_outlined
+                              : Icons.schedule_outlined,
+                          label: detail.status == AppointmentStatus.requested
+                              ? 'Time'
+                              : 'Time',
+                          value: detail.status == AppointmentStatus.requested
+                              ? 'To be confirmed'
+                              : DateFormatter.appointmentCardTime(
+                                  detail.scheduledAt,
+                                ),
                         ),
                       ],
                     ),
@@ -142,7 +155,7 @@ class AppointmentDetailScreen extends ConsumerWidget {
                       color: colorScheme.onSurfaceVariant,
                     ),
                     const Gap(AppDesignTokens.spacingSm),
-                    Expanded(child: Text(detail.location)),
+                    Expanded(child: Text(detail.locationLabel)),
                   ],
                 ),
               ),
@@ -179,12 +192,6 @@ class AppointmentDetailScreen extends ConsumerWidget {
                   onPressed: () {
                     ref.read(bookingWizardProvider.notifier).startReschedule(
                           appointmentId: detail.id,
-                          doctor: BookableDoctor(
-                            id: detail.doctor.id,
-                            name: detail.doctor.name,
-                            specialty: detail.doctor.specialty,
-                            avatarUrl: detail.doctor.avatarUrl,
-                          ),
                         );
                     context.router.push(
                       BookAppointmentRoute(appointmentId: detail.id),

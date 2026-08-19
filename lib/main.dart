@@ -19,6 +19,7 @@ import 'src/services/navigation_service.dart';
 import 'src/shared/widgets/offline_banner.dart';
 import 'src/widgets/app_notification_host.dart';
 import 'src/widgets/clock_sync_gate.dart';
+import 'src/widgets/imsh_android_update_layer.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -124,7 +125,11 @@ class _ImshAppState extends ConsumerState<ImshApp> {
         return MediaQuery(
           data: mediaQuery.copyWith(textScaler: clampedScaler),
           child: AppNotificationHost(
-            child: OfflineBanner(child: child ?? const SizedBox.shrink()),
+            child: OfflineBanner(
+              child: ImshAndroidUpdateLayer(
+                child: child ?? const SizedBox.shrink(),
+              ),
+            ),
           ),
         );
       },

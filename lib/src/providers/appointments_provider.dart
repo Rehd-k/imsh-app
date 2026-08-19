@@ -33,23 +33,6 @@ final appointmentSpecialtiesProvider =
   return service.listSpecialties();
 });
 
-final bookableDoctorsProvider = FutureProvider.autoDispose
-    .family<BookableDoctorListResponse, String>((ref, specialtyId) async {
-  final service = ref.watch(appointmentServiceProvider);
-  return service.listDoctors(specialtyId: specialtyId);
-});
-
-typedef AvailabilityParams = ({String doctorId, String date});
-
-final appointmentAvailabilityProvider = FutureProvider.autoDispose
-    .family<AvailabilityResponse, AvailabilityParams>((ref, params) async {
-  final service = ref.watch(appointmentServiceProvider);
-  return service.listAvailability(
-    doctorId: params.doctorId,
-    date: params.date,
-  );
-});
-
 final cancelAppointmentProvider =
     AsyncNotifierProvider.autoDispose<CancelAppointmentNotifier, Set<String>>(
   CancelAppointmentNotifier.new,
@@ -94,6 +77,7 @@ class BookAppointmentNotifier extends AutoDisposeAsyncNotifier<bool> {
   Future<AppointmentDetail> submit({
     required CreateAppointmentRequest request,
     String? appointmentId,
+    UpdateAppointmentRequest? updateRequest,
   }) async {
     state = const AsyncLoading();
 
@@ -103,10 +87,10 @@ class BookAppointmentNotifier extends AutoDisposeAsyncNotifier<bool> {
           ? await service.createAppointment(request)
           : await service.updateAppointment(
               appointmentId,
-              UpdateAppointmentRequest(
-                scheduledAt: request.scheduledAt,
-                reason: request.reason,
-              ),
+              updateRequest ??
+                  UpdateAppointmentRequest(
+                    reason: request.reason,
+                  ),
             );
       _invalidateAppointmentDashboards(ref);
       if (appointmentId != null) {
@@ -131,49 +115,40 @@ class BookingWizardState {
   const BookingWizardState({
     this.step = 0,
     this.specialty,
-    this.doctor,
     this.selectedDate,
-    this.selectedSlot,
+    this.visitType,
     this.reason = '',
     this.rescheduleAppointmentId,
-    this.prefilledDoctor,
   });
 
   final int step;
   final AppointmentSpecialty? specialty;
-  final BookableDoctor? doctor;
   final DateTime? selectedDate;
-  final AvailabilitySlot? selectedSlot;
+  final AppointmentVisitType? visitType;
   final String reason;
   final String? rescheduleAppointmentId;
-  final BookableDoctor? prefilledDoctor;
 
   bool get isReschedule => rescheduleAppointmentId != null;
 
   BookingWizardState copyWith({
     int? step,
     AppointmentSpecialty? specialty,
-    BookableDoctor? doctor,
     DateTime? selectedDate,
-    AvailabilitySlot? selectedSlot,
+    AppointmentVisitType? visitType,
     String? reason,
     String? rescheduleAppointmentId,
-    BookableDoctor? prefilledDoctor,
     bool clearSpecialty = false,
-    bool clearDoctor = false,
     bool clearDate = false,
-    bool clearSlot = false,
+    bool clearVisitType = false,
   }) {
     return BookingWizardState(
       step: step ?? this.step,
       specialty: clearSpecialty ? null : (specialty ?? this.specialty),
-      doctor: clearDoctor ? null : (doctor ?? this.doctor),
       selectedDate: clearDate ? null : (selectedDate ?? this.selectedDate),
-      selectedSlot: clearSlot ? null : (selectedSlot ?? this.selectedSlot),
+      visitType: clearVisitType ? null : (visitType ?? this.visitType),
       reason: reason ?? this.reason,
       rescheduleAppointmentId:
           rescheduleAppointmentId ?? this.rescheduleAppointmentId,
-      prefilledDoctor: prefilledDoctor ?? this.prefilledDoctor,
     );
   }
 }
@@ -182,14 +157,9 @@ class BookingWizardNotifier extends AutoDisposeNotifier<BookingWizardState> {
   @override
   BookingWizardState build() => const BookingWizardState();
 
-  void startReschedule({
-    required String appointmentId,
-    required BookableDoctor doctor,
-  }) {
+  void startReschedule({required String appointmentId}) {
     state = BookingWizardState(
-      step: 2,
-      doctor: doctor,
-      prefilledDoctor: doctor,
+      step: 0,
       rescheduleAppointmentId: appointmentId,
       selectedDate: DateTime.now(),
     );
@@ -202,32 +172,18 @@ class BookingWizardNotifier extends AutoDisposeNotifier<BookingWizardState> {
   void selectSpecialty(AppointmentSpecialty specialty) {
     state = state.copyWith(
       specialty: specialty,
-      clearDoctor: true,
-      clearDate: true,
-      clearSlot: true,
+      selectedDate: DateTime.now(),
+      clearVisitType: true,
       step: 1,
     );
   }
 
-  void selectDoctor(BookableDoctor doctor) {
-    state = state.copyWith(
-      doctor: doctor,
-      clearDate: true,
-      clearSlot: true,
-      selectedDate: DateTime.now(),
-      step: 2,
-    );
-  }
-
   void selectDate(DateTime date) {
-    state = state.copyWith(
-      selectedDate: date,
-      clearSlot: true,
-    );
+    state = state.copyWith(selectedDate: date);
   }
 
-  void selectSlot(AvailabilitySlot slot) {
-    state = state.copyWith(selectedSlot: slot);
+  void selectVisitType(AppointmentVisitType visitType) {
+    state = state.copyWith(visitType: visitType);
   }
 
   void setReason(String reason) {

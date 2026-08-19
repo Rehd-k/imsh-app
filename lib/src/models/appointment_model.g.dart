@@ -10,7 +10,7 @@ _DoctorSummary _$DoctorSummaryFromJson(Map<String, dynamic> json) =>
     _DoctorSummary(
       id: json['id'] as String,
       name: json['name'] as String,
-      specialty: json['specialty'] as String,
+      specialty: json['specialty'] as String?,
       avatarUrl: json['avatarUrl'] as String?,
     );
 
@@ -27,7 +27,14 @@ _AppointmentSummary _$AppointmentSummaryFromJson(Map<String, dynamic> json) =>
       id: json['id'] as String,
       status: $enumDecode(_$AppointmentStatusEnumMap, json['status']),
       scheduledAt: DateTime.parse(json['scheduledAt'] as String),
-      location: json['location'] as String,
+      location: json['location'] as String?,
+      specialty: json['specialty'] as String?,
+      visitType:
+          $enumDecodeNullable(
+            _$AppointmentVisitTypeEnumMap,
+            json['visitType'],
+          ) ??
+          AppointmentVisitType.inPerson,
       doctor: DoctorSummary.fromJson(json['doctor'] as Map<String, dynamic>),
       canReschedule: json['canReschedule'] as bool? ?? true,
       canCancel: json['canCancel'] as bool? ?? true,
@@ -39,16 +46,24 @@ Map<String, dynamic> _$AppointmentSummaryToJson(_AppointmentSummary instance) =>
       'status': _$AppointmentStatusEnumMap[instance.status]!,
       'scheduledAt': instance.scheduledAt.toIso8601String(),
       'location': instance.location,
+      'specialty': instance.specialty,
+      'visitType': _$AppointmentVisitTypeEnumMap[instance.visitType]!,
       'doctor': instance.doctor,
       'canReschedule': instance.canReschedule,
       'canCancel': instance.canCancel,
     };
 
 const _$AppointmentStatusEnumMap = {
+  AppointmentStatus.requested: 'REQUESTED',
   AppointmentStatus.confirmed: 'CONFIRMED',
   AppointmentStatus.pending: 'PENDING',
   AppointmentStatus.cancelled: 'CANCELLED',
   AppointmentStatus.completed: 'COMPLETED',
+};
+
+const _$AppointmentVisitTypeEnumMap = {
+  AppointmentVisitType.inPerson: 'IN_PERSON',
+  AppointmentVisitType.telemedicine: 'TELEMEDICINE',
 };
 
 _AppointmentDetail _$AppointmentDetailFromJson(Map<String, dynamic> json) =>
@@ -56,7 +71,14 @@ _AppointmentDetail _$AppointmentDetailFromJson(Map<String, dynamic> json) =>
       id: json['id'] as String,
       status: $enumDecode(_$AppointmentStatusEnumMap, json['status']),
       scheduledAt: DateTime.parse(json['scheduledAt'] as String),
-      location: json['location'] as String,
+      location: json['location'] as String?,
+      specialty: json['specialty'] as String?,
+      visitType:
+          $enumDecodeNullable(
+            _$AppointmentVisitTypeEnumMap,
+            json['visitType'],
+          ) ??
+          AppointmentVisitType.inPerson,
       doctor: DoctorSummary.fromJson(json['doctor'] as Map<String, dynamic>),
       reason: json['reason'] as String?,
       notes: json['notes'] as String?,
@@ -76,6 +98,8 @@ Map<String, dynamic> _$AppointmentDetailToJson(_AppointmentDetail instance) =>
       'status': _$AppointmentStatusEnumMap[instance.status]!,
       'scheduledAt': instance.scheduledAt.toIso8601String(),
       'location': instance.location,
+      'specialty': instance.specialty,
+      'visitType': _$AppointmentVisitTypeEnumMap[instance.visitType]!,
       'doctor': instance.doctor,
       'reason': instance.reason,
       'notes': instance.notes,
@@ -217,7 +241,7 @@ _BookableDoctor _$BookableDoctorFromJson(Map<String, dynamic> json) =>
     _BookableDoctor(
       id: json['id'] as String,
       name: json['name'] as String,
-      specialty: json['specialty'] as String,
+      specialty: json['specialty'] as String?,
       avatarUrl: json['avatarUrl'] as String?,
     );
 
@@ -278,16 +302,18 @@ Map<String, dynamic> _$AvailabilityResponseToJson(
 _CreateAppointmentRequest _$CreateAppointmentRequestFromJson(
   Map<String, dynamic> json,
 ) => _CreateAppointmentRequest(
-  doctorId: json['doctorId'] as String,
-  scheduledAt: DateTime.parse(json['scheduledAt'] as String),
+  specialty: json['specialty'] as String,
+  date: json['date'] as String,
+  visitType: $enumDecode(_$AppointmentVisitTypeEnumMap, json['visitType']),
   reason: json['reason'] as String?,
 );
 
 Map<String, dynamic> _$CreateAppointmentRequestToJson(
   _CreateAppointmentRequest instance,
 ) => <String, dynamic>{
-  'doctorId': instance.doctorId,
-  'scheduledAt': instance.scheduledAt.toIso8601String(),
+  'specialty': instance.specialty,
+  'date': instance.date,
+  'visitType': _$AppointmentVisitTypeEnumMap[instance.visitType]!,
   'reason': instance.reason,
 };
 

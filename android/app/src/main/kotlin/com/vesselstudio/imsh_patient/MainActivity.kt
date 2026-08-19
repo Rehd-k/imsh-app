@@ -1,4 +1,4 @@
-package com.vesselstudio.imsh_patients
+package com.vesselstudio.imsh_patient
 
 import io.flutter.embedding.android.FlutterActivity
 
