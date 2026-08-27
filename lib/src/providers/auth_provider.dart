@@ -1,5 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../core/constants/test_accounts.dart';
 import '../core/storage/token_storage.dart';
 import '../core/utils/user_error_message.dart';
 import '../models/device_model.dart';
@@ -35,9 +36,11 @@ class PatientAuthState {
   bool get isAuthenticated => patient != null;
 
   bool get isDeviceApproved =>
+      isDeviceVerificationExempt(patient?.patientId) ||
       device?.status == PatientDeviceStatus.approved;
 
   bool get isDevicePending =>
+      !isDeviceVerificationExempt(patient?.patientId) &&
       device?.status == PatientDeviceStatus.pending;
 
   /// Token present and device approved — full app access.

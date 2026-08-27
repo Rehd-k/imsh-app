@@ -7,7 +7,6 @@ import 'package:gap/gap.dart';
 import 'package:imsh/app_router.gr.dart';
 
 import '../../core/theme/app_design_tokens.dart';
-import '../../models/device_model.dart';
 import '../../models/patient_model.dart';
 import '../../providers/auth_provider.dart';
 import '../../shared/widgets/imsh_surface_card.dart';
@@ -44,7 +43,7 @@ class _DevicePendingScreenState extends ConsumerState<DevicePendingScreen> {
     try {
       await ref.read(patientAuthProvider.notifier).refreshDeviceStatus();
       final auth = ref.read(patientAuthProvider);
-      if (auth.device?.status == PatientDeviceStatus.approved) {
+      if (auth.canAccessApp) {
         await _goToShell();
       }
     } catch (_) {
@@ -78,7 +77,7 @@ class _DevicePendingScreenState extends ConsumerState<DevicePendingScreen> {
     final colorScheme = theme.colorScheme;
 
     ref.listen(patientAuthProvider, (prev, next) {
-      if (next.device?.status == PatientDeviceStatus.approved) {
+      if (next.canAccessApp) {
         _goToShell();
       }
     });

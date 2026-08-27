@@ -23,6 +23,7 @@ Future<void> startProfilePhotoUpload(BuildContext context, WidgetRef ref) async 
     maxWidth: 2048,
     maxHeight: 2048,
     imageQuality: 90,
+    requestFullMetadata: source == ImageSource.camera,
   );
   if (picked == null || !context.mounted) return;
 
