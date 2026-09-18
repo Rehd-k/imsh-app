@@ -20,9 +20,7 @@ class NextDoseCard extends StatelessWidget {
   final bool isMarking;
 
   String _formatTime(DateTime date) {
-    return DateFormat('h:mm a')
-        .format(AppTimezone.toLocal(date))
-        .toUpperCase();
+    return DateFormat('h:mm a').format(AppTimezone.toLocal(date));
   }
 
   @override
@@ -51,7 +49,7 @@ class NextDoseCard extends StatelessWidget {
               ),
               const Gap(AppDesignTokens.spacingSm),
               Text(
-                'NEXT DOSE AT ${_formatTime(dose.scheduledAt)}',
+                'Next dose at ${_formatTime(dose.scheduledAt)}',
                 style: theme.textTheme.labelSmall?.copyWith(
                   color: colorScheme.onPrimary.withValues(alpha: 0.85),
                   fontWeight: FontWeight.w600,
@@ -85,8 +83,9 @@ class NextDoseCard extends StatelessWidget {
               style: FilledButton.styleFrom(
                 backgroundColor: colorScheme.onPrimary,
                 foregroundColor: colorScheme.primary,
-                disabledBackgroundColor:
-                    colorScheme.onPrimary.withValues(alpha: 0.7),
+                disabledBackgroundColor: colorScheme.onPrimary.withValues(
+                  alpha: 0.7,
+                ),
                 padding: const EdgeInsets.symmetric(
                   vertical: AppDesignTokens.spacingMd,
                 ),

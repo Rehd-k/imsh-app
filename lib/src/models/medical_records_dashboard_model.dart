@@ -118,7 +118,7 @@ class DashboardDiagnosis {
     required this.title,
     required this.doctorName,
     this.specialty,
-    this.status,
+    this.icdCode,
     this.diagnosedAt,
   });
 
@@ -126,7 +126,7 @@ class DashboardDiagnosis {
   final String title;
   final String doctorName;
   final String? specialty;
-  final String? status;
+  final String? icdCode;
   final DateTime? diagnosedAt;
 
   factory DashboardDiagnosis.fromJson(Map<String, dynamic> json) {
@@ -135,7 +135,7 @@ class DashboardDiagnosis {
       title: (json['title'] as String?)?.trim() ?? '',
       doctorName: (json['doctorName'] as String?)?.trim() ?? '',
       specialty: json['specialty'] as String?,
-      status: json['status'] as String?,
+      icdCode: json['icdCode'] as String?,
       diagnosedAt: _asDateTime(json['diagnosedAt']),
     );
   }

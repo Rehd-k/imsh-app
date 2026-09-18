@@ -41,8 +41,9 @@ class VitalsTrendScreen extends ConsumerWidget {
           ),
         ),
         data: (points) {
-          final labels =
-              points.map((p) => compactTrendDate(p.at)).toList(growable: false);
+          final labels = points
+              .map((p) => compactTrendDate(p.at))
+              .toList(growable: false);
           final pulseSpots = <FlSpot>[];
           final systolicSpots = <FlSpot>[];
           final diastolicSpots = <FlSpot>[];
@@ -52,12 +53,14 @@ class VitalsTrendScreen extends ConsumerWidget {
               pulseSpots.add(FlSpot(i.toDouble(), point.pulseRate!.toDouble()));
             }
             if (point.systolic != null) {
-              systolicSpots
-                  .add(FlSpot(i.toDouble(), point.systolic!.toDouble()));
+              systolicSpots.add(
+                FlSpot(i.toDouble(), point.systolic!.toDouble()),
+              );
             }
             if (point.diastolic != null) {
-              diastolicSpots
-                  .add(FlSpot(i.toDouble(), point.diastolic!.toDouble()));
+              diastolicSpots.add(
+                FlSpot(i.toDouble(), point.diastolic!.toDouble()),
+              );
             }
           }
 
@@ -70,17 +73,17 @@ class VitalsTrendScreen extends ConsumerWidget {
               padding: const EdgeInsets.all(AppDesignTokens.containerPadding),
               children: [
                 Text(
-                  'From your recent encounters',
+                  'From clinic visits and hospital observations',
                   style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                        color: colorScheme.onSurfaceVariant,
-                      ),
+                    color: colorScheme.onSurfaceVariant,
+                  ),
                 ),
                 const Gap(AppDesignTokens.spacingLg),
                 Text(
                   'Heart rate',
                   style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                        fontWeight: FontWeight.w700,
-                      ),
+                    fontWeight: FontWeight.w700,
+                  ),
                 ),
                 const Gap(AppDesignTokens.spacingSm),
                 TrendLineChart(
@@ -93,8 +96,8 @@ class VitalsTrendScreen extends ConsumerWidget {
                 Text(
                   'Systolic BP',
                   style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                        fontWeight: FontWeight.w700,
-                      ),
+                    fontWeight: FontWeight.w700,
+                  ),
                 ),
                 const Gap(AppDesignTokens.spacingSm),
                 TrendLineChart(
@@ -106,8 +109,8 @@ class VitalsTrendScreen extends ConsumerWidget {
                 Text(
                   'Diastolic BP',
                   style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                        fontWeight: FontWeight.w700,
-                      ),
+                    fontWeight: FontWeight.w700,
+                  ),
                 ),
                 const Gap(AppDesignTokens.spacingSm),
                 TrendLineChart(
@@ -127,10 +130,7 @@ class VitalsTrendScreen extends ConsumerWidget {
 
 @RoutePage()
 class LabTrendScreen extends ConsumerStatefulWidget {
-  const LabTrendScreen({
-    super.key,
-    @QueryParam('analyte') this.analyte,
-  });
+  const LabTrendScreen({super.key, @QueryParam('analyte') this.analyte});
 
   final String? analyte;
 
@@ -156,9 +156,7 @@ class _LabTrendScreenState extends ConsumerState<LabTrendScreen> {
       appBar: const ImshAppBar(title: Text('Lab trends')),
       body: optionsAsync.when(
         loading: () => const Center(child: CircularProgressIndicator()),
-        error: (error, _) => Center(
-          child: Text(authFlowErrorMessage(error)),
-        ),
+        error: (error, _) => Center(child: Text(authFlowErrorMessage(error))),
         data: (options) {
           final effective = selected != null && options.contains(selected)
               ? selected
@@ -169,8 +167,8 @@ class _LabTrendScreenState extends ConsumerState<LabTrendScreen> {
               child: Text(
                 'No numeric lab analytes available yet.',
                 style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                      color: context.colorScheme.onSurfaceVariant,
-                    ),
+                  color: context.colorScheme.onSurfaceVariant,
+                ),
               ),
             );
           }
@@ -182,9 +180,9 @@ class _LabTrendScreenState extends ConsumerState<LabTrendScreen> {
             children: [
               Text(
                 'Analyte',
-                style: Theme.of(context).textTheme.titleSmall?.copyWith(
-                      fontWeight: FontWeight.w700,
-                    ),
+                style: Theme.of(
+                  context,
+                ).textTheme.titleSmall?.copyWith(fontWeight: FontWeight.w700),
               ),
               const Gap(AppDesignTokens.spacingSm),
               DropdownButtonFormField<String>(
@@ -198,9 +196,7 @@ class _LabTrendScreenState extends ConsumerState<LabTrendScreen> {
                   if (value == null) return;
                   setState(() => _selected = value);
                 },
-                decoration: const InputDecoration(
-                  border: OutlineInputBorder(),
-                ),
+                decoration: const InputDecoration(border: OutlineInputBorder()),
               ),
               const Gap(AppDesignTokens.spacingLg),
               trendAsync.when(
@@ -223,17 +219,11 @@ class _LabTrendScreenState extends ConsumerState<LabTrendScreen> {
                     children: [
                       Text(
                         effective,
-                        style:
-                            Theme.of(context).textTheme.titleMedium?.copyWith(
-                                  fontWeight: FontWeight.w700,
-                                ),
+                        style: Theme.of(context).textTheme.titleMedium
+                            ?.copyWith(fontWeight: FontWeight.w700),
                       ),
                       const Gap(AppDesignTokens.spacingSm),
-                      TrendLineChart(
-                        spots: spots,
-                        labels: labels,
-                        unit: unit,
-                      ),
+                      TrendLineChart(spots: spots, labels: labels, unit: unit),
                     ],
                   );
                 },

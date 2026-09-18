@@ -6,12 +6,11 @@ import 'package:imsh/app_router.gr.dart';
 import '../../providers/auth_provider.dart';
 import 'logout_button.dart';
 import 'patient_avatar.dart';
-import 'theme_mode_menu_button.dart';
 
 class ImshSliverAppBar extends ConsumerWidget {
   const ImshSliverAppBar({super.key});
 
-  static const double toolbarHeight = 52;
+  static const double toolbarHeight = 56;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -27,17 +26,17 @@ class ImshSliverAppBar extends ConsumerWidget {
       backgroundColor: colorScheme.surfaceContainerHighest,
       scrolledUnderElevation: 0,
       elevation: 0,
-      leading: Padding(
-        padding: const EdgeInsets.only(left: 8),
-        child: Center(
-          child: GestureDetector(
-            onTap: () => context.router.push(const ProfileRoute()),
-            child: PatientAvatar(patient: patient, radius: 18),
-          ),
-        ),
+      leading: IconButton(
+        tooltip: 'Profile',
+        padding: ImshAppBarActions.iconPadding,
+        constraints: ImshAppBarActions.iconConstraints,
+        onPressed: () => context.router.push(const ProfileRoute()),
+        icon: PatientAvatar(patient: patient, radius: 18),
       ),
       title: Text(
         'Ibom Specialist',
+        maxLines: 1,
+        overflow: TextOverflow.ellipsis,
         style: theme.textTheme.titleLarge?.copyWith(
           color: colorScheme.primary,
           fontWeight: FontWeight.w700,
@@ -53,8 +52,6 @@ class ImshSliverAppBar extends ConsumerWidget {
           tooltip: 'Notifications',
           onPressed: () => context.router.push(const NotificationsRoute()),
         ),
-        ThemeModeMenuButton(iconSize: ImshAppBarActions.iconSize),
-        LogoutIconButton(iconSize: ImshAppBarActions.iconSize),
         const SizedBox(width: 4),
       ],
     );

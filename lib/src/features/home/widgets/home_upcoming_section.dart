@@ -44,10 +44,7 @@ class HomeUpcomingSection extends StatelessWidget {
                 ),
               ),
               const Spacer(),
-              TextButton(
-                onPressed: onViewAll,
-                child: const Text('View All'),
-              ),
+              TextButton(onPressed: onViewAll, child: const Text('View all')),
             ],
           ),
           if (appointments.isEmpty)
@@ -189,10 +186,10 @@ class HomeUpcomingAppointmentCard extends StatelessWidget {
                                   Expanded(
                                     child: Text(
                                       '${appointment.doctorDisplayName} · ${appointment.status.label}',
-                                      style:
-                                          theme.textTheme.bodySmall?.copyWith(
-                                        color: colorScheme.onSurfaceVariant,
-                                      ),
+                                      style: theme.textTheme.bodySmall
+                                          ?.copyWith(
+                                            color: colorScheme.onSurfaceVariant,
+                                          ),
                                     ),
                                   ),
                                 ],
@@ -288,10 +285,8 @@ void openHomeReschedule(
   WidgetRef ref,
   AppointmentSummary appointment,
 ) {
-  ref.read(bookingWizardProvider.notifier).startReschedule(
-        appointmentId: appointment.id,
-      );
-  context.router.push(
-    BookAppointmentRoute(appointmentId: appointment.id),
-  );
+  ref
+      .read(bookingWizardProvider.notifier)
+      .startReschedule(appointmentId: appointment.id);
+  context.router.push(BookAppointmentRoute(appointmentId: appointment.id));
 }

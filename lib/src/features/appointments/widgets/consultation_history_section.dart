@@ -39,18 +39,13 @@ class ConsultationHistorySection extends StatelessWidget {
               ),
             ),
             const Spacer(),
-            TextButton(
-              onPressed: onViewAll,
-              child: const Text('View All'),
-            ),
+            TextButton(onPressed: onViewAll, child: const Text('View all')),
           ],
         ),
         const Gap(AppDesignTokens.spacingSm),
         ...items.map(
-          (item) => ConsultationHistoryTile(
-            item: item,
-            onTap: () => onItemTap(item),
-          ),
+          (item) =>
+              ConsultationHistoryTile(item: item, onTap: () => onItemTap(item)),
         ),
       ],
     );

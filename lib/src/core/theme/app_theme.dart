@@ -21,89 +21,91 @@ class AppTheme {
       ThemeData(brightness: brightness).textTheme,
     );
 
-    final textTheme = baseTextTheme.copyWith(
-      displayLarge: baseTextTheme.displayLarge?.copyWith(
-        fontSize: 28,
-        fontWeight: FontWeight.w700,
-        height: 36 / 28,
-        letterSpacing: -0.02 * 28,
-      ),
-      displayMedium: baseTextTheme.displayMedium?.copyWith(
-        fontSize: 24,
-        fontWeight: FontWeight.w700,
-        height: 32 / 24,
-      ),
-      displaySmall: baseTextTheme.displaySmall?.copyWith(
-        fontSize: 22,
-        fontWeight: FontWeight.w600,
-        height: 28 / 22,
-      ),
-      headlineLarge: baseTextTheme.headlineLarge?.copyWith(
-        fontSize: 22,
-        fontWeight: FontWeight.w600,
-        height: 28 / 22,
-      ),
-      headlineMedium: baseTextTheme.headlineMedium?.copyWith(
-        fontSize: 20,
-        fontWeight: FontWeight.w600,
-        height: 26 / 20,
-        letterSpacing: -0.01 * 20,
-      ),
-      headlineSmall: baseTextTheme.headlineSmall?.copyWith(
-        fontSize: 17,
-        fontWeight: FontWeight.w600,
-        height: 24 / 17,
-      ),
-      titleLarge: baseTextTheme.titleLarge?.copyWith(
-        fontSize: 17,
-        fontWeight: FontWeight.w600,
-        height: 24 / 17,
-      ),
-      titleMedium: baseTextTheme.titleMedium?.copyWith(
-        fontSize: 15,
-        fontWeight: FontWeight.w600,
-        height: 22 / 15,
-      ),
-      titleSmall: baseTextTheme.titleSmall?.copyWith(
-        fontSize: 13,
-        fontWeight: FontWeight.w600,
-        height: 18 / 13,
-      ),
-      bodyLarge: baseTextTheme.bodyLarge?.copyWith(
-        fontSize: 15,
-        fontWeight: FontWeight.w400,
-        height: 22 / 15,
-      ),
-      bodyMedium: baseTextTheme.bodyMedium?.copyWith(
-        fontSize: 14,
-        fontWeight: FontWeight.w400,
-        height: 20 / 14,
-      ),
-      bodySmall: baseTextTheme.bodySmall?.copyWith(
-        fontSize: 12,
-        fontWeight: FontWeight.w400,
-        height: 16 / 12,
-      ),
-      labelLarge: baseTextTheme.labelLarge?.copyWith(
-        fontSize: 12,
-        fontWeight: FontWeight.w600,
-        height: 16 / 12,
-        letterSpacing: 0.01 * 12,
-      ),
-      labelMedium: baseTextTheme.labelMedium?.copyWith(
-        fontSize: 11,
-        fontWeight: FontWeight.w500,
-        height: 14 / 11,
-      ),
-      labelSmall: baseTextTheme.labelSmall?.copyWith(
-        fontSize: 10,
-        fontWeight: FontWeight.w500,
-        height: 14 / 10,
-      ),
-    ).apply(
-      bodyColor: colorScheme.onSurface,
-      displayColor: colorScheme.onSurface,
-    );
+    final textTheme = baseTextTheme
+        .copyWith(
+          displayLarge: baseTextTheme.displayLarge?.copyWith(
+            fontSize: 28,
+            fontWeight: FontWeight.w700,
+            height: 36 / 28,
+            letterSpacing: -0.02 * 28,
+          ),
+          displayMedium: baseTextTheme.displayMedium?.copyWith(
+            fontSize: 24,
+            fontWeight: FontWeight.w700,
+            height: 32 / 24,
+          ),
+          displaySmall: baseTextTheme.displaySmall?.copyWith(
+            fontSize: 22,
+            fontWeight: FontWeight.w600,
+            height: 28 / 22,
+          ),
+          headlineLarge: baseTextTheme.headlineLarge?.copyWith(
+            fontSize: 22,
+            fontWeight: FontWeight.w600,
+            height: 28 / 22,
+          ),
+          headlineMedium: baseTextTheme.headlineMedium?.copyWith(
+            fontSize: 20,
+            fontWeight: FontWeight.w600,
+            height: 26 / 20,
+            letterSpacing: -0.01 * 20,
+          ),
+          headlineSmall: baseTextTheme.headlineSmall?.copyWith(
+            fontSize: 17,
+            fontWeight: FontWeight.w600,
+            height: 24 / 17,
+          ),
+          titleLarge: baseTextTheme.titleLarge?.copyWith(
+            fontSize: 17,
+            fontWeight: FontWeight.w600,
+            height: 24 / 17,
+          ),
+          titleMedium: baseTextTheme.titleMedium?.copyWith(
+            fontSize: 15,
+            fontWeight: FontWeight.w600,
+            height: 22 / 15,
+          ),
+          titleSmall: baseTextTheme.titleSmall?.copyWith(
+            fontSize: 13,
+            fontWeight: FontWeight.w600,
+            height: 18 / 13,
+          ),
+          bodyLarge: baseTextTheme.bodyLarge?.copyWith(
+            fontSize: 15,
+            fontWeight: FontWeight.w400,
+            height: 22 / 15,
+          ),
+          bodyMedium: baseTextTheme.bodyMedium?.copyWith(
+            fontSize: 14,
+            fontWeight: FontWeight.w400,
+            height: 20 / 14,
+          ),
+          bodySmall: baseTextTheme.bodySmall?.copyWith(
+            fontSize: 12,
+            fontWeight: FontWeight.w400,
+            height: 16 / 12,
+          ),
+          labelLarge: baseTextTheme.labelLarge?.copyWith(
+            fontSize: 15,
+            fontWeight: FontWeight.w600,
+            height: 20 / 15,
+            letterSpacing: 0.01 * 15,
+          ),
+          labelMedium: baseTextTheme.labelMedium?.copyWith(
+            fontSize: 12,
+            fontWeight: FontWeight.w500,
+            height: 16 / 12,
+          ),
+          labelSmall: baseTextTheme.labelSmall?.copyWith(
+            fontSize: 12,
+            fontWeight: FontWeight.w500,
+            height: 16 / 12,
+          ),
+        )
+        .apply(
+          bodyColor: colorScheme.onSurface,
+          displayColor: colorScheme.onSurface,
+        );
 
     final inputBorderRadius = BorderRadius.circular(AppDesignTokens.radiusSm);
     final cardShape = RoundedRectangleBorder(
@@ -126,7 +128,7 @@ class AppTheme {
         titleTextStyle: textTheme.titleMedium?.copyWith(
           color: colorScheme.onSurface,
         ),
-        toolbarHeight: 52,
+        toolbarHeight: 56,
       ),
       elevatedButtonTheme: ElevatedButtonThemeData(
         style: ElevatedButton.styleFrom(
@@ -134,14 +136,13 @@ class AppTheme {
           foregroundColor: colorScheme.onPrimary,
           elevation: 2,
           shadowColor: colorScheme.primary.withValues(alpha: 0.25),
+          minimumSize: const Size(44, 44),
           padding: const EdgeInsets.symmetric(
             horizontal: AppDesignTokens.spacingLg,
             vertical: 12,
           ),
           textStyle: textTheme.labelLarge,
-          shape: RoundedRectangleBorder(
-            borderRadius: inputBorderRadius,
-          ),
+          shape: RoundedRectangleBorder(borderRadius: inputBorderRadius),
         ),
       ),
       filledButtonTheme: FilledButtonThemeData(
@@ -150,33 +151,32 @@ class AppTheme {
           foregroundColor: colorScheme.onPrimary,
           elevation: 2,
           shadowColor: colorScheme.primary.withValues(alpha: 0.25),
+          minimumSize: const Size(44, 44),
           padding: const EdgeInsets.symmetric(
             horizontal: AppDesignTokens.spacingLg,
             vertical: 12,
           ),
           textStyle: textTheme.labelLarge,
-          shape: RoundedRectangleBorder(
-            borderRadius: inputBorderRadius,
-          ),
+          shape: RoundedRectangleBorder(borderRadius: inputBorderRadius),
         ),
       ),
       outlinedButtonTheme: OutlinedButtonThemeData(
         style: OutlinedButton.styleFrom(
           foregroundColor: colorScheme.primary,
           side: BorderSide(color: colorScheme.outlineVariant),
+          minimumSize: const Size(44, 44),
           padding: const EdgeInsets.symmetric(
             horizontal: AppDesignTokens.spacingLg,
             vertical: 12,
           ),
           textStyle: textTheme.labelLarge,
-          shape: RoundedRectangleBorder(
-            borderRadius: inputBorderRadius,
-          ),
+          shape: RoundedRectangleBorder(borderRadius: inputBorderRadius),
         ),
       ),
       textButtonTheme: TextButtonThemeData(
         style: TextButton.styleFrom(
           foregroundColor: colorScheme.primary,
+          minimumSize: const Size(44, 44),
         ),
       ),
       floatingActionButtonTheme: FloatingActionButtonThemeData(
@@ -187,9 +187,7 @@ class AppTheme {
       inputDecorationTheme: InputDecorationTheme(
         filled: true,
         fillColor: colorScheme.surfaceContainerLowest,
-        hintStyle: TextStyle(
-          color: colorScheme.onSurfaceVariant.withValues(alpha: 0.6),
-        ),
+        hintStyle: TextStyle(color: colorScheme.onSurfaceVariant),
         border: OutlineInputBorder(
           borderRadius: inputBorderRadius,
           borderSide: BorderSide(color: colorScheme.outlineVariant),
@@ -280,19 +278,21 @@ class AppTheme {
       ),
       navigationBarTheme: NavigationBarThemeData(
         backgroundColor: colorScheme.surfaceContainerHighest,
-        height: 64,
+        height: 80,
         indicatorColor: colorScheme.primaryContainer.withValues(alpha: 0.2),
         labelTextStyle: WidgetStateProperty.resolveWith((states) {
           if (states.contains(WidgetState.selected)) {
             return TextStyle(
               color: colorScheme.primary,
-              fontSize: 11,
+              fontSize: 12,
               fontWeight: FontWeight.w600,
+              overflow: TextOverflow.ellipsis,
             );
           }
           return TextStyle(
             color: colorScheme.onSurfaceVariant,
-            fontSize: 11,
+            fontSize: 12,
+            overflow: TextOverflow.ellipsis,
           );
         }),
       ),

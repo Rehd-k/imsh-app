@@ -58,8 +58,9 @@ class AppointmentsBody extends ConsumerWidget {
                         isCancelling: ref
                             .watch(cancelAppointmentProvider)
                             .maybeWhen(
-                              data: (inFlight) => inFlight
-                                  .contains(dashboard.nextAppointment!.id),
+                              data: (inFlight) => inFlight.contains(
+                                dashboard.nextAppointment!.id,
+                              ),
                               orElse: () => false,
                             ),
                         onReschedule: () => _openReschedule(
@@ -116,12 +117,10 @@ class AppointmentsBody extends ConsumerWidget {
     WidgetRef ref,
     AppointmentSummary appointment,
   ) {
-    ref.read(bookingWizardProvider.notifier).startReschedule(
-          appointmentId: appointment.id,
-        );
-    context.router.push(
-      BookAppointmentRoute(appointmentId: appointment.id),
-    );
+    ref
+        .read(bookingWizardProvider.notifier)
+        .startReschedule(appointmentId: appointment.id);
+    context.router.push(BookAppointmentRoute(appointmentId: appointment.id));
   }
 
   Future<void> _confirmCancel(
@@ -131,22 +130,26 @@ class AppointmentsBody extends ConsumerWidget {
   ) async {
     final confirmed = await showDialog<bool>(
       context: context,
-      builder: (context) => AlertDialog(
-        title: const Text('Cancel appointment?'),
-        content: const Text(
-          'This action cannot be undone. The hospital will be notified.',
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.of(context).pop(false),
-            child: const Text('Keep'),
+      builder: (context) {
+        final scheme = Theme.of(context).colorScheme;
+        return AlertDialog(
+          title: const Text('Cancel appointment?'),
+          content: const Text(
+            'This action cannot be undone. The hospital will be notified.',
           ),
-          FilledButton(
-            onPressed: () => Navigator.of(context).pop(true),
-            child: const Text('Cancel appointment'),
-          ),
-        ],
-      ),
+          actions: [
+            TextButton(
+              style: TextButton.styleFrom(foregroundColor: scheme.error),
+              onPressed: () => Navigator.of(context).pop(true),
+              child: const Text('Cancel appointment'),
+            ),
+            FilledButton(
+              onPressed: () => Navigator.of(context).pop(false),
+              child: const Text('Keep appointment'),
+            ),
+          ],
+        );
+      },
     );
 
     if (confirmed != true || !context.mounted) return;
@@ -154,15 +157,15 @@ class AppointmentsBody extends ConsumerWidget {
     try {
       await ref.read(cancelAppointmentProvider.notifier).cancel(appointmentId);
       if (context.mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Appointment cancelled')),
-        );
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(const SnackBar(content: Text('Appointment cancelled')));
       }
     } catch (error) {
       if (context.mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text(appointmentErrorMessage(error))),
-        );
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text(appointmentErrorMessage(error))));
       }
     }
   }
@@ -192,9 +195,9 @@ class _EmptyAppointments extends StatelessWidget {
       child: Text(
         message,
         textAlign: TextAlign.center,
-        style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-              color: colorScheme.onSurfaceVariant,
-            ),
+        style: Theme.of(
+          context,
+        ).textTheme.bodyMedium?.copyWith(color: colorScheme.onSurfaceVariant),
       ),
     );
   }
@@ -249,10 +252,7 @@ class _AppointmentsSkeleton extends StatelessWidget {
 }
 
 class _AppointmentsError extends StatelessWidget {
-  const _AppointmentsError({
-    required this.message,
-    required this.onRetry,
-  });
+  const _AppointmentsError({required this.message, required this.onRetry});
 
   final String message;
   final VoidCallback onRetry;

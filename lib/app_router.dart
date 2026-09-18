@@ -71,14 +71,16 @@ class AppRouter extends RootStackRouter {
     AutoRoute(page: EditFeedbackRoute.page, path: '/feedback/:id/edit'),
 
     AutoRoute(page: EmergencyRequestsRoute.page, path: '/emergency'),
+    AutoRoute(page: CreateEmergencyRequestRoute.page, path: '/emergency/new'),
     AutoRoute(
-      page: CreateEmergencyRequestRoute.page,
-      path: '/emergency/new',
+      page: GuestCreateEmergencyRequestRoute.page,
+      path: '/emergency/guest',
     ),
     AutoRoute(
-      page: EmergencyRequestDetailRoute.page,
-      path: '/emergency/:id',
+      page: GuestEmergencySubmittedRoute.page,
+      path: '/emergency/guest/submitted',
     ),
+    AutoRoute(page: EmergencyRequestDetailRoute.page, path: '/emergency/:id'),
 
     AutoRoute(page: NotificationsRoute.page, path: '/notifications'),
     AutoRoute(page: FamilyAccountsRoute.page, path: '/family'),
@@ -86,6 +88,7 @@ class AppRouter extends RootStackRouter {
     AutoRoute(page: DevicesRoute.page, path: '/devices'),
 
     AutoRoute(page: HealthCardRoute.page, path: '/health-card'),
+    AutoRoute(page: CycleTrackerRoute.page, path: '/cycle'),
     AutoRoute(page: ProfileRoute.page, path: '/profile'),
     AutoRoute(page: EditProfileRoute.page, path: '/profile/edit'),
   ];

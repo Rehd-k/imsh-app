@@ -11,7 +11,7 @@ class ImshAppBar extends ConsumerWidget implements PreferredSizeWidget {
     this.leading,
     this.actions,
     this.automaticallyImplyLeading = true,
-    this.showThemeToggle = true,
+    this.showThemeToggle = false,
     this.showLogout = false,
   });
 
@@ -32,9 +32,7 @@ class ImshAppBar extends ConsumerWidget implements PreferredSizeWidget {
       leading: leading,
       automaticallyImplyLeading: automaticallyImplyLeading,
       actions: [
-        ...?actions?.map(
-          (action) => _wrapCompactAction(action),
-        ),
+        ...?actions?.map((action) => _wrapCompactAction(action)),
         if (showLogout) const LogoutIconButton(),
         if (showThemeToggle)
           const ThemeModeMenuButton(iconSize: ImshAppBarActions.iconSize),

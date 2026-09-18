@@ -16,6 +16,7 @@ import '../../../providers/home_provider.dart';
 import '../../../shared/widgets/family_subject_banner.dart';
 import '../../../shared/widgets/imsh_sliver_app_bar.dart';
 import 'home_billing_snippet.dart';
+import 'home_cycle_snippet.dart';
 import 'home_header.dart';
 import 'home_lab_results_snippet.dart';
 import 'home_medications_section.dart';
@@ -94,10 +95,10 @@ class HomeBody extends ConsumerWidget {
                     const Gap(AppDesignTokens.spacingLg),
                     QuickActionsRow(
                       onPayBill: () => _switchToTab(context, billingTabIndex),
-                      onOpenAppointments: () =>
-                          _switchToTab(context, bookingTabIndex),
+                      onCheckIn: () => _switchToTab(context, bookingTabIndex),
                     ),
                     const Gap(AppDesignTokens.spacingLg),
+                    const HomeCycleSnippet(),
                     HomeMedicationsSection(
                       nextDoses: dashboard.medications.nextDoses,
                       todaySchedule: dashboard.medications.todaySchedule,
@@ -113,8 +114,7 @@ class HomeBody extends ConsumerWidget {
                       const Gap(AppDesignTokens.spacingLg),
                     HomeLabResultsSnippet(
                       results: dashboard.labResultsPreview,
-                      onViewTrends: () =>
-                          context.router.push(LabTrendRoute()),
+                      onViewTrends: () => context.router.push(LabTrendRoute()),
                     ),
                     if (dashboard.labResultsPreview.isNotEmpty)
                       const Gap(AppDesignTokens.spacingLg),
@@ -124,10 +124,11 @@ class HomeBody extends ConsumerWidget {
                         data: (r) => r.data.take(2).toList(),
                         orElse: () => const <HealthContentItem>[],
                       ),
-                      onViewAll: () => context.router
-                          .push(const HealthCampaignsRoute()),
-                      onOpen: (item) => context.router
-                          .push(HealthCampaignDetailRoute(id: item.id)),
+                      onViewAll: () =>
+                          context.router.push(const HealthCampaignsRoute()),
+                      onOpen: (item) => context.router.push(
+                        HealthCampaignDetailRoute(id: item.id),
+                      ),
                     ),
                     const Gap(AppDesignTokens.spacingLg),
                     _HomeHealthFeed(
@@ -138,8 +139,9 @@ class HomeBody extends ConsumerWidget {
                       ),
                       onViewAll: () =>
                           context.router.push(const HealthNewsRoute()),
-                      onOpen: (item) => context.router
-                          .push(HealthNewsDetailRoute(id: item.id)),
+                      onOpen: (item) => context.router.push(
+                        HealthNewsDetailRoute(id: item.id),
+                      ),
                     ),
                     const Gap(AppDesignTokens.spacingLg),
                     Padding(
@@ -147,8 +149,8 @@ class HomeBody extends ConsumerWidget {
                         horizontal: AppDesignTokens.containerPadding,
                       ),
                       child: OutlinedButton.icon(
-                        onPressed: () => context.router
-                            .push(const TheatreSchedulesRoute()),
+                        onPressed: () =>
+                            context.router.push(const TheatreSchedulesRoute()),
                         icon: const Icon(Icons.local_hospital_outlined),
                         label: const Text('Theatre schedule'),
                       ),
@@ -169,11 +171,7 @@ class HomeBody extends ConsumerWidget {
 }
 
 class _SectionLabel extends StatelessWidget {
-  const _SectionLabel({
-    required this.title,
-    this.actionLabel,
-    this.onAction,
-  });
+  const _SectionLabel({required this.title, this.actionLabel, this.onAction});
 
   final String title;
   final String? actionLabel;
@@ -189,9 +187,9 @@ class _SectionLabel extends StatelessWidget {
         children: [
           Text(
             title,
-            style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                  fontWeight: FontWeight.w700,
-                ),
+            style: Theme.of(
+              context,
+            ).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w700),
           ),
           const Spacer(),
           if (actionLabel != null && onAction != null)
@@ -230,10 +228,7 @@ class _HeroVisitCard extends StatelessWidget {
           gradient: LinearGradient(
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
-            colors: [
-              colorScheme.primary,
-              colorScheme.primaryContainer,
-            ],
+            colors: [colorScheme.primary, colorScheme.primaryContainer],
           ),
           boxShadow: AppDesignTokens.buttonShadow(colorScheme.brightness),
         ),
@@ -310,8 +305,9 @@ class _HeroVisitCard extends StatelessWidget {
                             style: OutlinedButton.styleFrom(
                               foregroundColor: colorScheme.onPrimary,
                               side: BorderSide(
-                                color: colorScheme.onPrimary
-                                    .withValues(alpha: 0.55),
+                                color: colorScheme.onPrimary.withValues(
+                                  alpha: 0.55,
+                                ),
                               ),
                             ),
                             onPressed: onOpenBooking,
@@ -370,9 +366,9 @@ class _HomeHealthFeed extends StatelessWidget {
             children: [
               Text(
                 title,
-                style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                      fontWeight: FontWeight.w700,
-                    ),
+                style: Theme.of(
+                  context,
+                ).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w700),
               ),
               const Spacer(),
               TextButton(onPressed: onViewAll, child: const Text('View all')),
@@ -389,8 +385,9 @@ class _HomeHealthFeed extends StatelessWidget {
                 child: Container(
                   padding: const EdgeInsets.all(AppDesignTokens.spacingMd),
                   decoration: BoxDecoration(
-                    borderRadius:
-                        BorderRadius.circular(AppDesignTokens.radiusMd),
+                    borderRadius: BorderRadius.circular(
+                      AppDesignTokens.radiusMd,
+                    ),
                     border: Border.all(color: colorScheme.outlineVariant),
                   ),
                   child: Column(
@@ -399,8 +396,8 @@ class _HomeHealthFeed extends StatelessWidget {
                       Text(
                         item.title,
                         style: Theme.of(context).textTheme.titleSmall?.copyWith(
-                              fontWeight: FontWeight.w700,
-                            ),
+                          fontWeight: FontWeight.w700,
+                        ),
                       ),
                       const Gap(4),
                       Text(
@@ -408,8 +405,8 @@ class _HomeHealthFeed extends StatelessWidget {
                         maxLines: 2,
                         overflow: TextOverflow.ellipsis,
                         style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                              color: colorScheme.onSurfaceVariant,
-                            ),
+                          color: colorScheme.onSurfaceVariant,
+                        ),
                       ),
                     ],
                   ),
@@ -477,10 +474,7 @@ class _HomeSkeleton extends StatelessWidget {
                 const Gap(AppDesignTokens.spacingLg),
                 VitalsSummaryRow(vitals: _placeholderVitals),
                 const Gap(AppDesignTokens.spacingLg),
-                QuickActionsRow(
-                  onPayBill: () {},
-                  onOpenAppointments: () {},
-                ),
+                QuickActionsRow(onPayBill: () {}, onCheckIn: () {}),
                 const Gap(AppDesignTokens.spacingLg),
                 HomeMedicationsSection(
                   nextDoses: [_placeholderDose],
@@ -496,10 +490,7 @@ class _HomeSkeleton extends StatelessWidget {
 }
 
 class _HomeError extends StatelessWidget {
-  const _HomeError({
-    required this.message,
-    required this.onRetry,
-  });
+  const _HomeError({required this.message, required this.onRetry});
 
   final String message;
   final VoidCallback onRetry;

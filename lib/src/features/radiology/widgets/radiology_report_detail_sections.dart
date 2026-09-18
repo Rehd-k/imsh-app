@@ -8,6 +8,7 @@ import '../../../core/theme/context_extensions.dart';
 import '../../../helper/date_formatter.dart';
 import '../../../models/radiology_report_model.dart';
 import '../../../providers/service_providers.dart';
+import '../radiology_pdf_download.dart';
 import 'patient_radiology_image_carousel.dart';
 import 'radiology_status_badge.dart';
 
@@ -60,12 +61,17 @@ class RadiologyReportDetailSections extends ConsumerWidget {
             ),
           ),
         ],
-        if (detail.pdfUrl?.isNotEmpty == true && detail.images.isEmpty) ...[
+        if (!detail.paymentRequired) ...[
           const Gap(AppDesignTokens.spacingMd),
           _FileActionButton(
             label: 'Download PDF report',
             icon: Icons.picture_as_pdf_outlined,
-            onPressed: () => _openUrl(context, detail.pdfUrl!, 'PDF'),
+            onPressed: () => downloadRadiologyReportPdf(
+              context,
+              service: radiologyService,
+              reportId: detail.id,
+              detail: detail,
+            ),
           ),
         ],
         if (detail.dicomUrl?.isNotEmpty == true) ...[

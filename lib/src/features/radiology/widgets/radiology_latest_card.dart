@@ -1,37 +1,24 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gap/gap.dart';
 import 'package:imsh/app_router.gr.dart';
-import 'package:url_launcher/url_launcher.dart';
 
 import '../../../core/theme/app_design_tokens.dart';
 import '../../../core/theme/context_extensions.dart';
 import '../../../helper/date_formatter.dart';
 import '../../../models/radiology_report_model.dart';
+import '../../../providers/service_providers.dart';
+import '../radiology_pdf_download.dart';
 import 'radiology_status_badge.dart';
 
-class RadiologyLatestCard extends StatelessWidget {
-  const RadiologyLatestCard({
-    super.key,
-    required this.report,
-  });
+class RadiologyLatestCard extends ConsumerWidget {
+  const RadiologyLatestCard({super.key, required this.report});
 
   final RadiologyReportSummary report;
 
-  Future<void> _openUrl(BuildContext context, String? url) async {
-    if (url == null || url.isEmpty) return;
-    final uri = Uri.tryParse(url);
-    if (uri == null) return;
-    final launched = await launchUrl(uri, mode: LaunchMode.externalApplication);
-    if (!launched && context.mounted) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Could not open file')),
-      );
-    }
-  }
-
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final theme = Theme.of(context);
     final colorScheme = context.colorScheme;
 
@@ -64,10 +51,12 @@ class RadiologyLatestCard extends StatelessWidget {
                         vertical: AppDesignTokens.spacingXs,
                       ),
                       decoration: BoxDecoration(
-                        color: colorScheme.primaryContainer
-                            .withValues(alpha: 0.12),
-                        borderRadius:
-                            BorderRadius.circular(AppDesignTokens.radiusSm),
+                        color: colorScheme.primaryContainer.withValues(
+                          alpha: 0.12,
+                        ),
+                        borderRadius: BorderRadius.circular(
+                          AppDesignTokens.radiusSm,
+                        ),
                       ),
                       child: Text(
                         'LATEST RESULT',
@@ -146,17 +135,20 @@ class RadiologyLatestCard extends StatelessWidget {
                         ),
                       ),
                     ),
-                    if (report.pdfUrl?.isNotEmpty == true) ...[
+                    if (report.status.isComplete ||
+                        report.thumbnailUrl?.isNotEmpty == true) ...[
                       const Gap(AppDesignTokens.spacingSm),
                       OutlinedButton(
-                        onPressed: () => _openUrl(context, report.pdfUrl),
+                        onPressed: () => downloadRadiologyReportPdf(
+                          context,
+                          service: ref.read(radiologyServiceProvider),
+                          reportId: report.id,
+                        ),
                         style: OutlinedButton.styleFrom(
                           padding: const EdgeInsets.all(
                             AppDesignTokens.spacingSm + 4,
                           ),
-                          side: BorderSide(
-                            color: colorScheme.outlineVariant,
-                          ),
+                          side: BorderSide(color: colorScheme.outlineVariant),
                         ),
                         child: const Icon(Icons.download_outlined),
                       ),
@@ -173,10 +165,7 @@ class RadiologyLatestCard extends StatelessWidget {
 }
 
 class _Thumbnail extends StatelessWidget {
-  const _Thumbnail({
-    required this.thumbnailUrl,
-    required this.modality,
-  });
+  const _Thumbnail({required this.thumbnailUrl, required this.modality});
 
   final String? thumbnailUrl;
   final RadiologyModality modality;

@@ -19,7 +19,7 @@ enum EmergencyRequestStatus {
 
 extension EmergencyRequestStatusDisplay on EmergencyRequestStatus {
   String get label => switch (this) {
-    EmergencyRequestStatus.submitted => 'Submitted',
+    EmergencyRequestStatus.submitted => 'Waiting',
     EmergencyRequestStatus.acknowledged => 'Acknowledged',
     EmergencyRequestStatus.dispatched => 'Ambulance dispatched',
     EmergencyRequestStatus.closed => 'Closed',
@@ -107,6 +107,8 @@ class CreateEmergencyRequestPayload {
     this.description,
     this.voicePath,
     this.videoPath,
+    this.guestName,
+    this.guestPhone,
   });
 
   final double latitude;
@@ -116,6 +118,8 @@ class CreateEmergencyRequestPayload {
   final String? description;
   final String? voicePath;
   final String? videoPath;
+  final String? guestName;
+  final String? guestPhone;
 
   bool get hasAttachment {
     final text = description?.trim() ?? '';

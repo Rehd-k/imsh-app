@@ -66,6 +66,45 @@ class EmergencyService {
     return EmergencyRequest.fromJson(resp.data ?? {});
   }
 
+  Future<EmergencyRequest> createGuestRequest(
+    CreateEmergencyRequestPayload payload,
+  ) async {
+    final map = <String, dynamic>{
+      'latitude': payload.latitude,
+      'longitude': payload.longitude,
+      if (payload.accuracyMeters != null)
+        'accuracyMeters': payload.accuracyMeters,
+      if (payload.addressText != null && payload.addressText!.trim().isNotEmpty)
+        'addressText': payload.addressText!.trim(),
+      if (payload.description != null && payload.description!.trim().isNotEmpty)
+        'description': payload.description!.trim(),
+      if (payload.guestName != null && payload.guestName!.trim().isNotEmpty)
+        'guestName': payload.guestName!.trim(),
+      if (payload.guestPhone != null && payload.guestPhone!.trim().isNotEmpty)
+        'guestPhone': payload.guestPhone!.trim(),
+    };
+
+    if (payload.voicePath != null && payload.voicePath!.isNotEmpty) {
+      map['voice'] = await MultipartFile.fromFile(
+        payload.voicePath!,
+        filename: 'voice.m4a',
+      );
+    }
+    if (payload.videoPath != null && payload.videoPath!.isNotEmpty) {
+      map['video'] = await MultipartFile.fromFile(
+        payload.videoPath!,
+        filename: 'video.mp4',
+      );
+    }
+
+    final formData = FormData.fromMap(map);
+    final resp = await _dio.post<Map<String, dynamic>>(
+      '/public/emergency-requests',
+      data: formData,
+    );
+    return EmergencyRequest.fromJson(resp.data ?? {});
+  }
+
   Future<EmergencyRequest> cancelRequest(String id) async {
     final resp = await _dio.patch<Map<String, dynamic>>(
       '/patient/emergency-requests/$id/cancel',

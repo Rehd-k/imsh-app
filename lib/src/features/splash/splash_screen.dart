@@ -19,16 +19,23 @@ class _SplashScreenState extends ConsumerState<SplashScreen>
     with SingleTickerProviderStateMixin {
   static const _minDisplayDuration = Duration(milliseconds: 2500);
 
-  late final AnimationController _controller;
-  late final Animation<double> _logoOpacity;
-  late final Animation<double> _logoScale;
-  late final Animation<double> _taglineOpacity;
-  late final Animation<double> _taglineSlide;
-  late final Animation<double> _footerOpacity;
-  late final Animation<double> _pulseScale;
-  late final Animation<double> _exitOpacity;
+  AnimationController? _controller;
+  Animation<double>? _logoOpacity;
+  Animation<double>? _logoScale;
+  Animation<double>? _taglineOpacity;
+  Animation<double>? _taglineSlide;
+  Animation<double>? _footerOpacity;
+  Animation<double>? _pulseScale;
+  Animation<double>? _exitOpacity;
 
   bool _navigating = false;
+  bool _staticSplash = false;
+
+  bool get _reduceMotion => WidgetsBinding
+      .instance
+      .platformDispatcher
+      .accessibilityFeatures
+      .disableAnimations;
 
   @override
   void initState() {
@@ -39,75 +46,93 @@ class _SplashScreenState extends ConsumerState<SplashScreen>
       return;
     }
 
-    _controller = AnimationController(
+    if (_reduceMotion) {
+      _staticSplash = true;
+      _scheduleNavigation(reduceMotion: true);
+      return;
+    }
+
+    _initAnimations();
+    _controller!.forward();
+    _scheduleNavigation(reduceMotion: false);
+  }
+
+  void _initAnimations() {
+    final controller = AnimationController(
       vsync: this,
       duration: const Duration(milliseconds: 2200),
     );
+    _controller = controller;
 
     _logoOpacity = CurvedAnimation(
-      parent: _controller,
+      parent: controller,
       curve: const Interval(0, 0.27, curve: Curves.easeOut),
     );
     _logoScale = Tween<double>(begin: 0.85, end: 1).animate(
       CurvedAnimation(
-        parent: _controller,
+        parent: controller,
         curve: const Interval(0, 0.27, curve: Curves.easeOutBack),
       ),
     );
     _taglineOpacity = CurvedAnimation(
-      parent: _controller,
+      parent: controller,
       curve: const Interval(0.18, 0.45, curve: Curves.easeOut),
     );
     _taglineSlide = Tween<double>(begin: 12, end: 0).animate(
       CurvedAnimation(
-        parent: _controller,
+        parent: controller,
         curve: const Interval(0.18, 0.45, curve: Curves.easeOutCubic),
       ),
     );
     _footerOpacity = CurvedAnimation(
-      parent: _controller,
+      parent: controller,
       curve: const Interval(0.41, 0.64, curve: Curves.easeOut),
     );
-    _pulseScale = TweenSequence<double>([
-      TweenSequenceItem(
-        tween: Tween<double>(begin: 1, end: 1.12),
-        weight: 50,
-      ),
-      TweenSequenceItem(
-        tween: Tween<double>(begin: 1.12, end: 1),
-        weight: 50,
-      ),
-    ]).animate(
-      CurvedAnimation(
-        parent: _controller,
-        curve: const Interval(0.27, 0.82, curve: Curves.easeInOut),
-      ),
-    );
+    _pulseScale =
+        TweenSequence<double>([
+          TweenSequenceItem(
+            tween: Tween<double>(begin: 1, end: 1.12),
+            weight: 50,
+          ),
+          TweenSequenceItem(
+            tween: Tween<double>(begin: 1.12, end: 1),
+            weight: 50,
+          ),
+        ]).animate(
+          CurvedAnimation(
+            parent: controller,
+            curve: const Interval(0.27, 0.82, curve: Curves.easeInOut),
+          ),
+        );
     _exitOpacity = Tween<double>(begin: 1, end: 0).animate(
       CurvedAnimation(
-        parent: _controller,
+        parent: controller,
         curve: const Interval(0.91, 1, curve: Curves.easeIn),
       ),
     );
-
-    _controller.forward();
-    _scheduleNavigation();
   }
 
-  Future<void> _scheduleNavigation() async {
+  Future<void> _scheduleNavigation({required bool reduceMotion}) async {
     if (kIsWeb) return;
 
-    await Future.wait([
-      Future<void>.delayed(_minDisplayDuration),
-      ref.read(patientAuthProvider.notifier).restoreSession(),
-    ]);
+    if (reduceMotion) {
+      await ref.read(patientAuthProvider.notifier).restoreSession();
+    } else {
+      await Future.wait([
+        Future<void>.delayed(_minDisplayDuration),
+        ref.read(patientAuthProvider.notifier).restoreSession(),
+      ]);
+    }
 
     if (!mounted || _navigating) return;
 
-    await _controller.animateTo(
-      1,
-      duration: const Duration(milliseconds: 200),
-    );
+    final controller = _controller;
+    if (controller != null && !reduceMotion) {
+      await controller.animateTo(
+        1,
+        duration: const Duration(milliseconds: 200),
+      );
+    }
 
     if (!mounted || _navigating) return;
     await _navigate();
@@ -132,9 +157,7 @@ class _SplashScreenState extends ConsumerState<SplashScreen>
 
   @override
   void dispose() {
-    if (!kIsWeb) {
-      _controller.dispose();
-    }
+    _controller?.dispose();
     super.dispose();
   }
 
@@ -144,20 +167,29 @@ class _SplashScreenState extends ConsumerState<SplashScreen>
       return const Scaffold(body: SizedBox.shrink());
     }
 
+    if (_staticSplash) {
+      return const Scaffold(body: SplashBranding());
+    }
+
+    final controller = _controller;
+    if (controller == null) {
+      return const Scaffold(body: SplashBranding());
+    }
+
     return Scaffold(
       body: AnimatedBuilder(
-        animation: _controller,
+        animation: controller,
         builder: (context, child) {
           return Opacity(
-            opacity: _exitOpacity.value,
+            opacity: _exitOpacity!.value,
             child: SplashBranding(
-              logoOpacity: _logoOpacity.value,
-              logoScale: _logoScale.value,
-              taglineOpacity: _taglineOpacity.value,
-              taglineSlide: _taglineSlide.value,
-              footerOpacity: _footerOpacity.value,
-              pulseScale: _pulseScale.value,
-              showPulse: _controller.value > 0.27 && _controller.value < 0.82,
+              logoOpacity: _logoOpacity!.value,
+              logoScale: _logoScale!.value,
+              taglineOpacity: _taglineOpacity!.value,
+              taglineSlide: _taglineSlide!.value,
+              footerOpacity: _footerOpacity!.value,
+              pulseScale: _pulseScale!.value,
+              showPulse: controller.value > 0.27 && controller.value < 0.82,
             ),
           );
         },

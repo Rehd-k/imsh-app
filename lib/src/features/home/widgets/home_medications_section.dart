@@ -49,7 +49,7 @@ class HomeMedicationsSection extends StatelessWidget {
               const Spacer(),
               TextButton(
                 onPressed: () => context.router.push(const MedicationsRoute()),
-                child: const Text('View All'),
+                child: const Text('View all'),
               ),
             ],
           ),
@@ -93,11 +93,10 @@ class _NextDosePreview extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            'NEXT DOSE',
+            'Next dose',
             style: theme.textTheme.labelSmall?.copyWith(
               color: colorScheme.onPrimary.withValues(alpha: 0.85),
               fontWeight: FontWeight.w600,
-              letterSpacing: 0.6,
             ),
           ),
           const Gap(AppDesignTokens.spacingSm),

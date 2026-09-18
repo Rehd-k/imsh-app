@@ -47,6 +47,29 @@ class SubmitEmergencyNotifier extends AutoDisposeAsyncNotifier<bool> {
   }
 }
 
+final submitGuestEmergencyProvider =
+    AsyncNotifierProvider.autoDispose<SubmitGuestEmergencyNotifier, bool>(
+      SubmitGuestEmergencyNotifier.new,
+    );
+
+class SubmitGuestEmergencyNotifier extends AutoDisposeAsyncNotifier<bool> {
+  @override
+  Future<bool> build() async => false;
+
+  Future<EmergencyRequest> submit(CreateEmergencyRequestPayload payload) async {
+    state = const AsyncLoading();
+    try {
+      final service = ref.read(emergencyServiceProvider);
+      final result = await service.createGuestRequest(payload);
+      state = const AsyncData(false);
+      return result;
+    } catch (error, stackTrace) {
+      state = AsyncError(error, stackTrace);
+      rethrow;
+    }
+  }
+}
+
 final cancelEmergencyProvider =
     AsyncNotifierProvider.autoDispose<CancelEmergencyNotifier, Set<String>>(
       CancelEmergencyNotifier.new,

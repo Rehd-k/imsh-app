@@ -39,7 +39,7 @@ class EmergencyRequestsScreen extends ConsumerWidget {
       floatingActionButton: FloatingActionButton.extended(
         backgroundColor: context.colorScheme.error,
         foregroundColor: context.colorScheme.onError,
-        onPressed: () => context.router.push(const CreateEmergencyRequestRoute()),
+        onPressed: () => context.router.push(CreateEmergencyRequestRoute()),
         icon: const Icon(Icons.emergency_outlined),
         label: const Text('Request help'),
       ),
@@ -100,7 +100,9 @@ class EmergencyRequestsScreen extends ConsumerWidget {
 
 @RoutePage()
 class CreateEmergencyRequestScreen extends ConsumerStatefulWidget {
-  const CreateEmergencyRequestScreen({super.key});
+  const CreateEmergencyRequestScreen({super.key, this.guestMode = false});
+
+  final bool guestMode;
 
   @override
   ConsumerState<CreateEmergencyRequestScreen> createState() =>
@@ -110,12 +112,16 @@ class CreateEmergencyRequestScreen extends ConsumerStatefulWidget {
 class _CreateEmergencyRequestScreenState
     extends ConsumerState<CreateEmergencyRequestScreen> {
   final _descriptionController = TextEditingController();
+  final _guestNameController = TextEditingController();
+  final _guestPhoneController = TextEditingController();
   final _recorder = AudioRecorder();
   final _picker = ImagePicker();
 
   Position? _position;
   String? _locationError;
   bool _locating = false;
+  bool _needsLocationSettings = false;
+  bool _needsAppSettings = false;
   bool _recording = false;
   String? _voicePath;
   String? _videoPath;
@@ -133,6 +139,8 @@ class _CreateEmergencyRequestScreenState
   void dispose() {
     _recordTimer?.cancel();
     _descriptionController.dispose();
+    _guestNameController.dispose();
+    _guestPhoneController.dispose();
     _recorder.dispose();
     super.dispose();
   }
@@ -141,12 +149,15 @@ class _CreateEmergencyRequestScreenState
     setState(() {
       _locating = true;
       _locationError = null;
+      _needsLocationSettings = false;
+      _needsAppSettings = false;
     });
     try {
       final enabled = await Geolocator.isLocationServiceEnabled();
       if (!enabled) {
         setState(() {
-          _locationError = 'Turn on location services to request help.';
+          _locationError = 'Turn on location in Settings';
+          _needsLocationSettings = true;
           _locating = false;
         });
         return;
@@ -160,7 +171,8 @@ class _CreateEmergencyRequestScreenState
           permission == LocationPermission.deniedForever) {
         setState(() {
           _locationError =
-              'Location permission is required so ED can find you.';
+              'Turn on location in Settings so the hospital can find you.';
+          _needsAppSettings = true;
           _locating = false;
         });
         return;
@@ -226,6 +238,14 @@ class _CreateEmergencyRequestScreenState
     });
   }
 
+  Future<void> _openLocationSettings() async {
+    if (_needsLocationSettings) {
+      await Geolocator.openLocationSettings();
+    } else {
+      await Geolocator.openAppSettings();
+    }
+  }
+
   Future<void> _pickVideo() async {
     final file = await _picker.pickVideo(
       source: ImageSource.camera,
@@ -237,6 +257,8 @@ class _CreateEmergencyRequestScreenState
 
   Future<void> _submit() async {
     final description = _descriptionController.text.trim();
+    final guestName = _guestNameController.text.trim();
+    final guestPhone = _guestPhoneController.text.trim();
     final payload = CreateEmergencyRequestPayload(
       latitude: _position?.latitude ?? 0,
       longitude: _position?.longitude ?? 0,
@@ -244,6 +266,8 @@ class _CreateEmergencyRequestScreenState
       description: description.isEmpty ? null : description,
       voicePath: _voicePath,
       videoPath: _videoPath,
+      guestName: widget.guestMode && guestName.isNotEmpty ? guestName : null,
+      guestPhone: widget.guestMode && guestPhone.isNotEmpty ? guestPhone : null,
     );
 
     if (_position == null) {
@@ -263,16 +287,22 @@ class _CreateEmergencyRequestScreenState
 
     setState(() => _submitting = true);
     try {
-      final saved = await ref
-          .read(submitEmergencyProvider.notifier)
-          .submit(payload);
-      if (!mounted) return;
-      context.router.replace(EmergencyRequestDetailRoute(id: saved.id));
+      if (widget.guestMode) {
+        await ref.read(submitGuestEmergencyProvider.notifier).submit(payload);
+        if (!mounted) return;
+        context.router.replaceAll([const GuestEmergencySubmittedRoute()]);
+      } else {
+        final saved = await ref
+            .read(submitEmergencyProvider.notifier)
+            .submit(payload);
+        if (!mounted) return;
+        context.router.replace(EmergencyRequestDetailRoute(id: saved.id));
+      }
     } catch (error) {
       if (!mounted) return;
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(emergencyErrorMessage(error))),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text(emergencyErrorMessage(error))));
     } finally {
       if (mounted) setState(() => _submitting = false);
     }
@@ -281,12 +311,57 @@ class _CreateEmergencyRequestScreenState
   @override
   Widget build(BuildContext context) {
     final colorScheme = context.colorScheme;
+    final needsSettings = _needsLocationSettings || _needsAppSettings;
+    final accuracyLabel = _position != null && _position!.accuracy > 0
+        ? ' (±${_position!.accuracy.toStringAsFixed(0)} m)'
+        : '';
 
     return Scaffold(
-      appBar: ImshAppBar(title: const Text('Request emergency help')),
+      appBar: const ImshAppBar(title: Text('Request emergency help')),
       body: ListView(
         padding: const EdgeInsets.all(AppDesignTokens.containerPadding),
         children: [
+          if (widget.guestMode) ...[
+            ImshSurfaceCard(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    'Your contact (optional)',
+                    style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                      fontWeight: FontWeight.w700,
+                    ),
+                  ),
+                  const Gap(AppDesignTokens.spacingSm),
+                  Text(
+                    'Help hospital staff reach you if they need more information.',
+                    style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                      color: colorScheme.onSurfaceVariant,
+                    ),
+                  ),
+                  const Gap(AppDesignTokens.spacingMd),
+                  TextField(
+                    controller: _guestNameController,
+                    textCapitalization: TextCapitalization.words,
+                    textInputAction: TextInputAction.next,
+                    autofillHints: const [AutofillHints.name],
+                    decoration: const InputDecoration(labelText: 'Your name'),
+                  ),
+                  const Gap(AppDesignTokens.spacingMd),
+                  TextField(
+                    controller: _guestPhoneController,
+                    keyboardType: TextInputType.phone,
+                    textInputAction: TextInputAction.done,
+                    autofillHints: const [AutofillHints.telephoneNumber],
+                    decoration: const InputDecoration(
+                      labelText: 'Phone number',
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            const Gap(AppDesignTokens.spacingLg),
+          ],
           ImshSurfaceCard(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -307,25 +382,32 @@ class _CreateEmergencyRequestScreenState
                         child: CircularProgressIndicator(strokeWidth: 2),
                       ),
                       Gap(AppDesignTokens.spacingSm),
-                      Text('Getting precise location…'),
+                      Expanded(child: Text('Getting precise location…')),
                     ],
                   )
                 else if (_position != null)
-                  Text(
-                    '${_position!.latitude.toStringAsFixed(5)}, '
-                    '${_position!.longitude.toStringAsFixed(5)}'
-                    '${_position!.accuracy > 0 ? ' (±${_position!.accuracy.toStringAsFixed(0)} m)' : ''}',
-                  )
+                  Text('Location ready$accuracyLabel')
                 else
                   Text(
                     _locationError ?? 'Location unavailable',
                     style: TextStyle(color: colorScheme.error),
                   ),
                 const Gap(AppDesignTokens.spacingSm),
-                TextButton.icon(
-                  onPressed: _locating ? null : _captureLocation,
-                  icon: const Icon(Icons.my_location),
-                  label: const Text('Refresh location'),
+                Wrap(
+                  spacing: AppDesignTokens.spacingSm,
+                  children: [
+                    TextButton.icon(
+                      onPressed: _locating ? null : _captureLocation,
+                      icon: const Icon(Icons.my_location),
+                      label: const Text('Refresh location'),
+                    ),
+                    if (needsSettings)
+                      TextButton.icon(
+                        onPressed: _openLocationSettings,
+                        icon: const Icon(Icons.settings_outlined),
+                        label: const Text('Open settings'),
+                      ),
+                  ],
                 ),
               ],
             ),
@@ -344,7 +426,6 @@ class _CreateEmergencyRequestScreenState
             maxLength: 2000,
             decoration: const InputDecoration(
               hintText: 'Describe the emergency…',
-              border: OutlineInputBorder(),
             ),
           ),
           const Gap(AppDesignTokens.spacingMd),
@@ -353,71 +434,80 @@ class _CreateEmergencyRequestScreenState
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  'Voice note (optional, max 2 min)',
-                  style: Theme.of(context).textTheme.titleSmall?.copyWith(
-                    fontWeight: FontWeight.w600,
-                  ),
+                  'Add a voice note or short video (optional)',
+                  style: Theme.of(
+                    context,
+                  ).textTheme.titleSmall?.copyWith(fontWeight: FontWeight.w600),
                 ),
-                const Gap(AppDesignTokens.spacingSm),
+                const Gap(AppDesignTokens.spacingMd),
                 Row(
                   children: [
-                    FilledButton.tonalIcon(
-                      onPressed: _submitting ? null : _toggleRecording,
-                      icon: Icon(_recording ? Icons.stop : Icons.mic),
-                      label: Text(_recording ? 'Stop' : 'Record'),
+                    Expanded(
+                      child: FilledButton.tonalIcon(
+                        onPressed: _submitting ? null : _toggleRecording,
+                        icon: Icon(_recording ? Icons.stop : Icons.mic),
+                        label: Text(_recording ? 'Stop' : 'Record'),
+                      ),
                     ),
-                    const Gap(AppDesignTokens.spacingMd),
-                    if (_recording)
-                      Text(
-                        '${_recordElapsed.inMinutes}:'
-                        '${(_recordElapsed.inSeconds % 60).toString().padLeft(2, '0')}',
-                      )
-                    else if (_voicePath != null)
+                    const Gap(AppDesignTokens.spacingSm),
+                    Expanded(
+                      child: FilledButton.tonalIcon(
+                        onPressed: _submitting ? null : _pickVideo,
+                        icon: const Icon(Icons.videocam_outlined),
+                        label: Text(
+                          _videoPath == null ? 'Record video' : 'Retake',
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+                if (_recording) ...[
+                  const Gap(AppDesignTokens.spacingSm),
+                  Text(
+                    '${_recordElapsed.inMinutes}:'
+                    '${(_recordElapsed.inSeconds % 60).toString().padLeft(2, '0')}',
+                  ),
+                ],
+                if (_voicePath != null && !_recording) ...[
+                  const Gap(AppDesignTokens.spacingSm),
+                  Row(
+                    children: [
                       const Expanded(child: Text('Voice note attached')),
-                    if (_voicePath != null && !_recording)
                       IconButton(
+                        tooltip: 'Remove voice note',
                         onPressed: () => setState(() => _voicePath = null),
                         icon: const Icon(Icons.delete_outline),
                       ),
-                  ],
-                ),
-              ],
-            ),
-          ),
-          const Gap(AppDesignTokens.spacingMd),
-          ImshSurfaceCard(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  'Short video (optional, max 30 s)',
-                  style: Theme.of(context).textTheme.titleSmall?.copyWith(
-                    fontWeight: FontWeight.w600,
+                    ],
                   ),
-                ),
-                const Gap(AppDesignTokens.spacingSm),
-                Row(
-                  children: [
-                    FilledButton.tonalIcon(
-                      onPressed: _submitting ? null : _pickVideo,
-                      icon: const Icon(Icons.videocam_outlined),
-                      label: Text(_videoPath == null ? 'Record video' : 'Retake'),
-                    ),
-                    if (_videoPath != null) ...[
-                      const Gap(AppDesignTokens.spacingMd),
+                ],
+                if (_videoPath != null) ...[
+                  const Gap(AppDesignTokens.spacingXs),
+                  Row(
+                    children: [
                       const Expanded(child: Text('Video attached')),
                       IconButton(
+                        tooltip: 'Remove video',
                         onPressed: () => setState(() => _videoPath = null),
                         icon: const Icon(Icons.delete_outline),
                       ),
                     ],
-                  ],
-                ),
+                  ),
+                ],
               ],
             ),
           ),
-          const Gap(AppDesignTokens.spacing2xl),
-          FilledButton.icon(
+        ],
+      ),
+      bottomNavigationBar: SafeArea(
+        child: Padding(
+          padding: const EdgeInsets.fromLTRB(
+            AppDesignTokens.containerPadding,
+            AppDesignTokens.spacingSm,
+            AppDesignTokens.containerPadding,
+            AppDesignTokens.spacingMd,
+          ),
+          child: FilledButton.icon(
             style: FilledButton.styleFrom(
               backgroundColor: colorScheme.error,
               foregroundColor: colorScheme.onError,
@@ -425,15 +515,18 @@ class _CreateEmergencyRequestScreenState
             ),
             onPressed: _submitting ? null : _submit,
             icon: _submitting
-                ? const SizedBox(
+                ? SizedBox(
                     width: 18,
                     height: 18,
-                    child: CircularProgressIndicator(strokeWidth: 2),
+                    child: CircularProgressIndicator(
+                      strokeWidth: 2,
+                      color: colorScheme.onError,
+                    ),
                   )
                 : const Icon(Icons.send_outlined),
-            label: Text(_submitting ? 'Sending…' : 'Send to ED'),
+            label: Text(_submitting ? 'Sending…' : 'Send emergency request'),
           ),
-        ],
+        ),
       ),
     );
   }
@@ -496,10 +589,8 @@ class EmergencyRequestDetailScreen extends ConsumerWidget {
                       '${request.longitude.toStringAsFixed(5)}',
                 ),
                 TextButton.icon(
-                  onPressed: () => _openMaps(
-                    request.latitude,
-                    request.longitude,
-                  ),
+                  onPressed: () =>
+                      _openMaps(request.latitude, request.longitude),
                   icon: const Icon(Icons.map_outlined),
                   label: const Text('Open in maps'),
                 ),
@@ -553,24 +644,33 @@ class EmergencyRequestDetailScreen extends ConsumerWidget {
                         : () async {
                             final confirmed = await showDialog<bool>(
                               context: context,
-                              builder: (dialogContext) => AlertDialog(
-                                title: const Text('Cancel request?'),
-                                content: const Text(
-                                  'Only cancel if you no longer need emergency help.',
-                                ),
-                                actions: [
-                                  TextButton(
-                                    onPressed: () =>
-                                        Navigator.of(dialogContext).pop(false),
-                                    child: const Text('Keep'),
+                              builder: (dialogContext) {
+                                final scheme = Theme.of(
+                                  dialogContext,
+                                ).colorScheme;
+                                return AlertDialog(
+                                  title: const Text('Cancel request?'),
+                                  content: const Text(
+                                    'Only cancel if you no longer need emergency help.',
                                   ),
-                                  FilledButton(
-                                    onPressed: () =>
-                                        Navigator.of(dialogContext).pop(true),
-                                    child: const Text('Cancel request'),
-                                  ),
-                                ],
-                              ),
+                                  actions: [
+                                    TextButton(
+                                      style: TextButton.styleFrom(
+                                        foregroundColor: scheme.error,
+                                      ),
+                                      onPressed: () =>
+                                          Navigator.of(dialogContext).pop(true),
+                                      child: const Text('Cancel request'),
+                                    ),
+                                    FilledButton(
+                                      onPressed: () => Navigator.of(
+                                        dialogContext,
+                                      ).pop(false),
+                                      child: const Text('Keep request'),
+                                    ),
+                                  ],
+                                );
+                              },
                             );
                             if (confirmed != true) return;
                             await ref
@@ -608,7 +708,7 @@ class _StatusFilters extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final options = <(EmergencyRequestStatus?, String)>[
       (null, 'All'),
-      (EmergencyRequestStatus.submitted, 'Submitted'),
+      (EmergencyRequestStatus.submitted, 'Waiting'),
       (EmergencyRequestStatus.acknowledged, 'Acknowledged'),
       (EmergencyRequestStatus.dispatched, 'Dispatched'),
       (EmergencyRequestStatus.closed, 'Closed'),
@@ -694,7 +794,7 @@ class _StatusBadge extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final tone = switch (status) {
-      EmergencyRequestStatus.submitted => ImshSemanticTone.error,
+      EmergencyRequestStatus.submitted => ImshSemanticTone.warning,
       EmergencyRequestStatus.acknowledged => ImshSemanticTone.warning,
       EmergencyRequestStatus.dispatched => ImshSemanticTone.info,
       EmergencyRequestStatus.closed => ImshSemanticTone.success,
@@ -814,9 +914,7 @@ class _AuthenticatedAudioPlayerState
       await _player.setAudioSource(
         AudioSource.uri(
           Uri.parse('$base$path'),
-          headers: {
-            if (token != null) 'Authorization': 'Bearer $token',
-          },
+          headers: {if (token != null) 'Authorization': 'Bearer $token'},
         ),
       );
       if (mounted) setState(() => _loading = false);
@@ -834,6 +932,12 @@ class _AuthenticatedAudioPlayerState
   void dispose() {
     _player.dispose();
     super.dispose();
+  }
+
+  String _formatDuration(Duration duration) {
+    final minutes = duration.inMinutes;
+    final seconds = duration.inSeconds % 60;
+    return '$minutes:${seconds.toString().padLeft(2, '0')}';
   }
 
   @override
@@ -858,15 +962,25 @@ class _AuthenticatedAudioPlayerState
               stream: _player.playerStateStream,
               builder: (context, snapshot) {
                 final playing = snapshot.data?.playing ?? false;
-                return IconButton.filledTonal(
-                  onPressed: () {
-                    if (playing) {
-                      _player.pause();
-                    } else {
-                      _player.play();
-                    }
-                  },
-                  icon: Icon(playing ? Icons.pause : Icons.play_arrow),
+                final duration = _player.duration;
+                return Row(
+                  children: [
+                    IconButton.filledTonal(
+                      tooltip: playing ? 'Pause' : 'Play voice note',
+                      onPressed: () {
+                        if (playing) {
+                          _player.pause();
+                        } else {
+                          _player.play();
+                        }
+                      },
+                      icon: Icon(playing ? Icons.pause : Icons.play_arrow),
+                    ),
+                    if (duration != null && duration > Duration.zero) ...[
+                      const Gap(AppDesignTokens.spacingSm),
+                      Text(_formatDuration(duration)),
+                    ],
+                  ],
                 );
               },
             ),
@@ -907,9 +1021,7 @@ class _AuthenticatedVideoPlayerState
       final token = await TokenStorage.getAccessToken();
       final controller = VideoPlayerController.networkUrl(
         Uri.parse('$base$path'),
-        httpHeaders: {
-          if (token != null) 'Authorization': 'Bearer $token',
-        },
+        httpHeaders: {if (token != null) 'Authorization': 'Bearer $token'},
       );
       await controller.initialize();
       if (!mounted) {
@@ -965,6 +1077,7 @@ class _AuthenticatedVideoPlayerState
               child: VideoPlayer(controller),
             ),
             IconButton(
+              tooltip: controller.value.isPlaying ? 'Pause' : 'Play video',
               onPressed: () {
                 setState(() {
                   if (controller.value.isPlaying) {
@@ -980,6 +1093,79 @@ class _AuthenticatedVideoPlayerState
             ),
           ],
         ],
+      ),
+    );
+  }
+}
+
+@RoutePage()
+class GuestCreateEmergencyRequestScreen extends StatelessWidget {
+  const GuestCreateEmergencyRequestScreen({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return const CreateEmergencyRequestScreen(guestMode: true);
+  }
+}
+
+@RoutePage()
+class GuestEmergencySubmittedScreen extends StatelessWidget {
+  const GuestEmergencySubmittedScreen({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+
+    return Scaffold(
+      appBar: ImshAppBar(title: const Text('Emergency request sent')),
+      body: Padding(
+        padding: const EdgeInsets.all(AppDesignTokens.containerPadding),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            ImshSurfaceCard(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Icon(
+                    Icons.check_circle_outline,
+                    size: 64,
+                    color: colorScheme.primary,
+                  ),
+                  const Gap(AppDesignTokens.spacingLg),
+                  Text(
+                    'Request sent to the emergency department',
+                    style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+                      fontWeight: FontWeight.bold,
+                    ),
+                    textAlign: TextAlign.center,
+                  ),
+                  const Gap(AppDesignTokens.spacingMd),
+                  Text(
+                    'Hospital staff have your location and will respond as soon as they can.',
+                    style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                      color: colorScheme.onSurfaceVariant,
+                    ),
+                    textAlign: TextAlign.center,
+                  ),
+                  const Gap(AppDesignTokens.spacingMd),
+                  Text(
+                    'Sign in with your patient ID to track updates on this request later.',
+                    style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                      color: colorScheme.onSurfaceVariant,
+                    ),
+                    textAlign: TextAlign.center,
+                  ),
+                ],
+              ),
+            ),
+            const Spacer(),
+            FilledButton(
+              onPressed: () => context.router.replaceAll([const LoginRoute()]),
+              child: const Text('Back to sign in'),
+            ),
+          ],
+        ),
       ),
     );
   }

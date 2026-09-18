@@ -10,14 +10,13 @@ class QuickActionsRow extends StatelessWidget {
   const QuickActionsRow({
     super.key,
     required this.onPayBill,
-    required this.onOpenAppointments,
+    required this.onCheckIn,
   });
 
   final VoidCallback onPayBill;
-  final VoidCallback onOpenAppointments;
+  final VoidCallback onCheckIn;
 
-  static const _itemWidth = 72.0;
-  static const _carouselHeight = 92.0;
+  static const _columns = 4;
 
   @override
   Widget build(BuildContext context) {
@@ -26,7 +25,7 @@ class QuickActionsRow extends StatelessWidget {
     final actions = _buildActions(
       context,
       onPayBill: onPayBill,
-      onOpenAppointments: onOpenAppointments,
+      onCheckIn: onCheckIn,
       primary: colorScheme.primary,
       onPrimary: colorScheme.onPrimary,
       highlight: imshTheme.primaryHighlight,
@@ -34,53 +33,50 @@ class QuickActionsRow extends StatelessWidget {
       mutedForeground: colorScheme.onSurfaceVariant,
     );
 
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.stretch,
-      children: [
-        Padding(
-          padding: const EdgeInsets.symmetric(
-            horizontal: AppDesignTokens.containerPadding,
-          ),
-          child: Text(
-            'Quick Actions',
+    return Padding(
+      padding: const EdgeInsets.symmetric(
+        horizontal: AppDesignTokens.containerPadding,
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          Text(
+            'Quick actions',
             style: Theme.of(
               context,
             ).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w700),
           ),
-        ),
-        const Gap(AppDesignTokens.spacingMd),
-        SizedBox(
-          height: _carouselHeight,
-          child: ListView.separated(
-            scrollDirection: Axis.horizontal,
-            padding: const EdgeInsets.symmetric(
-              horizontal: AppDesignTokens.containerPadding,
-            ),
+          const Gap(AppDesignTokens.spacingMd),
+          GridView.builder(
+            shrinkWrap: true,
+            physics: const NeverScrollableScrollPhysics(),
             itemCount: actions.length,
-            separatorBuilder: (_, __) => const Gap(AppDesignTokens.spacingMd),
+            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+              crossAxisCount: _columns,
+              mainAxisSpacing: AppDesignTokens.spacingMd,
+              crossAxisSpacing: AppDesignTokens.spacingSm,
+              mainAxisExtent: 96,
+            ),
             itemBuilder: (context, index) {
               final action = actions[index];
-              return SizedBox(
-                width: _itemWidth,
-                child: _QuickAction(
-                  icon: action.icon,
-                  label: action.label,
-                  backgroundColor: action.backgroundColor,
-                  foregroundColor: action.foregroundColor,
-                  onTap: action.onTap,
-                ),
+              return _QuickAction(
+                icon: action.icon,
+                label: action.label,
+                backgroundColor: action.backgroundColor,
+                foregroundColor: action.foregroundColor,
+                onTap: action.onTap,
               );
             },
           ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 
   List<_QuickActionData> _buildActions(
     BuildContext context, {
     required VoidCallback onPayBill,
-    required VoidCallback onOpenAppointments,
+    required VoidCallback onCheckIn,
     required Color primary,
     required Color onPrimary,
     required Color highlight,
@@ -97,18 +93,32 @@ class QuickActionsRow extends StatelessWidget {
         onTap: () => context.router.push(const EmergencyRequestsRoute()),
       ),
       _QuickActionData(
+        icon: Icons.login_outlined,
+        label: 'Self check-in',
+        backgroundColor: primary,
+        foregroundColor: onPrimary,
+        onTap: onCheckIn,
+      ),
+      _QuickActionData(
         icon: Icons.calendar_month_outlined,
-        label: 'Request Appt',
+        label: 'Request appointment',
         backgroundColor: primary,
         foregroundColor: onPrimary,
         onTap: () => context.router.push(BookAppointmentRoute()),
       ),
       _QuickActionData(
-        icon: Icons.event_outlined,
-        label: 'Appointments',
+        icon: Icons.badge_outlined,
+        label: 'Health card',
         backgroundColor: highlight,
         foregroundColor: primary,
-        onTap: onOpenAppointments,
+        onTap: () => context.router.push(const HealthCardRoute()),
+      ),
+      _QuickActionData(
+        icon: Icons.water_drop_outlined,
+        label: 'Cycle',
+        backgroundColor: highlight,
+        foregroundColor: primary,
+        onTap: () => context.router.push(const CycleTrackerRoute()),
       ),
       _QuickActionData(
         icon: Icons.medication_outlined,
@@ -118,43 +128,25 @@ class QuickActionsRow extends StatelessWidget {
         onTap: () => context.router.push(const MedicationsRoute()),
       ),
       _QuickActionData(
-        icon: Icons.payments_outlined,
-        label: 'Pay Bill',
-        backgroundColor: muted,
-        foregroundColor: mutedForeground,
-        onTap: onPayBill,
-      ),
-      _QuickActionData(
-        icon: Icons.forum_outlined,
-        label: 'Feedback',
-        backgroundColor: muted,
-        foregroundColor: mutedForeground,
-        onTap: () => context.router.push(const PatientFeedbackRoute()),
-      ),
-      _QuickActionData(
-        icon: Icons.how_to_reg_outlined,
-        label: 'Self Check-in',
-        backgroundColor: muted,
-        foregroundColor: mutedForeground,
-        onTap: () {
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text('Self check-in is coming soon.')),
-          );
-        },
-      ),
-      _QuickActionData(
         icon: Icons.science_outlined,
-        label: 'Lab Results',
+        label: 'Lab results',
         backgroundColor: muted,
         foregroundColor: mutedForeground,
         onTap: () => context.router.push(const LabResultsRoute()),
       ),
       _QuickActionData(
-        icon: Icons.medical_information_outlined,
+        icon: Icons.photo_outlined,
         label: 'Radiology',
         backgroundColor: muted,
         foregroundColor: mutedForeground,
         onTap: () => context.router.push(const RadiologyReportsRoute()),
+      ),
+      _QuickActionData(
+        icon: Icons.payments_outlined,
+        label: 'Pay bill',
+        backgroundColor: muted,
+        foregroundColor: mutedForeground,
+        onTap: onPayBill,
       ),
       _QuickActionData(
         icon: Icons.notifications_outlined,
@@ -164,11 +156,11 @@ class QuickActionsRow extends StatelessWidget {
         onTap: () => context.router.push(const NotificationsRoute()),
       ),
       _QuickActionData(
-        icon: Icons.qr_code_2_outlined,
-        label: 'Health Card',
+        icon: Icons.forum_outlined,
+        label: 'Feedback',
         backgroundColor: muted,
         foregroundColor: mutedForeground,
-        onTap: () => context.router.push(const HealthCardRoute()),
+        onTap: () => context.router.push(const PatientFeedbackRoute()),
       ),
       _QuickActionData(
         icon: Icons.family_restroom_outlined,

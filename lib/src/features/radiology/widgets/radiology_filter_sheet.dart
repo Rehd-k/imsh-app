@@ -5,6 +5,7 @@ import 'package:gap/gap.dart';
 import '../../../core/theme/app_design_tokens.dart';
 import '../../../models/radiology_report_model.dart';
 import '../../../providers/radiology_reports_provider.dart';
+import '../../../shared/widgets/adaptive_date_picker.dart';
 
 Future<void> showRadiologyFilterSheet(BuildContext context, WidgetRef ref) {
   return showModalBottomSheet<void>(
@@ -43,7 +44,7 @@ class _RadiologyFilterSheetState extends ConsumerState<_RadiologyFilterSheet> {
 
   Future<void> _pickDate({required bool isFrom}) async {
     final initial = isFrom ? _dateFrom : _dateTo;
-    final picked = await showDatePicker(
+    final picked = await showAdaptiveDatePicker(
       context: context,
       initialDate: initial ?? DateTime.now(),
       firstDate: DateTime(2000),
@@ -60,8 +61,9 @@ class _RadiologyFilterSheetState extends ConsumerState<_RadiologyFilterSheet> {
   }
 
   void _apply() {
-    ref.read(radiologyReportFilterProvider.notifier).state =
-        RadiologyReportFilter(
+    ref
+        .read(radiologyReportFilterProvider.notifier)
+        .state = RadiologyReportFilter(
       status: _status,
       dateFrom: _dateFrom,
       dateTo: _dateTo,
@@ -84,8 +86,8 @@ class _RadiologyFilterSheetState extends ConsumerState<_RadiologyFilterSheet> {
         left: AppDesignTokens.containerPadding,
         right: AppDesignTokens.containerPadding,
         top: AppDesignTokens.spacingMd,
-        bottom: MediaQuery.viewInsetsOf(context).bottom +
-            AppDesignTokens.spacingLg,
+        bottom:
+            MediaQuery.viewInsetsOf(context).bottom + AppDesignTokens.spacingLg,
       ),
       child: Column(
         mainAxisSize: MainAxisSize.min,
@@ -98,10 +100,7 @@ class _RadiologyFilterSheetState extends ConsumerState<_RadiologyFilterSheet> {
             ),
           ),
           const Gap(AppDesignTokens.spacingMd),
-          Text(
-            'Status',
-            style: theme.textTheme.labelLarge,
-          ),
+          Text('Status', style: theme.textTheme.labelLarge),
           const Gap(AppDesignTokens.spacingSm),
           Wrap(
             spacing: AppDesignTokens.spacingSm,
@@ -116,17 +115,13 @@ class _RadiologyFilterSheetState extends ConsumerState<_RadiologyFilterSheet> {
                 FilterChip(
                   label: Text(status.label),
                   selected: _status == status,
-                  onSelected: (selected) => setState(
-                    () => _status = selected ? status : null,
-                  ),
+                  onSelected: (selected) =>
+                      setState(() => _status = selected ? status : null),
                 ),
             ],
           ),
           const Gap(AppDesignTokens.spacingMd),
-          Text(
-            'Date range',
-            style: theme.textTheme.labelLarge,
-          ),
+          Text('Date range', style: theme.textTheme.labelLarge),
           const Gap(AppDesignTokens.spacingSm),
           Row(
             children: [
@@ -154,15 +149,9 @@ class _RadiologyFilterSheetState extends ConsumerState<_RadiologyFilterSheet> {
             ],
           ),
           const Gap(AppDesignTokens.spacingLg),
-          FilledButton(
-            onPressed: _apply,
-            child: const Text('Apply filters'),
-          ),
+          FilledButton(onPressed: _apply, child: const Text('Apply filters')),
           const Gap(AppDesignTokens.spacingSm),
-          TextButton(
-            onPressed: _clear,
-            child: const Text('Clear all'),
-          ),
+          TextButton(onPressed: _clear, child: const Text('Clear all')),
         ],
       ),
     );

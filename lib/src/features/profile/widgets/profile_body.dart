@@ -12,6 +12,7 @@ import '../../../helper/date_formatter.dart';
 import '../../../models/patient_model.dart';
 import '../../../providers/auth_provider.dart';
 import '../../../providers/profile_provider.dart';
+import '../../../providers/theme_mode_provider.dart';
 import '../../../services/imsh_android_update_service.dart';
 import '../../../shared/widgets/imsh_sliver_app_bar.dart';
 import '../../../shared/widgets/logout_button.dart';
@@ -182,9 +183,26 @@ class _ProfileContent extends StatelessWidget {
             children: [_ProfileField(label: 'HMO', value: patient.hmo)],
           ),
           const Gap(AppDesignTokens.spacingLg),
+          const _ProfileSection(
+            title: 'Appearance',
+            children: [_AppearanceOptions()],
+          ),
+          const Gap(AppDesignTokens.spacingLg),
           _ProfileSection(
             title: 'Support',
             children: [
+              _ProfileAction(
+                icon: Icons.water_drop_outlined,
+                title: 'Cycle tracking',
+                subtitle: 'Log periods and see upcoming cycle predictions.',
+                onTap: () => context.router.push(const CycleTrackerRoute()),
+              ),
+              _ProfileAction(
+                icon: Icons.badge_outlined,
+                title: 'Health card',
+                subtitle: 'Show your digital hospital QR card.',
+                onTap: () => context.router.push(const HealthCardRoute()),
+              ),
               _ProfileAction(
                 icon: Icons.family_restroom_outlined,
                 title: 'Family accounts',
@@ -203,12 +221,12 @@ class _ProfileContent extends StatelessWidget {
                 subtitle: 'Send feedback and follow hospital responses.',
                 onTap: () => context.router.push(const PatientFeedbackRoute()),
               ),
-              if (!kIsWeb &&
-                  defaultTargetPlatform == TargetPlatform.android)
+              if (!kIsWeb && defaultTargetPlatform == TargetPlatform.android)
                 _ProfileAction(
                   icon: Icons.system_update_alt_outlined,
                   title: 'Check for updates',
-                  subtitle: 'Download the latest IMSH Patient build from the hospital server.',
+                  subtitle:
+                      'Download the latest IMSH Patient build from the hospital server.',
                   onTap: () => ImshAndroidUpdateService.triggerCheckFromUi(),
                 ),
             ],
@@ -289,6 +307,58 @@ class _ProfileField extends StatelessWidget {
           Text(displayValue, style: theme.textTheme.bodyLarge),
         ],
       ),
+    );
+  }
+}
+
+class _AppearanceOptions extends ConsumerWidget {
+  const _AppearanceOptions();
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final themeMode = ref.watch(themeModeProvider);
+    final colorScheme = context.colorScheme;
+
+    Widget option({
+      required ThemeMode value,
+      required String title,
+      required String subtitle,
+      required IconData icon,
+    }) {
+      final selected = themeMode == value;
+      return ListTile(
+        contentPadding: EdgeInsets.zero,
+        leading: Icon(icon, color: colorScheme.primary),
+        title: Text(title),
+        subtitle: Text(subtitle),
+        trailing: selected
+            ? Icon(Icons.check_circle, color: colorScheme.primary)
+            : Icon(Icons.circle_outlined, color: colorScheme.outline),
+        onTap: () => ref.read(themeModeProvider.notifier).setThemeMode(value),
+      );
+    }
+
+    return Column(
+      children: [
+        option(
+          value: ThemeMode.light,
+          title: 'Light',
+          subtitle: 'Always use light appearance.',
+          icon: Icons.light_mode_outlined,
+        ),
+        option(
+          value: ThemeMode.dark,
+          title: 'Dark',
+          subtitle: 'Always use dark appearance.',
+          icon: Icons.dark_mode_outlined,
+        ),
+        option(
+          value: ThemeMode.system,
+          title: 'System',
+          subtitle: 'Match the device light or dark setting.',
+          icon: Icons.brightness_auto_outlined,
+        ),
+      ],
     );
   }
 }

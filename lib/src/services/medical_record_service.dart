@@ -31,9 +31,7 @@ class MedicalRecordService {
   }) async {
     final resp = await _dio.get<Map<String, dynamic>>(
       '/patient/medical-records/$id',
-      queryParameters: {
-        if (forPatientId != null) 'forPatientId': forPatientId,
-      },
+      queryParameters: {if (forPatientId != null) 'forPatientId': forPatientId},
     );
     return EncounterDetail.fromJson(resp.data ?? {});
   }
@@ -43,10 +41,43 @@ class MedicalRecordService {
   }) async {
     final resp = await _dio.get<Map<String, dynamic>>(
       '/patient/medical-records/dashboard',
+      queryParameters: {if (forPatientId != null) 'forPatientId': forPatientId},
+    );
+    return MedicalRecordsDashboardResponse.fromJson(resp.data ?? {});
+  }
+
+  Future<List<DashboardDiagnosis>> listDiagnoses({String? forPatientId}) async {
+    final resp = await _dio.get<Map<String, dynamic>>(
+      '/patient/medical-records/diagnoses',
+      queryParameters: {if (forPatientId != null) 'forPatientId': forPatientId},
+    );
+    final raw = resp.data?['data'];
+    if (raw is! List) return const [];
+    return raw
+        .whereType<Map>()
+        .map(
+          (item) =>
+              DashboardDiagnosis.fromJson(Map<String, dynamic>.from(item)),
+        )
+        .toList();
+  }
+
+  Future<List<Map<String, dynamic>>> getVitalsTrend({
+    String? forPatientId,
+    int limit = 40,
+  }) async {
+    final resp = await _dio.get<Map<String, dynamic>>(
+      '/patient/medical-records/vitals-trend',
       queryParameters: {
+        'limit': limit,
         if (forPatientId != null) 'forPatientId': forPatientId,
       },
     );
-    return MedicalRecordsDashboardResponse.fromJson(resp.data ?? {});
+    final raw = resp.data?['data'];
+    if (raw is! List) return const [];
+    return raw
+        .whereType<Map>()
+        .map((item) => Map<String, dynamic>.from(item))
+        .toList();
   }
 }

@@ -10,6 +10,7 @@ import '../../core/theme/app_theme.dart';
 import '../../core/theme/context_extensions.dart';
 import '../../helper/date_formatter.dart';
 import '../../providers/auth_provider.dart';
+import '../../shared/widgets/adaptive_date_picker.dart';
 import '../../shared/widgets/feature_placeholder_screen.dart';
 import '../../shared/widgets/imsh_surface_card.dart';
 import '../../shared/widgets/theme_mode_menu_button.dart';
@@ -38,7 +39,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
 
   Future<void> _pickDob() async {
     final now = DateTime.now();
-    final picked = await showDatePicker(
+    final picked = await showAdaptiveDatePicker(
       context: context,
       initialDate: _dob ?? DateTime(now.year - 30),
       firstDate: DateTime(now.year - 120),
@@ -66,10 +67,9 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
       return;
     }
 
-    final success = await ref.read(patientAuthProvider.notifier).login(
-          patientId: _patientIdController.text,
-          dob: _dob!,
-        );
+    final success = await ref
+        .read(patientAuthProvider.notifier)
+        .login(patientId: _patientIdController.text, dob: _dob!);
 
     if (!mounted || !success) return;
     final auth = ref.read(patientAuthProvider);
@@ -134,17 +134,28 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                                 .read(patientAuthProvider.notifier)
                                 .clearError(),
                           ),
+                          const Gap(AppDesignTokens.spacingLg),
+                          OutlinedButton.icon(
+                            style: OutlinedButton.styleFrom(
+                              foregroundColor: colorScheme.error,
+                              side: BorderSide(color: colorScheme.error),
+                              padding: const EdgeInsets.symmetric(vertical: 14),
+                            ),
+                            onPressed: auth.isLoading
+                                ? null
+                                : () => context.router.push(
+                                    const GuestCreateEmergencyRequestRoute(),
+                                  ),
+                            icon: const Icon(Icons.emergency_outlined),
+                            label: const Text('Request emergency help'),
+                          ),
                         ],
                       ),
                     ),
                   ),
                 ),
               ),
-              const Positioned(
-                top: 0,
-                right: 8,
-                child: ThemeModeMenuButton(),
-              ),
+              const Positioned(top: 0, right: 8, child: ThemeModeMenuButton()),
             ],
           ),
         ),
@@ -171,7 +182,11 @@ class _LoginBrandingHeader extends StatelessWidget {
           ),
           child: ClipRRect(
             borderRadius: BorderRadius.circular(AppDesignTokens.radiusMd),
-            child: Image.asset('assets/imsh.png', height: 72),
+            child: Image.asset(
+              'assets/imsh.png',
+              height: 72,
+              semanticLabel: 'Ibom Specialist Hospital',
+            ),
           ),
         ),
         const Gap(AppDesignTokens.spacingLg),
@@ -195,10 +210,7 @@ class _LoginBrandingHeader extends StatelessWidget {
 }
 
 class _LabeledField extends StatelessWidget {
-  const _LabeledField({
-    required this.label,
-    required this.child,
-  });
+  const _LabeledField({required this.label, required this.child});
 
   final String label;
   final Widget child;
@@ -268,6 +280,7 @@ class _LoginFormCard extends StatelessWidget {
                 hintText: 'ISH-2024-XXXX',
                 prefixIcon: Icon(Icons.person_outline),
               ),
+              autofillHints: const [AutofillHints.username],
               textInputAction: TextInputAction.next,
               textCapitalization: TextCapitalization.characters,
               inputFormatters: [
@@ -286,25 +299,31 @@ class _LoginFormCard extends StatelessWidget {
           const Gap(AppDesignTokens.spacingMd),
           _LabeledField(
             label: 'Date of birth',
-            child: InkWell(
-              onTap: auth.isLoading ? null : onPickDob,
-              borderRadius: BorderRadius.circular(AppDesignTokens.radiusSm),
-              child: InputDecorator(
-                decoration: InputDecoration(
-                  hintText: 'Select your date of birth',
-                  prefixIcon: const Icon(Icons.calendar_today_outlined),
-                  errorText: showDobError && dob == null
-                      ? 'Date of birth is required'
-                      : null,
-                ),
-                child: Text(
-                  dob == null
-                      ? 'Select your date of birth'
-                      : DateFormatter.shortDate(dob!),
-                  style: theme.textTheme.bodyLarge?.copyWith(
-                    color: dob == null
-                        ? colorScheme.onSurfaceVariant.withValues(alpha: 0.6)
-                        : colorScheme.onSurface,
+            child: Semantics(
+              button: true,
+              label: dob == null
+                  ? 'Date of birth, not selected'
+                  : 'Date of birth, ${DateFormatter.shortDate(dob!)}',
+              child: InkWell(
+                onTap: auth.isLoading ? null : onPickDob,
+                borderRadius: BorderRadius.circular(AppDesignTokens.radiusSm),
+                child: InputDecorator(
+                  decoration: InputDecoration(
+                    hintText: 'Select your date of birth',
+                    prefixIcon: const Icon(Icons.calendar_today_outlined),
+                    errorText: showDobError && dob == null
+                        ? 'Date of birth is required'
+                        : null,
+                  ),
+                  child: Text(
+                    dob == null
+                        ? 'Select your date of birth'
+                        : DateFormatter.shortDate(dob!),
+                    style: theme.textTheme.bodyLarge?.copyWith(
+                      color: dob == null
+                          ? colorScheme.onSurfaceVariant
+                          : colorScheme.onSurface,
+                    ),
                   ),
                 ),
               ),
@@ -359,7 +378,7 @@ class _LoginFormCard extends StatelessWidget {
                         color: colorScheme.onPrimary,
                       ),
                     )
-                  : const Text('Secure Sign In'),
+                  : const Text('Sign in'),
             ),
           ),
         ],

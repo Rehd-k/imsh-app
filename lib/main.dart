@@ -131,18 +131,10 @@ class _ImshAppState extends ConsumerState<ImshApp> {
       debugShowCheckedModeBanner: false,
       routerConfig: NavigationService.router.config(),
       builder: (context, child) {
-        final mediaQuery = MediaQuery.of(context);
-        final clampedScaler = TextScaler.linear(
-          mediaQuery.textScaler.scale(1).clamp(0.9, 1.0),
-        );
-
-        return MediaQuery(
-          data: mediaQuery.copyWith(textScaler: clampedScaler),
-          child: AppNotificationHost(
-            child: OfflineBanner(
-              child: ImshAndroidUpdateLayer(
-                child: child ?? const SizedBox.shrink(),
-              ),
+        return AppNotificationHost(
+          child: OfflineBanner(
+            child: ImshAndroidUpdateLayer(
+              child: child ?? const SizedBox.shrink(),
             ),
           ),
         );

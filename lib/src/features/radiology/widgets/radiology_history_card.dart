@@ -1,5 +1,6 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gap/gap.dart';
 import 'package:imsh/app_router.gr.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -8,31 +9,31 @@ import '../../../core/theme/app_design_tokens.dart';
 import '../../../core/theme/context_extensions.dart';
 import '../../../helper/date_formatter.dart';
 import '../../../models/radiology_report_model.dart';
+import '../../../providers/service_providers.dart';
+import '../radiology_pdf_download.dart';
 
-class RadiologyHistoryCard extends StatelessWidget {
-  const RadiologyHistoryCard({
-    super.key,
-    required this.report,
-  });
+class RadiologyHistoryCard extends ConsumerWidget {
+  const RadiologyHistoryCard({super.key, required this.report});
 
   final RadiologyReportSummary report;
 
-  Future<void> _openUrl(BuildContext context, String url, String label) async {
+  Future<void> _openDicom(BuildContext context, String url) async {
     final uri = Uri.tryParse(url);
     if (uri == null) return;
     final launched = await launchUrl(uri, mode: LaunchMode.externalApplication);
     if (!launched && context.mounted) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Could not open $label')),
+        const SnackBar(content: Text('Could not open DICOM viewer')),
       );
     }
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final theme = Theme.of(context);
     final colorScheme = context.colorScheme;
-    final hasPdf = report.pdfUrl?.isNotEmpty == true;
+    final hasPdf =
+        report.status.isComplete || report.thumbnailUrl?.isNotEmpty == true;
     final hasDicom = report.dicomUrl?.isNotEmpty == true;
     final hasDetail = report.status.isComplete;
 
@@ -59,8 +60,9 @@ class RadiologyHistoryCard extends StatelessWidget {
                   height: 40,
                   decoration: BoxDecoration(
                     color: colorScheme.surfaceContainerLow,
-                    borderRadius:
-                        BorderRadius.circular(AppDesignTokens.radiusSm),
+                    borderRadius: BorderRadius.circular(
+                      AppDesignTokens.radiusSm,
+                    ),
                   ),
                   child: Icon(
                     report.modality.icon,
@@ -100,21 +102,18 @@ class RadiologyHistoryCard extends StatelessWidget {
                           children: [
                             if (hasPdf)
                               _LinkButton(
-                                label: 'View PDF',
-                                onTap: () => _openUrl(
+                                label: 'Download PDF',
+                                onTap: () => downloadRadiologyReportPdf(
                                   context,
-                                  report.pdfUrl!,
-                                  'PDF',
+                                  service: ref.read(radiologyServiceProvider),
+                                  reportId: report.id,
                                 ),
                               ),
                             if (hasDicom)
                               _LinkButton(
                                 label: 'DICOM',
-                                onTap: () => _openUrl(
-                                  context,
-                                  report.dicomUrl!,
-                                  'DICOM viewer',
-                                ),
+                                onTap: () =>
+                                    _openDicom(context, report.dicomUrl!),
                               ),
                             if (!hasPdf && !hasDicom && hasDetail)
                               _LinkButton(
@@ -139,10 +138,7 @@ class RadiologyHistoryCard extends StatelessWidget {
 }
 
 class _LinkButton extends StatelessWidget {
-  const _LinkButton({
-    required this.label,
-    required this.onTap,
-  });
+  const _LinkButton({required this.label, required this.onTap});
 
   final String label;
   final VoidCallback onTap;
@@ -154,9 +150,9 @@ class _LinkButton extends StatelessWidget {
       child: Text(
         label,
         style: Theme.of(context).textTheme.labelLarge?.copyWith(
-              color: Theme.of(context).colorScheme.primary,
-              fontWeight: FontWeight.w600,
-            ),
+          color: Theme.of(context).colorScheme.primary,
+          fontWeight: FontWeight.w600,
+        ),
       ),
     );
   }

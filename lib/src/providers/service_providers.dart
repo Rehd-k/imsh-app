@@ -2,6 +2,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../services/appointment_service.dart';
 import '../services/billing_service.dart';
+import '../services/cycle_service.dart';
 import '../services/device_service.dart';
 import '../services/emergency_service.dart';
 import '../services/family_service.dart';
@@ -50,6 +51,10 @@ final medicalRecordServiceProvider = Provider<MedicalRecordService>((ref) {
 
 final billingServiceProvider = Provider<BillingService>((ref) {
   return BillingService();
+});
+
+final cycleServiceProvider = Provider<CycleService>((ref) {
+  return CycleService();
 });
 
 final notificationServiceProvider = Provider<NotificationService>((ref) {

@@ -6,10 +6,7 @@ import '../../../core/theme/context_extensions.dart';
 import '../../../models/medical_records_dashboard_model.dart';
 
 class VitalsSummaryRow extends StatelessWidget {
-  const VitalsSummaryRow({
-    super.key,
-    required this.vitals,
-  });
+  const VitalsSummaryRow({super.key, required this.vitals});
 
   final LatestVitalsSummary? vitals;
 
@@ -21,11 +18,7 @@ class VitalsSummaryRow extends StatelessWidget {
       ),
       child: Row(
         children: [
-          Expanded(
-            child: _HeartRateCard(
-              pulseRate: vitals?.pulseRate,
-            ),
-          ),
+          Expanded(child: _HeartRateCard(pulseRate: vitals?.pulseRate)),
           const Gap(AppDesignTokens.spacingMd),
           Expanded(
             child: _BloodPressureCard(
@@ -51,15 +44,17 @@ class _HeartRateCard extends StatelessWidget {
     final colorScheme = context.colorScheme;
     final hasValue = pulseRate != null;
     final displayValue = hasValue ? '$pulseRate' : '—';
-    final progress = hasValue ? (pulseRate!.clamp(40, 120) - 40) / 80 : 0.0;
+    final semanticLabel = hasValue
+        ? 'Heart rate $pulseRate beats per minute'
+        : 'Heart rate unavailable';
 
-    return _VitalCardShell(
-      icon: Icons.monitor_heart_outlined,
-      label: 'HEART RATE',
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
+    return Semantics(
+      label: semanticLabel,
+      child: ExcludeSemantics(
+        child: _VitalCardShell(
+          icon: Icons.monitor_heart_outlined,
+          label: 'Heart rate',
+          child: Row(
             crossAxisAlignment: CrossAxisAlignment.baseline,
             textBaseline: TextBaseline.alphabetic,
             children: [
@@ -81,17 +76,7 @@ class _HeartRateCard extends StatelessWidget {
               ],
             ],
           ),
-          const Gap(AppDesignTokens.spacingSm),
-          ClipRRect(
-            borderRadius: BorderRadius.circular(AppDesignTokens.radiusSm),
-            child: LinearProgressIndicator(
-              value: hasValue ? progress : 0,
-              minHeight: 4,
-              backgroundColor: colorScheme.surfaceContainerHighest,
-              color: colorScheme.tertiary,
-            ),
-          ),
-        ],
+        ),
       ),
     );
   }
@@ -115,46 +100,58 @@ class _BloodPressureCard extends StatelessWidget {
     final hasValue = systolic != null || diastolic != null;
     final displayValue = hasValue
         ? (systolic != null && diastolic != null
-            ? '$systolic/$diastolic'
-            : systolic != null
-                ? '$systolic/—'
-                : '—/$diastolic')
+              ? '$systolic/$diastolic'
+              : systolic != null
+              ? '$systolic/—'
+              : '—/$diastolic')
         : '—';
+    final semanticLabel = !hasValue
+        ? 'Blood pressure unavailable'
+        : status != null && status!.isNotEmpty
+        ? 'Blood pressure $displayValue, $status'
+        : 'Blood pressure $displayValue';
 
-    return _VitalCardShell(
-      icon: Icons.bloodtype_outlined,
-      label: 'BLOOD PRESS.',
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            displayValue,
-            style: theme.textTheme.headlineSmall?.copyWith(
-              color: colorScheme.primary,
-              fontWeight: FontWeight.w700,
-            ),
-          ),
-          if (status != null && status!.isNotEmpty) ...[
-            const Gap(AppDesignTokens.spacingSm),
-            Container(
-              padding: const EdgeInsets.symmetric(
-                horizontal: AppDesignTokens.spacingSm,
-                vertical: 2,
-              ),
-              decoration: BoxDecoration(
-                color: context.imshTheme.primaryHighlight,
-                borderRadius: BorderRadius.circular(AppDesignTokens.radiusSm),
-              ),
-              child: Text(
-                status!,
-                style: theme.textTheme.labelSmall?.copyWith(
+    return Semantics(
+      label: semanticLabel,
+      child: ExcludeSemantics(
+        child: _VitalCardShell(
+          icon: Icons.bloodtype_outlined,
+          label: 'Blood pressure',
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                displayValue,
+                style: theme.textTheme.headlineSmall?.copyWith(
                   color: colorScheme.primary,
-                  fontWeight: FontWeight.w600,
+                  fontWeight: FontWeight.w700,
                 ),
               ),
-            ),
-          ],
-        ],
+              if (status != null && status!.isNotEmpty) ...[
+                const Gap(AppDesignTokens.spacingSm),
+                Container(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: AppDesignTokens.spacingSm,
+                    vertical: 2,
+                  ),
+                  decoration: BoxDecoration(
+                    color: context.imshTheme.primaryHighlight,
+                    borderRadius: BorderRadius.circular(
+                      AppDesignTokens.radiusSm,
+                    ),
+                  ),
+                  child: Text(
+                    status!,
+                    style: theme.textTheme.labelSmall?.copyWith(
+                      color: colorScheme.primary,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                ),
+              ],
+            ],
+          ),
+        ),
       ),
     );
   }
@@ -191,12 +188,15 @@ class _VitalCardShell extends StatelessWidget {
             children: [
               Icon(icon, size: 16, color: colorScheme.onSurfaceVariant),
               const Gap(AppDesignTokens.spacingXs),
-              Text(
-                label,
-                style: theme.textTheme.labelSmall?.copyWith(
-                  color: colorScheme.onSurfaceVariant,
-                  fontWeight: FontWeight.w600,
-                  letterSpacing: 0.6,
+              Expanded(
+                child: Text(
+                  label,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: theme.textTheme.labelSmall?.copyWith(
+                    color: colorScheme.onSurfaceVariant,
+                    fontWeight: FontWeight.w600,
+                  ),
                 ),
               ),
             ],

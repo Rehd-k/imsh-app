@@ -11,7 +11,9 @@ Future<void> confirmAndLogout(BuildContext context, WidgetRef ref) async {
     context: context,
     builder: (context) => AlertDialog(
       title: const Text('Log out?'),
-      content: const Text('You will need to sign in again to access your records.'),
+      content: const Text(
+        'You will need to sign in again to access your records.',
+      ),
       actions: [
         TextButton(
           onPressed: () => Navigator.of(context).pop(false),
@@ -65,10 +67,7 @@ class LogoutTextButton extends ConsumerWidget {
     return OutlinedButton.icon(
       onPressed: () => confirmAndLogout(context, ref),
       icon: Icon(Icons.logout_outlined, color: colorScheme.error),
-      label: Text(
-        'Log out',
-        style: TextStyle(color: colorScheme.error),
-      ),
+      label: Text('Log out', style: TextStyle(color: colorScheme.error)),
       style: OutlinedButton.styleFrom(
         side: BorderSide(color: colorScheme.error),
       ),
@@ -76,14 +75,14 @@ class LogoutTextButton extends ConsumerWidget {
   }
 }
 
-/// Shared sizing for compact app bar action icons.
+/// Shared sizing for app bar action icons (44pt minimum target).
 abstract final class ImshAppBarActions {
-  static const double iconSize = 20;
+  static const double iconSize = 24;
 
-  static const EdgeInsets iconPadding = EdgeInsets.all(8);
+  static const EdgeInsets iconPadding = EdgeInsets.all(10);
 
   static const BoxConstraints iconConstraints = BoxConstraints(
-    minWidth: 36,
-    minHeight: 36,
+    minWidth: 44,
+    minHeight: 44,
   );
 }

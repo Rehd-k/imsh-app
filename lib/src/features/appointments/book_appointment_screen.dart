@@ -10,6 +10,7 @@ import '../../helper/date_formatter.dart';
 import '../../models/appointment_model.dart';
 import '../../providers/appointments_provider.dart';
 import '../../services/appointment_service.dart';
+import '../../shared/widgets/adaptive_date_picker.dart';
 import '../../shared/widgets/imsh_app_bar.dart';
 
 @RoutePage()
@@ -44,9 +45,9 @@ class _BookAppointmentScreenState extends ConsumerState<BookAppointmentScreen> {
 
     if (!_initialized && widget.appointmentId != null && !wizard.isReschedule) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
-        ref.read(bookingWizardProvider.notifier).startReschedule(
-              appointmentId: widget.appointmentId!,
-            );
+        ref
+            .read(bookingWizardProvider.notifier)
+            .startReschedule(appointmentId: widget.appointmentId!);
       });
       _initialized = true;
     }
@@ -57,7 +58,9 @@ class _BookAppointmentScreenState extends ConsumerState<BookAppointmentScreen> {
 
     return Scaffold(
       appBar: ImshAppBar(
-        title: Text(isReschedule ? 'Reschedule request' : 'Request appointment'),
+        title: Text(
+          isReschedule ? 'Reschedule request' : 'Request appointment',
+        ),
       ),
       body: Column(
         children: [
@@ -68,9 +71,7 @@ class _BookAppointmentScreenState extends ConsumerState<BookAppointmentScreen> {
               currentStep: wizard.step.clamp(0, stepLabels.length - 1),
             ),
           ),
-          Expanded(
-            child: _buildStepContent(wizard, isReschedule),
-          ),
+          Expanded(child: _buildStepContent(wizard, isReschedule)),
           _buildBottomBar(wizard, isReschedule, stepLabels.length - 1),
         ],
       ),
@@ -81,44 +82,44 @@ class _BookAppointmentScreenState extends ConsumerState<BookAppointmentScreen> {
     if (isReschedule) {
       return switch (wizard.step) {
         0 => _DateStep(
-            selectedDate: wizard.selectedDate ?? DateTime.now(),
-            onDateSelected: (date) {
-              ref.read(bookingWizardProvider.notifier).selectDate(date);
-            },
-          ),
-        _ => _ConfirmStep(
-            wizard: wizard,
-            isReschedule: true,
-            reasonController: _reasonController,
-            onReasonChanged: ref.read(bookingWizardProvider.notifier).setReason,
-          ),
-      };
-    }
-
-    return switch (wizard.step) {
-      0 => _SpecialtyStep(
-          onSelected: (specialty) {
-            ref.read(bookingWizardProvider.notifier).selectSpecialty(specialty);
-          },
-        ),
-      1 => _DateStep(
           selectedDate: wizard.selectedDate ?? DateTime.now(),
           onDateSelected: (date) {
             ref.read(bookingWizardProvider.notifier).selectDate(date);
           },
         ),
-      2 => _VisitTypeStep(
-          selected: wizard.visitType,
-          onSelected: (type) {
-            ref.read(bookingWizardProvider.notifier).selectVisitType(type);
-          },
-        ),
-      _ => _ConfirmStep(
+        _ => _ConfirmStep(
           wizard: wizard,
-          isReschedule: false,
+          isReschedule: true,
           reasonController: _reasonController,
           onReasonChanged: ref.read(bookingWizardProvider.notifier).setReason,
         ),
+      };
+    }
+
+    return switch (wizard.step) {
+      0 => _SpecialtyStep(
+        onSelected: (specialty) {
+          ref.read(bookingWizardProvider.notifier).selectSpecialty(specialty);
+        },
+      ),
+      1 => _DateStep(
+        selectedDate: wizard.selectedDate ?? DateTime.now(),
+        onDateSelected: (date) {
+          ref.read(bookingWizardProvider.notifier).selectDate(date);
+        },
+      ),
+      2 => _VisitTypeStep(
+        selected: wizard.visitType,
+        onSelected: (type) {
+          ref.read(bookingWizardProvider.notifier).selectVisitType(type);
+        },
+      ),
+      _ => _ConfirmStep(
+        wizard: wizard,
+        isReschedule: false,
+        reasonController: _reasonController,
+        onReasonChanged: ref.read(bookingWizardProvider.notifier).setReason,
+      ),
     };
   }
 
@@ -140,8 +141,9 @@ class _BookAppointmentScreenState extends ConsumerState<BookAppointmentScreen> {
               OutlinedButton(
                 onPressed: _submitting
                     ? null
-                    : () =>
-                        ref.read(bookingWizardProvider.notifier).previousStep(),
+                    : () => ref
+                          .read(bookingWizardProvider.notifier)
+                          .previousStep(),
                 child: const Text('Back'),
               ),
             if (step > 0) const Gap(AppDesignTokens.spacingSm),
@@ -178,11 +180,7 @@ class _BookAppointmentScreenState extends ConsumerState<BookAppointmentScreen> {
     );
   }
 
-  bool _canProceed(
-    BookingWizardState wizard,
-    int step,
-    bool isReschedule,
-  ) {
+  bool _canProceed(BookingWizardState wizard, int step, bool isReschedule) {
     if (isReschedule) {
       return switch (step) {
         0 => wizard.selectedDate != null,
@@ -194,9 +192,10 @@ class _BookAppointmentScreenState extends ConsumerState<BookAppointmentScreen> {
       0 => wizard.specialty != null,
       1 => wizard.selectedDate != null,
       2 => wizard.visitType != null,
-      3 => wizard.specialty != null &&
-          wizard.selectedDate != null &&
-          wizard.visitType != null,
+      3 =>
+        wizard.specialty != null &&
+            wizard.selectedDate != null &&
+            wizard.visitType != null,
       _ => false,
     };
   }
@@ -212,12 +211,13 @@ class _BookAppointmentScreenState extends ConsumerState<BookAppointmentScreen> {
         if (date == null || appointmentId == null) return;
 
         final scheduledAt = DateTime(date.year, date.month, date.day, 9);
-        await ref.read(bookAppointmentProvider.notifier).submit(
+        await ref
+            .read(bookAppointmentProvider.notifier)
+            .submit(
               request: CreateAppointmentRequest(
                 specialty: wizard.specialty?.id ?? '',
                 date: AppointmentService.formatPreferredDate(date),
-                visitType:
-                    wizard.visitType ?? AppointmentVisitType.inPerson,
+                visitType: wizard.visitType ?? AppointmentVisitType.inPerson,
                 reason: reason.isEmpty ? null : reason,
               ),
               appointmentId: appointmentId,
@@ -232,7 +232,9 @@ class _BookAppointmentScreenState extends ConsumerState<BookAppointmentScreen> {
         final visitType = wizard.visitType;
         if (specialty == null || date == null || visitType == null) return;
 
-        await ref.read(bookAppointmentProvider.notifier).submit(
+        await ref
+            .read(bookAppointmentProvider.notifier)
+            .submit(
               request: CreateAppointmentRequest(
                 specialty: specialty.id,
                 date: AppointmentService.formatPreferredDate(date),
@@ -261,9 +263,9 @@ class _BookAppointmentScreenState extends ConsumerState<BookAppointmentScreen> {
       }
     } catch (error) {
       if (!mounted) return;
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(appointmentErrorMessage(error))),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text(appointmentErrorMessage(error))));
     } finally {
       if (mounted) setState(() => _submitting = false);
     }
@@ -271,10 +273,7 @@ class _BookAppointmentScreenState extends ConsumerState<BookAppointmentScreen> {
 }
 
 class _StepIndicator extends StatelessWidget {
-  const _StepIndicator({
-    required this.labels,
-    required this.currentStep,
-  });
+  const _StepIndicator({required this.labels, required this.currentStep});
 
   final List<String> labels;
   final int currentStep;
@@ -317,9 +316,10 @@ class _StepIndicator extends StatelessWidget {
               Text(
                 labels[i],
                 style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                      fontWeight:
-                          i == currentStep ? FontWeight.w700 : FontWeight.w400,
-                    ),
+                  fontWeight: i == currentStep
+                      ? FontWeight.w700
+                      : FontWeight.w400,
+                ),
               ),
             ],
           ),
@@ -340,9 +340,7 @@ class _SpecialtyStep extends ConsumerWidget {
 
     return specialtiesAsync.when(
       loading: () => const Center(child: CircularProgressIndicator()),
-      error: (error, _) => Center(
-        child: Text(appointmentErrorMessage(error)),
-      ),
+      error: (error, _) => Center(child: Text(appointmentErrorMessage(error))),
       data: (response) {
         final colorScheme = context.colorScheme;
 
@@ -359,8 +357,7 @@ class _SpecialtyStep extends ConsumerWidget {
             return ListTile(
               tileColor: colorScheme.surfaceContainerLowest,
               shape: RoundedRectangleBorder(
-                borderRadius:
-                    BorderRadius.circular(AppDesignTokens.radiusMd),
+                borderRadius: BorderRadius.circular(AppDesignTokens.radiusMd),
                 side: BorderSide(color: colorScheme.outlineVariant),
               ),
               title: Text(
@@ -381,10 +378,7 @@ class _SpecialtyStep extends ConsumerWidget {
 }
 
 class _DateStep extends StatelessWidget {
-  const _DateStep({
-    required this.selectedDate,
-    required this.onDateSelected,
-  });
+  const _DateStep({required this.selectedDate, required this.onDateSelected});
 
   final DateTime selectedDate;
   final void Function(DateTime date) onDateSelected;
@@ -396,21 +390,21 @@ class _DateStep extends StatelessWidget {
       children: [
         Text(
           'Preferred date',
-          style: Theme.of(context).textTheme.titleSmall?.copyWith(
-                fontWeight: FontWeight.w700,
-              ),
+          style: Theme.of(
+            context,
+          ).textTheme.titleSmall?.copyWith(fontWeight: FontWeight.w700),
         ),
         const Gap(AppDesignTokens.spacingXs),
         Text(
           'The hospital will confirm a time after reviewing your request.',
           style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                color: context.colorScheme.onSurfaceVariant,
-              ),
+            color: context.colorScheme.onSurfaceVariant,
+          ),
         ),
         const Gap(AppDesignTokens.spacingLg),
         OutlinedButton.icon(
           onPressed: () async {
-            final picked = await showDatePicker(
+            final picked = await showAdaptiveDatePicker(
               context: context,
               initialDate: selectedDate,
               firstDate: DateTime.now(),
@@ -427,10 +421,7 @@ class _DateStep extends StatelessWidget {
 }
 
 class _VisitTypeStep extends StatelessWidget {
-  const _VisitTypeStep({
-    required this.selected,
-    required this.onSelected,
-  });
+  const _VisitTypeStep({required this.selected, required this.onSelected});
 
   final AppointmentVisitType? selected;
   final void Function(AppointmentVisitType type) onSelected;
@@ -444,9 +435,9 @@ class _VisitTypeStep extends StatelessWidget {
       children: [
         Text(
           'How would you like to visit?',
-          style: Theme.of(context).textTheme.titleSmall?.copyWith(
-                fontWeight: FontWeight.w700,
-              ),
+          style: Theme.of(
+            context,
+          ).textTheme.titleSmall?.copyWith(fontWeight: FontWeight.w700),
         ),
         const Gap(AppDesignTokens.spacingMd),
         for (final type in AppointmentVisitType.values) ...[
@@ -523,8 +514,8 @@ class _ConfirmStep extends StatelessWidget {
                   Text(
                     wizard.specialty!.name,
                     style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                          fontWeight: FontWeight.w700,
-                        ),
+                      fontWeight: FontWeight.w700,
+                    ),
                   ),
                   const Gap(AppDesignTokens.spacingSm),
                 ],
@@ -538,9 +529,9 @@ class _ConfirmStep extends StatelessWidget {
                   Text(
                     wizard.visitType!.label,
                     style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                          color: colorScheme.primary,
-                          fontWeight: FontWeight.w600,
-                        ),
+                      color: colorScheme.primary,
+                      fontWeight: FontWeight.w600,
+                    ),
                   ),
                 ],
                 const Gap(AppDesignTokens.spacingSm),
@@ -549,8 +540,8 @@ class _ConfirmStep extends StatelessWidget {
                       ? 'Your preferred date will be updated. Staff will confirm timing.'
                       : 'Submitted as Requested. A doctor will be assigned after review.',
                   style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                        color: colorScheme.onSurfaceVariant,
-                      ),
+                    color: colorScheme.onSurfaceVariant,
+                  ),
                 ),
               ],
             ),

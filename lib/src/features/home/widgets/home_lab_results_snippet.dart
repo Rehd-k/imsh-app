@@ -68,8 +68,9 @@ class HomeLabResultsSnippet extends StatelessWidget {
                 child: Container(
                   padding: const EdgeInsets.all(AppDesignTokens.spacingMd),
                   decoration: BoxDecoration(
-                    borderRadius:
-                        BorderRadius.circular(AppDesignTokens.radiusMd),
+                    borderRadius: BorderRadius.circular(
+                      AppDesignTokens.radiusMd,
+                    ),
                     border: Border.all(color: colorScheme.outlineVariant),
                   ),
                   child: Row(
@@ -97,24 +98,43 @@ class HomeLabResultsSnippet extends StatelessWidget {
                         ),
                       ),
                       if (result.status != null && result.status!.isNotEmpty)
-                        Container(
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: AppDesignTokens.spacingSm,
-                            vertical: 2,
-                          ),
-                          decoration: BoxDecoration(
-                            color: context.imshTheme.successContainer,
-                            borderRadius: BorderRadius.circular(
-                              AppDesignTokens.radiusSm,
-                            ),
-                          ),
-                          child: Text(
-                            result.status!,
-                            style: theme.textTheme.labelSmall?.copyWith(
-                              color: context.imshTheme.onSuccessContainer,
-                              fontWeight: FontWeight.w600,
-                            ),
-                          ),
+                        Builder(
+                          builder: (context) {
+                            final key = result.status!.toLowerCase();
+                            final high = key == 'high' || key == 'critical';
+                            final low = key == 'low';
+                            final bg = high
+                                ? colorScheme.errorContainer
+                                : low
+                                ? context.imshTheme.warningContainer
+                                : context.imshTheme.successContainer;
+                            final fg = high
+                                ? colorScheme.onErrorContainer
+                                : low
+                                ? context.imshTheme.onWarningContainer
+                                : context.imshTheme.onSuccessContainer;
+                            final label =
+                                '${result.status![0].toUpperCase()}${result.status!.substring(1).toLowerCase()}';
+                            return Container(
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: AppDesignTokens.spacingSm,
+                                vertical: 2,
+                              ),
+                              decoration: BoxDecoration(
+                                color: bg,
+                                borderRadius: BorderRadius.circular(
+                                  AppDesignTokens.radiusSm,
+                                ),
+                              ),
+                              child: Text(
+                                label,
+                                style: theme.textTheme.labelSmall?.copyWith(
+                                  color: fg,
+                                  fontWeight: FontWeight.w600,
+                                ),
+                              ),
+                            );
+                          },
                         ),
                     ],
                   ),

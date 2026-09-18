@@ -2,12 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../providers/theme_mode_provider.dart';
+import 'logout_button.dart';
 
 class ThemeModeMenuButton extends ConsumerWidget {
-  const ThemeModeMenuButton({
-    super.key,
-    this.iconSize = 24,
-  });
+  const ThemeModeMenuButton({super.key, this.iconSize = 24});
 
   final double iconSize;
 
@@ -15,9 +13,10 @@ class ThemeModeMenuButton extends ConsumerWidget {
     return switch (mode) {
       ThemeMode.light => Icons.light_mode_outlined,
       ThemeMode.dark => Icons.dark_mode_outlined,
-      ThemeMode.system => platformBrightness == Brightness.dark
-          ? Icons.dark_mode_outlined
-          : Icons.light_mode_outlined,
+      ThemeMode.system =>
+        platformBrightness == Brightness.dark
+            ? Icons.dark_mode_outlined
+            : Icons.light_mode_outlined,
     };
   }
 
@@ -27,14 +26,9 @@ class ThemeModeMenuButton extends ConsumerWidget {
     final platformBrightness = MediaQuery.platformBrightnessOf(context);
 
     return PopupMenuButton<ThemeMode>(
-      icon: Icon(
-        _iconFor(themeMode, platformBrightness),
-        size: iconSize,
-      ),
-      padding: iconSize <= 20 ? const EdgeInsets.all(8) : EdgeInsets.zero,
-      constraints: iconSize <= 20
-          ? const BoxConstraints(minWidth: 36, minHeight: 36)
-          : null,
+      icon: Icon(_iconFor(themeMode, platformBrightness), size: iconSize),
+      padding: ImshAppBarActions.iconPadding,
+      constraints: ImshAppBarActions.iconConstraints,
       tooltip: 'Theme',
       onSelected: (mode) =>
           ref.read(themeModeProvider.notifier).setThemeMode(mode),
@@ -80,8 +74,7 @@ class ThemeModeMenuButton extends ConsumerWidget {
           Icon(icon, size: 20, color: colorScheme.onSurface),
           const SizedBox(width: 12),
           Expanded(child: Text(label)),
-          if (selected)
-            Icon(Icons.check, size: 20, color: colorScheme.primary),
+          if (selected) Icon(Icons.check, size: 20, color: colorScheme.primary),
         ],
       ),
     );
