@@ -7,6 +7,8 @@ part 'patient_model.g.dart';
 
 @freezed
 abstract class Patient with _$Patient {
+  const Patient._();
+
   const factory Patient({
     required String id,
     String? patientId,
@@ -25,21 +27,7 @@ abstract class Patient with _$Patient {
   }) = _Patient;
 
   factory Patient.fromJson(Map<String, dynamic> json) => _$PatientFromJson(json);
-}
 
-@freezed
-abstract class PatientLoginResponse with _$PatientLoginResponse {
-  const factory PatientLoginResponse({
-    required String accessToken,
-    required Patient patient,
-    required PatientDevice device,
-  }) = _PatientLoginResponse;
-
-  factory PatientLoginResponse.fromJson(Map<String, dynamic> json) =>
-      _$PatientLoginResponseFromJson(json);
-}
-
-extension PatientDisplay on Patient {
   String get displayFirstName {
     final name = firstName?.trim();
     if (name != null && name.isNotEmpty) return name;
@@ -58,6 +46,18 @@ extension PatientDisplay on Patient {
         .join();
     return parts.isEmpty ? '?' : parts;
   }
+}
+
+@freezed
+abstract class PatientLoginResponse with _$PatientLoginResponse {
+  const factory PatientLoginResponse({
+    required String accessToken,
+    required Patient patient,
+    required PatientDevice device,
+  }) = _PatientLoginResponse;
+
+  factory PatientLoginResponse.fromJson(Map<String, dynamic> json) =>
+      _$PatientLoginResponseFromJson(json);
 }
 
 String timeBasedGreeting() {

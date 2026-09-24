@@ -3,7 +3,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../core/theme/app_design_tokens.dart';
 import '../../core/theme/context_extensions.dart';
-import '../../models/family_model.dart';
 import '../../providers/family_provider.dart';
 
 /// Banner shown when viewing a linked child's records.
@@ -37,8 +36,8 @@ class FamilySubjectBanner extends ConsumerWidget {
               child: Text(
                 'Viewing ${selected.displayName}',
                 style: Theme.of(context).textTheme.labelLarge?.copyWith(
-                      color: colorScheme.onSecondaryContainer,
-                    ),
+                  color: colorScheme.onSecondaryContainer,
+                ),
               ),
             ),
             TextButton(

@@ -1,15 +1,16 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:gap/gap.dart';
 import 'package:imsh/app_router.gr.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../../../core/theme/app_design_tokens.dart';
-import '../../../core/theme/context_extensions.dart';
+import '../../../core/theme/imsh_accent_colors.dart';
 import '../../../helper/date_formatter.dart';
 import '../../../models/radiology_report_model.dart';
 import '../../../providers/service_providers.dart';
+import '../../../shared/widgets/imsh_solid_icon.dart';
+import '../../../shared/widgets/imsh_surface_card.dart';
 import '../radiology_pdf_download.dart';
 
 class RadiologyHistoryCard extends ConsumerWidget {
@@ -28,109 +29,103 @@ class RadiologyHistoryCard extends ConsumerWidget {
     }
   }
 
+  Color _modalityAccent(RadiologyModality modality) {
+    return switch (modality) {
+      RadiologyModality.xray => ImshAccentColors.blue,
+      RadiologyModality.ct => ImshAccentColors.indigo,
+      RadiologyModality.mri => ImshAccentColors.purple,
+      RadiologyModality.ultrasound => ImshAccentColors.teal,
+      RadiologyModality.echo => ImshAccentColors.pink,
+      RadiologyModality.other => ImshAccentColors.amber,
+    };
+  }
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final theme = Theme.of(context);
-    final colorScheme = context.colorScheme;
+    final cs = theme.colorScheme;
     final hasPdf =
         report.status.isComplete || report.thumbnailUrl?.isNotEmpty == true;
     final hasDicom = report.dicomUrl?.isNotEmpty == true;
     final hasDetail = report.status.isComplete;
 
     return Padding(
-      padding: const EdgeInsets.only(bottom: AppDesignTokens.spacingSm),
-      child: Material(
-        color: colorScheme.surfaceContainerLowest,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(AppDesignTokens.radiusMd),
-          side: BorderSide(color: colorScheme.outlineVariant),
-        ),
-        child: InkWell(
-          onTap: hasDetail
-              ? () => context.router.push(RadiologyDetailRoute(id: report.id))
-              : null,
-          borderRadius: BorderRadius.circular(AppDesignTokens.radiusMd),
-          child: Padding(
-            padding: const EdgeInsets.all(AppDesignTokens.spacingMd),
-            child: Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Container(
-                  width: 40,
-                  height: 40,
-                  decoration: BoxDecoration(
-                    color: colorScheme.surfaceContainerLow,
-                    borderRadius: BorderRadius.circular(
-                      AppDesignTokens.radiusSm,
+      padding: const EdgeInsets.only(bottom: 8),
+      child: ImshSurfaceCard(
+        padding: const EdgeInsets.all(10),
+        onTap: hasDetail
+            ? () => context.router.push(RadiologyDetailRoute(id: report.id))
+            : null,
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            ImshSolidIcon(
+              icon: report.modality.icon,
+              color: _modalityAccent(report.modality),
+              size: 34,
+              iconSize: 18,
+              radius: AppDesignTokens.radiusMd,
+            ),
+            const SizedBox(width: 10),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  ImshEllipsisText(
+                    text: report.displayTitle,
+                    style: theme.textTheme.titleSmall?.copyWith(
+                      fontWeight: FontWeight.w700,
                     ),
                   ),
-                  child: Icon(
-                    report.modality.icon,
-                    color: theme.colorScheme.primary,
-                    size: 22,
+                  const SizedBox(height: 2),
+                  ImshEllipsisText(
+                    text: DateFormatter.medicalDate(report.performedAt),
+                    style: theme.textTheme.bodySmall?.copyWith(
+                      color: cs.onSurfaceVariant,
+                    ),
                   ),
-                ),
-                const Gap(AppDesignTokens.spacingMd),
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        report.displayTitle,
-                        style: theme.textTheme.titleSmall?.copyWith(
-                          fontWeight: FontWeight.w600,
-                        ),
-                      ),
-                      const Gap(AppDesignTokens.spacingXs),
-                      Text(
-                        DateFormatter.medicalDate(report.performedAt),
-                        style: theme.textTheme.bodySmall?.copyWith(
-                          color: colorScheme.onSurfaceVariant,
-                        ),
-                      ),
-                      const Gap(AppDesignTokens.spacingXs),
-                      Text(
-                        'Ref: ${report.referringDoctorName}',
-                        style: theme.textTheme.bodySmall?.copyWith(
-                          color: colorScheme.onSurfaceVariant,
-                        ),
-                      ),
-                      if (hasPdf || hasDicom || hasDetail) ...[
-                        const Gap(AppDesignTokens.spacingSm),
-                        Wrap(
-                          spacing: AppDesignTokens.spacingMd,
-                          children: [
-                            if (hasPdf)
-                              _LinkButton(
-                                label: 'Download PDF',
-                                onTap: () => downloadRadiologyReportPdf(
-                                  context,
-                                  service: ref.read(radiologyServiceProvider),
-                                  reportId: report.id,
-                                ),
-                              ),
-                            if (hasDicom)
-                              _LinkButton(
-                                label: 'DICOM',
-                                onTap: () =>
-                                    _openDicom(context, report.dicomUrl!),
-                              ),
-                            if (!hasPdf && !hasDicom && hasDetail)
-                              _LinkButton(
-                                label: 'Full Result',
-                                onTap: () => context.router.push(
-                                  RadiologyDetailRoute(id: report.id),
-                                ),
-                              ),
-                          ],
-                        ),
+                  const SizedBox(height: 2),
+                  ImshEllipsisText(
+                    text: report.referringDoctorName.trim().isEmpty
+                        ? 'Ref: —'
+                        : 'Ref: ${report.referringDoctorName}',
+                    style: theme.textTheme.bodySmall?.copyWith(
+                      color: cs.onSurfaceVariant,
+                    ),
+                  ),
+                  if (hasPdf || hasDicom || hasDetail) ...[
+                    const SizedBox(height: 8),
+                    Wrap(
+                      spacing: 12,
+                      children: [
+                        if (hasPdf)
+                          _LinkButton(
+                            label: 'Download PDF',
+                            onTap: () => downloadRadiologyReportPdf(
+                              context,
+                              service: ref.read(radiologyServiceProvider),
+                              reportId: report.id,
+                            ),
+                          ),
+                        if (hasDicom)
+                          _LinkButton(
+                            label: 'DICOM',
+                            onTap: () => _openDicom(context, report.dicomUrl!),
+                          ),
+                        if (!hasPdf && !hasDicom && hasDetail)
+                          _LinkButton(
+                            label: 'Full result',
+                            onTap: () => context.router.push(
+                              RadiologyDetailRoute(id: report.id),
+                            ),
+                          ),
                       ],
-                    ],
-                  ),
-                ),
-              ],
+                    ),
+                  ],
+                ],
+              ),
             ),
-          ),
+          ],
         ),
       ),
     );
@@ -150,7 +145,7 @@ class _LinkButton extends StatelessWidget {
       child: Text(
         label,
         style: Theme.of(context).textTheme.labelLarge?.copyWith(
-          color: Theme.of(context).colorScheme.primary,
+          color: ImshAccentColors.teal,
           fontWeight: FontWeight.w600,
         ),
       ),

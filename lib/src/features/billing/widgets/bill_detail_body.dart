@@ -3,9 +3,14 @@ import 'package:gap/gap.dart';
 import 'package:intl/intl.dart';
 
 import '../../../core/theme/app_design_tokens.dart';
+import '../../../core/theme/imsh_accent_colors.dart';
 import '../../../helper/app_timezone.dart';
 import '../../../helper/currency_formatter.dart';
 import '../../../models/invoice_model.dart';
+import '../../../shared/widgets/imsh_ellipsis_chip.dart';
+import '../../../shared/widgets/imsh_page_header.dart';
+import '../../../shared/widgets/imsh_solid_icon.dart';
+import '../../../shared/widgets/imsh_surface_card.dart';
 import 'breakdown_category_section.dart';
 
 class BillDetailBody extends StatelessWidget {
@@ -16,45 +21,37 @@ class BillDetailBody extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final colorScheme = theme.colorScheme;
+    final cs = theme.colorScheme;
     final issuedLocal = AppTimezone.toLocal(detail.issuedAt);
     final dateLabel = DateFormat('MMM d, yyyy').format(issuedLocal);
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        Text(
-          detail.titleLabel,
-          style: theme.textTheme.headlineSmall?.copyWith(
-            fontWeight: FontWeight.w700,
-          ),
+        ImshPageHeader(
+          title: detail.titleLabel,
+          subtitle: 'Invoice #${detail.invoiceNumber} · $dateLabel',
+          icon: Icons.receipt_long_outlined,
+          iconColor: ImshAccentColors.amber,
         ),
-        const Gap(AppDesignTokens.spacingXs),
-        Text(
-          'Invoice #${detail.invoiceNumber} • $dateLabel',
-          style: theme.textTheme.bodyMedium?.copyWith(
-            color: colorScheme.onSurfaceVariant,
-          ),
-        ),
-        const Gap(AppDesignTokens.spacingLg),
+        const Gap(12),
         _SummaryCard(detail: detail),
         if (detail.admission != null) ...[
-          const Gap(AppDesignTokens.spacingMd),
+          const Gap(10),
           _AdmissionCard(admission: detail.admission!),
         ],
-        const Gap(AppDesignTokens.spacingLg),
-        Text(
-          'Charge Breakdown',
-          style: theme.textTheme.titleMedium?.copyWith(
-            fontWeight: FontWeight.w700,
-          ),
+        const Gap(12),
+        const ImshSectionHeader(
+          title: 'Charge breakdown',
+          icon: Icons.list_alt_outlined,
+          iconColor: ImshAccentColors.indigo,
         ),
-        const Gap(AppDesignTokens.spacingMd),
+        const Gap(10),
         if (detail.breakdown.isEmpty)
           Text(
             'No line items on this bill.',
             style: theme.textTheme.bodyMedium?.copyWith(
-              color: colorScheme.onSurfaceVariant,
+              color: cs.onSurfaceVariant,
             ),
           )
         else
@@ -62,29 +59,42 @@ class BillDetailBody extends StatelessWidget {
             (category) => BreakdownCategorySection(category: category),
           ),
         if (detail.payments.isNotEmpty) ...[
-          const Gap(AppDesignTokens.spacingLg),
-          Text(
-            'Payments on this bill',
-            style: theme.textTheme.titleMedium?.copyWith(
-              fontWeight: FontWeight.w700,
-            ),
+          const Gap(12),
+          const ImshSectionHeader(
+            title: 'Payments on this bill',
+            icon: Icons.payments_outlined,
+            iconColor: ImshAccentColors.green,
           ),
-          const Gap(AppDesignTokens.spacingSm),
-          ...detail.payments.map(
-            (payment) => ListTile(
-              contentPadding: EdgeInsets.zero,
-              title: Text(payment.methodLabel),
-              subtitle: Text(
-                DateFormat('MMM d, yyyy').format(
-                  AppTimezone.toLocal(payment.paidAt),
-                ),
-              ),
-              trailing: Text(
-                CurrencyFormatter.formatAmount(payment.amount),
-                style: theme.textTheme.titleSmall?.copyWith(
-                  fontWeight: FontWeight.w700,
-                ),
-              ),
+          const Gap(10),
+          ImshSurfaceCard(
+            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+            child: Column(
+              children: detail.payments
+                  .map(
+                    (payment) => ListTile(
+                      contentPadding: EdgeInsets.zero,
+                      leading: const ImshSolidIcon(
+                        icon: Icons.payments_outlined,
+                        color: ImshAccentColors.green,
+                        size: 30,
+                        iconSize: 16,
+                        radius: 8,
+                      ),
+                      title: Text(payment.methodLabel),
+                      subtitle: Text(
+                        DateFormat('MMM d, yyyy').format(
+                          AppTimezone.toLocal(payment.paidAt),
+                        ),
+                      ),
+                      trailing: Text(
+                        CurrencyFormatter.formatAmount(payment.amount),
+                        style: theme.textTheme.titleSmall?.copyWith(
+                          fontWeight: FontWeight.w700,
+                        ),
+                      ),
+                    ),
+                  )
+                  .toList(),
             ),
           ),
         ],
@@ -98,8 +108,7 @@ extension on InvoiceDetail {
     if (billType == BillType.inpatient && admission != null) {
       return 'Inpatient Stay — ${admission!.wardName}';
     }
-    final firstCategory =
-        breakdown.isNotEmpty ? breakdown.first : null;
+    final firstCategory = breakdown.isNotEmpty ? breakdown.first : null;
     final firstItem = firstCategory != null && firstCategory.items.isNotEmpty
         ? firstCategory.items.first
         : null;
@@ -116,21 +125,18 @@ class _SummaryCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final colorScheme = theme.colorScheme;
+    final cs = theme.colorScheme;
+    final hasBalance = detail.balance != '0.00';
 
-    return Container(
-      padding: const EdgeInsets.all(AppDesignTokens.spacingMd),
-      decoration: BoxDecoration(
-        color: colorScheme.surfaceContainerLow,
-        borderRadius: BorderRadius.circular(AppDesignTokens.radiusMd),
-      ),
+    return ImshSurfaceCard(
+      padding: const EdgeInsets.all(12),
       child: Column(
         children: [
           _SummaryRow(
             label: 'Total',
             value: CurrencyFormatter.formatAmount(detail.totalAmount),
           ),
-          const Gap(AppDesignTokens.spacingSm),
+          const Gap(8),
           _SummaryRow(
             label: 'Paid',
             value: CurrencyFormatter.formatAmount(detail.amountPaid),
@@ -140,9 +146,7 @@ class _SummaryCard extends StatelessWidget {
             label: 'Balance due',
             value: CurrencyFormatter.formatAmount(detail.balance),
             emphasize: true,
-            valueColor: detail.balance != '0.00'
-                ? theme.colorScheme.error
-                : colorScheme.onSurface,
+            valueColor: hasBalance ? cs.error : cs.onSurface,
           ),
         ],
       ),
@@ -166,7 +170,7 @@ class _SummaryRow extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final colorScheme = theme.colorScheme;
+    final cs = theme.colorScheme;
 
     return Row(
       children: [
@@ -174,7 +178,7 @@ class _SummaryRow extends StatelessWidget {
           child: Text(
             label,
             style: theme.textTheme.bodyMedium?.copyWith(
-              color: colorScheme.onSurfaceVariant,
+              color: cs.onSurfaceVariant,
               fontWeight: emphasize ? FontWeight.w600 : null,
             ),
           ),
@@ -202,7 +206,7 @@ class _AdmissionCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final colorScheme = theme.colorScheme;
+    final cs = theme.colorScheme;
     final admitted = DateFormat('MMM d, yyyy').format(
       AppTimezone.toLocal(admission.admittedAt),
     );
@@ -212,26 +216,36 @@ class _AdmissionCard extends StatelessWidget {
           )
         : 'Active stay';
 
-    return Container(
-      padding: const EdgeInsets.all(AppDesignTokens.spacingMd),
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(AppDesignTokens.radiusMd),
-        border: Border.all(color: colorScheme.outlineVariant),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+    return ImshSurfaceCard(
+      padding: const EdgeInsets.all(10),
+      child: Row(
         children: [
-          Text(
-            admission.wardName,
-            style: theme.textTheme.titleSmall?.copyWith(
-              fontWeight: FontWeight.w700,
-            ),
+          const ImshSolidIcon(
+            icon: Icons.local_hospital_outlined,
+            color: ImshAccentColors.purple,
+            size: 34,
+            iconSize: 18,
+            radius: AppDesignTokens.radiusMd,
           ),
-          const Gap(4),
-          Text(
-            'Admitted $admitted • $discharged',
-            style: theme.textTheme.bodySmall?.copyWith(
-              color: colorScheme.onSurfaceVariant,
+          const Gap(10),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                ImshEllipsisText(
+                  text: admission.wardName,
+                  style: theme.textTheme.titleSmall?.copyWith(
+                    fontWeight: FontWeight.w700,
+                  ),
+                ),
+                const Gap(2),
+                Text(
+                  'Admitted $admitted · $discharged',
+                  style: theme.textTheme.bodySmall?.copyWith(
+                    color: cs.onSurfaceVariant,
+                  ),
+                ),
+              ],
             ),
           ),
         ],

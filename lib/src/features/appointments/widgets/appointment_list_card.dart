@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:gap/gap.dart';
 
 import '../../../core/theme/app_design_tokens.dart';
-import '../../../core/theme/context_extensions.dart';
+import '../../../core/theme/imsh_accent_colors.dart';
 import '../../../helper/date_formatter.dart';
 import '../../../models/appointment_model.dart';
-import 'next_appointment_card.dart';
+import '../../../shared/widgets/imsh_solid_icon.dart';
+import '../../../shared/widgets/imsh_surface_card.dart';
+import 'appointment_status_badge.dart';
 
 class AppointmentListCard extends StatelessWidget {
   const AppointmentListCard({
@@ -22,111 +23,93 @@ class AppointmentListCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final colorScheme = context.colorScheme;
+    final cs = theme.colorScheme;
+    final dateLabel = DateFormatter.appointmentCompactDate(appointment.scheduledAt);
+    final timeLabel = appointment.status == AppointmentStatus.requested
+        ? 'To be confirmed'
+        : DateFormatter.appointmentCompactTime(appointment.scheduledAt);
 
-    return Container(
-      margin: const EdgeInsets.only(bottom: AppDesignTokens.spacingSm),
-      padding: const EdgeInsets.all(AppDesignTokens.spacingMd),
-      decoration: BoxDecoration(
-        color: colorScheme.surfaceContainerLowest,
-        borderRadius: BorderRadius.circular(AppDesignTokens.radiusLg),
-        border: Border.all(color: colorScheme.outlineVariant),
-        boxShadow: context.cardShadow,
-      ),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          DoctorAvatar(
-            name: appointment.doctorDisplayName,
-            avatarUrl: appointment.doctor.avatarUrl,
-          ),
-          const Gap(AppDesignTokens.spacingMd),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  appointment.doctorDisplayName,
-                  style: theme.textTheme.titleSmall?.copyWith(
-                    fontWeight: FontWeight.w700,
-                  ),
-                ),
-                const Gap(2),
-                Text(
-                  appointment.specialtyLabel,
-                  style: theme.textTheme.bodySmall?.copyWith(
-                    color: colorScheme.primary,
-                  ),
-                ),
-                const Gap(2),
-                Text(
-                  '${appointment.visitType.label} · ${appointment.status.label}',
-                  style: theme.textTheme.labelSmall?.copyWith(
-                    color: colorScheme.onSurfaceVariant,
-                  ),
-                ),
-                const Gap(AppDesignTokens.spacingSm),
-                Row(
-                  children: [
-                    if (appointment.canReschedule)
-                      _ActionChip(label: 'Edit', onTap: onEdit),
-                    if (appointment.canReschedule) const Gap(AppDesignTokens.spacingXs),
-                    _ActionChip(label: 'Details', onTap: onDetails),
-                  ],
-                ),
-              ],
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 8),
+      child: ImshSurfaceCard(
+        padding: const EdgeInsets.all(10),
+        onTap: onDetails,
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            ImshSolidIcon(
+              icon: appointment.visitType == AppointmentVisitType.telemedicine
+                  ? Icons.videocam_outlined
+                  : Icons.event_outlined,
+              color: appointment.visitType == AppointmentVisitType.telemedicine
+                  ? ImshAccentColors.purple
+                  : ImshAccentColors.teal,
+              size: 34,
+              iconSize: 18,
+              radius: AppDesignTokens.radiusMd,
             ),
-          ),
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.end,
-            children: [
-              Text(
-                DateFormatter.appointmentCompactDate(appointment.scheduledAt),
-                style: theme.textTheme.titleSmall?.copyWith(
-                  fontWeight: FontWeight.w700,
-                ),
+            const SizedBox(width: 10),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    children: [
+                      Expanded(
+                        child: ImshEllipsisText(
+                          text: appointment.specialtyLabel,
+                          style: theme.textTheme.titleSmall?.copyWith(
+                            fontWeight: FontWeight.w700,
+                          ),
+                        ),
+                      ),
+                      AppointmentStatusBadge(status: appointment.status),
+                    ],
+                  ),
+                  const SizedBox(height: 2),
+                  ImshEllipsisText(
+                    text: appointment.doctorDisplayName,
+                    style: theme.textTheme.bodySmall?.copyWith(
+                      color: cs.onSurfaceVariant,
+                    ),
+                  ),
+                  const SizedBox(height: 2),
+                  ImshEllipsisText(
+                    text: '$dateLabel · $timeLabel · ${appointment.visitType.label}',
+                    style: theme.textTheme.bodySmall?.copyWith(
+                      color: cs.onSurfaceVariant,
+                    ),
+                  ),
+                  const SizedBox(height: 8),
+                  Row(
+                    children: [
+                      if (appointment.canReschedule) ...[
+                        TextButton(
+                          onPressed: onEdit,
+                          style: TextButton.styleFrom(
+                            visualDensity: VisualDensity.compact,
+                            padding: EdgeInsets.zero,
+                            tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                          ),
+                          child: const Text('Reschedule'),
+                        ),
+                        const SizedBox(width: 8),
+                      ],
+                      TextButton(
+                        onPressed: onDetails,
+                        style: TextButton.styleFrom(
+                          visualDensity: VisualDensity.compact,
+                          padding: EdgeInsets.zero,
+                          tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                        ),
+                        child: const Text('Details'),
+                      ),
+                    ],
+                  ),
+                ],
               ),
-              Text(
-                DateFormatter.appointmentCompactTime(appointment.scheduledAt),
-                style: theme.textTheme.bodySmall?.copyWith(
-                  color: colorScheme.onSurfaceVariant,
-                ),
-              ),
-            ],
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-class _ActionChip extends StatelessWidget {
-  const _ActionChip({required this.label, required this.onTap});
-
-  final String label;
-  final VoidCallback onTap;
-
-  @override
-  Widget build(BuildContext context) {
-    final colorScheme = context.colorScheme;
-
-    return Material(
-      color: colorScheme.surfaceContainer,
-      borderRadius: BorderRadius.circular(AppDesignTokens.radiusSm),
-      child: InkWell(
-        onTap: onTap,
-        borderRadius: BorderRadius.circular(AppDesignTokens.radiusSm),
-        child: Padding(
-          padding: const EdgeInsets.symmetric(
-            horizontal: AppDesignTokens.spacingSm,
-            vertical: AppDesignTokens.spacingXs,
-          ),
-          child: Text(
-            label,
-            style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                  fontWeight: FontWeight.w600,
-                ),
-          ),
+            ),
+          ],
         ),
       ),
     );

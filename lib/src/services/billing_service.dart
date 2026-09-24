@@ -22,19 +22,13 @@ class BillingService {
   }) async {
     final resp = await _dio.get<Map<String, dynamic>>(
       '/patient/invoices',
-      queryParameters: {
-        'page': page,
-        'limit': limit,
-        if (status != null) 'status': status,
-      },
+      queryParameters: {'page': page, 'limit': limit, 'status': ?status},
     );
     return InvoiceListResponse.fromJson(resp.data ?? {});
   }
 
   Future<InvoiceDetail> getInvoice(String id) async {
-    final resp = await _dio.get<Map<String, dynamic>>(
-      '/patient/invoices/$id',
-    );
+    final resp = await _dio.get<Map<String, dynamic>>('/patient/invoices/$id');
     return InvoiceDetail.fromJson(resp.data ?? {});
   }
 

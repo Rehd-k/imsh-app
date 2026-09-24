@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // coverage:ignore-file
-// ignore_for_file: type=lint
+// ignore_for_file: type=lint, type=warning, deprecated_member_use, deprecated_member_use_from_same_package
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
 part of 'medical_record_model.dart';
@@ -9,6 +9,7 @@ part of 'medical_record_model.dart';
 // FreezedGenerator
 // **************************************************************************
 
+// GENERATED CODE - DO NOT MODIFY BY HAND
 // dart format off
 T _$identity<T>(T value) => value;
 
@@ -28,16 +29,21 @@ $EncounterSummaryCopyWith<EncounterSummary> get copyWith => _$EncounterSummaryCo
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is EncounterSummary&&(identical(other.id, id) || other.id == id)&&(identical(other.encounterType, encounterType) || other.encounterType == encounterType)&&(identical(other.status, status) || other.status == status)&&(identical(other.startTime, startTime) || other.startTime == startTime)&&(identical(other.endTime, endTime) || other.endTime == endTime)&&(identical(other.chiefComplaint, chiefComplaint) || other.chiefComplaint == chiefComplaint)&&(identical(other.visitType, visitType) || other.visitType == visitType)&&(identical(other.doctorName, doctorName) || other.doctorName == doctorName)&&(identical(other.primaryDiagnosis, primaryDiagnosis) || other.primaryDiagnosis == primaryDiagnosis));
+  final _this = this as EncounterSummary;
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is EncounterSummary&&(identical(other.id, _this.id) || other.id == _this.id)&&(identical(other.encounterType, _this.encounterType) || other.encounterType == _this.encounterType)&&(identical(other.status, _this.status) || other.status == _this.status)&&(identical(other.startTime, _this.startTime) || other.startTime == _this.startTime)&&(identical(other.endTime, _this.endTime) || other.endTime == _this.endTime)&&(identical(other.chiefComplaint, _this.chiefComplaint) || other.chiefComplaint == _this.chiefComplaint)&&(identical(other.visitType, _this.visitType) || other.visitType == _this.visitType)&&(identical(other.doctorName, _this.doctorName) || other.doctorName == _this.doctorName)&&(identical(other.primaryDiagnosis, _this.primaryDiagnosis) || other.primaryDiagnosis == _this.primaryDiagnosis));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,encounterType,status,startTime,endTime,chiefComplaint,visitType,doctorName,primaryDiagnosis);
+int get hashCode {
+  final _this = this as EncounterSummary;
+  return Object.hash(runtimeType,_this.id,_this.encounterType,_this.status,_this.startTime,_this.endTime,_this.chiefComplaint,_this.visitType,_this.doctorName,_this.primaryDiagnosis);
+}
 
 @override
 String toString() {
-  return 'EncounterSummary(id: $id, encounterType: $encounterType, status: $status, startTime: $startTime, endTime: $endTime, chiefComplaint: $chiefComplaint, visitType: $visitType, doctorName: $doctorName, primaryDiagnosis: $primaryDiagnosis)';
+  final _this = this as EncounterSummary;
+  return 'EncounterSummary(id: ${_this.id}, encounterType: ${_this.encounterType}, status: ${_this.status}, startTime: ${_this.startTime}, endTime: ${_this.endTime}, chiefComplaint: ${_this.chiefComplaint}, visitType: ${_this.visitType}, doctorName: ${_this.doctorName}, primaryDiagnosis: ${_this.primaryDiagnosis})';
 }
 
 
@@ -66,7 +72,7 @@ class _$EncounterSummaryCopyWithImpl<$Res>
 /// Create a copy of EncounterSummary
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? encounterType = null,Object? status = null,Object? startTime = null,Object? endTime = freezed,Object? chiefComplaint = freezed,Object? visitType = freezed,Object? doctorName = null,Object? primaryDiagnosis = freezed,}) {
-  return _then(_self.copyWith(
+  return _then(EncounterSummary(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,encounterType: null == encounterType ? _self.encounterType : encounterType // ignore: cast_nullable_to_non_nullable
 as EncounterType,status: null == status ? _self.status : status // ignore: cast_nullable_to_non_nullable
@@ -243,16 +249,18 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _EncounterSummary&&(identical(other.id, id) || other.id == id)&&(identical(other.encounterType, encounterType) || other.encounterType == encounterType)&&(identical(other.status, status) || other.status == status)&&(identical(other.startTime, startTime) || other.startTime == startTime)&&(identical(other.endTime, endTime) || other.endTime == endTime)&&(identical(other.chiefComplaint, chiefComplaint) || other.chiefComplaint == chiefComplaint)&&(identical(other.visitType, visitType) || other.visitType == visitType)&&(identical(other.doctorName, doctorName) || other.doctorName == doctorName)&&(identical(other.primaryDiagnosis, primaryDiagnosis) || other.primaryDiagnosis == primaryDiagnosis));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _EncounterSummary&&(identical(other.id, id) || other.id == id)&&(identical(other.encounterType, encounterType) || other.encounterType == encounterType)&&(identical(other.status, status) || other.status == status)&&(identical(other.startTime, startTime) || other.startTime == startTime)&&(identical(other.endTime, endTime) || other.endTime == endTime)&&(identical(other.chiefComplaint, chiefComplaint) || other.chiefComplaint == chiefComplaint)&&(identical(other.visitType, visitType) || other.visitType == visitType)&&(identical(other.doctorName, doctorName) || other.doctorName == doctorName)&&(identical(other.primaryDiagnosis, primaryDiagnosis) || other.primaryDiagnosis == primaryDiagnosis));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,encounterType,status,startTime,endTime,chiefComplaint,visitType,doctorName,primaryDiagnosis);
+int get hashCode {
+    return Object.hash(runtimeType,id,encounterType,status,startTime,endTime,chiefComplaint,visitType,doctorName,primaryDiagnosis);
+}
 
 @override
 String toString() {
-  return 'EncounterSummary(id: $id, encounterType: $encounterType, status: $status, startTime: $startTime, endTime: $endTime, chiefComplaint: $chiefComplaint, visitType: $visitType, doctorName: $doctorName, primaryDiagnosis: $primaryDiagnosis)';
+    return 'EncounterSummary(id: $id, encounterType: $encounterType, status: $status, startTime: $startTime, endTime: $endTime, chiefComplaint: $chiefComplaint, visitType: $visitType, doctorName: $doctorName, primaryDiagnosis: $primaryDiagnosis)';
 }
 
 
@@ -315,16 +323,21 @@ $EncounterListResponseCopyWith<EncounterListResponse> get copyWith => _$Encounte
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is EncounterListResponse&&const DeepCollectionEquality().equals(other.data, data)&&(identical(other.total, total) || other.total == total)&&(identical(other.page, page) || other.page == page)&&(identical(other.limit, limit) || other.limit == limit));
+  final _this = this as EncounterListResponse;
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is EncounterListResponse&&const DeepCollectionEquality().equals(other.data, _this.data)&&(identical(other.total, _this.total) || other.total == _this.total)&&(identical(other.page, _this.page) || other.page == _this.page)&&(identical(other.limit, _this.limit) || other.limit == _this.limit));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,const DeepCollectionEquality().hash(data),total,page,limit);
+int get hashCode {
+  final _this = this as EncounterListResponse;
+  return Object.hash(runtimeType,const DeepCollectionEquality().hash(_this.data),_this.total,_this.page,_this.limit);
+}
 
 @override
 String toString() {
-  return 'EncounterListResponse(data: $data, total: $total, page: $page, limit: $limit)';
+  final _this = this as EncounterListResponse;
+  return 'EncounterListResponse(data: ${_this.data}, total: ${_this.total}, page: ${_this.page}, limit: ${_this.limit})';
 }
 
 
@@ -353,7 +366,7 @@ class _$EncounterListResponseCopyWithImpl<$Res>
 /// Create a copy of EncounterListResponse
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') @override $Res call({Object? data = null,Object? total = null,Object? page = null,Object? limit = null,}) {
-  return _then(_self.copyWith(
+  return _then(EncounterListResponse(
 data: null == data ? _self.data : data // ignore: cast_nullable_to_non_nullable
 as List<EncounterSummary>,total: null == total ? _self.total : total // ignore: cast_nullable_to_non_nullable
 as int,page: null == page ? _self.page : page // ignore: cast_nullable_to_non_nullable
@@ -499,7 +512,7 @@ return $default(_that.data,_that.total,_that.page,_that.limit);case _:
 @JsonSerializable()
 
 class _EncounterListResponse implements EncounterListResponse {
-  const _EncounterListResponse({required final  List<EncounterSummary> data, required this.total, required this.page, required this.limit}): _data = data;
+  const _EncounterListResponse({required  List<EncounterSummary> data, required this.total, required this.page, required this.limit}): _data = data;
   factory _EncounterListResponse.fromJson(Map<String, dynamic> json) => _$EncounterListResponseFromJson(json);
 
  final  List<EncounterSummary> _data;
@@ -526,16 +539,18 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _EncounterListResponse&&const DeepCollectionEquality().equals(other._data, _data)&&(identical(other.total, total) || other.total == total)&&(identical(other.page, page) || other.page == page)&&(identical(other.limit, limit) || other.limit == limit));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _EncounterListResponse&&const DeepCollectionEquality().equals(other.data, _data)&&(identical(other.total, total) || other.total == total)&&(identical(other.page, page) || other.page == page)&&(identical(other.limit, limit) || other.limit == limit));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,const DeepCollectionEquality().hash(_data),total,page,limit);
+int get hashCode {
+    return Object.hash(runtimeType,const DeepCollectionEquality().hash(_data),total,page,limit);
+}
 
 @override
 String toString() {
-  return 'EncounterListResponse(data: $data, total: $total, page: $page, limit: $limit)';
+    return 'EncounterListResponse(data: $data, total: $total, page: $page, limit: $limit)';
 }
 
 
@@ -593,16 +608,21 @@ $EncounterVitalsCopyWith<EncounterVitals> get copyWith => _$EncounterVitalsCopyW
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is EncounterVitals&&(identical(other.systolic, systolic) || other.systolic == systolic)&&(identical(other.diastolic, diastolic) || other.diastolic == diastolic)&&(identical(other.temperature, temperature) || other.temperature == temperature)&&(identical(other.height, height) || other.height == height)&&(identical(other.weight, weight) || other.weight == weight)&&(identical(other.bmi, bmi) || other.bmi == bmi)&&(identical(other.pulseRate, pulseRate) || other.pulseRate == pulseRate)&&(identical(other.respRate, respRate) || other.respRate == respRate)&&(identical(other.spo2, spo2) || other.spo2 == spo2)&&(identical(other.painScore, painScore) || other.painScore == painScore)&&(identical(other.bloodGlucose, bloodGlucose) || other.bloodGlucose == bloodGlucose)&&(identical(other.recordedAt, recordedAt) || other.recordedAt == recordedAt));
+  final _this = this as EncounterVitals;
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is EncounterVitals&&(identical(other.systolic, _this.systolic) || other.systolic == _this.systolic)&&(identical(other.diastolic, _this.diastolic) || other.diastolic == _this.diastolic)&&(identical(other.temperature, _this.temperature) || other.temperature == _this.temperature)&&(identical(other.height, _this.height) || other.height == _this.height)&&(identical(other.weight, _this.weight) || other.weight == _this.weight)&&(identical(other.bmi, _this.bmi) || other.bmi == _this.bmi)&&(identical(other.pulseRate, _this.pulseRate) || other.pulseRate == _this.pulseRate)&&(identical(other.respRate, _this.respRate) || other.respRate == _this.respRate)&&(identical(other.spo2, _this.spo2) || other.spo2 == _this.spo2)&&(identical(other.painScore, _this.painScore) || other.painScore == _this.painScore)&&(identical(other.bloodGlucose, _this.bloodGlucose) || other.bloodGlucose == _this.bloodGlucose)&&(identical(other.recordedAt, _this.recordedAt) || other.recordedAt == _this.recordedAt));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,systolic,diastolic,temperature,height,weight,bmi,pulseRate,respRate,spo2,painScore,bloodGlucose,recordedAt);
+int get hashCode {
+  final _this = this as EncounterVitals;
+  return Object.hash(runtimeType,_this.systolic,_this.diastolic,_this.temperature,_this.height,_this.weight,_this.bmi,_this.pulseRate,_this.respRate,_this.spo2,_this.painScore,_this.bloodGlucose,_this.recordedAt);
+}
 
 @override
 String toString() {
-  return 'EncounterVitals(systolic: $systolic, diastolic: $diastolic, temperature: $temperature, height: $height, weight: $weight, bmi: $bmi, pulseRate: $pulseRate, respRate: $respRate, spo2: $spo2, painScore: $painScore, bloodGlucose: $bloodGlucose, recordedAt: $recordedAt)';
+  final _this = this as EncounterVitals;
+  return 'EncounterVitals(systolic: ${_this.systolic}, diastolic: ${_this.diastolic}, temperature: ${_this.temperature}, height: ${_this.height}, weight: ${_this.weight}, bmi: ${_this.bmi}, pulseRate: ${_this.pulseRate}, respRate: ${_this.respRate}, spo2: ${_this.spo2}, painScore: ${_this.painScore}, bloodGlucose: ${_this.bloodGlucose}, recordedAt: ${_this.recordedAt})';
 }
 
 
@@ -631,7 +651,7 @@ class _$EncounterVitalsCopyWithImpl<$Res>
 /// Create a copy of EncounterVitals
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') @override $Res call({Object? systolic = freezed,Object? diastolic = freezed,Object? temperature = freezed,Object? height = freezed,Object? weight = freezed,Object? bmi = freezed,Object? pulseRate = freezed,Object? respRate = freezed,Object? spo2 = freezed,Object? painScore = freezed,Object? bloodGlucose = freezed,Object? recordedAt = freezed,}) {
-  return _then(_self.copyWith(
+  return _then(EncounterVitals(
 systolic: freezed == systolic ? _self.systolic : systolic // ignore: cast_nullable_to_non_nullable
 as int?,diastolic: freezed == diastolic ? _self.diastolic : diastolic // ignore: cast_nullable_to_non_nullable
 as int?,temperature: freezed == temperature ? _self.temperature : temperature // ignore: cast_nullable_to_non_nullable
@@ -814,16 +834,18 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _EncounterVitals&&(identical(other.systolic, systolic) || other.systolic == systolic)&&(identical(other.diastolic, diastolic) || other.diastolic == diastolic)&&(identical(other.temperature, temperature) || other.temperature == temperature)&&(identical(other.height, height) || other.height == height)&&(identical(other.weight, weight) || other.weight == weight)&&(identical(other.bmi, bmi) || other.bmi == bmi)&&(identical(other.pulseRate, pulseRate) || other.pulseRate == pulseRate)&&(identical(other.respRate, respRate) || other.respRate == respRate)&&(identical(other.spo2, spo2) || other.spo2 == spo2)&&(identical(other.painScore, painScore) || other.painScore == painScore)&&(identical(other.bloodGlucose, bloodGlucose) || other.bloodGlucose == bloodGlucose)&&(identical(other.recordedAt, recordedAt) || other.recordedAt == recordedAt));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _EncounterVitals&&(identical(other.systolic, systolic) || other.systolic == systolic)&&(identical(other.diastolic, diastolic) || other.diastolic == diastolic)&&(identical(other.temperature, temperature) || other.temperature == temperature)&&(identical(other.height, height) || other.height == height)&&(identical(other.weight, weight) || other.weight == weight)&&(identical(other.bmi, bmi) || other.bmi == bmi)&&(identical(other.pulseRate, pulseRate) || other.pulseRate == pulseRate)&&(identical(other.respRate, respRate) || other.respRate == respRate)&&(identical(other.spo2, spo2) || other.spo2 == spo2)&&(identical(other.painScore, painScore) || other.painScore == painScore)&&(identical(other.bloodGlucose, bloodGlucose) || other.bloodGlucose == bloodGlucose)&&(identical(other.recordedAt, recordedAt) || other.recordedAt == recordedAt));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,systolic,diastolic,temperature,height,weight,bmi,pulseRate,respRate,spo2,painScore,bloodGlucose,recordedAt);
+int get hashCode {
+    return Object.hash(runtimeType,systolic,diastolic,temperature,height,weight,bmi,pulseRate,respRate,spo2,painScore,bloodGlucose,recordedAt);
+}
 
 @override
 String toString() {
-  return 'EncounterVitals(systolic: $systolic, diastolic: $diastolic, temperature: $temperature, height: $height, weight: $weight, bmi: $bmi, pulseRate: $pulseRate, respRate: $respRate, spo2: $spo2, painScore: $painScore, bloodGlucose: $bloodGlucose, recordedAt: $recordedAt)';
+    return 'EncounterVitals(systolic: $systolic, diastolic: $diastolic, temperature: $temperature, height: $height, weight: $weight, bmi: $bmi, pulseRate: $pulseRate, respRate: $respRate, spo2: $spo2, painScore: $painScore, bloodGlucose: $bloodGlucose, recordedAt: $recordedAt)';
 }
 
 
@@ -889,16 +911,21 @@ $EncounterDiagnosisCopyWith<EncounterDiagnosis> get copyWith => _$EncounterDiagn
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is EncounterDiagnosis&&(identical(other.primaryIcdCode, primaryIcdCode) || other.primaryIcdCode == primaryIcdCode)&&(identical(other.primaryIcdDescription, primaryIcdDescription) || other.primaryIcdDescription == primaryIcdDescription)&&const DeepCollectionEquality().equals(other.secondaryDiagnoses, secondaryDiagnoses));
+  final _this = this as EncounterDiagnosis;
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is EncounterDiagnosis&&(identical(other.primaryIcdCode, _this.primaryIcdCode) || other.primaryIcdCode == _this.primaryIcdCode)&&(identical(other.primaryIcdDescription, _this.primaryIcdDescription) || other.primaryIcdDescription == _this.primaryIcdDescription)&&const DeepCollectionEquality().equals(other.secondaryDiagnoses, _this.secondaryDiagnoses));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,primaryIcdCode,primaryIcdDescription,const DeepCollectionEquality().hash(secondaryDiagnoses));
+int get hashCode {
+  final _this = this as EncounterDiagnosis;
+  return Object.hash(runtimeType,_this.primaryIcdCode,_this.primaryIcdDescription,const DeepCollectionEquality().hash(_this.secondaryDiagnoses));
+}
 
 @override
 String toString() {
-  return 'EncounterDiagnosis(primaryIcdCode: $primaryIcdCode, primaryIcdDescription: $primaryIcdDescription, secondaryDiagnoses: $secondaryDiagnoses)';
+  final _this = this as EncounterDiagnosis;
+  return 'EncounterDiagnosis(primaryIcdCode: ${_this.primaryIcdCode}, primaryIcdDescription: ${_this.primaryIcdDescription}, secondaryDiagnoses: ${_this.secondaryDiagnoses})';
 }
 
 
@@ -927,7 +954,7 @@ class _$EncounterDiagnosisCopyWithImpl<$Res>
 /// Create a copy of EncounterDiagnosis
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') @override $Res call({Object? primaryIcdCode = freezed,Object? primaryIcdDescription = freezed,Object? secondaryDiagnoses = freezed,}) {
-  return _then(_self.copyWith(
+  return _then(EncounterDiagnosis(
 primaryIcdCode: freezed == primaryIcdCode ? _self.primaryIcdCode : primaryIcdCode // ignore: cast_nullable_to_non_nullable
 as String?,primaryIcdDescription: freezed == primaryIcdDescription ? _self.primaryIcdDescription : primaryIcdDescription // ignore: cast_nullable_to_non_nullable
 as String?,secondaryDiagnoses: freezed == secondaryDiagnoses ? _self.secondaryDiagnoses : secondaryDiagnoses ,
@@ -1091,16 +1118,18 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _EncounterDiagnosis&&(identical(other.primaryIcdCode, primaryIcdCode) || other.primaryIcdCode == primaryIcdCode)&&(identical(other.primaryIcdDescription, primaryIcdDescription) || other.primaryIcdDescription == primaryIcdDescription)&&const DeepCollectionEquality().equals(other.secondaryDiagnoses, secondaryDiagnoses));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _EncounterDiagnosis&&(identical(other.primaryIcdCode, primaryIcdCode) || other.primaryIcdCode == primaryIcdCode)&&(identical(other.primaryIcdDescription, primaryIcdDescription) || other.primaryIcdDescription == primaryIcdDescription)&&const DeepCollectionEquality().equals(other.secondaryDiagnoses, secondaryDiagnoses));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,primaryIcdCode,primaryIcdDescription,const DeepCollectionEquality().hash(secondaryDiagnoses));
+int get hashCode {
+    return Object.hash(runtimeType,primaryIcdCode,primaryIcdDescription,const DeepCollectionEquality().hash(secondaryDiagnoses));
+}
 
 @override
 String toString() {
-  return 'EncounterDiagnosis(primaryIcdCode: $primaryIcdCode, primaryIcdDescription: $primaryIcdDescription, secondaryDiagnoses: $secondaryDiagnoses)';
+    return 'EncounterDiagnosis(primaryIcdCode: $primaryIcdCode, primaryIcdDescription: $primaryIcdDescription, secondaryDiagnoses: $secondaryDiagnoses)';
 }
 
 
@@ -1156,16 +1185,21 @@ $EncounterPrescriptionItemCopyWith<EncounterPrescriptionItem> get copyWith => _$
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is EncounterPrescriptionItem&&(identical(other.drugName, drugName) || other.drugName == drugName)&&(identical(other.dosage, dosage) || other.dosage == dosage)&&(identical(other.frequency, frequency) || other.frequency == frequency)&&(identical(other.duration, duration) || other.duration == duration)&&(identical(other.instructions, instructions) || other.instructions == instructions));
+  final _this = this as EncounterPrescriptionItem;
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is EncounterPrescriptionItem&&(identical(other.drugName, _this.drugName) || other.drugName == _this.drugName)&&(identical(other.dosage, _this.dosage) || other.dosage == _this.dosage)&&(identical(other.frequency, _this.frequency) || other.frequency == _this.frequency)&&(identical(other.duration, _this.duration) || other.duration == _this.duration)&&(identical(other.instructions, _this.instructions) || other.instructions == _this.instructions));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,drugName,dosage,frequency,duration,instructions);
+int get hashCode {
+  final _this = this as EncounterPrescriptionItem;
+  return Object.hash(runtimeType,_this.drugName,_this.dosage,_this.frequency,_this.duration,_this.instructions);
+}
 
 @override
 String toString() {
-  return 'EncounterPrescriptionItem(drugName: $drugName, dosage: $dosage, frequency: $frequency, duration: $duration, instructions: $instructions)';
+  final _this = this as EncounterPrescriptionItem;
+  return 'EncounterPrescriptionItem(drugName: ${_this.drugName}, dosage: ${_this.dosage}, frequency: ${_this.frequency}, duration: ${_this.duration}, instructions: ${_this.instructions})';
 }
 
 
@@ -1194,7 +1228,7 @@ class _$EncounterPrescriptionItemCopyWithImpl<$Res>
 /// Create a copy of EncounterPrescriptionItem
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') @override $Res call({Object? drugName = null,Object? dosage = null,Object? frequency = freezed,Object? duration = freezed,Object? instructions = freezed,}) {
-  return _then(_self.copyWith(
+  return _then(EncounterPrescriptionItem(
 drugName: null == drugName ? _self.drugName : drugName // ignore: cast_nullable_to_non_nullable
 as String,dosage: null == dosage ? _self.dosage : dosage // ignore: cast_nullable_to_non_nullable
 as String,frequency: freezed == frequency ? _self.frequency : frequency // ignore: cast_nullable_to_non_nullable
@@ -1363,16 +1397,18 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _EncounterPrescriptionItem&&(identical(other.drugName, drugName) || other.drugName == drugName)&&(identical(other.dosage, dosage) || other.dosage == dosage)&&(identical(other.frequency, frequency) || other.frequency == frequency)&&(identical(other.duration, duration) || other.duration == duration)&&(identical(other.instructions, instructions) || other.instructions == instructions));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _EncounterPrescriptionItem&&(identical(other.drugName, drugName) || other.drugName == drugName)&&(identical(other.dosage, dosage) || other.dosage == dosage)&&(identical(other.frequency, frequency) || other.frequency == frequency)&&(identical(other.duration, duration) || other.duration == duration)&&(identical(other.instructions, instructions) || other.instructions == instructions));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,drugName,dosage,frequency,duration,instructions);
+int get hashCode {
+    return Object.hash(runtimeType,drugName,dosage,frequency,duration,instructions);
+}
 
 @override
 String toString() {
-  return 'EncounterPrescriptionItem(drugName: $drugName, dosage: $dosage, frequency: $frequency, duration: $duration, instructions: $instructions)';
+    return 'EncounterPrescriptionItem(drugName: $drugName, dosage: $dosage, frequency: $frequency, duration: $duration, instructions: $instructions)';
 }
 
 
@@ -1431,16 +1467,21 @@ $EncounterPrescriptionCopyWith<EncounterPrescription> get copyWith => _$Encounte
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is EncounterPrescription&&(identical(other.id, id) || other.id == id)&&(identical(other.drug, drug) || other.drug == drug)&&(identical(other.dosage, dosage) || other.dosage == dosage)&&(identical(other.notes, notes) || other.notes == notes)&&(identical(other.startDate, startDate) || other.startDate == startDate)&&(identical(other.endDate, endDate) || other.endDate == endDate)&&const DeepCollectionEquality().equals(other.items, items));
+  final _this = this as EncounterPrescription;
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is EncounterPrescription&&(identical(other.id, _this.id) || other.id == _this.id)&&(identical(other.drug, _this.drug) || other.drug == _this.drug)&&(identical(other.dosage, _this.dosage) || other.dosage == _this.dosage)&&(identical(other.notes, _this.notes) || other.notes == _this.notes)&&(identical(other.startDate, _this.startDate) || other.startDate == _this.startDate)&&(identical(other.endDate, _this.endDate) || other.endDate == _this.endDate)&&const DeepCollectionEquality().equals(other.items, _this.items));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,drug,dosage,notes,startDate,endDate,const DeepCollectionEquality().hash(items));
+int get hashCode {
+  final _this = this as EncounterPrescription;
+  return Object.hash(runtimeType,_this.id,_this.drug,_this.dosage,_this.notes,_this.startDate,_this.endDate,const DeepCollectionEquality().hash(_this.items));
+}
 
 @override
 String toString() {
-  return 'EncounterPrescription(id: $id, drug: $drug, dosage: $dosage, notes: $notes, startDate: $startDate, endDate: $endDate, items: $items)';
+  final _this = this as EncounterPrescription;
+  return 'EncounterPrescription(id: ${_this.id}, drug: ${_this.drug}, dosage: ${_this.dosage}, notes: ${_this.notes}, startDate: ${_this.startDate}, endDate: ${_this.endDate}, items: ${_this.items})';
 }
 
 
@@ -1469,7 +1510,7 @@ class _$EncounterPrescriptionCopyWithImpl<$Res>
 /// Create a copy of EncounterPrescription
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? drug = freezed,Object? dosage = freezed,Object? notes = freezed,Object? startDate = freezed,Object? endDate = freezed,Object? items = null,}) {
-  return _then(_self.copyWith(
+  return _then(EncounterPrescription(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,drug: freezed == drug ? _self.drug : drug // ignore: cast_nullable_to_non_nullable
 as String?,dosage: freezed == dosage ? _self.dosage : dosage // ignore: cast_nullable_to_non_nullable
@@ -1618,7 +1659,7 @@ return $default(_that.id,_that.drug,_that.dosage,_that.notes,_that.startDate,_th
 @JsonSerializable()
 
 class _EncounterPrescription implements EncounterPrescription {
-  const _EncounterPrescription({required this.id, this.drug, this.dosage, this.notes, this.startDate, this.endDate, final  List<EncounterPrescriptionItem> items = const []}): _items = items;
+  const _EncounterPrescription({required this.id, this.drug, this.dosage, this.notes, this.startDate, this.endDate,  List<EncounterPrescriptionItem> items = const []}): _items = items;
   factory _EncounterPrescription.fromJson(Map<String, dynamic> json) => _$EncounterPrescriptionFromJson(json);
 
 @override final  String id;
@@ -1648,16 +1689,18 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _EncounterPrescription&&(identical(other.id, id) || other.id == id)&&(identical(other.drug, drug) || other.drug == drug)&&(identical(other.dosage, dosage) || other.dosage == dosage)&&(identical(other.notes, notes) || other.notes == notes)&&(identical(other.startDate, startDate) || other.startDate == startDate)&&(identical(other.endDate, endDate) || other.endDate == endDate)&&const DeepCollectionEquality().equals(other._items, _items));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _EncounterPrescription&&(identical(other.id, id) || other.id == id)&&(identical(other.drug, drug) || other.drug == drug)&&(identical(other.dosage, dosage) || other.dosage == dosage)&&(identical(other.notes, notes) || other.notes == notes)&&(identical(other.startDate, startDate) || other.startDate == startDate)&&(identical(other.endDate, endDate) || other.endDate == endDate)&&const DeepCollectionEquality().equals(other.items, _items));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,drug,dosage,notes,startDate,endDate,const DeepCollectionEquality().hash(_items));
+int get hashCode {
+    return Object.hash(runtimeType,id,drug,dosage,notes,startDate,endDate,const DeepCollectionEquality().hash(_items));
+}
 
 @override
 String toString() {
-  return 'EncounterPrescription(id: $id, drug: $drug, dosage: $dosage, notes: $notes, startDate: $startDate, endDate: $endDate, items: $items)';
+    return 'EncounterPrescription(id: $id, drug: $drug, dosage: $dosage, notes: $notes, startDate: $startDate, endDate: $endDate, items: $items)';
 }
 
 
@@ -1718,16 +1761,21 @@ $EncounterSoapCopyWith<EncounterSoap> get copyWith => _$EncounterSoapCopyWithImp
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is EncounterSoap&&(identical(other.subjective, subjective) || other.subjective == subjective)&&(identical(other.objective, objective) || other.objective == objective)&&(identical(other.assessment, assessment) || other.assessment == assessment)&&(identical(other.plan, plan) || other.plan == plan));
+  final _this = this as EncounterSoap;
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is EncounterSoap&&(identical(other.subjective, _this.subjective) || other.subjective == _this.subjective)&&(identical(other.objective, _this.objective) || other.objective == _this.objective)&&(identical(other.assessment, _this.assessment) || other.assessment == _this.assessment)&&(identical(other.plan, _this.plan) || other.plan == _this.plan));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,subjective,objective,assessment,plan);
+int get hashCode {
+  final _this = this as EncounterSoap;
+  return Object.hash(runtimeType,_this.subjective,_this.objective,_this.assessment,_this.plan);
+}
 
 @override
 String toString() {
-  return 'EncounterSoap(subjective: $subjective, objective: $objective, assessment: $assessment, plan: $plan)';
+  final _this = this as EncounterSoap;
+  return 'EncounterSoap(subjective: ${_this.subjective}, objective: ${_this.objective}, assessment: ${_this.assessment}, plan: ${_this.plan})';
 }
 
 
@@ -1756,7 +1804,7 @@ class _$EncounterSoapCopyWithImpl<$Res>
 /// Create a copy of EncounterSoap
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') @override $Res call({Object? subjective = freezed,Object? objective = freezed,Object? assessment = freezed,Object? plan = freezed,}) {
-  return _then(_self.copyWith(
+  return _then(EncounterSoap(
 subjective: freezed == subjective ? _self.subjective : subjective // ignore: cast_nullable_to_non_nullable
 as String?,objective: freezed == objective ? _self.objective : objective // ignore: cast_nullable_to_non_nullable
 as String?,assessment: freezed == assessment ? _self.assessment : assessment // ignore: cast_nullable_to_non_nullable
@@ -1923,16 +1971,18 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _EncounterSoap&&(identical(other.subjective, subjective) || other.subjective == subjective)&&(identical(other.objective, objective) || other.objective == objective)&&(identical(other.assessment, assessment) || other.assessment == assessment)&&(identical(other.plan, plan) || other.plan == plan));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _EncounterSoap&&(identical(other.subjective, subjective) || other.subjective == subjective)&&(identical(other.objective, objective) || other.objective == objective)&&(identical(other.assessment, assessment) || other.assessment == assessment)&&(identical(other.plan, plan) || other.plan == plan));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,subjective,objective,assessment,plan);
+int get hashCode {
+    return Object.hash(runtimeType,subjective,objective,assessment,plan);
+}
 
 @override
 String toString() {
-  return 'EncounterSoap(subjective: $subjective, objective: $objective, assessment: $assessment, plan: $plan)';
+    return 'EncounterSoap(subjective: $subjective, objective: $objective, assessment: $assessment, plan: $plan)';
 }
 
 
@@ -1990,16 +2040,21 @@ $EncounterDetailCopyWith<EncounterDetail> get copyWith => _$EncounterDetailCopyW
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is EncounterDetail&&(identical(other.id, id) || other.id == id)&&(identical(other.encounterType, encounterType) || other.encounterType == encounterType)&&(identical(other.status, status) || other.status == status)&&(identical(other.startTime, startTime) || other.startTime == startTime)&&(identical(other.endTime, endTime) || other.endTime == endTime)&&(identical(other.chiefComplaint, chiefComplaint) || other.chiefComplaint == chiefComplaint)&&(identical(other.visitType, visitType) || other.visitType == visitType)&&(identical(other.doctorName, doctorName) || other.doctorName == doctorName)&&(identical(other.primaryDiagnosis, primaryDiagnosis) || other.primaryDiagnosis == primaryDiagnosis)&&(identical(other.vitals, vitals) || other.vitals == vitals)&&const DeepCollectionEquality().equals(other.diagnoses, diagnoses)&&const DeepCollectionEquality().equals(other.prescriptions, prescriptions)&&(identical(other.soap, soap) || other.soap == soap)&&(identical(other.followUpDate, followUpDate) || other.followUpDate == followUpDate)&&(identical(other.followUpInstructions, followUpInstructions) || other.followUpInstructions == followUpInstructions)&&(identical(other.referral, referral) || other.referral == referral));
+  final _this = this as EncounterDetail;
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is EncounterDetail&&(identical(other.id, _this.id) || other.id == _this.id)&&(identical(other.encounterType, _this.encounterType) || other.encounterType == _this.encounterType)&&(identical(other.status, _this.status) || other.status == _this.status)&&(identical(other.startTime, _this.startTime) || other.startTime == _this.startTime)&&(identical(other.endTime, _this.endTime) || other.endTime == _this.endTime)&&(identical(other.chiefComplaint, _this.chiefComplaint) || other.chiefComplaint == _this.chiefComplaint)&&(identical(other.visitType, _this.visitType) || other.visitType == _this.visitType)&&(identical(other.doctorName, _this.doctorName) || other.doctorName == _this.doctorName)&&(identical(other.primaryDiagnosis, _this.primaryDiagnosis) || other.primaryDiagnosis == _this.primaryDiagnosis)&&(identical(other.vitals, _this.vitals) || other.vitals == _this.vitals)&&const DeepCollectionEquality().equals(other.diagnoses, _this.diagnoses)&&const DeepCollectionEquality().equals(other.prescriptions, _this.prescriptions)&&(identical(other.soap, _this.soap) || other.soap == _this.soap)&&(identical(other.followUpDate, _this.followUpDate) || other.followUpDate == _this.followUpDate)&&(identical(other.followUpInstructions, _this.followUpInstructions) || other.followUpInstructions == _this.followUpInstructions)&&(identical(other.referral, _this.referral) || other.referral == _this.referral));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,encounterType,status,startTime,endTime,chiefComplaint,visitType,doctorName,primaryDiagnosis,vitals,const DeepCollectionEquality().hash(diagnoses),const DeepCollectionEquality().hash(prescriptions),soap,followUpDate,followUpInstructions,referral);
+int get hashCode {
+  final _this = this as EncounterDetail;
+  return Object.hash(runtimeType,_this.id,_this.encounterType,_this.status,_this.startTime,_this.endTime,_this.chiefComplaint,_this.visitType,_this.doctorName,_this.primaryDiagnosis,_this.vitals,const DeepCollectionEquality().hash(_this.diagnoses),const DeepCollectionEquality().hash(_this.prescriptions),_this.soap,_this.followUpDate,_this.followUpInstructions,_this.referral);
+}
 
 @override
 String toString() {
-  return 'EncounterDetail(id: $id, encounterType: $encounterType, status: $status, startTime: $startTime, endTime: $endTime, chiefComplaint: $chiefComplaint, visitType: $visitType, doctorName: $doctorName, primaryDiagnosis: $primaryDiagnosis, vitals: $vitals, diagnoses: $diagnoses, prescriptions: $prescriptions, soap: $soap, followUpDate: $followUpDate, followUpInstructions: $followUpInstructions, referral: $referral)';
+  final _this = this as EncounterDetail;
+  return 'EncounterDetail(id: ${_this.id}, encounterType: ${_this.encounterType}, status: ${_this.status}, startTime: ${_this.startTime}, endTime: ${_this.endTime}, chiefComplaint: ${_this.chiefComplaint}, visitType: ${_this.visitType}, doctorName: ${_this.doctorName}, primaryDiagnosis: ${_this.primaryDiagnosis}, vitals: ${_this.vitals}, diagnoses: ${_this.diagnoses}, prescriptions: ${_this.prescriptions}, soap: ${_this.soap}, followUpDate: ${_this.followUpDate}, followUpInstructions: ${_this.followUpInstructions}, referral: ${_this.referral})';
 }
 
 
@@ -2028,7 +2083,7 @@ class _$EncounterDetailCopyWithImpl<$Res>
 /// Create a copy of EncounterDetail
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? encounterType = null,Object? status = null,Object? startTime = null,Object? endTime = freezed,Object? chiefComplaint = freezed,Object? visitType = freezed,Object? doctorName = null,Object? primaryDiagnosis = freezed,Object? vitals = freezed,Object? diagnoses = null,Object? prescriptions = null,Object? soap = freezed,Object? followUpDate = freezed,Object? followUpInstructions = freezed,Object? referral = freezed,}) {
-  return _then(_self.copyWith(
+  return _then(EncounterDetail(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,encounterType: null == encounterType ? _self.encounterType : encounterType // ignore: cast_nullable_to_non_nullable
 as EncounterType,status: null == status ? _self.status : status // ignore: cast_nullable_to_non_nullable
@@ -2210,7 +2265,7 @@ return $default(_that.id,_that.encounterType,_that.status,_that.startTime,_that.
 @JsonSerializable()
 
 class _EncounterDetail implements EncounterDetail {
-  const _EncounterDetail({required this.id, required this.encounterType, required this.status, required this.startTime, this.endTime, this.chiefComplaint, this.visitType, required this.doctorName, this.primaryDiagnosis, this.vitals, final  List<EncounterDiagnosis> diagnoses = const [], final  List<EncounterPrescription> prescriptions = const [], this.soap, this.followUpDate, this.followUpInstructions, this.referral}): _diagnoses = diagnoses,_prescriptions = prescriptions;
+  const _EncounterDetail({required this.id, required this.encounterType, required this.status, required this.startTime, this.endTime, this.chiefComplaint, this.visitType, required this.doctorName, this.primaryDiagnosis, this.vitals,  List<EncounterDiagnosis> diagnoses = const [],  List<EncounterPrescription> prescriptions = const [], this.soap, this.followUpDate, this.followUpInstructions, this.referral}): _diagnoses = diagnoses,_prescriptions = prescriptions;
   factory _EncounterDetail.fromJson(Map<String, dynamic> json) => _$EncounterDetailFromJson(json);
 
 @override final  String id;
@@ -2255,16 +2310,18 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _EncounterDetail&&(identical(other.id, id) || other.id == id)&&(identical(other.encounterType, encounterType) || other.encounterType == encounterType)&&(identical(other.status, status) || other.status == status)&&(identical(other.startTime, startTime) || other.startTime == startTime)&&(identical(other.endTime, endTime) || other.endTime == endTime)&&(identical(other.chiefComplaint, chiefComplaint) || other.chiefComplaint == chiefComplaint)&&(identical(other.visitType, visitType) || other.visitType == visitType)&&(identical(other.doctorName, doctorName) || other.doctorName == doctorName)&&(identical(other.primaryDiagnosis, primaryDiagnosis) || other.primaryDiagnosis == primaryDiagnosis)&&(identical(other.vitals, vitals) || other.vitals == vitals)&&const DeepCollectionEquality().equals(other._diagnoses, _diagnoses)&&const DeepCollectionEquality().equals(other._prescriptions, _prescriptions)&&(identical(other.soap, soap) || other.soap == soap)&&(identical(other.followUpDate, followUpDate) || other.followUpDate == followUpDate)&&(identical(other.followUpInstructions, followUpInstructions) || other.followUpInstructions == followUpInstructions)&&(identical(other.referral, referral) || other.referral == referral));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _EncounterDetail&&(identical(other.id, id) || other.id == id)&&(identical(other.encounterType, encounterType) || other.encounterType == encounterType)&&(identical(other.status, status) || other.status == status)&&(identical(other.startTime, startTime) || other.startTime == startTime)&&(identical(other.endTime, endTime) || other.endTime == endTime)&&(identical(other.chiefComplaint, chiefComplaint) || other.chiefComplaint == chiefComplaint)&&(identical(other.visitType, visitType) || other.visitType == visitType)&&(identical(other.doctorName, doctorName) || other.doctorName == doctorName)&&(identical(other.primaryDiagnosis, primaryDiagnosis) || other.primaryDiagnosis == primaryDiagnosis)&&(identical(other.vitals, vitals) || other.vitals == vitals)&&const DeepCollectionEquality().equals(other.diagnoses, _diagnoses)&&const DeepCollectionEquality().equals(other.prescriptions, _prescriptions)&&(identical(other.soap, soap) || other.soap == soap)&&(identical(other.followUpDate, followUpDate) || other.followUpDate == followUpDate)&&(identical(other.followUpInstructions, followUpInstructions) || other.followUpInstructions == followUpInstructions)&&(identical(other.referral, referral) || other.referral == referral));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,encounterType,status,startTime,endTime,chiefComplaint,visitType,doctorName,primaryDiagnosis,vitals,const DeepCollectionEquality().hash(_diagnoses),const DeepCollectionEquality().hash(_prescriptions),soap,followUpDate,followUpInstructions,referral);
+int get hashCode {
+    return Object.hash(runtimeType,id,encounterType,status,startTime,endTime,chiefComplaint,visitType,doctorName,primaryDiagnosis,vitals,const DeepCollectionEquality().hash(_diagnoses),const DeepCollectionEquality().hash(_prescriptions),soap,followUpDate,followUpInstructions,referral);
+}
 
 @override
 String toString() {
-  return 'EncounterDetail(id: $id, encounterType: $encounterType, status: $status, startTime: $startTime, endTime: $endTime, chiefComplaint: $chiefComplaint, visitType: $visitType, doctorName: $doctorName, primaryDiagnosis: $primaryDiagnosis, vitals: $vitals, diagnoses: $diagnoses, prescriptions: $prescriptions, soap: $soap, followUpDate: $followUpDate, followUpInstructions: $followUpInstructions, referral: $referral)';
+    return 'EncounterDetail(id: $id, encounterType: $encounterType, status: $status, startTime: $startTime, endTime: $endTime, chiefComplaint: $chiefComplaint, visitType: $visitType, doctorName: $doctorName, primaryDiagnosis: $primaryDiagnosis, vitals: $vitals, diagnoses: $diagnoses, prescriptions: $prescriptions, soap: $soap, followUpDate: $followUpDate, followUpInstructions: $followUpInstructions, referral: $referral)';
 }
 
 

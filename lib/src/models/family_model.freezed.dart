@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // coverage:ignore-file
-// ignore_for_file: type=lint
+// ignore_for_file: type=lint, type=warning, deprecated_member_use, deprecated_member_use_from_same_package
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
 part of 'family_model.dart';
@@ -9,6 +9,7 @@ part of 'family_model.dart';
 // FreezedGenerator
 // **************************************************************************
 
+// GENERATED CODE - DO NOT MODIFY BY HAND
 // dart format off
 T _$identity<T>(T value) => value;
 
@@ -28,16 +29,21 @@ $FamilyMemberCopyWith<FamilyMember> get copyWith => _$FamilyMemberCopyWithImpl<F
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is FamilyMember&&(identical(other.id, id) || other.id == id)&&(identical(other.patientId, patientId) || other.patientId == patientId)&&(identical(other.surname, surname) || other.surname == surname)&&(identical(other.firstName, firstName) || other.firstName == firstName)&&(identical(other.otherName, otherName) || other.otherName == otherName)&&(identical(other.relationship, relationship) || other.relationship == relationship)&&(identical(other.dob, dob) || other.dob == dob)&&(identical(other.avatarUrl, avatarUrl) || other.avatarUrl == avatarUrl));
+  final _this = this as FamilyMember;
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is FamilyMember&&(identical(other.id, _this.id) || other.id == _this.id)&&(identical(other.patientId, _this.patientId) || other.patientId == _this.patientId)&&(identical(other.surname, _this.surname) || other.surname == _this.surname)&&(identical(other.firstName, _this.firstName) || other.firstName == _this.firstName)&&(identical(other.otherName, _this.otherName) || other.otherName == _this.otherName)&&(identical(other.relationship, _this.relationship) || other.relationship == _this.relationship)&&(identical(other.dob, _this.dob) || other.dob == _this.dob)&&(identical(other.avatarUrl, _this.avatarUrl) || other.avatarUrl == _this.avatarUrl));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,patientId,surname,firstName,otherName,relationship,dob,avatarUrl);
+int get hashCode {
+  final _this = this as FamilyMember;
+  return Object.hash(runtimeType,_this.id,_this.patientId,_this.surname,_this.firstName,_this.otherName,_this.relationship,_this.dob,_this.avatarUrl);
+}
 
 @override
 String toString() {
-  return 'FamilyMember(id: $id, patientId: $patientId, surname: $surname, firstName: $firstName, otherName: $otherName, relationship: $relationship, dob: $dob, avatarUrl: $avatarUrl)';
+  final _this = this as FamilyMember;
+  return 'FamilyMember(id: ${_this.id}, patientId: ${_this.patientId}, surname: ${_this.surname}, firstName: ${_this.firstName}, otherName: ${_this.otherName}, relationship: ${_this.relationship}, dob: ${_this.dob}, avatarUrl: ${_this.avatarUrl})';
 }
 
 
@@ -66,7 +72,7 @@ class _$FamilyMemberCopyWithImpl<$Res>
 /// Create a copy of FamilyMember
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? patientId = freezed,Object? surname = freezed,Object? firstName = freezed,Object? otherName = freezed,Object? relationship = freezed,Object? dob = freezed,Object? avatarUrl = freezed,}) {
-  return _then(_self.copyWith(
+  return _then(FamilyMember(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,patientId: freezed == patientId ? _self.patientId : patientId // ignore: cast_nullable_to_non_nullable
 as String?,surname: freezed == surname ? _self.surname : surname // ignore: cast_nullable_to_non_nullable
@@ -215,8 +221,8 @@ return $default(_that.id,_that.patientId,_that.surname,_that.firstName,_that.oth
 /// @nodoc
 @JsonSerializable()
 
-class _FamilyMember implements FamilyMember {
-  const _FamilyMember({required this.id, this.patientId, this.surname, this.firstName, this.otherName, this.relationship, this.dob, this.avatarUrl});
+class _FamilyMember extends FamilyMember {
+  const _FamilyMember({required this.id, this.patientId, this.surname, this.firstName, this.otherName, this.relationship, this.dob, this.avatarUrl}): super._();
   factory _FamilyMember.fromJson(Map<String, dynamic> json) => _$FamilyMemberFromJson(json);
 
 @override final  String id;
@@ -241,16 +247,18 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _FamilyMember&&(identical(other.id, id) || other.id == id)&&(identical(other.patientId, patientId) || other.patientId == patientId)&&(identical(other.surname, surname) || other.surname == surname)&&(identical(other.firstName, firstName) || other.firstName == firstName)&&(identical(other.otherName, otherName) || other.otherName == otherName)&&(identical(other.relationship, relationship) || other.relationship == relationship)&&(identical(other.dob, dob) || other.dob == dob)&&(identical(other.avatarUrl, avatarUrl) || other.avatarUrl == avatarUrl));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _FamilyMember&&(identical(other.id, id) || other.id == id)&&(identical(other.patientId, patientId) || other.patientId == patientId)&&(identical(other.surname, surname) || other.surname == surname)&&(identical(other.firstName, firstName) || other.firstName == firstName)&&(identical(other.otherName, otherName) || other.otherName == otherName)&&(identical(other.relationship, relationship) || other.relationship == relationship)&&(identical(other.dob, dob) || other.dob == dob)&&(identical(other.avatarUrl, avatarUrl) || other.avatarUrl == avatarUrl));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,patientId,surname,firstName,otherName,relationship,dob,avatarUrl);
+int get hashCode {
+    return Object.hash(runtimeType,id,patientId,surname,firstName,otherName,relationship,dob,avatarUrl);
+}
 
 @override
 String toString() {
-  return 'FamilyMember(id: $id, patientId: $patientId, surname: $surname, firstName: $firstName, otherName: $otherName, relationship: $relationship, dob: $dob, avatarUrl: $avatarUrl)';
+    return 'FamilyMember(id: $id, patientId: $patientId, surname: $surname, firstName: $firstName, otherName: $otherName, relationship: $relationship, dob: $dob, avatarUrl: $avatarUrl)';
 }
 
 

@@ -3,8 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:imsh/app_router.gr.dart';
 
-import '../../../core/theme/app_design_tokens.dart';
+import '../../../core/theme/imsh_accent_colors.dart';
 import '../../../models/invoice_model.dart';
+import '../../../shared/widgets/imsh_ellipsis_chip.dart';
+import '../../../shared/widgets/imsh_empty_state.dart';
 import 'unpaid_invoice_card.dart';
 
 class UnpaidInvoicesSection extends StatelessWidget {
@@ -21,33 +23,21 @@ class UnpaidInvoicesSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    final colorScheme = theme.colorScheme;
-
     if (invoices.isEmpty) {
       return Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          Text(
-            'Unpaid Consultations',
-            style: theme.textTheme.titleMedium?.copyWith(
-              fontWeight: FontWeight.w700,
-            ),
+          const ImshSectionHeader(
+            title: 'Unpaid bills',
+            icon: Icons.receipt_long_outlined,
+            iconColor: ImshAccentColors.amber,
           ),
-          const Gap(AppDesignTokens.spacingMd),
-          Container(
-            padding: const EdgeInsets.all(AppDesignTokens.spacingLg),
-            decoration: BoxDecoration(
-              color: colorScheme.surfaceContainerLow,
-              borderRadius: BorderRadius.circular(AppDesignTokens.radiusMd),
-            ),
-            child: Text(
-              'You have no outstanding bills.',
-              style: theme.textTheme.bodyMedium?.copyWith(
-                color: colorScheme.onSurfaceVariant,
-              ),
-              textAlign: TextAlign.center,
-            ),
+          const Gap(10),
+          const ImshEmptyState(
+            title: 'No outstanding bills',
+            message: 'You have no unpaid invoices right now.',
+            icon: Icons.check_circle_outline,
+            iconColor: ImshAccentColors.green,
           ),
         ],
       );
@@ -56,27 +46,21 @@ class UnpaidInvoicesSection extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        Row(
-          children: [
-            Expanded(
-              child: Text(
-                'Unpaid Consultations',
-                style: theme.textTheme.titleMedium?.copyWith(
-                  fontWeight: FontWeight.w700,
-                ),
-              ),
-            ),
-            if (totalCount > invoices.length)
-              TextButton(
-                onPressed: onViewAll,
-                child: const Text('View all →'),
-              ),
-          ],
+        ImshSectionHeader(
+          title: 'Unpaid bills',
+          icon: Icons.receipt_long_outlined,
+          iconColor: ImshAccentColors.amber,
+          trailing: totalCount > invoices.length
+              ? TextButton(
+                  onPressed: onViewAll,
+                  child: const Text('View all'),
+                )
+              : null,
         ),
-        const Gap(AppDesignTokens.spacingSm),
+        const Gap(10),
         ...invoices.map(
           (invoice) => Padding(
-            padding: const EdgeInsets.only(bottom: AppDesignTokens.spacingMd),
+            padding: const EdgeInsets.only(bottom: 10),
             child: UnpaidInvoiceCard(
               invoice: invoice,
               onTap: () => context.router.push(

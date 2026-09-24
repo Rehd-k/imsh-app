@@ -1,15 +1,18 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:gap/gap.dart';
 import 'package:imsh/app_router.gr.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 
-import '../../../core/theme/app_design_tokens.dart';
-import '../../../core/theme/context_extensions.dart';
+import '../../../core/responsive.dart';
+import '../../../core/theme/imsh_accent_colors.dart';
+import '../../../helper/date_formatter.dart';
 import '../../../models/appointment_model.dart';
 import '../../../providers/appointments_provider.dart';
 import '../../../shared/widgets/family_subject_banner.dart';
+import '../../../shared/widgets/imsh_empty_state.dart';
+import '../../../shared/widgets/imsh_error_panel.dart';
+import '../../../shared/widgets/imsh_kpi_tile.dart';
 import '../../../shared/widgets/imsh_sliver_app_bar.dart';
 import 'appointment_filter_chips.dart';
 import 'appointment_list_card.dart';
@@ -19,6 +22,8 @@ import 'next_appointment_card.dart';
 
 class AppointmentsBody extends ConsumerWidget {
   const AppointmentsBody({super.key});
+
+  static const sectionGap = 12.0;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -41,69 +46,31 @@ class AppointmentsBody extends ConsumerWidget {
           slivers: [
             const ImshSliverAppBar(),
             const SliverToBoxAdapter(child: FamilySubjectBanner()),
-            SliverPadding(
-              padding: const EdgeInsets.all(AppDesignTokens.containerPadding),
-              sliver: SliverToBoxAdapter(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: [
-                    const AppointmentsPageHeader(),
-                    const Gap(AppDesignTokens.spacingLg),
-                    const AppointmentFilterChips(),
-                    const Gap(AppDesignTokens.spacingLg),
-                    if (filter == AppointmentFilterTab.upcoming &&
-                        dashboard.nextAppointment != null) ...[
-                      NextAppointmentCard(
-                        appointment: dashboard.nextAppointment!,
-                        isCancelling: ref
-                            .watch(cancelAppointmentProvider)
-                            .maybeWhen(
-                              data: (inFlight) => inFlight.contains(
-                                dashboard.nextAppointment!.id,
-                              ),
-                              orElse: () => false,
-                            ),
-                        onReschedule: () => _openReschedule(
-                          context,
-                          ref,
-                          dashboard.nextAppointment!,
-                        ),
-                        onCancel: () => _confirmCancel(
-                          context,
-                          ref,
-                          dashboard.nextAppointment!.id,
-                        ),
-                      ),
-                      const Gap(AppDesignTokens.spacingLg),
-                    ],
-                    if (dashboard.upcomingAppointments.isNotEmpty) ...[
-                      for (final appointment in dashboard.upcomingAppointments)
-                        AppointmentListCard(
-                          appointment: appointment,
-                          onEdit: () =>
-                              _openReschedule(context, ref, appointment),
-                          onDetails: () => context.router.push(
-                            AppointmentDetailRoute(id: appointment.id),
+            SliverFillRemaining(
+              hasScrollBody: true,
+              child: ResponsiveBody(
+                expand: false,
+                center: false,
+                bottomPadding: 88,
+                builder: (context, bp) {
+                  return SingleChildScrollView(
+                    physics: const AlwaysScrollableScrollPhysics(),
+                    child: _AppointmentsMainColumn(
+                      filter: filter,
+                      dashboard: dashboard,
+                      useSnapKpis: bp.maxWidth < 520,
+                      onReschedule: (appointment) =>
+                          _openReschedule(context, ref, appointment),
+                      onCancel: (id) => _confirmCancel(context, ref, id),
+                      isCancelling: (id) => ref
+                          .watch(cancelAppointmentProvider)
+                          .maybeWhen(
+                            data: (inFlight) => inFlight.contains(id),
+                            orElse: () => false,
                           ),
-                        ),
-                      const Gap(AppDesignTokens.spacingMd),
-                    ] else if (filter != AppointmentFilterTab.upcoming ||
-                        dashboard.nextAppointment == null) ...[
-                      _EmptyAppointments(filter: filter),
-                      const Gap(AppDesignTokens.spacingMd),
-                    ],
-                    if (filter == AppointmentFilterTab.upcoming)
-                      ConsultationHistorySection(
-                        items: dashboard.consultationHistory,
-                        onViewAll: () =>
-                            context.router.push(const MedicalRecordsRoute()),
-                        onItemTap: (item) => context.router.push(
-                          EncounterDetailRoute(id: item.id),
-                        ),
-                      ),
-                    const Gap(80),
-                  ],
-                ),
+                    ),
+                  );
+                },
               ),
             ),
           ],
@@ -171,34 +138,116 @@ class AppointmentsBody extends ConsumerWidget {
   }
 }
 
-class _EmptyAppointments extends StatelessWidget {
-  const _EmptyAppointments({required this.filter});
+class _AppointmentsMainColumn extends StatelessWidget {
+  const _AppointmentsMainColumn({
+    required this.filter,
+    required this.dashboard,
+    required this.useSnapKpis,
+    required this.onReschedule,
+    required this.onCancel,
+    required this.isCancelling,
+  });
 
   final AppointmentFilterTab filter;
+  final AppointmentsDashboardResponse dashboard;
+  final bool useSnapKpis;
+  final void Function(AppointmentSummary appointment) onReschedule;
+  final void Function(String id) onCancel;
+  final bool Function(String id) isCancelling;
 
   @override
   Widget build(BuildContext context) {
-    final colorScheme = context.colorScheme;
-    final message = switch (filter) {
-      AppointmentFilterTab.upcoming => 'No upcoming appointments scheduled.',
-      AppointmentFilterTab.past => 'No past appointments on record.',
-      AppointmentFilterTab.pending => 'No pending appointments.',
-    };
+    final upcomingCount = dashboard.upcomingAppointments.length +
+        (dashboard.nextAppointment != null ? 1 : 0);
+    final historyCount = dashboard.consultationHistory.length;
+    final next = dashboard.nextAppointment;
+    final nextValue = next == null
+        ? '—'
+        : DateFormatter.appointmentCompactDate(next.scheduledAt);
+    final nextCaption = next == null
+        ? 'None scheduled'
+        : next.status == AppointmentStatus.requested
+            ? 'Awaiting confirm'
+            : DateFormatter.appointmentCardTime(next.scheduledAt);
 
-    return Container(
-      width: double.infinity,
-      padding: const EdgeInsets.all(AppDesignTokens.spacingLg),
-      decoration: BoxDecoration(
-        color: colorScheme.surfaceContainerLow,
-        borderRadius: BorderRadius.circular(AppDesignTokens.radiusMd),
-      ),
-      child: Text(
-        message,
-        textAlign: TextAlign.center,
-        style: Theme.of(
-          context,
-        ).textTheme.bodyMedium?.copyWith(color: colorScheme.onSurfaceVariant),
-      ),
+    final listEmpty = dashboard.upcomingAppointments.isEmpty &&
+        (filter != AppointmentFilterTab.upcoming ||
+            dashboard.nextAppointment == null);
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        const AppointmentsPageHeader(),
+        const SizedBox(height: AppointmentsBody.sectionGap),
+        ImshKpiStrip(
+          useSnapStrip: useSnapKpis,
+          items: [
+            ImshKpiItem(
+              label: filter.label,
+              value: upcomingCount > 0 ? '$upcomingCount' : '—',
+              caption: upcomingCount > 0 ? 'In this view' : 'None listed',
+              icon: Icons.event_note_outlined,
+              accent: ImshAccentColors.teal,
+            ),
+            ImshKpiItem(
+              label: 'Next visit',
+              value: nextValue,
+              caption: nextCaption,
+              icon: Icons.event_available_outlined,
+              accent: ImshAccentColors.indigo,
+            ),
+            ImshKpiItem(
+              label: 'History',
+              value: historyCount > 0 ? '$historyCount' : '—',
+              caption: historyCount > 0 ? 'Recent consults' : 'No consults',
+              icon: Icons.history_outlined,
+              accent: ImshAccentColors.blue,
+            ),
+          ],
+        ),
+        const SizedBox(height: AppointmentsBody.sectionGap),
+        const AppointmentFilterChips(),
+        const SizedBox(height: AppointmentsBody.sectionGap),
+        if (filter == AppointmentFilterTab.upcoming && next != null) ...[
+          NextAppointmentCard(
+            appointment: next,
+            isCancelling: isCancelling(next.id),
+            onReschedule: () => onReschedule(next),
+            onCancel: () => onCancel(next.id),
+          ),
+          const SizedBox(height: AppointmentsBody.sectionGap),
+        ],
+        if (dashboard.upcomingAppointments.isNotEmpty)
+          for (final appointment in dashboard.upcomingAppointments)
+            AppointmentListCard(
+              appointment: appointment,
+              onEdit: () => onReschedule(appointment),
+              onDetails: () => context.router.push(
+                AppointmentDetailRoute(id: appointment.id),
+              ),
+            )
+        else if (listEmpty)
+          ImshEmptyState(
+            icon: Icons.event_busy_outlined,
+            iconColor: ImshAccentColors.teal,
+            message: switch (filter) {
+              AppointmentFilterTab.upcoming =>
+                'No upcoming appointments scheduled.',
+              AppointmentFilterTab.past => 'No past appointments on record.',
+              AppointmentFilterTab.pending => 'No pending appointments.',
+            },
+          ),
+        if (filter == AppointmentFilterTab.upcoming) ...[
+          const SizedBox(height: AppointmentsBody.sectionGap),
+          ConsultationHistorySection(
+            items: dashboard.consultationHistory,
+            onViewAll: () => context.router.push(const MedicalRecordsRoute()),
+            onItemTap: (item) => context.router.push(
+              EncounterDetailRoute(id: item.id),
+            ),
+          ),
+        ],
+      ],
     );
   }
 }
@@ -226,23 +275,29 @@ class _AppointmentsSkeleton extends StatelessWidget {
       child: CustomScrollView(
         slivers: [
           const ImshSliverAppBar(),
-          SliverPadding(
-            padding: const EdgeInsets.all(AppDesignTokens.containerPadding),
-            sliver: SliverToBoxAdapter(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  const AppointmentsPageHeader(),
-                  const Gap(AppDesignTokens.spacingLg),
-                  const AppointmentFilterChips(),
-                  const Gap(AppDesignTokens.spacingLg),
-                  NextAppointmentCard(
-                    appointment: _placeholderAppointment,
-                    onReschedule: () {},
-                    onCancel: () {},
+          SliverFillRemaining(
+            hasScrollBody: true,
+            child: ResponsiveBody(
+              expand: false,
+              center: false,
+              builder: (context, bp) {
+                return SingleChildScrollView(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      const AppointmentsPageHeader(),
+                      const SizedBox(height: AppointmentsBody.sectionGap),
+                      const AppointmentFilterChips(),
+                      const SizedBox(height: AppointmentsBody.sectionGap),
+                      NextAppointmentCard(
+                        appointment: _placeholderAppointment,
+                        onReschedule: () {},
+                        onCancel: () {},
+                      ),
+                    ],
                   ),
-                ],
-              ),
+                );
+              },
             ),
           ),
         ],
@@ -265,21 +320,7 @@ class _AppointmentsError extends StatelessWidget {
         const ImshSliverAppBar(),
         SliverFillRemaining(
           hasScrollBody: false,
-          child: Center(
-            child: Padding(
-              padding: const EdgeInsets.all(AppDesignTokens.containerPadding),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  const Icon(Icons.error_outline, size: 48),
-                  const Gap(AppDesignTokens.spacingMd),
-                  Text(message, textAlign: TextAlign.center),
-                  const Gap(AppDesignTokens.spacingMd),
-                  FilledButton(onPressed: onRetry, child: const Text('Retry')),
-                ],
-              ),
-            ),
-          ),
+          child: ImshErrorPanel(message: message, onRetry: onRetry),
         ),
       ],
     );

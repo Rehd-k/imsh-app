@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:gap/gap.dart';
 
-import '../../../core/theme/app_design_tokens.dart';
-import '../../../core/theme/context_extensions.dart';
+import '../../../core/theme/imsh_accent_colors.dart';
 import '../../../models/appointment_model.dart';
+import '../../../shared/widgets/imsh_ellipsis_chip.dart';
 import 'consultation_history_item.dart';
 
 class ConsultationHistorySection extends StatelessWidget {
@@ -22,31 +21,31 @@ class ConsultationHistorySection extends StatelessWidget {
   Widget build(BuildContext context) {
     if (items.isEmpty) return const SizedBox.shrink();
 
-    final theme = Theme.of(context);
-    final colorScheme = context.colorScheme;
-
     return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
+      crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        Row(
-          children: [
-            Text(
-              'CONSULTATION HISTORY',
-              style: theme.textTheme.labelSmall?.copyWith(
-                color: colorScheme.onSurfaceVariant,
-                fontWeight: FontWeight.w600,
-                letterSpacing: 0.8,
-              ),
+        ImshSectionHeader(
+          title: 'Consultation history',
+          icon: Icons.history_outlined,
+          iconColor: ImshAccentColors.indigo,
+          trailing: TextButton(
+            onPressed: onViewAll,
+            style: TextButton.styleFrom(
+              visualDensity: VisualDensity.compact,
+              padding: EdgeInsets.zero,
+              tapTargetSize: MaterialTapTargetSize.shrinkWrap,
             ),
-            const Spacer(),
-            TextButton(onPressed: onViewAll, child: const Text('View all')),
-          ],
+            child: const Text('View all'),
+          ),
         ),
-        const Gap(AppDesignTokens.spacingSm),
-        ...items.map(
-          (item) =>
-              ConsultationHistoryTile(item: item, onTap: () => onItemTap(item)),
-        ),
+        const SizedBox(height: 8),
+        for (var i = 0; i < items.length; i++) ...[
+          if (i > 0) const SizedBox(height: 8),
+          ConsultationHistoryTile(
+            item: items[i],
+            onTap: () => onItemTap(items[i]),
+          ),
+        ],
       ],
     );
   }

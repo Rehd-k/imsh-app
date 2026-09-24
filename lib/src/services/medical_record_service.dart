@@ -19,7 +19,7 @@ class MedicalRecordService {
       queryParameters: {
         'page': page,
         'limit': limit,
-        if (forPatientId != null) 'forPatientId': forPatientId,
+        'forPatientId': ?forPatientId,
       },
     );
     return EncounterListResponse.fromJson(resp.data ?? {});
@@ -31,7 +31,7 @@ class MedicalRecordService {
   }) async {
     final resp = await _dio.get<Map<String, dynamic>>(
       '/patient/medical-records/$id',
-      queryParameters: {if (forPatientId != null) 'forPatientId': forPatientId},
+      queryParameters: {'forPatientId': ?forPatientId},
     );
     return EncounterDetail.fromJson(resp.data ?? {});
   }
@@ -41,7 +41,7 @@ class MedicalRecordService {
   }) async {
     final resp = await _dio.get<Map<String, dynamic>>(
       '/patient/medical-records/dashboard',
-      queryParameters: {if (forPatientId != null) 'forPatientId': forPatientId},
+      queryParameters: {'forPatientId': ?forPatientId},
     );
     return MedicalRecordsDashboardResponse.fromJson(resp.data ?? {});
   }
@@ -49,7 +49,7 @@ class MedicalRecordService {
   Future<List<DashboardDiagnosis>> listDiagnoses({String? forPatientId}) async {
     final resp = await _dio.get<Map<String, dynamic>>(
       '/patient/medical-records/diagnoses',
-      queryParameters: {if (forPatientId != null) 'forPatientId': forPatientId},
+      queryParameters: {'forPatientId': ?forPatientId},
     );
     final raw = resp.data?['data'];
     if (raw is! List) return const [];
@@ -68,10 +68,7 @@ class MedicalRecordService {
   }) async {
     final resp = await _dio.get<Map<String, dynamic>>(
       '/patient/medical-records/vitals-trend',
-      queryParameters: {
-        'limit': limit,
-        if (forPatientId != null) 'forPatientId': forPatientId,
-      },
+      queryParameters: {'limit': limit, 'forPatientId': ?forPatientId},
     );
     final raw = resp.data?['data'];
     if (raw is! List) return const [];

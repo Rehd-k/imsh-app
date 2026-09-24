@@ -1,9 +1,18 @@
 import 'package:flutter/material.dart';
 
-import '../../../core/theme/app_design_tokens.dart';
-import '../../../core/theme/context_extensions.dart';
-import '../../../core/theme/status_badge_colors.dart';
 import '../../../models/appointment_model.dart';
+import '../../../shared/widgets/imsh_ellipsis_chip.dart';
+import '../../../shared/widgets/imsh_semantic_badge.dart';
+
+ImshSemanticTone appointmentStatusTone(AppointmentStatus status) {
+  return switch (status) {
+    AppointmentStatus.requested => ImshSemanticTone.warning,
+    AppointmentStatus.confirmed => ImshSemanticTone.success,
+    AppointmentStatus.pending => ImshSemanticTone.warning,
+    AppointmentStatus.cancelled => ImshSemanticTone.error,
+    AppointmentStatus.completed => ImshSemanticTone.info,
+  };
+}
 
 class AppointmentStatusBadge extends StatelessWidget {
   const AppointmentStatusBadge({super.key, required this.status});
@@ -12,26 +21,9 @@ class AppointmentStatusBadge extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final colorScheme = context.colorScheme;
-    final (background, foreground) =
-        status.appointmentBadgeColors(colorScheme, context.imshTheme);
-
-    return Container(
-      padding: const EdgeInsets.symmetric(
-        horizontal: AppDesignTokens.spacingSm + 4,
-        vertical: AppDesignTokens.spacingXs,
-      ),
-      decoration: BoxDecoration(
-        color: background,
-        borderRadius: BorderRadius.circular(999),
-      ),
-      child: Text(
-        status.label,
-        style: Theme.of(context).textTheme.labelSmall?.copyWith(
-              color: foreground,
-              fontWeight: FontWeight.w600,
-            ),
-      ),
+    return ImshEllipsisChip(
+      label: status.label,
+      tone: appointmentStatusTone(status),
     );
   }
 }

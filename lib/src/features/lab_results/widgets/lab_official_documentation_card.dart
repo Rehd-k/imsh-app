@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:gap/gap.dart';
 
 import '../../../core/theme/app_design_tokens.dart';
-import '../../../core/theme/context_extensions.dart';
+import '../../../core/theme/imsh_accent_colors.dart';
+import '../../../shared/widgets/imsh_solid_icon.dart';
+import '../../../shared/widgets/imsh_surface_card.dart';
 
 class LabOfficialDocumentationCard extends StatelessWidget {
   const LabOfficialDocumentationCard({super.key});
@@ -10,69 +11,42 @@ class LabOfficialDocumentationCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final colorScheme = context.colorScheme;
+    final cs = theme.colorScheme;
 
-    return Container(
-      width: double.infinity,
-      padding: const EdgeInsets.all(AppDesignTokens.spacingMd),
-      decoration: BoxDecoration(
-        color: colorScheme.surfaceContainerLow,
-        borderRadius: BorderRadius.circular(AppDesignTokens.radiusLg),
-        border: Border.all(color: colorScheme.outlineVariant),
-      ),
-      child: Stack(
-        clipBehavior: Clip.none,
+    return ImshSurfaceCard(
+      padding: const EdgeInsets.all(12),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Positioned(
-            right: 0,
-            top: 0,
-            bottom: 0,
-            child: Icon(
-              Icons.verified_user_outlined,
-              size: 72,
-              color: theme.colorScheme.primary.withValues(alpha: 0.06),
-            ),
+          const ImshSolidIcon(
+            icon: Icons.verified_user_outlined,
+            color: ImshAccentColors.green,
+            size: 34,
+            iconSize: 18,
+            radius: AppDesignTokens.radiusMd,
           ),
-          Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Container(
-                width: 40,
-                height: 40,
-                decoration: BoxDecoration(
-                  color: theme.colorScheme.primary.withValues(alpha: 0.1),
-                  shape: BoxShape.circle,
+          const SizedBox(width: 10),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  'Official documentation',
+                  style: theme.textTheme.titleSmall?.copyWith(
+                    fontWeight: FontWeight.w700,
+                  ),
                 ),
-                child: Icon(
-                  Icons.verified_user_outlined,
-                  color: theme.colorScheme.primary,
-                  size: 22,
+                const SizedBox(height: 4),
+                Text(
+                  'All laboratory results displayed here are electronically '
+                  'signed and verified by our hospital specialists.',
+                  style: theme.textTheme.bodySmall?.copyWith(
+                    color: cs.onSurfaceVariant,
+                    height: 1.4,
+                  ),
                 ),
-              ),
-              const Gap(AppDesignTokens.spacingMd),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      'Official Documentation',
-                      style: theme.textTheme.titleSmall?.copyWith(
-                        fontWeight: FontWeight.w600,
-                      ),
-                    ),
-                    const Gap(AppDesignTokens.spacingSm),
-                    Text(
-                      'All laboratory results displayed here are electronically '
-                      'signed and verified by our hospital specialists.',
-                      style: theme.textTheme.bodySmall?.copyWith(
-                        color: colorScheme.onSurfaceVariant,
-                        height: 1.5,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ],
+              ],
+            ),
           ),
         ],
       ),

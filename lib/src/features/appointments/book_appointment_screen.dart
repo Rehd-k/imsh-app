@@ -1,17 +1,22 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:gap/gap.dart';
 import 'package:imsh/app_router.gr.dart';
 
+import '../../core/responsive.dart';
 import '../../core/theme/app_design_tokens.dart';
-import '../../core/theme/context_extensions.dart';
+import '../../core/theme/imsh_accent_colors.dart';
 import '../../helper/date_formatter.dart';
 import '../../models/appointment_model.dart';
 import '../../providers/appointments_provider.dart';
 import '../../services/appointment_service.dart';
 import '../../shared/widgets/adaptive_date_picker.dart';
 import '../../shared/widgets/imsh_app_bar.dart';
+import '../../shared/widgets/imsh_ellipsis_chip.dart';
+import '../../shared/widgets/imsh_empty_state.dart';
+import '../../shared/widgets/imsh_page_header.dart';
+import '../../shared/widgets/imsh_solid_icon.dart';
+import '../../shared/widgets/imsh_surface_card.dart';
 
 @RoutePage()
 class BookAppointmentScreen extends ConsumerStatefulWidget {
@@ -52,9 +57,44 @@ class _BookAppointmentScreenState extends ConsumerState<BookAppointmentScreen> {
       _initialized = true;
     }
 
-    final stepLabels = isReschedule
-        ? const ['Date', 'Confirm']
-        : const ['Specialty', 'Date', 'Visit type', 'Confirm'];
+    final steps = isReschedule
+        ? const [
+            _WizardStepMeta(
+              label: 'Date',
+              icon: Icons.calendar_today_outlined,
+              color: ImshAccentColors.teal,
+            ),
+            _WizardStepMeta(
+              label: 'Confirm',
+              icon: Icons.check_circle_outline,
+              color: ImshAccentColors.green,
+            ),
+          ]
+        : const [
+            _WizardStepMeta(
+              label: 'Specialty',
+              icon: Icons.medical_services_outlined,
+              color: ImshAccentColors.blue,
+            ),
+            _WizardStepMeta(
+              label: 'Date',
+              icon: Icons.calendar_today_outlined,
+              color: ImshAccentColors.teal,
+            ),
+            _WizardStepMeta(
+              label: 'Visit type',
+              icon: Icons.meeting_room_outlined,
+              color: ImshAccentColors.purple,
+            ),
+            _WizardStepMeta(
+              label: 'Confirm',
+              icon: Icons.check_circle_outline,
+              color: ImshAccentColors.green,
+            ),
+          ];
+
+    final currentStep = wizard.step.clamp(0, steps.length - 1);
+    final current = steps[currentStep];
 
     return Scaffold(
       appBar: ImshAppBar(
@@ -64,15 +104,52 @@ class _BookAppointmentScreenState extends ConsumerState<BookAppointmentScreen> {
       ),
       body: Column(
         children: [
-          Padding(
-            padding: const EdgeInsets.all(AppDesignTokens.containerPadding),
-            child: _StepIndicator(
-              labels: stepLabels,
-              currentStep: wizard.step.clamp(0, stepLabels.length - 1),
+          ResponsiveBody(
+            expand: false,
+            bottomPadding: 0,
+            builder: (context, bp) {
+              return Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  ImshPageHeader(
+                    title: current.label,
+                    subtitle: isReschedule
+                        ? 'Pick a preferred date for your request'
+                        : 'Step ${currentStep + 1} of ${steps.length}',
+                    icon: current.icon,
+                    iconColor: current.color,
+                  ),
+                  const SizedBox(height: 12),
+                  _StepIndicator(
+                    steps: steps,
+                    currentStep: currentStep,
+                  ),
+                ],
+              );
+            },
+          ),
+          Expanded(
+            child: ResponsiveBody(
+              expand: true,
+              bottomPadding: 0,
+              builder: (context, bp) {
+                return _buildStepContent(wizard, isReschedule);
+              },
             ),
           ),
-          Expanded(child: _buildStepContent(wizard, isReschedule)),
-          _buildBottomBar(wizard, isReschedule, stepLabels.length - 1),
+          ResponsiveBody(
+            expand: false,
+            bottomPadding: 0,
+            builder: (context, bp) {
+              return SafeArea(
+                top: false,
+                child: Padding(
+                  padding: const EdgeInsets.only(bottom: 12),
+                  child: _buildBottomBar(wizard, isReschedule, steps.length - 1),
+                ),
+              );
+            },
+          ),
         ],
       ),
     );
@@ -132,51 +209,44 @@ class _BookAppointmentScreenState extends ConsumerState<BookAppointmentScreen> {
     final isConfirmStep = step == maxStep;
     final canGoNext = _canProceed(wizard, step, isReschedule);
 
-    return SafeArea(
-      child: Padding(
-        padding: const EdgeInsets.all(AppDesignTokens.containerPadding),
-        child: Row(
-          children: [
-            if (step > 0)
-              OutlinedButton(
-                onPressed: _submitting
-                    ? null
-                    : () => ref
-                          .read(bookingWizardProvider.notifier)
-                          .previousStep(),
-                child: const Text('Back'),
-              ),
-            if (step > 0) const Gap(AppDesignTokens.spacingSm),
-            Expanded(
-              child: FilledButton(
-                onPressed: canGoNext && !_submitting
-                    ? () async {
-                        if (isConfirmStep) {
-                          await _submit(wizard, isReschedule);
-                        } else {
-                          if (!isReschedule &&
-                              step == 1 &&
-                              wizard.selectedDate == null) {
-                            ref
-                                .read(bookingWizardProvider.notifier)
-                                .selectDate(DateTime.now());
-                          }
-                          ref.read(bookingWizardProvider.notifier).nextStep();
-                        }
+    return Row(
+      children: [
+        if (step > 0)
+          OutlinedButton(
+            onPressed: _submitting
+                ? null
+                : () => ref.read(bookingWizardProvider.notifier).previousStep(),
+            child: const Text('Back'),
+          ),
+        if (step > 0) const SizedBox(width: 8),
+        Expanded(
+          child: FilledButton(
+            onPressed: canGoNext && !_submitting
+                ? () async {
+                    if (isConfirmStep) {
+                      await _submit(wizard, isReschedule);
+                    } else {
+                      if (!isReschedule &&
+                          step == 1 &&
+                          wizard.selectedDate == null) {
+                        ref
+                            .read(bookingWizardProvider.notifier)
+                            .selectDate(DateTime.now());
                       }
-                    : null,
-                child: _submitting
-                    ? const SizedBox(
-                        width: 20,
-                        height: 20,
-                        child: CircularProgressIndicator(strokeWidth: 2),
-                      )
-                    : Text(isConfirmStep ? 'Submit request' : 'Continue'),
-              ),
-            ),
-          ],
+                      ref.read(bookingWizardProvider.notifier).nextStep();
+                    }
+                  }
+                : null,
+            child: _submitting
+                ? const SizedBox(
+                    width: 20,
+                    height: 20,
+                    child: CircularProgressIndicator(strokeWidth: 2),
+                  )
+                : Text(isConfirmStep ? 'Submit request' : 'Continue'),
+          ),
         ),
-      ),
+      ],
     );
   }
 
@@ -272,53 +342,61 @@ class _BookAppointmentScreenState extends ConsumerState<BookAppointmentScreen> {
   }
 }
 
-class _StepIndicator extends StatelessWidget {
-  const _StepIndicator({required this.labels, required this.currentStep});
+class _WizardStepMeta {
+  const _WizardStepMeta({
+    required this.label,
+    required this.icon,
+    required this.color,
+  });
 
-  final List<String> labels;
+  final String label;
+  final IconData icon;
+  final Color color;
+}
+
+class _StepIndicator extends StatelessWidget {
+  const _StepIndicator({required this.steps, required this.currentStep});
+
+  final List<_WizardStepMeta> steps;
   final int currentStep;
 
   @override
   Widget build(BuildContext context) {
-    final colorScheme = context.colorScheme;
+    final cs = Theme.of(context).colorScheme;
 
     return Row(
       children: [
-        for (var i = 0; i < labels.length; i++) ...[
+        for (var i = 0; i < steps.length; i++) ...[
           if (i > 0)
             Expanded(
               child: Container(
                 height: 2,
+                margin: const EdgeInsets.symmetric(horizontal: 4),
                 color: i <= currentStep
-                    ? colorScheme.primary
-                    : colorScheme.outlineVariant,
+                    ? steps[i].color
+                    : cs.outlineVariant,
               ),
             ),
           Column(
             children: [
-              CircleAvatar(
-                radius: 14,
-                backgroundColor: i <= currentStep
-                    ? colorScheme.primary
-                    : colorScheme.surfaceContainerHigh,
-                child: Text(
-                  '${i + 1}',
-                  style: TextStyle(
-                    color: i <= currentStep
-                        ? colorScheme.onPrimary
-                        : colorScheme.onSurfaceVariant,
-                    fontSize: 12,
-                    fontWeight: FontWeight.w700,
-                  ),
-                ),
+              ImshSolidIcon(
+                icon: i < currentStep ? Icons.check_rounded : steps[i].icon,
+                color: i <= currentStep
+                    ? steps[i].color
+                    : cs.onSurfaceVariant,
+                size: 28,
+                iconSize: 14,
+                radius: 8,
               ),
-              const Gap(4),
+              const SizedBox(height: 4),
               Text(
-                labels[i],
+                steps[i].label,
                 style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                  fontWeight: i == currentStep
-                      ? FontWeight.w700
-                      : FontWeight.w400,
+                  fontWeight:
+                      i == currentStep ? FontWeight.w700 : FontWeight.w500,
+                  color: i == currentStep
+                      ? cs.onSurface
+                      : cs.onSurfaceVariant,
                 ),
               ),
             ],
@@ -337,38 +415,64 @@ class _SpecialtyStep extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final specialtiesAsync = ref.watch(appointmentSpecialtiesProvider);
+    final theme = Theme.of(context);
+    final cs = theme.colorScheme;
 
     return specialtiesAsync.when(
       loading: () => const Center(child: CircularProgressIndicator()),
       error: (error, _) => Center(child: Text(appointmentErrorMessage(error))),
       data: (response) {
-        final colorScheme = context.colorScheme;
-
         if (response.data.isEmpty) {
-          return const Center(child: Text('No specialties available'));
+          return const ImshEmptyState(
+            message: 'No specialties available',
+            icon: Icons.medical_services_outlined,
+            iconColor: ImshAccentColors.blue,
+          );
         }
 
         return ListView.separated(
-          padding: const EdgeInsets.all(AppDesignTokens.containerPadding),
           itemCount: response.data.length,
-          separatorBuilder: (_, __) => const Gap(AppDesignTokens.spacingSm),
+          separatorBuilder: (_, _) => const SizedBox(height: 8),
           itemBuilder: (context, index) {
             final specialty = response.data[index];
-            return ListTile(
-              tileColor: colorScheme.surfaceContainerLowest,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(AppDesignTokens.radiusMd),
-                side: BorderSide(color: colorScheme.outlineVariant),
-              ),
-              title: Text(
-                specialty.name,
-                style: const TextStyle(fontWeight: FontWeight.w600),
-              ),
-              subtitle: specialty.description != null
-                  ? Text(specialty.description!)
-                  : null,
-              trailing: const Icon(Icons.chevron_right),
+            return ImshSurfaceCard(
+              padding: const EdgeInsets.all(10),
               onTap: () => onSelected(specialty),
+              child: Row(
+                children: [
+                  const ImshSolidIcon(
+                    icon: Icons.medical_services_outlined,
+                    color: ImshAccentColors.blue,
+                    size: 34,
+                    iconSize: 18,
+                    radius: AppDesignTokens.radiusMd,
+                  ),
+                  const SizedBox(width: 10),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        ImshEllipsisText(
+                          text: specialty.name,
+                          style: theme.textTheme.titleSmall?.copyWith(
+                            fontWeight: FontWeight.w700,
+                          ),
+                        ),
+                        if (specialty.description != null) ...[
+                          const SizedBox(height: 2),
+                          ImshEllipsisText(
+                            text: specialty.description!,
+                            style: theme.textTheme.bodySmall?.copyWith(
+                              color: cs.onSurfaceVariant,
+                            ),
+                          ),
+                        ],
+                      ],
+                    ),
+                  ),
+                  Icon(Icons.chevron_right, color: cs.onSurfaceVariant),
+                ],
+              ),
             );
           },
         );
@@ -385,25 +489,27 @@ class _DateStep extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final cs = theme.colorScheme;
+
     return ListView(
-      padding: const EdgeInsets.all(AppDesignTokens.containerPadding),
       children: [
-        Text(
-          'Preferred date',
-          style: Theme.of(
-            context,
-          ).textTheme.titleSmall?.copyWith(fontWeight: FontWeight.w700),
+        ImshSectionHeader(
+          title: 'Preferred date',
+          icon: Icons.calendar_today_outlined,
+          iconColor: ImshAccentColors.teal,
         ),
-        const Gap(AppDesignTokens.spacingXs),
+        const SizedBox(height: 8),
         Text(
           'The hospital will confirm a time after reviewing your request.',
-          style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-            color: context.colorScheme.onSurfaceVariant,
+          style: theme.textTheme.bodyMedium?.copyWith(
+            color: cs.onSurfaceVariant,
           ),
         ),
-        const Gap(AppDesignTokens.spacingLg),
-        OutlinedButton.icon(
-          onPressed: () async {
+        const SizedBox(height: 12),
+        ImshSurfaceCard(
+          padding: const EdgeInsets.all(12),
+          onTap: () async {
             final picked = await showAdaptiveDatePicker(
               context: context,
               initialDate: selectedDate,
@@ -412,8 +518,39 @@ class _DateStep extends StatelessWidget {
             );
             if (picked != null) onDateSelected(picked);
           },
-          icon: const Icon(Icons.calendar_today_outlined),
-          label: Text(DateFormatter.appointmentCardDate(selectedDate)),
+          child: Row(
+            children: [
+              const ImshSolidIcon(
+                icon: Icons.event_outlined,
+                color: ImshAccentColors.teal,
+                size: 34,
+                iconSize: 18,
+                radius: AppDesignTokens.radiusMd,
+              ),
+              const SizedBox(width: 10),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'Selected date',
+                      style: theme.textTheme.labelSmall?.copyWith(
+                        color: cs.onSurfaceVariant,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                    ImshEllipsisText(
+                      text: DateFormatter.appointmentCardDate(selectedDate),
+                      style: theme.textTheme.titleSmall?.copyWith(
+                        fontWeight: FontWeight.w700,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              Icon(Icons.edit_calendar_outlined, color: cs.onSurfaceVariant),
+            ],
+          ),
         ),
       ],
     );
@@ -428,49 +565,69 @@ class _VisitTypeStep extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final colorScheme = context.colorScheme;
+    final theme = Theme.of(context);
+    final cs = theme.colorScheme;
 
     return ListView(
-      padding: const EdgeInsets.all(AppDesignTokens.containerPadding),
       children: [
-        Text(
-          'How would you like to visit?',
-          style: Theme.of(
-            context,
-          ).textTheme.titleSmall?.copyWith(fontWeight: FontWeight.w700),
+        ImshSectionHeader(
+          title: 'How would you like to visit?',
+          icon: Icons.meeting_room_outlined,
+          iconColor: ImshAccentColors.purple,
         ),
-        const Gap(AppDesignTokens.spacingMd),
+        const SizedBox(height: 12),
         for (final type in AppointmentVisitType.values) ...[
-          ListTile(
-            tileColor: selected == type
-                ? context.imshTheme.primaryHighlight
-                : colorScheme.surfaceContainerLowest,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(AppDesignTokens.radiusMd),
-              side: BorderSide(
-                color: selected == type
-                    ? colorScheme.primary
-                    : colorScheme.outlineVariant,
-              ),
-            ),
-            leading: Icon(
-              type == AppointmentVisitType.telemedicine
-                  ? Icons.videocam_outlined
-                  : Icons.local_hospital_outlined,
-              color: colorScheme.primary,
-            ),
-            title: Text(
-              type.label,
-              style: const TextStyle(fontWeight: FontWeight.w600),
-            ),
-            subtitle: Text(
-              type == AppointmentVisitType.telemedicine
-                  ? 'Remote consultation by video'
-                  : 'Visit the hospital in person',
-            ),
+          ImshSurfaceCard(
+            padding: const EdgeInsets.all(12),
             onTap: () => onSelected(type),
+            child: Row(
+              children: [
+                ImshSolidIcon(
+                  icon: type == AppointmentVisitType.telemedicine
+                      ? Icons.videocam_outlined
+                      : Icons.local_hospital_outlined,
+                  color: type == AppointmentVisitType.telemedicine
+                      ? ImshAccentColors.purple
+                      : ImshAccentColors.teal,
+                  size: 34,
+                  iconSize: 18,
+                  radius: AppDesignTokens.radiusMd,
+                ),
+                const SizedBox(width: 10),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      ImshEllipsisText(
+                        text: type.label,
+                        style: theme.textTheme.titleSmall?.copyWith(
+                          fontWeight: FontWeight.w700,
+                        ),
+                      ),
+                      const SizedBox(height: 2),
+                      ImshEllipsisText(
+                        text: type == AppointmentVisitType.telemedicine
+                            ? 'Remote consultation by video'
+                            : 'Visit the hospital in person',
+                        style: theme.textTheme.bodySmall?.copyWith(
+                          color: cs.onSurfaceVariant,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                if (selected == type)
+                  const ImshSolidIcon(
+                    icon: Icons.check_rounded,
+                    color: ImshAccentColors.green,
+                    size: 28,
+                    iconSize: 14,
+                    radius: 8,
+                  ),
+              ],
+            ),
           ),
-          const Gap(AppDesignTokens.spacingSm),
+          const SizedBox(height: 8),
         ],
       ],
     );
@@ -492,61 +649,66 @@ class _ConfirmStep extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final colorScheme = context.colorScheme;
+    final theme = Theme.of(context);
+    final cs = theme.colorScheme;
     final date = wizard.selectedDate;
 
     return SingleChildScrollView(
-      padding: const EdgeInsets.all(AppDesignTokens.containerPadding),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          Container(
-            padding: const EdgeInsets.all(AppDesignTokens.spacingMd),
-            decoration: BoxDecoration(
-              color: colorScheme.surfaceContainerLowest,
-              borderRadius: BorderRadius.circular(AppDesignTokens.radiusMd),
-              border: Border.all(color: colorScheme.outlineVariant),
-            ),
+          ImshSectionHeader(
+            title: 'Review request',
+            icon: Icons.check_circle_outline,
+            iconColor: ImshAccentColors.green,
+          ),
+          const SizedBox(height: 8),
+          ImshSurfaceCard(
+            padding: const EdgeInsets.all(12),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 if (!isReschedule && wizard.specialty != null) ...[
-                  Text(
-                    wizard.specialty!.name,
-                    style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                      fontWeight: FontWeight.w700,
-                    ),
+                  _ConfirmRow(
+                    icon: Icons.medical_services_outlined,
+                    accent: ImshAccentColors.blue,
+                    label: 'Specialty',
+                    value: wizard.specialty!.name,
                   ),
-                  const Gap(AppDesignTokens.spacingSm),
+                  const SizedBox(height: 10),
                 ],
-                if (date != null)
-                  Text(
-                    DateFormatter.appointmentCardDate(date),
-                    style: Theme.of(context).textTheme.bodyLarge,
-                  ),
+                _ConfirmRow(
+                  icon: Icons.calendar_today_outlined,
+                  accent: ImshAccentColors.teal,
+                  label: 'Preferred date',
+                  value: date == null
+                      ? '—'
+                      : DateFormatter.appointmentCardDate(date),
+                ),
                 if (!isReschedule && wizard.visitType != null) ...[
-                  const Gap(AppDesignTokens.spacingXs),
-                  Text(
-                    wizard.visitType!.label,
-                    style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                      color: colorScheme.primary,
-                      fontWeight: FontWeight.w600,
-                    ),
+                  const SizedBox(height: 10),
+                  _ConfirmRow(
+                    icon: wizard.visitType == AppointmentVisitType.telemedicine
+                        ? Icons.videocam_outlined
+                        : Icons.local_hospital_outlined,
+                    accent: ImshAccentColors.purple,
+                    label: 'Visit type',
+                    value: wizard.visitType!.label,
                   ),
                 ],
-                const Gap(AppDesignTokens.spacingSm),
+                const SizedBox(height: 10),
                 Text(
                   isReschedule
                       ? 'Your preferred date will be updated. Staff will confirm timing.'
                       : 'Submitted as Requested. A doctor will be assigned after review.',
-                  style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                    color: colorScheme.onSurfaceVariant,
+                  style: theme.textTheme.bodySmall?.copyWith(
+                    color: cs.onSurfaceVariant,
                   ),
                 ),
               ],
             ),
           ),
-          const Gap(AppDesignTokens.spacingLg),
+          const SizedBox(height: 12),
           TextField(
             controller: reasonController,
             onChanged: onReasonChanged,
@@ -558,6 +720,59 @@ class _ConfirmStep extends StatelessWidget {
           ),
         ],
       ),
+    );
+  }
+}
+
+class _ConfirmRow extends StatelessWidget {
+  const _ConfirmRow({
+    required this.icon,
+    required this.accent,
+    required this.label,
+    required this.value,
+  });
+
+  final IconData icon;
+  final Color accent;
+  final String label;
+  final String value;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final cs = theme.colorScheme;
+
+    return Row(
+      children: [
+        ImshSolidIcon(
+          icon: icon,
+          color: accent,
+          size: 30,
+          iconSize: 16,
+          radius: 8,
+        ),
+        const SizedBox(width: 10),
+        Expanded(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                label,
+                style: theme.textTheme.labelSmall?.copyWith(
+                  color: cs.onSurfaceVariant,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+              ImshEllipsisText(
+                text: value,
+                style: theme.textTheme.bodyMedium?.copyWith(
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+            ],
+          ),
+        ),
+      ],
     );
   }
 }

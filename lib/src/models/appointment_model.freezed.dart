@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // coverage:ignore-file
-// ignore_for_file: type=lint
+// ignore_for_file: type=lint, type=warning, deprecated_member_use, deprecated_member_use_from_same_package
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
 part of 'appointment_model.dart';
@@ -9,6 +9,7 @@ part of 'appointment_model.dart';
 // FreezedGenerator
 // **************************************************************************
 
+// GENERATED CODE - DO NOT MODIFY BY HAND
 // dart format off
 T _$identity<T>(T value) => value;
 
@@ -28,16 +29,21 @@ $DoctorSummaryCopyWith<DoctorSummary> get copyWith => _$DoctorSummaryCopyWithImp
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is DoctorSummary&&(identical(other.id, id) || other.id == id)&&(identical(other.name, name) || other.name == name)&&(identical(other.specialty, specialty) || other.specialty == specialty)&&(identical(other.avatarUrl, avatarUrl) || other.avatarUrl == avatarUrl));
+  final _this = this as DoctorSummary;
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is DoctorSummary&&(identical(other.id, _this.id) || other.id == _this.id)&&(identical(other.name, _this.name) || other.name == _this.name)&&(identical(other.specialty, _this.specialty) || other.specialty == _this.specialty)&&(identical(other.avatarUrl, _this.avatarUrl) || other.avatarUrl == _this.avatarUrl));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,name,specialty,avatarUrl);
+int get hashCode {
+  final _this = this as DoctorSummary;
+  return Object.hash(runtimeType,_this.id,_this.name,_this.specialty,_this.avatarUrl);
+}
 
 @override
 String toString() {
-  return 'DoctorSummary(id: $id, name: $name, specialty: $specialty, avatarUrl: $avatarUrl)';
+  final _this = this as DoctorSummary;
+  return 'DoctorSummary(id: ${_this.id}, name: ${_this.name}, specialty: ${_this.specialty}, avatarUrl: ${_this.avatarUrl})';
 }
 
 
@@ -66,7 +72,7 @@ class _$DoctorSummaryCopyWithImpl<$Res>
 /// Create a copy of DoctorSummary
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? name = null,Object? specialty = freezed,Object? avatarUrl = freezed,}) {
-  return _then(_self.copyWith(
+  return _then(DoctorSummary(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,name: null == name ? _self.name : name // ignore: cast_nullable_to_non_nullable
 as String,specialty: freezed == specialty ? _self.specialty : specialty // ignore: cast_nullable_to_non_nullable
@@ -233,16 +239,18 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _DoctorSummary&&(identical(other.id, id) || other.id == id)&&(identical(other.name, name) || other.name == name)&&(identical(other.specialty, specialty) || other.specialty == specialty)&&(identical(other.avatarUrl, avatarUrl) || other.avatarUrl == avatarUrl));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _DoctorSummary&&(identical(other.id, id) || other.id == id)&&(identical(other.name, name) || other.name == name)&&(identical(other.specialty, specialty) || other.specialty == specialty)&&(identical(other.avatarUrl, avatarUrl) || other.avatarUrl == avatarUrl));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,name,specialty,avatarUrl);
+int get hashCode {
+    return Object.hash(runtimeType,id,name,specialty,avatarUrl);
+}
 
 @override
 String toString() {
-  return 'DoctorSummary(id: $id, name: $name, specialty: $specialty, avatarUrl: $avatarUrl)';
+    return 'DoctorSummary(id: $id, name: $name, specialty: $specialty, avatarUrl: $avatarUrl)';
 }
 
 
@@ -300,16 +308,21 @@ $AppointmentSummaryCopyWith<AppointmentSummary> get copyWith => _$AppointmentSum
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is AppointmentSummary&&(identical(other.id, id) || other.id == id)&&(identical(other.status, status) || other.status == status)&&(identical(other.scheduledAt, scheduledAt) || other.scheduledAt == scheduledAt)&&(identical(other.location, location) || other.location == location)&&(identical(other.specialty, specialty) || other.specialty == specialty)&&(identical(other.visitType, visitType) || other.visitType == visitType)&&(identical(other.doctor, doctor) || other.doctor == doctor)&&(identical(other.canReschedule, canReschedule) || other.canReschedule == canReschedule)&&(identical(other.canCancel, canCancel) || other.canCancel == canCancel));
+  final _this = this as AppointmentSummary;
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is AppointmentSummary&&(identical(other.id, _this.id) || other.id == _this.id)&&(identical(other.status, _this.status) || other.status == _this.status)&&(identical(other.scheduledAt, _this.scheduledAt) || other.scheduledAt == _this.scheduledAt)&&(identical(other.location, _this.location) || other.location == _this.location)&&(identical(other.specialty, _this.specialty) || other.specialty == _this.specialty)&&(identical(other.visitType, _this.visitType) || other.visitType == _this.visitType)&&(identical(other.doctor, _this.doctor) || other.doctor == _this.doctor)&&(identical(other.canReschedule, _this.canReschedule) || other.canReschedule == _this.canReschedule)&&(identical(other.canCancel, _this.canCancel) || other.canCancel == _this.canCancel));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,status,scheduledAt,location,specialty,visitType,doctor,canReschedule,canCancel);
+int get hashCode {
+  final _this = this as AppointmentSummary;
+  return Object.hash(runtimeType,_this.id,_this.status,_this.scheduledAt,_this.location,_this.specialty,_this.visitType,_this.doctor,_this.canReschedule,_this.canCancel);
+}
 
 @override
 String toString() {
-  return 'AppointmentSummary(id: $id, status: $status, scheduledAt: $scheduledAt, location: $location, specialty: $specialty, visitType: $visitType, doctor: $doctor, canReschedule: $canReschedule, canCancel: $canCancel)';
+  final _this = this as AppointmentSummary;
+  return 'AppointmentSummary(id: ${_this.id}, status: ${_this.status}, scheduledAt: ${_this.scheduledAt}, location: ${_this.location}, specialty: ${_this.specialty}, visitType: ${_this.visitType}, doctor: ${_this.doctor}, canReschedule: ${_this.canReschedule}, canCancel: ${_this.canCancel})';
 }
 
 
@@ -338,7 +351,7 @@ class _$AppointmentSummaryCopyWithImpl<$Res>
 /// Create a copy of AppointmentSummary
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? status = null,Object? scheduledAt = null,Object? location = freezed,Object? specialty = freezed,Object? visitType = null,Object? doctor = null,Object? canReschedule = null,Object? canCancel = null,}) {
-  return _then(_self.copyWith(
+  return _then(AppointmentSummary(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,status: null == status ? _self.status : status // ignore: cast_nullable_to_non_nullable
 as AppointmentStatus,scheduledAt: null == scheduledAt ? _self.scheduledAt : scheduledAt // ignore: cast_nullable_to_non_nullable
@@ -524,16 +537,18 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _AppointmentSummary&&(identical(other.id, id) || other.id == id)&&(identical(other.status, status) || other.status == status)&&(identical(other.scheduledAt, scheduledAt) || other.scheduledAt == scheduledAt)&&(identical(other.location, location) || other.location == location)&&(identical(other.specialty, specialty) || other.specialty == specialty)&&(identical(other.visitType, visitType) || other.visitType == visitType)&&(identical(other.doctor, doctor) || other.doctor == doctor)&&(identical(other.canReschedule, canReschedule) || other.canReschedule == canReschedule)&&(identical(other.canCancel, canCancel) || other.canCancel == canCancel));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _AppointmentSummary&&(identical(other.id, id) || other.id == id)&&(identical(other.status, status) || other.status == status)&&(identical(other.scheduledAt, scheduledAt) || other.scheduledAt == scheduledAt)&&(identical(other.location, location) || other.location == location)&&(identical(other.specialty, specialty) || other.specialty == specialty)&&(identical(other.visitType, visitType) || other.visitType == visitType)&&(identical(other.doctor, doctor) || other.doctor == doctor)&&(identical(other.canReschedule, canReschedule) || other.canReschedule == canReschedule)&&(identical(other.canCancel, canCancel) || other.canCancel == canCancel));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,status,scheduledAt,location,specialty,visitType,doctor,canReschedule,canCancel);
+int get hashCode {
+    return Object.hash(runtimeType,id,status,scheduledAt,location,specialty,visitType,doctor,canReschedule,canCancel);
+}
 
 @override
 String toString() {
-  return 'AppointmentSummary(id: $id, status: $status, scheduledAt: $scheduledAt, location: $location, specialty: $specialty, visitType: $visitType, doctor: $doctor, canReschedule: $canReschedule, canCancel: $canCancel)';
+    return 'AppointmentSummary(id: $id, status: $status, scheduledAt: $scheduledAt, location: $location, specialty: $specialty, visitType: $visitType, doctor: $doctor, canReschedule: $canReschedule, canCancel: $canCancel)';
 }
 
 
@@ -605,16 +620,21 @@ $AppointmentDetailCopyWith<AppointmentDetail> get copyWith => _$AppointmentDetai
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is AppointmentDetail&&(identical(other.id, id) || other.id == id)&&(identical(other.status, status) || other.status == status)&&(identical(other.scheduledAt, scheduledAt) || other.scheduledAt == scheduledAt)&&(identical(other.location, location) || other.location == location)&&(identical(other.specialty, specialty) || other.specialty == specialty)&&(identical(other.visitType, visitType) || other.visitType == visitType)&&(identical(other.doctor, doctor) || other.doctor == doctor)&&(identical(other.reason, reason) || other.reason == reason)&&(identical(other.notes, notes) || other.notes == notes)&&(identical(other.canReschedule, canReschedule) || other.canReschedule == canReschedule)&&(identical(other.canCancel, canCancel) || other.canCancel == canCancel)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.updatedAt, updatedAt) || other.updatedAt == updatedAt));
+  final _this = this as AppointmentDetail;
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is AppointmentDetail&&(identical(other.id, _this.id) || other.id == _this.id)&&(identical(other.status, _this.status) || other.status == _this.status)&&(identical(other.scheduledAt, _this.scheduledAt) || other.scheduledAt == _this.scheduledAt)&&(identical(other.location, _this.location) || other.location == _this.location)&&(identical(other.specialty, _this.specialty) || other.specialty == _this.specialty)&&(identical(other.visitType, _this.visitType) || other.visitType == _this.visitType)&&(identical(other.doctor, _this.doctor) || other.doctor == _this.doctor)&&(identical(other.reason, _this.reason) || other.reason == _this.reason)&&(identical(other.notes, _this.notes) || other.notes == _this.notes)&&(identical(other.canReschedule, _this.canReschedule) || other.canReschedule == _this.canReschedule)&&(identical(other.canCancel, _this.canCancel) || other.canCancel == _this.canCancel)&&(identical(other.createdAt, _this.createdAt) || other.createdAt == _this.createdAt)&&(identical(other.updatedAt, _this.updatedAt) || other.updatedAt == _this.updatedAt));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,status,scheduledAt,location,specialty,visitType,doctor,reason,notes,canReschedule,canCancel,createdAt,updatedAt);
+int get hashCode {
+  final _this = this as AppointmentDetail;
+  return Object.hash(runtimeType,_this.id,_this.status,_this.scheduledAt,_this.location,_this.specialty,_this.visitType,_this.doctor,_this.reason,_this.notes,_this.canReschedule,_this.canCancel,_this.createdAt,_this.updatedAt);
+}
 
 @override
 String toString() {
-  return 'AppointmentDetail(id: $id, status: $status, scheduledAt: $scheduledAt, location: $location, specialty: $specialty, visitType: $visitType, doctor: $doctor, reason: $reason, notes: $notes, canReschedule: $canReschedule, canCancel: $canCancel, createdAt: $createdAt, updatedAt: $updatedAt)';
+  final _this = this as AppointmentDetail;
+  return 'AppointmentDetail(id: ${_this.id}, status: ${_this.status}, scheduledAt: ${_this.scheduledAt}, location: ${_this.location}, specialty: ${_this.specialty}, visitType: ${_this.visitType}, doctor: ${_this.doctor}, reason: ${_this.reason}, notes: ${_this.notes}, canReschedule: ${_this.canReschedule}, canCancel: ${_this.canCancel}, createdAt: ${_this.createdAt}, updatedAt: ${_this.updatedAt})';
 }
 
 
@@ -643,7 +663,7 @@ class _$AppointmentDetailCopyWithImpl<$Res>
 /// Create a copy of AppointmentDetail
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? status = null,Object? scheduledAt = null,Object? location = freezed,Object? specialty = freezed,Object? visitType = null,Object? doctor = null,Object? reason = freezed,Object? notes = freezed,Object? canReschedule = null,Object? canCancel = null,Object? createdAt = freezed,Object? updatedAt = freezed,}) {
-  return _then(_self.copyWith(
+  return _then(AppointmentDetail(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,status: null == status ? _self.status : status // ignore: cast_nullable_to_non_nullable
 as AppointmentStatus,scheduledAt: null == scheduledAt ? _self.scheduledAt : scheduledAt // ignore: cast_nullable_to_non_nullable
@@ -837,16 +857,18 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _AppointmentDetail&&(identical(other.id, id) || other.id == id)&&(identical(other.status, status) || other.status == status)&&(identical(other.scheduledAt, scheduledAt) || other.scheduledAt == scheduledAt)&&(identical(other.location, location) || other.location == location)&&(identical(other.specialty, specialty) || other.specialty == specialty)&&(identical(other.visitType, visitType) || other.visitType == visitType)&&(identical(other.doctor, doctor) || other.doctor == doctor)&&(identical(other.reason, reason) || other.reason == reason)&&(identical(other.notes, notes) || other.notes == notes)&&(identical(other.canReschedule, canReschedule) || other.canReschedule == canReschedule)&&(identical(other.canCancel, canCancel) || other.canCancel == canCancel)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.updatedAt, updatedAt) || other.updatedAt == updatedAt));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _AppointmentDetail&&(identical(other.id, id) || other.id == id)&&(identical(other.status, status) || other.status == status)&&(identical(other.scheduledAt, scheduledAt) || other.scheduledAt == scheduledAt)&&(identical(other.location, location) || other.location == location)&&(identical(other.specialty, specialty) || other.specialty == specialty)&&(identical(other.visitType, visitType) || other.visitType == visitType)&&(identical(other.doctor, doctor) || other.doctor == doctor)&&(identical(other.reason, reason) || other.reason == reason)&&(identical(other.notes, notes) || other.notes == notes)&&(identical(other.canReschedule, canReschedule) || other.canReschedule == canReschedule)&&(identical(other.canCancel, canCancel) || other.canCancel == canCancel)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.updatedAt, updatedAt) || other.updatedAt == updatedAt));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,status,scheduledAt,location,specialty,visitType,doctor,reason,notes,canReschedule,canCancel,createdAt,updatedAt);
+int get hashCode {
+    return Object.hash(runtimeType,id,status,scheduledAt,location,specialty,visitType,doctor,reason,notes,canReschedule,canCancel,createdAt,updatedAt);
+}
 
 @override
 String toString() {
-  return 'AppointmentDetail(id: $id, status: $status, scheduledAt: $scheduledAt, location: $location, specialty: $specialty, visitType: $visitType, doctor: $doctor, reason: $reason, notes: $notes, canReschedule: $canReschedule, canCancel: $canCancel, createdAt: $createdAt, updatedAt: $updatedAt)';
+    return 'AppointmentDetail(id: $id, status: $status, scheduledAt: $scheduledAt, location: $location, specialty: $specialty, visitType: $visitType, doctor: $doctor, reason: $reason, notes: $notes, canReschedule: $canReschedule, canCancel: $canCancel, createdAt: $createdAt, updatedAt: $updatedAt)';
 }
 
 
@@ -922,16 +944,21 @@ $ConsultationHistoryItemCopyWith<ConsultationHistoryItem> get copyWith => _$Cons
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is ConsultationHistoryItem&&(identical(other.id, id) || other.id == id)&&(identical(other.title, title) || other.title == title)&&(identical(other.providerName, providerName) || other.providerName == providerName)&&(identical(other.department, department) || other.department == department)&&(identical(other.visitedAt, visitedAt) || other.visitedAt == visitedAt)&&(identical(other.resultStatus, resultStatus) || other.resultStatus == resultStatus));
+  final _this = this as ConsultationHistoryItem;
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is ConsultationHistoryItem&&(identical(other.id, _this.id) || other.id == _this.id)&&(identical(other.title, _this.title) || other.title == _this.title)&&(identical(other.providerName, _this.providerName) || other.providerName == _this.providerName)&&(identical(other.department, _this.department) || other.department == _this.department)&&(identical(other.visitedAt, _this.visitedAt) || other.visitedAt == _this.visitedAt)&&(identical(other.resultStatus, _this.resultStatus) || other.resultStatus == _this.resultStatus));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,title,providerName,department,visitedAt,resultStatus);
+int get hashCode {
+  final _this = this as ConsultationHistoryItem;
+  return Object.hash(runtimeType,_this.id,_this.title,_this.providerName,_this.department,_this.visitedAt,_this.resultStatus);
+}
 
 @override
 String toString() {
-  return 'ConsultationHistoryItem(id: $id, title: $title, providerName: $providerName, department: $department, visitedAt: $visitedAt, resultStatus: $resultStatus)';
+  final _this = this as ConsultationHistoryItem;
+  return 'ConsultationHistoryItem(id: ${_this.id}, title: ${_this.title}, providerName: ${_this.providerName}, department: ${_this.department}, visitedAt: ${_this.visitedAt}, resultStatus: ${_this.resultStatus})';
 }
 
 
@@ -960,7 +987,7 @@ class _$ConsultationHistoryItemCopyWithImpl<$Res>
 /// Create a copy of ConsultationHistoryItem
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? title = null,Object? providerName = freezed,Object? department = freezed,Object? visitedAt = null,Object? resultStatus = null,}) {
-  return _then(_self.copyWith(
+  return _then(ConsultationHistoryItem(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,title: null == title ? _self.title : title // ignore: cast_nullable_to_non_nullable
 as String,providerName: freezed == providerName ? _self.providerName : providerName // ignore: cast_nullable_to_non_nullable
@@ -1131,16 +1158,18 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _ConsultationHistoryItem&&(identical(other.id, id) || other.id == id)&&(identical(other.title, title) || other.title == title)&&(identical(other.providerName, providerName) || other.providerName == providerName)&&(identical(other.department, department) || other.department == department)&&(identical(other.visitedAt, visitedAt) || other.visitedAt == visitedAt)&&(identical(other.resultStatus, resultStatus) || other.resultStatus == resultStatus));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _ConsultationHistoryItem&&(identical(other.id, id) || other.id == id)&&(identical(other.title, title) || other.title == title)&&(identical(other.providerName, providerName) || other.providerName == providerName)&&(identical(other.department, department) || other.department == department)&&(identical(other.visitedAt, visitedAt) || other.visitedAt == visitedAt)&&(identical(other.resultStatus, resultStatus) || other.resultStatus == resultStatus));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,title,providerName,department,visitedAt,resultStatus);
+int get hashCode {
+    return Object.hash(runtimeType,id,title,providerName,department,visitedAt,resultStatus);
+}
 
 @override
 String toString() {
-  return 'ConsultationHistoryItem(id: $id, title: $title, providerName: $providerName, department: $department, visitedAt: $visitedAt, resultStatus: $resultStatus)';
+    return 'ConsultationHistoryItem(id: $id, title: $title, providerName: $providerName, department: $department, visitedAt: $visitedAt, resultStatus: $resultStatus)';
 }
 
 
@@ -1200,16 +1229,21 @@ $AppointmentsDashboardResponseCopyWith<AppointmentsDashboardResponse> get copyWi
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is AppointmentsDashboardResponse&&(identical(other.nextAppointment, nextAppointment) || other.nextAppointment == nextAppointment)&&const DeepCollectionEquality().equals(other.upcomingAppointments, upcomingAppointments)&&const DeepCollectionEquality().equals(other.consultationHistory, consultationHistory));
+  final _this = this as AppointmentsDashboardResponse;
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is AppointmentsDashboardResponse&&(identical(other.nextAppointment, _this.nextAppointment) || other.nextAppointment == _this.nextAppointment)&&const DeepCollectionEquality().equals(other.upcomingAppointments, _this.upcomingAppointments)&&const DeepCollectionEquality().equals(other.consultationHistory, _this.consultationHistory));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,nextAppointment,const DeepCollectionEquality().hash(upcomingAppointments),const DeepCollectionEquality().hash(consultationHistory));
+int get hashCode {
+  final _this = this as AppointmentsDashboardResponse;
+  return Object.hash(runtimeType,_this.nextAppointment,const DeepCollectionEquality().hash(_this.upcomingAppointments),const DeepCollectionEquality().hash(_this.consultationHistory));
+}
 
 @override
 String toString() {
-  return 'AppointmentsDashboardResponse(nextAppointment: $nextAppointment, upcomingAppointments: $upcomingAppointments, consultationHistory: $consultationHistory)';
+  final _this = this as AppointmentsDashboardResponse;
+  return 'AppointmentsDashboardResponse(nextAppointment: ${_this.nextAppointment}, upcomingAppointments: ${_this.upcomingAppointments}, consultationHistory: ${_this.consultationHistory})';
 }
 
 
@@ -1238,7 +1272,7 @@ class _$AppointmentsDashboardResponseCopyWithImpl<$Res>
 /// Create a copy of AppointmentsDashboardResponse
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') @override $Res call({Object? nextAppointment = freezed,Object? upcomingAppointments = null,Object? consultationHistory = null,}) {
-  return _then(_self.copyWith(
+  return _then(AppointmentsDashboardResponse(
 nextAppointment: freezed == nextAppointment ? _self.nextAppointment : nextAppointment // ignore: cast_nullable_to_non_nullable
 as AppointmentSummary?,upcomingAppointments: null == upcomingAppointments ? _self.upcomingAppointments : upcomingAppointments // ignore: cast_nullable_to_non_nullable
 as List<AppointmentSummary>,consultationHistory: null == consultationHistory ? _self.consultationHistory : consultationHistory // ignore: cast_nullable_to_non_nullable
@@ -1395,7 +1429,7 @@ return $default(_that.nextAppointment,_that.upcomingAppointments,_that.consultat
 @JsonSerializable()
 
 class _AppointmentsDashboardResponse implements AppointmentsDashboardResponse {
-  const _AppointmentsDashboardResponse({this.nextAppointment, final  List<AppointmentSummary> upcomingAppointments = const [], final  List<ConsultationHistoryItem> consultationHistory = const []}): _upcomingAppointments = upcomingAppointments,_consultationHistory = consultationHistory;
+  const _AppointmentsDashboardResponse({this.nextAppointment,  List<AppointmentSummary> upcomingAppointments = const [],  List<ConsultationHistoryItem> consultationHistory = const []}): _upcomingAppointments = upcomingAppointments,_consultationHistory = consultationHistory;
   factory _AppointmentsDashboardResponse.fromJson(Map<String, dynamic> json) => _$AppointmentsDashboardResponseFromJson(json);
 
 @override final  AppointmentSummary? nextAppointment;
@@ -1427,16 +1461,18 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _AppointmentsDashboardResponse&&(identical(other.nextAppointment, nextAppointment) || other.nextAppointment == nextAppointment)&&const DeepCollectionEquality().equals(other._upcomingAppointments, _upcomingAppointments)&&const DeepCollectionEquality().equals(other._consultationHistory, _consultationHistory));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _AppointmentsDashboardResponse&&(identical(other.nextAppointment, nextAppointment) || other.nextAppointment == nextAppointment)&&const DeepCollectionEquality().equals(other.upcomingAppointments, _upcomingAppointments)&&const DeepCollectionEquality().equals(other.consultationHistory, _consultationHistory));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,nextAppointment,const DeepCollectionEquality().hash(_upcomingAppointments),const DeepCollectionEquality().hash(_consultationHistory));
+int get hashCode {
+    return Object.hash(runtimeType,nextAppointment,const DeepCollectionEquality().hash(_upcomingAppointments),const DeepCollectionEquality().hash(_consultationHistory));
+}
 
 @override
 String toString() {
-  return 'AppointmentsDashboardResponse(nextAppointment: $nextAppointment, upcomingAppointments: $upcomingAppointments, consultationHistory: $consultationHistory)';
+    return 'AppointmentsDashboardResponse(nextAppointment: $nextAppointment, upcomingAppointments: $upcomingAppointments, consultationHistory: $consultationHistory)';
 }
 
 
@@ -1505,16 +1541,21 @@ $AppointmentListResponseCopyWith<AppointmentListResponse> get copyWith => _$Appo
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is AppointmentListResponse&&const DeepCollectionEquality().equals(other.data, data)&&(identical(other.total, total) || other.total == total)&&(identical(other.page, page) || other.page == page)&&(identical(other.limit, limit) || other.limit == limit));
+  final _this = this as AppointmentListResponse;
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is AppointmentListResponse&&const DeepCollectionEquality().equals(other.data, _this.data)&&(identical(other.total, _this.total) || other.total == _this.total)&&(identical(other.page, _this.page) || other.page == _this.page)&&(identical(other.limit, _this.limit) || other.limit == _this.limit));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,const DeepCollectionEquality().hash(data),total,page,limit);
+int get hashCode {
+  final _this = this as AppointmentListResponse;
+  return Object.hash(runtimeType,const DeepCollectionEquality().hash(_this.data),_this.total,_this.page,_this.limit);
+}
 
 @override
 String toString() {
-  return 'AppointmentListResponse(data: $data, total: $total, page: $page, limit: $limit)';
+  final _this = this as AppointmentListResponse;
+  return 'AppointmentListResponse(data: ${_this.data}, total: ${_this.total}, page: ${_this.page}, limit: ${_this.limit})';
 }
 
 
@@ -1543,7 +1584,7 @@ class _$AppointmentListResponseCopyWithImpl<$Res>
 /// Create a copy of AppointmentListResponse
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') @override $Res call({Object? data = null,Object? total = null,Object? page = null,Object? limit = null,}) {
-  return _then(_self.copyWith(
+  return _then(AppointmentListResponse(
 data: null == data ? _self.data : data // ignore: cast_nullable_to_non_nullable
 as List<AppointmentSummary>,total: null == total ? _self.total : total // ignore: cast_nullable_to_non_nullable
 as int,page: null == page ? _self.page : page // ignore: cast_nullable_to_non_nullable
@@ -1689,7 +1730,7 @@ return $default(_that.data,_that.total,_that.page,_that.limit);case _:
 @JsonSerializable()
 
 class _AppointmentListResponse implements AppointmentListResponse {
-  const _AppointmentListResponse({final  List<AppointmentSummary> data = const [], this.total = 0, this.page = 1, this.limit = 20}): _data = data;
+  const _AppointmentListResponse({ List<AppointmentSummary> data = const [], this.total = 0, this.page = 1, this.limit = 20}): _data = data;
   factory _AppointmentListResponse.fromJson(Map<String, dynamic> json) => _$AppointmentListResponseFromJson(json);
 
  final  List<AppointmentSummary> _data;
@@ -1716,16 +1757,18 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _AppointmentListResponse&&const DeepCollectionEquality().equals(other._data, _data)&&(identical(other.total, total) || other.total == total)&&(identical(other.page, page) || other.page == page)&&(identical(other.limit, limit) || other.limit == limit));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _AppointmentListResponse&&const DeepCollectionEquality().equals(other.data, _data)&&(identical(other.total, total) || other.total == total)&&(identical(other.page, page) || other.page == page)&&(identical(other.limit, limit) || other.limit == limit));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,const DeepCollectionEquality().hash(_data),total,page,limit);
+int get hashCode {
+    return Object.hash(runtimeType,const DeepCollectionEquality().hash(_data),total,page,limit);
+}
 
 @override
 String toString() {
-  return 'AppointmentListResponse(data: $data, total: $total, page: $page, limit: $limit)';
+    return 'AppointmentListResponse(data: $data, total: $total, page: $page, limit: $limit)';
 }
 
 
@@ -1783,16 +1826,21 @@ $CancelAppointmentResponseCopyWith<CancelAppointmentResponse> get copyWith => _$
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is CancelAppointmentResponse&&(identical(other.id, id) || other.id == id)&&(identical(other.status, status) || other.status == status));
+  final _this = this as CancelAppointmentResponse;
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is CancelAppointmentResponse&&(identical(other.id, _this.id) || other.id == _this.id)&&(identical(other.status, _this.status) || other.status == _this.status));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,status);
+int get hashCode {
+  final _this = this as CancelAppointmentResponse;
+  return Object.hash(runtimeType,_this.id,_this.status);
+}
 
 @override
 String toString() {
-  return 'CancelAppointmentResponse(id: $id, status: $status)';
+  final _this = this as CancelAppointmentResponse;
+  return 'CancelAppointmentResponse(id: ${_this.id}, status: ${_this.status})';
 }
 
 
@@ -1821,7 +1869,7 @@ class _$CancelAppointmentResponseCopyWithImpl<$Res>
 /// Create a copy of CancelAppointmentResponse
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? status = null,}) {
-  return _then(_self.copyWith(
+  return _then(CancelAppointmentResponse(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,status: null == status ? _self.status : status // ignore: cast_nullable_to_non_nullable
 as AppointmentStatus,
@@ -1984,16 +2032,18 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _CancelAppointmentResponse&&(identical(other.id, id) || other.id == id)&&(identical(other.status, status) || other.status == status));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _CancelAppointmentResponse&&(identical(other.id, id) || other.id == id)&&(identical(other.status, status) || other.status == status));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,status);
+int get hashCode {
+    return Object.hash(runtimeType,id,status);
+}
 
 @override
 String toString() {
-  return 'CancelAppointmentResponse(id: $id, status: $status)';
+    return 'CancelAppointmentResponse(id: $id, status: $status)';
 }
 
 
@@ -2049,16 +2099,21 @@ $AppointmentSpecialtyCopyWith<AppointmentSpecialty> get copyWith => _$Appointmen
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is AppointmentSpecialty&&(identical(other.id, id) || other.id == id)&&(identical(other.name, name) || other.name == name)&&(identical(other.description, description) || other.description == description));
+  final _this = this as AppointmentSpecialty;
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is AppointmentSpecialty&&(identical(other.id, _this.id) || other.id == _this.id)&&(identical(other.name, _this.name) || other.name == _this.name)&&(identical(other.description, _this.description) || other.description == _this.description));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,name,description);
+int get hashCode {
+  final _this = this as AppointmentSpecialty;
+  return Object.hash(runtimeType,_this.id,_this.name,_this.description);
+}
 
 @override
 String toString() {
-  return 'AppointmentSpecialty(id: $id, name: $name, description: $description)';
+  final _this = this as AppointmentSpecialty;
+  return 'AppointmentSpecialty(id: ${_this.id}, name: ${_this.name}, description: ${_this.description})';
 }
 
 
@@ -2087,7 +2142,7 @@ class _$AppointmentSpecialtyCopyWithImpl<$Res>
 /// Create a copy of AppointmentSpecialty
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? name = null,Object? description = freezed,}) {
-  return _then(_self.copyWith(
+  return _then(AppointmentSpecialty(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,name: null == name ? _self.name : name // ignore: cast_nullable_to_non_nullable
 as String,description: freezed == description ? _self.description : description // ignore: cast_nullable_to_non_nullable
@@ -2252,16 +2307,18 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _AppointmentSpecialty&&(identical(other.id, id) || other.id == id)&&(identical(other.name, name) || other.name == name)&&(identical(other.description, description) || other.description == description));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _AppointmentSpecialty&&(identical(other.id, id) || other.id == id)&&(identical(other.name, name) || other.name == name)&&(identical(other.description, description) || other.description == description));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,name,description);
+int get hashCode {
+    return Object.hash(runtimeType,id,name,description);
+}
 
 @override
 String toString() {
-  return 'AppointmentSpecialty(id: $id, name: $name, description: $description)';
+    return 'AppointmentSpecialty(id: $id, name: $name, description: $description)';
 }
 
 
@@ -2318,16 +2375,21 @@ $AppointmentSpecialtyListResponseCopyWith<AppointmentSpecialtyListResponse> get 
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is AppointmentSpecialtyListResponse&&const DeepCollectionEquality().equals(other.data, data));
+  final _this = this as AppointmentSpecialtyListResponse;
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is AppointmentSpecialtyListResponse&&const DeepCollectionEquality().equals(other.data, _this.data));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,const DeepCollectionEquality().hash(data));
+int get hashCode {
+  final _this = this as AppointmentSpecialtyListResponse;
+  return Object.hash(runtimeType,const DeepCollectionEquality().hash(_this.data));
+}
 
 @override
 String toString() {
-  return 'AppointmentSpecialtyListResponse(data: $data)';
+  final _this = this as AppointmentSpecialtyListResponse;
+  return 'AppointmentSpecialtyListResponse(data: ${_this.data})';
 }
 
 
@@ -2356,7 +2418,7 @@ class _$AppointmentSpecialtyListResponseCopyWithImpl<$Res>
 /// Create a copy of AppointmentSpecialtyListResponse
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') @override $Res call({Object? data = null,}) {
-  return _then(_self.copyWith(
+  return _then(AppointmentSpecialtyListResponse(
 data: null == data ? _self.data : data // ignore: cast_nullable_to_non_nullable
 as List<AppointmentSpecialty>,
   ));
@@ -2499,7 +2561,7 @@ return $default(_that.data);case _:
 @JsonSerializable()
 
 class _AppointmentSpecialtyListResponse implements AppointmentSpecialtyListResponse {
-  const _AppointmentSpecialtyListResponse({final  List<AppointmentSpecialty> data = const []}): _data = data;
+  const _AppointmentSpecialtyListResponse({ List<AppointmentSpecialty> data = const []}): _data = data;
   factory _AppointmentSpecialtyListResponse.fromJson(Map<String, dynamic> json) => _$AppointmentSpecialtyListResponseFromJson(json);
 
  final  List<AppointmentSpecialty> _data;
@@ -2523,16 +2585,18 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _AppointmentSpecialtyListResponse&&const DeepCollectionEquality().equals(other._data, _data));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _AppointmentSpecialtyListResponse&&const DeepCollectionEquality().equals(other.data, _data));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,const DeepCollectionEquality().hash(_data));
+int get hashCode {
+    return Object.hash(runtimeType,const DeepCollectionEquality().hash(_data));
+}
 
 @override
 String toString() {
-  return 'AppointmentSpecialtyListResponse(data: $data)';
+    return 'AppointmentSpecialtyListResponse(data: $data)';
 }
 
 
@@ -2587,16 +2651,21 @@ $BookableDoctorCopyWith<BookableDoctor> get copyWith => _$BookableDoctorCopyWith
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is BookableDoctor&&(identical(other.id, id) || other.id == id)&&(identical(other.name, name) || other.name == name)&&(identical(other.specialty, specialty) || other.specialty == specialty)&&(identical(other.avatarUrl, avatarUrl) || other.avatarUrl == avatarUrl));
+  final _this = this as BookableDoctor;
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is BookableDoctor&&(identical(other.id, _this.id) || other.id == _this.id)&&(identical(other.name, _this.name) || other.name == _this.name)&&(identical(other.specialty, _this.specialty) || other.specialty == _this.specialty)&&(identical(other.avatarUrl, _this.avatarUrl) || other.avatarUrl == _this.avatarUrl));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,name,specialty,avatarUrl);
+int get hashCode {
+  final _this = this as BookableDoctor;
+  return Object.hash(runtimeType,_this.id,_this.name,_this.specialty,_this.avatarUrl);
+}
 
 @override
 String toString() {
-  return 'BookableDoctor(id: $id, name: $name, specialty: $specialty, avatarUrl: $avatarUrl)';
+  final _this = this as BookableDoctor;
+  return 'BookableDoctor(id: ${_this.id}, name: ${_this.name}, specialty: ${_this.specialty}, avatarUrl: ${_this.avatarUrl})';
 }
 
 
@@ -2625,7 +2694,7 @@ class _$BookableDoctorCopyWithImpl<$Res>
 /// Create a copy of BookableDoctor
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? name = null,Object? specialty = freezed,Object? avatarUrl = freezed,}) {
-  return _then(_self.copyWith(
+  return _then(BookableDoctor(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,name: null == name ? _self.name : name // ignore: cast_nullable_to_non_nullable
 as String,specialty: freezed == specialty ? _self.specialty : specialty // ignore: cast_nullable_to_non_nullable
@@ -2792,16 +2861,18 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _BookableDoctor&&(identical(other.id, id) || other.id == id)&&(identical(other.name, name) || other.name == name)&&(identical(other.specialty, specialty) || other.specialty == specialty)&&(identical(other.avatarUrl, avatarUrl) || other.avatarUrl == avatarUrl));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _BookableDoctor&&(identical(other.id, id) || other.id == id)&&(identical(other.name, name) || other.name == name)&&(identical(other.specialty, specialty) || other.specialty == specialty)&&(identical(other.avatarUrl, avatarUrl) || other.avatarUrl == avatarUrl));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,name,specialty,avatarUrl);
+int get hashCode {
+    return Object.hash(runtimeType,id,name,specialty,avatarUrl);
+}
 
 @override
 String toString() {
-  return 'BookableDoctor(id: $id, name: $name, specialty: $specialty, avatarUrl: $avatarUrl)';
+    return 'BookableDoctor(id: $id, name: $name, specialty: $specialty, avatarUrl: $avatarUrl)';
 }
 
 
@@ -2859,16 +2930,21 @@ $BookableDoctorListResponseCopyWith<BookableDoctorListResponse> get copyWith => 
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is BookableDoctorListResponse&&const DeepCollectionEquality().equals(other.data, data));
+  final _this = this as BookableDoctorListResponse;
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is BookableDoctorListResponse&&const DeepCollectionEquality().equals(other.data, _this.data));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,const DeepCollectionEquality().hash(data));
+int get hashCode {
+  final _this = this as BookableDoctorListResponse;
+  return Object.hash(runtimeType,const DeepCollectionEquality().hash(_this.data));
+}
 
 @override
 String toString() {
-  return 'BookableDoctorListResponse(data: $data)';
+  final _this = this as BookableDoctorListResponse;
+  return 'BookableDoctorListResponse(data: ${_this.data})';
 }
 
 
@@ -2897,7 +2973,7 @@ class _$BookableDoctorListResponseCopyWithImpl<$Res>
 /// Create a copy of BookableDoctorListResponse
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') @override $Res call({Object? data = null,}) {
-  return _then(_self.copyWith(
+  return _then(BookableDoctorListResponse(
 data: null == data ? _self.data : data // ignore: cast_nullable_to_non_nullable
 as List<BookableDoctor>,
   ));
@@ -3040,7 +3116,7 @@ return $default(_that.data);case _:
 @JsonSerializable()
 
 class _BookableDoctorListResponse implements BookableDoctorListResponse {
-  const _BookableDoctorListResponse({final  List<BookableDoctor> data = const []}): _data = data;
+  const _BookableDoctorListResponse({ List<BookableDoctor> data = const []}): _data = data;
   factory _BookableDoctorListResponse.fromJson(Map<String, dynamic> json) => _$BookableDoctorListResponseFromJson(json);
 
  final  List<BookableDoctor> _data;
@@ -3064,16 +3140,18 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _BookableDoctorListResponse&&const DeepCollectionEquality().equals(other._data, _data));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _BookableDoctorListResponse&&const DeepCollectionEquality().equals(other.data, _data));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,const DeepCollectionEquality().hash(_data));
+int get hashCode {
+    return Object.hash(runtimeType,const DeepCollectionEquality().hash(_data));
+}
 
 @override
 String toString() {
-  return 'BookableDoctorListResponse(data: $data)';
+    return 'BookableDoctorListResponse(data: $data)';
 }
 
 
@@ -3128,16 +3206,21 @@ $AvailabilitySlotCopyWith<AvailabilitySlot> get copyWith => _$AvailabilitySlotCo
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is AvailabilitySlot&&(identical(other.scheduledAt, scheduledAt) || other.scheduledAt == scheduledAt)&&(identical(other.available, available) || other.available == available));
+  final _this = this as AvailabilitySlot;
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is AvailabilitySlot&&(identical(other.scheduledAt, _this.scheduledAt) || other.scheduledAt == _this.scheduledAt)&&(identical(other.available, _this.available) || other.available == _this.available));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,scheduledAt,available);
+int get hashCode {
+  final _this = this as AvailabilitySlot;
+  return Object.hash(runtimeType,_this.scheduledAt,_this.available);
+}
 
 @override
 String toString() {
-  return 'AvailabilitySlot(scheduledAt: $scheduledAt, available: $available)';
+  final _this = this as AvailabilitySlot;
+  return 'AvailabilitySlot(scheduledAt: ${_this.scheduledAt}, available: ${_this.available})';
 }
 
 
@@ -3166,7 +3249,7 @@ class _$AvailabilitySlotCopyWithImpl<$Res>
 /// Create a copy of AvailabilitySlot
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') @override $Res call({Object? scheduledAt = null,Object? available = null,}) {
-  return _then(_self.copyWith(
+  return _then(AvailabilitySlot(
 scheduledAt: null == scheduledAt ? _self.scheduledAt : scheduledAt // ignore: cast_nullable_to_non_nullable
 as DateTime,available: null == available ? _self.available : available // ignore: cast_nullable_to_non_nullable
 as bool,
@@ -3329,16 +3412,18 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _AvailabilitySlot&&(identical(other.scheduledAt, scheduledAt) || other.scheduledAt == scheduledAt)&&(identical(other.available, available) || other.available == available));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _AvailabilitySlot&&(identical(other.scheduledAt, scheduledAt) || other.scheduledAt == scheduledAt)&&(identical(other.available, available) || other.available == available));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,scheduledAt,available);
+int get hashCode {
+    return Object.hash(runtimeType,scheduledAt,available);
+}
 
 @override
 String toString() {
-  return 'AvailabilitySlot(scheduledAt: $scheduledAt, available: $available)';
+    return 'AvailabilitySlot(scheduledAt: $scheduledAt, available: $available)';
 }
 
 
@@ -3394,16 +3479,21 @@ $AvailabilityResponseCopyWith<AvailabilityResponse> get copyWith => _$Availabili
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is AvailabilityResponse&&(identical(other.doctorId, doctorId) || other.doctorId == doctorId)&&(identical(other.date, date) || other.date == date)&&const DeepCollectionEquality().equals(other.slots, slots));
+  final _this = this as AvailabilityResponse;
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is AvailabilityResponse&&(identical(other.doctorId, _this.doctorId) || other.doctorId == _this.doctorId)&&(identical(other.date, _this.date) || other.date == _this.date)&&const DeepCollectionEquality().equals(other.slots, _this.slots));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,doctorId,date,const DeepCollectionEquality().hash(slots));
+int get hashCode {
+  final _this = this as AvailabilityResponse;
+  return Object.hash(runtimeType,_this.doctorId,_this.date,const DeepCollectionEquality().hash(_this.slots));
+}
 
 @override
 String toString() {
-  return 'AvailabilityResponse(doctorId: $doctorId, date: $date, slots: $slots)';
+  final _this = this as AvailabilityResponse;
+  return 'AvailabilityResponse(doctorId: ${_this.doctorId}, date: ${_this.date}, slots: ${_this.slots})';
 }
 
 
@@ -3432,7 +3522,7 @@ class _$AvailabilityResponseCopyWithImpl<$Res>
 /// Create a copy of AvailabilityResponse
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') @override $Res call({Object? doctorId = null,Object? date = null,Object? slots = null,}) {
-  return _then(_self.copyWith(
+  return _then(AvailabilityResponse(
 doctorId: null == doctorId ? _self.doctorId : doctorId // ignore: cast_nullable_to_non_nullable
 as String,date: null == date ? _self.date : date // ignore: cast_nullable_to_non_nullable
 as String,slots: null == slots ? _self.slots : slots // ignore: cast_nullable_to_non_nullable
@@ -3577,7 +3667,7 @@ return $default(_that.doctorId,_that.date,_that.slots);case _:
 @JsonSerializable()
 
 class _AvailabilityResponse implements AvailabilityResponse {
-  const _AvailabilityResponse({required this.doctorId, required this.date, final  List<AvailabilitySlot> slots = const []}): _slots = slots;
+  const _AvailabilityResponse({required this.doctorId, required this.date,  List<AvailabilitySlot> slots = const []}): _slots = slots;
   factory _AvailabilityResponse.fromJson(Map<String, dynamic> json) => _$AvailabilityResponseFromJson(json);
 
 @override final  String doctorId;
@@ -3603,16 +3693,18 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _AvailabilityResponse&&(identical(other.doctorId, doctorId) || other.doctorId == doctorId)&&(identical(other.date, date) || other.date == date)&&const DeepCollectionEquality().equals(other._slots, _slots));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _AvailabilityResponse&&(identical(other.doctorId, doctorId) || other.doctorId == doctorId)&&(identical(other.date, date) || other.date == date)&&const DeepCollectionEquality().equals(other.slots, _slots));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,doctorId,date,const DeepCollectionEquality().hash(_slots));
+int get hashCode {
+    return Object.hash(runtimeType,doctorId,date,const DeepCollectionEquality().hash(_slots));
+}
 
 @override
 String toString() {
-  return 'AvailabilityResponse(doctorId: $doctorId, date: $date, slots: $slots)';
+    return 'AvailabilityResponse(doctorId: $doctorId, date: $date, slots: $slots)';
 }
 
 
@@ -3669,16 +3761,21 @@ $CreateAppointmentRequestCopyWith<CreateAppointmentRequest> get copyWith => _$Cr
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is CreateAppointmentRequest&&(identical(other.specialty, specialty) || other.specialty == specialty)&&(identical(other.date, date) || other.date == date)&&(identical(other.visitType, visitType) || other.visitType == visitType)&&(identical(other.reason, reason) || other.reason == reason));
+  final _this = this as CreateAppointmentRequest;
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is CreateAppointmentRequest&&(identical(other.specialty, _this.specialty) || other.specialty == _this.specialty)&&(identical(other.date, _this.date) || other.date == _this.date)&&(identical(other.visitType, _this.visitType) || other.visitType == _this.visitType)&&(identical(other.reason, _this.reason) || other.reason == _this.reason));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,specialty,date,visitType,reason);
+int get hashCode {
+  final _this = this as CreateAppointmentRequest;
+  return Object.hash(runtimeType,_this.specialty,_this.date,_this.visitType,_this.reason);
+}
 
 @override
 String toString() {
-  return 'CreateAppointmentRequest(specialty: $specialty, date: $date, visitType: $visitType, reason: $reason)';
+  final _this = this as CreateAppointmentRequest;
+  return 'CreateAppointmentRequest(specialty: ${_this.specialty}, date: ${_this.date}, visitType: ${_this.visitType}, reason: ${_this.reason})';
 }
 
 
@@ -3707,7 +3804,7 @@ class _$CreateAppointmentRequestCopyWithImpl<$Res>
 /// Create a copy of CreateAppointmentRequest
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') @override $Res call({Object? specialty = null,Object? date = null,Object? visitType = null,Object? reason = freezed,}) {
-  return _then(_self.copyWith(
+  return _then(CreateAppointmentRequest(
 specialty: null == specialty ? _self.specialty : specialty // ignore: cast_nullable_to_non_nullable
 as String,date: null == date ? _self.date : date // ignore: cast_nullable_to_non_nullable
 as String,visitType: null == visitType ? _self.visitType : visitType // ignore: cast_nullable_to_non_nullable
@@ -3874,16 +3971,18 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _CreateAppointmentRequest&&(identical(other.specialty, specialty) || other.specialty == specialty)&&(identical(other.date, date) || other.date == date)&&(identical(other.visitType, visitType) || other.visitType == visitType)&&(identical(other.reason, reason) || other.reason == reason));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _CreateAppointmentRequest&&(identical(other.specialty, specialty) || other.specialty == specialty)&&(identical(other.date, date) || other.date == date)&&(identical(other.visitType, visitType) || other.visitType == visitType)&&(identical(other.reason, reason) || other.reason == reason));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,specialty,date,visitType,reason);
+int get hashCode {
+    return Object.hash(runtimeType,specialty,date,visitType,reason);
+}
 
 @override
 String toString() {
-  return 'CreateAppointmentRequest(specialty: $specialty, date: $date, visitType: $visitType, reason: $reason)';
+    return 'CreateAppointmentRequest(specialty: $specialty, date: $date, visitType: $visitType, reason: $reason)';
 }
 
 
@@ -3941,16 +4040,21 @@ $UpdateAppointmentRequestCopyWith<UpdateAppointmentRequest> get copyWith => _$Up
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is UpdateAppointmentRequest&&(identical(other.scheduledAt, scheduledAt) || other.scheduledAt == scheduledAt)&&(identical(other.reason, reason) || other.reason == reason));
+  final _this = this as UpdateAppointmentRequest;
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is UpdateAppointmentRequest&&(identical(other.scheduledAt, _this.scheduledAt) || other.scheduledAt == _this.scheduledAt)&&(identical(other.reason, _this.reason) || other.reason == _this.reason));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,scheduledAt,reason);
+int get hashCode {
+  final _this = this as UpdateAppointmentRequest;
+  return Object.hash(runtimeType,_this.scheduledAt,_this.reason);
+}
 
 @override
 String toString() {
-  return 'UpdateAppointmentRequest(scheduledAt: $scheduledAt, reason: $reason)';
+  final _this = this as UpdateAppointmentRequest;
+  return 'UpdateAppointmentRequest(scheduledAt: ${_this.scheduledAt}, reason: ${_this.reason})';
 }
 
 
@@ -3979,7 +4083,7 @@ class _$UpdateAppointmentRequestCopyWithImpl<$Res>
 /// Create a copy of UpdateAppointmentRequest
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') @override $Res call({Object? scheduledAt = freezed,Object? reason = freezed,}) {
-  return _then(_self.copyWith(
+  return _then(UpdateAppointmentRequest(
 scheduledAt: freezed == scheduledAt ? _self.scheduledAt : scheduledAt // ignore: cast_nullable_to_non_nullable
 as DateTime?,reason: freezed == reason ? _self.reason : reason // ignore: cast_nullable_to_non_nullable
 as String?,
@@ -4142,16 +4246,18 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _UpdateAppointmentRequest&&(identical(other.scheduledAt, scheduledAt) || other.scheduledAt == scheduledAt)&&(identical(other.reason, reason) || other.reason == reason));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _UpdateAppointmentRequest&&(identical(other.scheduledAt, scheduledAt) || other.scheduledAt == scheduledAt)&&(identical(other.reason, reason) || other.reason == reason));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,scheduledAt,reason);
+int get hashCode {
+    return Object.hash(runtimeType,scheduledAt,reason);
+}
 
 @override
 String toString() {
-  return 'UpdateAppointmentRequest(scheduledAt: $scheduledAt, reason: $reason)';
+    return 'UpdateAppointmentRequest(scheduledAt: $scheduledAt, reason: $reason)';
 }
 
 

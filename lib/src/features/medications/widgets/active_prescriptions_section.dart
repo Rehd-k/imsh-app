@@ -3,8 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:imsh/app_router.gr.dart';
 
-import '../../../core/theme/app_design_tokens.dart';
+import '../../../core/theme/imsh_accent_colors.dart';
 import '../../../models/medication_model.dart';
+import '../../../shared/widgets/imsh_ellipsis_chip.dart';
+import '../../../shared/widgets/imsh_empty_state.dart';
 import 'prescription_card.dart';
 
 class ActivePrescriptionsSection extends StatelessWidget {
@@ -17,34 +19,20 @@ class ActivePrescriptionsSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    final colorScheme = theme.colorScheme;
-
     if (prescriptions.isEmpty) {
-      return Column(
+      return const Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
-            'Active Prescriptions',
-            style: theme.textTheme.titleMedium?.copyWith(
-              fontWeight: FontWeight.w700,
-            ),
+          ImshSectionHeader(
+            title: 'Active prescriptions',
+            icon: Icons.medication_outlined,
+            iconColor: ImshAccentColors.teal,
           ),
-          const Gap(AppDesignTokens.spacingMd),
-          Container(
-            width: double.infinity,
-            padding: const EdgeInsets.all(AppDesignTokens.spacingLg),
-            decoration: BoxDecoration(
-              color: colorScheme.surfaceContainerLow,
-              borderRadius: BorderRadius.circular(AppDesignTokens.radiusMd),
-            ),
-            child: Text(
-              'No active medications.',
-              style: theme.textTheme.bodyMedium?.copyWith(
-                color: colorScheme.onSurfaceVariant,
-              ),
-              textAlign: TextAlign.center,
-            ),
+          Gap(10),
+          ImshEmptyState(
+            message: 'No active medications.',
+            icon: Icons.medication_outlined,
+            iconColor: ImshAccentColors.teal,
           ),
         ],
       );
@@ -53,23 +41,17 @@ class ActivePrescriptionsSection extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Row(
-          children: [
-            Text(
-              'Active Prescriptions',
-              style: theme.textTheme.titleMedium?.copyWith(
-                fontWeight: FontWeight.w700,
-              ),
-            ),
-            const Spacer(),
-            TextButton(
-              onPressed: () =>
-                  context.router.push(const MedicationsHistoryRoute()),
-              child: const Text('History >'),
-            ),
-          ],
+        ImshSectionHeader(
+          title: 'Active prescriptions',
+          icon: Icons.medication_outlined,
+          iconColor: ImshAccentColors.teal,
+          trailing: TextButton(
+            onPressed: () =>
+                context.router.push(const MedicationsHistoryRoute()),
+            child: const Text('History'),
+          ),
         ),
-        const Gap(AppDesignTokens.spacingSm),
+        const Gap(10),
         for (final prescription in prescriptions)
           PrescriptionCard(prescription: prescription),
       ],

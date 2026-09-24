@@ -4,15 +4,22 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gap/gap.dart';
 import 'package:table_calendar/table_calendar.dart';
 
+import '../../core/responsive.dart';
 import '../../core/theme/app_design_tokens.dart';
 import '../../core/theme/context_extensions.dart';
+import '../../core/theme/imsh_accent_colors.dart';
 import '../../helper/app_timezone.dart';
 import '../../models/cycle_model.dart';
 import '../../providers/cycle_provider.dart';
 import '../../shared/widgets/imsh_app_bar.dart';
+import '../../shared/widgets/imsh_error_panel.dart';
+import '../../shared/widgets/imsh_page_header.dart';
+import '../../shared/widgets/imsh_solid_icon.dart';
 import '../../shared/widgets/imsh_surface_card.dart';
 import 'widgets/cycle_day_sheet.dart';
 import 'widgets/cycle_settings_sheet.dart';
+
+const _kSectionGap = 10.0;
 
 @RoutePage()
 class CycleTrackerScreen extends ConsumerStatefulWidget {
@@ -59,49 +66,56 @@ class _CycleTrackerScreenState extends ConsumerState<CycleTrackerScreen> {
       ),
       body: calendarAsync.when(
         loading: () => const Center(child: CircularProgressIndicator()),
-        error: (error, _) => _CycleError(
+        error: (error, _) => ImshErrorPanel(
           message: cycleErrorMessage(error),
           onRetry: () => ref.invalidate(cycleCalendarProvider(_monthKey)),
         ),
-        data: (calendar) => RefreshIndicator(
-          onRefresh: () async {
-            ref.invalidate(cycleCalendarProvider(_monthKey));
-            await ref.read(cycleCalendarProvider(_monthKey).future);
-          },
-          child: ListView(
-            physics: const AlwaysScrollableScrollPhysics(),
-            padding: const EdgeInsets.fromLTRB(
-              AppDesignTokens.containerPadding,
-              AppDesignTokens.spacingMd,
-              AppDesignTokens.containerPadding,
-              AppDesignTokens.spacing2xl,
-            ),
-            children: [
-              _CycleStatusCard(calendar: calendar),
-              const Gap(AppDesignTokens.spacingLg),
-              _CycleCalendar(
-                focusedDay: _focusedDay,
-                calendar: calendar,
-                onPageChanged: (focused) {
-                  setState(() => _focusedDay = cycleDateOnly(focused));
-                },
-                onDaySelected: (day) => showCycleDaySheet(
-                  context: context,
-                  ref: ref,
-                  day: cycleDateOnly(day),
+        data: (calendar) => ResponsiveBody(
+          expand: false,
+          builder: (context, bp) => RefreshIndicator(
+            onRefresh: () async {
+              ref.invalidate(cycleCalendarProvider(_monthKey));
+              await ref.read(cycleCalendarProvider(_monthKey).future);
+            },
+            child: ListView(
+              physics: const AlwaysScrollableScrollPhysics(),
+              padding: EdgeInsets.zero,
+              children: [
+                ImshPageHeader(
+                  title: 'Cycle tracker',
+                  subtitle: calendar.configured
+                      ? 'Typical cycle ${calendar.settings.cycleLengthDays} days · period ${calendar.settings.periodLengthDays} days'
+                      : 'Log your last period to start tracking',
+                  icon: Icons.calendar_month_outlined,
+                  iconColor: ImshAccentColors.pink,
+                ),
+                const Gap(12),
+                _CycleStatusCard(calendar: calendar),
+                const Gap(_kSectionGap),
+                _CycleCalendar(
+                  focusedDay: _focusedDay,
                   calendar: calendar,
+                  onPageChanged: (focused) {
+                    setState(() => _focusedDay = cycleDateOnly(focused));
+                  },
+                  onDaySelected: (day) => showCycleDaySheet(
+                    context: context,
+                    ref: ref,
+                    day: cycleDateOnly(day),
+                    calendar: calendar,
+                  ),
                 ),
-              ),
-              const Gap(AppDesignTokens.spacingMd),
-              _CycleLegend(),
-              const Gap(AppDesignTokens.spacingMd),
-              Text(
-                'Predictions are estimates based on your logged periods, not medical advice or contraception.',
-                style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                  color: context.colorScheme.onSurfaceVariant,
+                const Gap(_kSectionGap),
+                _CycleLegend(),
+                const Gap(_kSectionGap),
+                Text(
+                  'Predictions are estimates based on your logged periods, not medical advice or contraception.',
+                  style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                    color: context.colorScheme.onSurfaceVariant,
+                  ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ),
@@ -120,41 +134,64 @@ class _CycleStatusCard extends StatelessWidget {
     final colorScheme = context.colorScheme;
 
     return ImshSurfaceCard(
-      padding: const EdgeInsets.all(AppDesignTokens.spacingMd),
-      child: Column(
+      padding: const EdgeInsets.all(12),
+      child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          if (calendar.pregnancyPaused)
-            Padding(
-              padding: const EdgeInsets.only(bottom: AppDesignTokens.spacingSm),
-              child: Container(
-                width: double.infinity,
-                padding: const EdgeInsets.all(AppDesignTokens.spacingSm),
-                decoration: BoxDecoration(
-                  color: context.imshTheme.warningContainer,
-                  borderRadius: BorderRadius.circular(AppDesignTokens.radiusSm),
-                ),
-                child: Text(
-                  'Predictions are paused while you have an ongoing pregnancy on file.',
-                  style: theme.textTheme.bodySmall?.copyWith(
-                    color: context.imshTheme.onWarningContainer,
+          ImshSolidIcon(
+            icon: calendar.pregnancyPaused
+                ? Icons.pause_circle_outline
+                : Icons.favorite_outline,
+            color: calendar.pregnancyPaused
+                ? ImshAccentColors.amber
+                : ImshAccentColors.pink,
+            size: 36,
+            iconSize: 18,
+            radius: 10,
+          ),
+          const Gap(10),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                if (calendar.pregnancyPaused)
+                  Padding(
+                    padding: const EdgeInsets.only(
+                      bottom: AppDesignTokens.spacingSm,
+                    ),
+                    child: Container(
+                      width: double.infinity,
+                      padding: const EdgeInsets.all(AppDesignTokens.spacingSm),
+                      decoration: BoxDecoration(
+                        color: context.imshTheme.warningContainer,
+                        borderRadius: BorderRadius.circular(
+                          AppDesignTokens.radiusSm,
+                        ),
+                      ),
+                      child: Text(
+                        'Predictions are paused while you have an ongoing pregnancy on file.',
+                        style: theme.textTheme.bodySmall?.copyWith(
+                          color: context.imshTheme.onWarningContainer,
+                        ),
+                      ),
+                    ),
+                  ),
+                Text(
+                  calendar.headline,
+                  style: theme.textTheme.titleMedium?.copyWith(
+                    fontWeight: FontWeight.w700,
                   ),
                 ),
-              ),
-            ),
-          Text(
-            calendar.headline,
-            style: theme.textTheme.titleMedium?.copyWith(
-              fontWeight: FontWeight.w700,
-            ),
-          ),
-          const Gap(4),
-          Text(
-            calendar.configured
-                ? 'Typical cycle ${calendar.settings.cycleLengthDays} days · period ${calendar.settings.periodLengthDays} days'
-                : 'Log your last period to start tracking.',
-            style: theme.textTheme.bodySmall?.copyWith(
-              color: colorScheme.onSurfaceVariant,
+                const Gap(4),
+                Text(
+                  calendar.configured
+                      ? 'Typical cycle ${calendar.settings.cycleLengthDays} days · period ${calendar.settings.periodLengthDays} days'
+                      : 'Log your last period to start tracking.',
+                  style: theme.textTheme.bodySmall?.copyWith(
+                    color: colorScheme.onSurfaceVariant,
+                  ),
+                ),
+              ],
             ),
           ),
         ],
@@ -306,7 +343,7 @@ class _CycleLegend extends StatelessWidget {
     return Row(
       children: [
         _LegendDot(color: colorScheme.primary, filled: true, label: 'Logged'),
-        const Gap(AppDesignTokens.spacingMd),
+        const Gap(_kSectionGap),
         _LegendDot(
           color: colorScheme.primary,
           filled: false,
@@ -345,30 +382,6 @@ class _LegendDot extends StatelessWidget {
         const SizedBox(width: 6),
         Text(label, style: Theme.of(context).textTheme.labelMedium),
       ],
-    );
-  }
-}
-
-class _CycleError extends StatelessWidget {
-  const _CycleError({required this.message, required this.onRetry});
-
-  final String message;
-  final VoidCallback onRetry;
-
-  @override
-  Widget build(BuildContext context) {
-    return Center(
-      child: Padding(
-        padding: const EdgeInsets.all(AppDesignTokens.containerPadding),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Text(message, textAlign: TextAlign.center),
-            const Gap(AppDesignTokens.spacingMd),
-            FilledButton(onPressed: onRetry, child: const Text('Try again')),
-          ],
-        ),
-      ),
     );
   }
 }

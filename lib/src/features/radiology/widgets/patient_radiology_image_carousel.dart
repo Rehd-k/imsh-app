@@ -28,15 +28,15 @@ Future<void> savePatientRadiologyImageBytes(
     await Printing.sharePdf(bytes: bytes, filename: fileName);
     return;
   }
-  final saved = await FilePicker.platform.saveFile(
+  final saved = await FilePicker.saveFile(
     fileName: fileName,
     bytes: bytes,
   );
   if (!context.mounted) return;
   if (saved != null) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text('Saved $fileName')),
-    );
+    ScaffoldMessenger.of(
+      context,
+    ).showSnackBar(SnackBar(content: Text('Saved $fileName')));
   }
 }
 
@@ -96,44 +96,43 @@ void showPatientRadiologyImageExpanded(
                         pdfFileName: image.fileName,
                       )
                     : isRaster
-                        ? InteractiveViewer(
-                            minScale: 0.5,
-                            maxScale: 4,
-                            child: Center(
-                              child: Image.memory(bytes, fit: BoxFit.contain),
-                            ),
-                          )
-                        : Center(
-                            child: Padding(
-                              padding: const EdgeInsets.all(24),
-                              child: Column(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  const Icon(
-                                    Icons.insert_drive_file_outlined,
-                                    size: 64,
-                                  ),
-                                  const SizedBox(height: 16),
-                                  Text(
-                                    'This file type cannot be previewed in the app.',
-                                    style: Theme.of(ctx).textTheme.bodyMedium,
-                                    textAlign: TextAlign.center,
-                                  ),
-                                  const SizedBox(height: 16),
-                                  FilledButton.icon(
-                                    onPressed: () =>
-                                        savePatientRadiologyImageBytes(
-                                      ctx,
-                                      image: image,
-                                      bytes: bytes,
-                                    ),
-                                    icon: const Icon(Icons.save_alt_outlined),
-                                    label: const Text('Save file'),
-                                  ),
-                                ],
+                    ? InteractiveViewer(
+                        minScale: 0.5,
+                        maxScale: 4,
+                        child: Center(
+                          child: Image.memory(bytes, fit: BoxFit.contain),
+                        ),
+                      )
+                    : Center(
+                        child: Padding(
+                          padding: const EdgeInsets.all(24),
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              const Icon(
+                                Icons.insert_drive_file_outlined,
+                                size: 64,
                               ),
-                            ),
+                              const SizedBox(height: 16),
+                              Text(
+                                'This file type cannot be previewed in the app.',
+                                style: Theme.of(ctx).textTheme.bodyMedium,
+                                textAlign: TextAlign.center,
+                              ),
+                              const SizedBox(height: 16),
+                              FilledButton.icon(
+                                onPressed: () => savePatientRadiologyImageBytes(
+                                  ctx,
+                                  image: image,
+                                  bytes: bytes,
+                                ),
+                                icon: const Icon(Icons.save_alt_outlined),
+                                label: const Text('Save file'),
+                              ),
+                            ],
                           ),
+                        ),
+                      ),
               ),
             ],
           ),
@@ -166,7 +165,8 @@ class PatientRadiologyImageSlide extends StatefulWidget {
       _PatientRadiologyImageSlideState();
 }
 
-class _PatientRadiologyImageSlideState extends State<PatientRadiologyImageSlide> {
+class _PatientRadiologyImageSlideState
+    extends State<PatientRadiologyImageSlide> {
   Future<Uint8List>? _bytesFuture;
 
   @override
@@ -234,10 +234,7 @@ class _PatientRadiologyImageSlideState extends State<PatientRadiologyImageSlide>
     if (widget.compact) {
       return content;
     }
-    return Card(
-      clipBehavior: Clip.antiAlias,
-      child: content,
-    );
+    return Card(clipBehavior: Clip.antiAlias, child: content);
   }
 
   Widget _slideLoading(ThemeData theme) {
@@ -298,10 +295,7 @@ class _PatientRadiologyImageSlideState extends State<PatientRadiologyImageSlide>
                         color: theme.colorScheme.error,
                       ),
                       const SizedBox(height: 8),
-                      Text(
-                        'Tap to view PDF',
-                        style: theme.textTheme.bodySmall,
-                      ),
+                      Text('Tap to view PDF', style: theme.textTheme.bodySmall),
                     ],
                   ),
                 ),
@@ -346,7 +340,7 @@ class _PatientRadiologyImageSlideState extends State<PatientRadiologyImageSlide>
             child: Image.memory(
               bytes,
               fit: BoxFit.contain,
-              errorBuilder: (_, __, ___) => Padding(
+              errorBuilder: (_, _, _) => Padding(
                 padding: const EdgeInsets.all(16),
                 child: Text(
                   'Preview not available for this file.',

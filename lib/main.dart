@@ -110,6 +110,14 @@ class _ImshAppState extends ConsumerState<ImshApp> {
               .read(familyViewProvider.notifier)
               .selectById(forPatientId, subjectName: subjectName);
         };
+    fcm.onFamilyMedication =
+        ({required String forPatientId, String? subjectName}) {
+          final selfId = ref.read(patientAuthProvider).patient?.id;
+          if (selfId != null && selfId == forPatientId) return;
+          ref
+              .read(familyViewProvider.notifier)
+              .selectById(forPatientId, subjectName: subjectName);
+        };
   }
 
   @override

@@ -4,14 +4,22 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gap/gap.dart';
 import 'package:imsh/app_router.gr.dart';
 
+import '../../core/responsive.dart';
 import '../../core/theme/app_design_tokens.dart';
 import '../../core/theme/context_extensions.dart';
+import '../../core/theme/imsh_accent_colors.dart';
 import '../../helper/date_formatter.dart';
 import '../../models/feedback_model.dart';
 import '../../providers/feedback_provider.dart';
 import '../../shared/widgets/imsh_app_bar.dart';
+import '../../shared/widgets/imsh_empty_state.dart';
+import '../../shared/widgets/imsh_error_panel.dart';
+import '../../shared/widgets/imsh_page_header.dart';
 import '../../shared/widgets/imsh_semantic_badge.dart';
+import '../../shared/widgets/imsh_solid_icon.dart';
 import '../../shared/widgets/imsh_surface_card.dart';
+
+const _kSectionGap = 10.0;
 
 @RoutePage()
 class PatientFeedbackScreen extends ConsumerWidget {
@@ -32,59 +40,64 @@ class PatientFeedbackScreen extends ConsumerWidget {
         icon: const Icon(Icons.add_comment_outlined),
         label: const Text('New'),
       ),
-      body: RefreshIndicator(
-        onRefresh: () async {
-          ref.invalidate(feedbackListProvider((kind: kind, status: status)));
-          await ref.read(
-            feedbackListProvider((kind: kind, status: status)).future,
-          );
-        },
-        child: ListView(
-          physics: const AlwaysScrollableScrollPhysics(),
-          padding: const EdgeInsets.fromLTRB(
-            AppDesignTokens.containerPadding,
-            AppDesignTokens.containerPadding,
-            AppDesignTokens.containerPadding,
-            AppDesignTokens.spacing2xl * 2,
-          ),
-          children: [
-            Text(
-              'Tell us what went well or what we should improve.',
-              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                color: context.colorScheme.onSurfaceVariant,
+      body: ResponsiveBody(
+        expand: false,
+        bottomPadding: 88,
+        builder: (context, bp) => RefreshIndicator(
+          onRefresh: () async {
+            ref.invalidate(feedbackListProvider((kind: kind, status: status)));
+            await ref.read(
+              feedbackListProvider((kind: kind, status: status)).future,
+            );
+          },
+          child: ListView(
+            physics: const AlwaysScrollableScrollPhysics(),
+            padding: EdgeInsets.zero,
+            children: [
+              const ImshPageHeader(
+                title: 'Suggestions & complaints',
+                subtitle: 'Tell us what went well or what we should improve',
+                icon: Icons.forum_outlined,
+                iconColor: ImshAccentColors.purple,
               ),
-            ),
-            const Gap(AppDesignTokens.spacingMd),
-            _FeedbackFilters(kind: kind, status: status),
-            const Gap(AppDesignTokens.spacingMd),
-            listAsync.when(
-              loading: () => const Center(
-                child: Padding(
-                  padding: EdgeInsets.all(AppDesignTokens.spacingXl),
-                  child: CircularProgressIndicator(),
+              const Gap(_kSectionGap),
+              _FeedbackFilters(kind: kind, status: status),
+              const Gap(_kSectionGap),
+              listAsync.when(
+                loading: () => const Center(
+                  child: Padding(
+                    padding: EdgeInsets.all(AppDesignTokens.spacingXl),
+                    child: CircularProgressIndicator(),
+                  ),
                 ),
-              ),
-              error: (error, _) => _FeedbackError(
-                message: feedbackErrorMessage(error),
-                onRetry: () => ref.invalidate(
-                  feedbackListProvider((kind: kind, status: status)),
+                error: (error, _) => ImshErrorPanel(
+                  message: feedbackErrorMessage(error),
+                  onRetry: () => ref.invalidate(
+                    feedbackListProvider((kind: kind, status: status)),
+                  ),
                 ),
-              ),
-              data: (response) {
-                if (response.data.isEmpty) {
-                  return const _EmptyFeedbackState();
-                }
-                return Column(
-                  children: [
-                    for (final item in response.data) ...[
-                      _FeedbackListCard(item: item),
-                      const Gap(AppDesignTokens.spacingMd),
+                data: (response) {
+                  if (response.data.isEmpty) {
+                    return const ImshEmptyState(
+                      title: 'No feedback yet',
+                      message:
+                          'Create a complaint, suggestion, or general feedback whenever you need to reach the hospital team.',
+                      icon: Icons.forum_outlined,
+                      iconColor: ImshAccentColors.purple,
+                    );
+                  }
+                  return Column(
+                    children: [
+                      for (final item in response.data) ...[
+                        _FeedbackListCard(item: item),
+                        const Gap(_kSectionGap),
+                      ],
                     ],
-                  ],
-                );
-              },
-            ),
-          ],
+                  );
+                },
+              ),
+            ],
+          ),
         ),
       ),
     );
@@ -102,132 +115,146 @@ class FeedbackDetailScreen extends ConsumerWidget {
     final detailAsync = ref.watch(feedbackDetailProvider(id));
     final closeNotifier = ref.watch(closeFeedbackProvider.notifier);
     final isClosing =
-        ref.watch(closeFeedbackProvider).valueOrNull?.contains(id) ?? false;
+        ref.watch(closeFeedbackProvider).value?.contains(id) ?? false;
 
     return Scaffold(
       appBar: ImshAppBar(title: const Text('Feedback detail')),
       body: detailAsync.when(
         loading: () => const Center(child: CircularProgressIndicator()),
-        error: (error, _) => _FeedbackError(
+        error: (error, _) => ImshErrorPanel(
           message: feedbackErrorMessage(error),
           onRetry: () => ref.invalidate(feedbackDetailProvider(id)),
         ),
         data: (feedback) {
           final canEdit = feedback.status == PatientFeedbackStatus.open;
-          return SingleChildScrollView(
-            padding: const EdgeInsets.all(AppDesignTokens.containerPadding),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                Row(
-                  children: [
-                    Expanded(
-                      child: Text(
-                        feedback.subject,
-                        style: Theme.of(context).textTheme.headlineSmall
-                            ?.copyWith(fontWeight: FontWeight.w700),
-                      ),
-                    ),
-                    _FeedbackStatusBadge(status: feedback.status),
-                  ],
-                ),
-                const Gap(AppDesignTokens.spacingSm),
-                _FeedbackKindBadge(kind: feedback.kind),
-                const Gap(AppDesignTokens.spacingLg),
-                _DetailBlock(title: 'Message', value: feedback.message),
-                if (feedback.department != null) ...[
-                  const Gap(AppDesignTokens.spacingMd),
-                  _DetailBlock(
-                    title: 'Department',
-                    value: feedback.department!.name,
-                  ),
-                ],
-                const Gap(AppDesignTokens.spacingMd),
-                _DetailBlock(
-                  title: 'Submitted',
-                  value: feedback.createdAt == null
-                      ? 'Unknown'
-                      : DateFormatter.dateTime(feedback.createdAt!),
-                ),
-                if (feedback.staffResponse?.isNotEmpty == true) ...[
-                  const Gap(AppDesignTokens.spacingLg),
-                  ImshSurfaceCard(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          'Hospital response',
-                          style: Theme.of(context).textTheme.titleMedium
-                              ?.copyWith(fontWeight: FontWeight.w700),
-                        ),
-                        const Gap(AppDesignTokens.spacingSm),
-                        Text(feedback.staffResponse!),
-                        if (feedback.respondedBy != null) ...[
-                          const Gap(AppDesignTokens.spacingSm),
-                          Text(
-                            'By ${feedback.respondedBy!.displayName}',
-                            style: Theme.of(context).textTheme.bodySmall
-                                ?.copyWith(
-                                  color: context.colorScheme.onSurfaceVariant,
-                                ),
-                          ),
-                        ],
-                      ],
-                    ),
-                  ),
-                ],
-                const Gap(AppDesignTokens.spacing2xl),
-                if (canEdit) ...[
-                  FilledButton.icon(
-                    onPressed: () =>
-                        context.router.push(EditFeedbackRoute(id: id)),
-                    icon: const Icon(Icons.edit_outlined),
-                    label: const Text('Edit feedback'),
+          return ResponsiveBody(
+            expand: false,
+            builder: (context, bp) => SingleChildScrollView(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  ImshPageHeader(
+                    title: feedback.subject,
+                    subtitle: feedback.createdAt == null
+                        ? '—'
+                        : DateFormatter.dateTime(feedback.createdAt!),
+                    icon: Icons.forum_outlined,
+                    iconColor: ImshAccentColors.purple,
+                    trailing: _FeedbackStatusBadge(status: feedback.status),
                   ),
                   const Gap(AppDesignTokens.spacingSm),
-                  OutlinedButton.icon(
-                    onPressed: isClosing
-                        ? null
-                        : () async {
-                            final confirmed = await showDialog<bool>(
-                              context: context,
-                              builder: (dialogContext) => AlertDialog(
-                                title: const Text('Close feedback?'),
-                                content: const Text(
-                                  'This will remove it from your open requests, but the hospital will keep the record.',
-                                ),
-                                actions: [
-                                  TextButton(
-                                    onPressed: () =>
-                                        Navigator.of(dialogContext).pop(false),
-                                    child: const Text('Cancel'),
-                                  ),
-                                  FilledButton(
-                                    onPressed: () =>
-                                        Navigator.of(dialogContext).pop(true),
-                                    child: const Text('Close'),
-                                  ),
-                                ],
-                              ),
-                            );
-                            if (confirmed != true) return;
-                            await closeNotifier.close(id);
-                            if (!context.mounted) return;
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              const SnackBar(content: Text('Feedback closed.')),
-                            );
-                            context.router.maybePop();
-                          },
-                    icon: isClosing
-                        ? const SizedBox.square(
-                            dimension: 18,
-                            child: CircularProgressIndicator(strokeWidth: 2),
-                          )
-                        : const Icon(Icons.close_outlined),
-                    label: const Text('Close feedback'),
+                  _FeedbackKindBadge(kind: feedback.kind),
+                  const Gap(12),
+                  _DetailBlock(
+                    title: 'Message',
+                    value: feedback.message,
+                    icon: Icons.notes_outlined,
+                    iconColor: ImshAccentColors.indigo,
                   ),
+                  if (feedback.department != null) ...[
+                    const Gap(_kSectionGap),
+                    _DetailBlock(
+                      title: 'Department',
+                      value: feedback.department!.name,
+                      icon: Icons.apartment_outlined,
+                      iconColor: ImshAccentColors.teal,
+                    ),
+                  ],
+                  if (feedback.staffResponse?.isNotEmpty == true) ...[
+                    const Gap(12),
+                    ImshSurfaceCard(
+                      padding: const EdgeInsets.all(12),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          const Row(
+                            children: [
+                              ImshSolidIcon(
+                                icon: Icons.reply_outlined,
+                                color: ImshAccentColors.blue,
+                                size: 32,
+                                iconSize: 16,
+                              ),
+                              Gap(10),
+                              Expanded(
+                                child: Text(
+                                  'Hospital response',
+                                  style: TextStyle(fontWeight: FontWeight.w700),
+                                ),
+                              ),
+                            ],
+                          ),
+                          const Gap(AppDesignTokens.spacingSm),
+                          Text(feedback.staffResponse!),
+                          if (feedback.respondedBy != null) ...[
+                            const Gap(AppDesignTokens.spacingSm),
+                            Text(
+                              'By ${feedback.respondedBy!.displayName}',
+                              style: Theme.of(context).textTheme.bodySmall
+                                  ?.copyWith(
+                                    color: context.colorScheme.onSurfaceVariant,
+                                  ),
+                            ),
+                          ],
+                        ],
+                      ),
+                    ),
+                  ],
+                  const Gap(24),
+                  if (canEdit) ...[
+                    FilledButton.icon(
+                      onPressed: () =>
+                          context.router.push(EditFeedbackRoute(id: id)),
+                      icon: const Icon(Icons.edit_outlined),
+                      label: const Text('Edit feedback'),
+                    ),
+                    const Gap(AppDesignTokens.spacingSm),
+                    OutlinedButton.icon(
+                      onPressed: isClosing
+                          ? null
+                          : () async {
+                              final confirmed = await showDialog<bool>(
+                                context: context,
+                                builder: (dialogContext) => AlertDialog(
+                                  title: const Text('Close feedback?'),
+                                  content: const Text(
+                                    'This will remove it from your open requests, but the hospital will keep the record.',
+                                  ),
+                                  actions: [
+                                    TextButton(
+                                      onPressed: () =>
+                                          Navigator.of(dialogContext).pop(false),
+                                      child: const Text('Cancel'),
+                                    ),
+                                    FilledButton(
+                                      onPressed: () =>
+                                          Navigator.of(dialogContext).pop(true),
+                                      child: const Text('Close'),
+                                    ),
+                                  ],
+                                ),
+                              );
+                              if (confirmed != true) return;
+                              await closeNotifier.close(id);
+                              if (!context.mounted) return;
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                const SnackBar(
+                                  content: Text('Feedback closed.'),
+                                ),
+                              );
+                              context.router.maybePop();
+                            },
+                      icon: isClosing
+                          ? const SizedBox.square(
+                              dimension: 18,
+                              child: CircularProgressIndicator(strokeWidth: 2),
+                            )
+                          : const Icon(Icons.close_outlined),
+                      label: const Text('Close feedback'),
+                    ),
+                  ],
                 ],
-              ],
+              ),
             ),
           );
         },
@@ -263,7 +290,7 @@ class EditFeedbackScreen extends ConsumerWidget {
       ),
       error: (error, _) => Scaffold(
         appBar: ImshAppBar(title: const Text('Edit feedback')),
-        body: _FeedbackError(
+        body: ImshErrorPanel(
           message: feedbackErrorMessage(error),
           onRetry: () => ref.invalidate(feedbackDetailProvider(id)),
         ),
@@ -343,75 +370,84 @@ class _FeedbackFormScaffoldState extends ConsumerState<_FeedbackFormScaffold> {
       appBar: ImshAppBar(
         title: Text(_isEditing ? 'Edit feedback' : 'New feedback'),
       ),
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.all(AppDesignTokens.containerPadding),
-        child: Form(
-          key: _formKey,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              DropdownButtonFormField<PatientFeedbackKind>(
-                initialValue: _kind,
-                decoration: const InputDecoration(
-                  labelText: 'Type',
-                  prefixIcon: Icon(Icons.category_outlined),
+      body: ResponsiveBody(
+        expand: false,
+        builder: (context, bp) => SingleChildScrollView(
+          child: Form(
+            key: _formKey,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                ImshPageHeader(
+                  title: _isEditing ? 'Edit feedback' : 'New feedback',
+                  subtitle: 'Share a suggestion or complaint with the hospital',
+                  icon: Icons.add_comment_outlined,
+                  iconColor: ImshAccentColors.purple,
                 ),
-                items: [
-                  for (final kind in PatientFeedbackKind.values)
-                    DropdownMenuItem(value: kind, child: Text(kind.label)),
-                ],
-                onChanged: isSubmitting
-                    ? null
-                    : (value) {
-                        if (value != null) setState(() => _kind = value);
-                      },
-              ),
-              const Gap(AppDesignTokens.spacingMd),
-              TextFormField(
-                controller: _subjectController,
-                enabled: !isSubmitting,
-                textInputAction: TextInputAction.next,
-                decoration: const InputDecoration(
-                  labelText: 'Subject',
-                  prefixIcon: Icon(Icons.subject_outlined),
+                const Gap(12),
+                DropdownButtonFormField<PatientFeedbackKind>(
+                  initialValue: _kind,
+                  decoration: const InputDecoration(
+                    labelText: 'Type',
+                    prefixIcon: Icon(Icons.category_outlined),
+                  ),
+                  items: [
+                    for (final kind in PatientFeedbackKind.values)
+                      DropdownMenuItem(value: kind, child: Text(kind.label)),
+                  ],
+                  onChanged: isSubmitting
+                      ? null
+                      : (value) {
+                          if (value != null) setState(() => _kind = value);
+                        },
                 ),
-                validator: (value) {
-                  if (value == null || value.trim().isEmpty) {
-                    return 'Enter a subject.';
-                  }
-                  return null;
-                },
-              ),
-              const Gap(AppDesignTokens.spacingMd),
-              TextFormField(
-                controller: _messageController,
-                enabled: !isSubmitting,
-                minLines: 5,
-                maxLines: 8,
-                decoration: const InputDecoration(
-                  labelText: 'Message',
-                  alignLabelWithHint: true,
-                  prefixIcon: Icon(Icons.notes_outlined),
+                const Gap(_kSectionGap),
+                TextFormField(
+                  controller: _subjectController,
+                  enabled: !isSubmitting,
+                  textInputAction: TextInputAction.next,
+                  decoration: const InputDecoration(
+                    labelText: 'Subject',
+                    prefixIcon: Icon(Icons.subject_outlined),
+                  ),
+                  validator: (value) {
+                    if (value == null || value.trim().isEmpty) {
+                      return 'Enter a subject.';
+                    }
+                    return null;
+                  },
                 ),
-                validator: (value) {
-                  if (value == null || value.trim().isEmpty) {
-                    return 'Tell us what happened or what you suggest.';
-                  }
-                  return null;
-                },
-              ),
-              const Gap(AppDesignTokens.spacingLg),
-              FilledButton.icon(
-                onPressed: isSubmitting ? null : _submit,
-                icon: isSubmitting
-                    ? const SizedBox.square(
-                        dimension: 18,
-                        child: CircularProgressIndicator(strokeWidth: 2),
-                      )
-                    : const Icon(Icons.send_outlined),
-                label: Text(_isEditing ? 'Save changes' : 'Submit feedback'),
-              ),
-            ],
+                const Gap(_kSectionGap),
+                TextFormField(
+                  controller: _messageController,
+                  enabled: !isSubmitting,
+                  minLines: 5,
+                  maxLines: 8,
+                  decoration: const InputDecoration(
+                    labelText: 'Message',
+                    alignLabelWithHint: true,
+                    prefixIcon: Icon(Icons.notes_outlined),
+                  ),
+                  validator: (value) {
+                    if (value == null || value.trim().isEmpty) {
+                      return 'Tell us what happened or what you suggest.';
+                    }
+                    return null;
+                  },
+                ),
+                const Gap(12),
+                FilledButton.icon(
+                  onPressed: isSubmitting ? null : _submit,
+                  icon: isSubmitting
+                      ? const SizedBox.square(
+                          dimension: 18,
+                          child: CircularProgressIndicator(strokeWidth: 2),
+                        )
+                      : const Icon(Icons.send_outlined),
+                  label: Text(_isEditing ? 'Save changes' : 'Submit feedback'),
+                ),
+              ],
+            ),
           ),
         ),
       ),
@@ -467,49 +503,67 @@ class _FeedbackListCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final accent = item.kind == PatientFeedbackKind.complaint
+        ? ImshAccentColors.amber
+        : ImshAccentColors.purple;
+
     return ImshSurfaceCard(
       padding: EdgeInsets.zero,
       child: InkWell(
         borderRadius: BorderRadius.circular(AppDesignTokens.radiusLg),
         onTap: () => context.router.push(FeedbackDetailRoute(id: item.id)),
         child: Padding(
-          padding: const EdgeInsets.all(AppDesignTokens.spacingMd),
-          child: Column(
+          padding: const EdgeInsets.all(12),
+          child: Row(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Row(
-                children: [
-                  Expanded(
-                    child: Text(
-                      item.subject,
-                      style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                        fontWeight: FontWeight.w700,
+              ImshSolidIcon(
+                icon: Icons.forum_outlined,
+                color: accent,
+                size: 36,
+                iconSize: 18,
+                radius: 10,
+              ),
+              const Gap(10),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      children: [
+                        Expanded(
+                          child: ImshEllipsisText(
+                            text: item.subject,
+                            style: Theme.of(context).textTheme.titleMedium
+                                ?.copyWith(fontWeight: FontWeight.w700),
+                          ),
+                        ),
+                        _FeedbackStatusBadge(status: item.status),
+                      ],
+                    ),
+                    const Gap(AppDesignTokens.spacingSm),
+                    _FeedbackKindBadge(kind: item.kind),
+                    const Gap(AppDesignTokens.spacingSm),
+                    Text(
+                      item.message,
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
+                      style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                        color: context.colorScheme.onSurfaceVariant,
                       ),
                     ),
-                  ),
-                  _FeedbackStatusBadge(status: item.status),
-                ],
-              ),
-              const Gap(AppDesignTokens.spacingSm),
-              _FeedbackKindBadge(kind: item.kind),
-              const Gap(AppDesignTokens.spacingSm),
-              Text(
-                item.message,
-                maxLines: 2,
-                overflow: TextOverflow.ellipsis,
-                style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                  color: context.colorScheme.onSurfaceVariant,
+                    if (item.createdAt != null) ...[
+                      const Gap(AppDesignTokens.spacingSm),
+                      Text(
+                        DateFormatter.dateTime(item.createdAt!),
+                        style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                          color: context.colorScheme.onSurfaceVariant,
+                        ),
+                      ),
+                    ],
+                  ],
                 ),
               ),
-              if (item.createdAt != null) ...[
-                const Gap(AppDesignTokens.spacingSm),
-                Text(
-                  DateFormatter.dateTime(item.createdAt!),
-                  style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                    color: context.colorScheme.onSurfaceVariant,
-                  ),
-                ),
-              ],
             ],
           ),
         ),
@@ -552,83 +606,47 @@ class _FeedbackKindBadge extends StatelessWidget {
 }
 
 class _DetailBlock extends StatelessWidget {
-  const _DetailBlock({required this.title, required this.value});
+  const _DetailBlock({
+    required this.title,
+    required this.value,
+    this.icon,
+    this.iconColor,
+  });
 
   final String title;
   final String value;
+  final IconData? icon;
+  final Color? iconColor;
 
   @override
   Widget build(BuildContext context) {
     return ImshSurfaceCard(
+      padding: const EdgeInsets.all(12),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
-            title,
-            style: Theme.of(
-              context,
-            ).textTheme.titleSmall?.copyWith(fontWeight: FontWeight.w700),
+          Row(
+            children: [
+              if (icon != null) ...[
+                ImshSolidIcon(
+                  icon: icon!,
+                  color: iconColor ?? ImshAccentColors.indigo,
+                  size: 28,
+                  iconSize: 14,
+                  radius: 8,
+                ),
+                const Gap(8),
+              ],
+              Text(
+                title,
+                style: Theme.of(
+                  context,
+                ).textTheme.titleSmall?.copyWith(fontWeight: FontWeight.w700),
+              ),
+            ],
           ),
           const Gap(AppDesignTokens.spacingXs),
           Text(value),
-        ],
-      ),
-    );
-  }
-}
-
-class _FeedbackError extends StatelessWidget {
-  const _FeedbackError({required this.message, required this.onRetry});
-
-  final String message;
-  final VoidCallback onRetry;
-
-  @override
-  Widget build(BuildContext context) {
-    return Center(
-      child: Padding(
-        padding: const EdgeInsets.all(AppDesignTokens.spacingLg),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Text(message, textAlign: TextAlign.center),
-            const Gap(AppDesignTokens.spacingMd),
-            OutlinedButton(onPressed: onRetry, child: const Text('Try again')),
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-class _EmptyFeedbackState extends StatelessWidget {
-  const _EmptyFeedbackState();
-
-  @override
-  Widget build(BuildContext context) {
-    return ImshSurfaceCard(
-      child: Column(
-        children: [
-          Icon(
-            Icons.forum_outlined,
-            size: 40,
-            color: context.colorScheme.primary,
-          ),
-          const Gap(AppDesignTokens.spacingMd),
-          Text(
-            'No feedback yet',
-            style: Theme.of(
-              context,
-            ).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w700),
-          ),
-          const Gap(AppDesignTokens.spacingXs),
-          Text(
-            'Create a complaint, suggestion, or general feedback whenever you need to reach the hospital team.',
-            textAlign: TextAlign.center,
-            style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-              color: context.colorScheme.onSurfaceVariant,
-            ),
-          ),
         ],
       ),
     );

@@ -3,6 +3,9 @@ import 'package:gap/gap.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../../../core/theme/app_design_tokens.dart';
+import '../../../core/theme/imsh_accent_colors.dart';
+import '../../../shared/widgets/imsh_solid_icon.dart';
+import '../../../shared/widgets/imsh_surface_card.dart';
 
 class BillingSupportCard extends StatelessWidget {
   const BillingSupportCard({super.key});
@@ -19,30 +22,21 @@ class BillingSupportCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final colorScheme = theme.colorScheme;
+    final cs = theme.colorScheme;
 
-    return Container(
-      width: double.infinity,
-      padding: const EdgeInsets.all(AppDesignTokens.spacingMd),
-      decoration: BoxDecoration(
-        color: colorScheme.surfaceContainerLow,
-        borderRadius: BorderRadius.circular(AppDesignTokens.radiusMd),
-      ),
+    return ImshSurfaceCard(
+      padding: const EdgeInsets.all(10),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Container(
-            padding: const EdgeInsets.all(10),
-            decoration: BoxDecoration(
-              color: colorScheme.surfaceContainerLowest,
-              borderRadius: BorderRadius.circular(AppDesignTokens.radiusSm),
-            ),
-            child: Icon(
-              Icons.support_agent_outlined,
-              color: colorScheme.primary,
-            ),
+          const ImshSolidIcon(
+            icon: Icons.support_agent_outlined,
+            color: ImshAccentColors.blue,
+            size: 36,
+            iconSize: 18,
+            radius: AppDesignTokens.radiusMd,
           ),
-          const Gap(AppDesignTokens.spacingMd),
+          const Gap(10),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -53,13 +47,13 @@ class BillingSupportCard extends StatelessWidget {
                     fontWeight: FontWeight.w700,
                   ),
                 ),
-                const Gap(AppDesignTokens.spacingXs),
+                const Gap(4),
                 InkWell(
                   onTap: () => _launch(Uri.parse('mailto:$_email')),
                   child: Text(
                     _email,
                     style: theme.textTheme.bodySmall?.copyWith(
-                      color: colorScheme.primary,
+                      color: cs.primary,
                     ),
                   ),
                 ),
@@ -68,7 +62,7 @@ class BillingSupportCard extends StatelessWidget {
                   child: Text(
                     _phone,
                     style: theme.textTheme.bodySmall?.copyWith(
-                      color: colorScheme.onSurfaceVariant,
+                      color: cs.onSurfaceVariant,
                     ),
                   ),
                 ),

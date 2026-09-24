@@ -6,9 +6,11 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gap/gap.dart';
 import 'package:imsh/app_router.gr.dart';
 
+import '../../core/responsive.dart';
 import '../../core/theme/app_design_tokens.dart';
-import '../../models/patient_model.dart';
+import '../../core/theme/imsh_accent_colors.dart';
 import '../../providers/auth_provider.dart';
+import '../../shared/widgets/imsh_solid_icon.dart';
 import '../../shared/widgets/imsh_surface_card.dart';
 
 @RoutePage()
@@ -84,77 +86,91 @@ class _DevicePendingScreenState extends ConsumerState<DevicePendingScreen> {
 
     return Scaffold(
       body: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.all(AppDesignTokens.containerPadding),
-          child: Column(
-            children: [
-              const Spacer(),
-              ImshSurfaceCard(
-                child: Column(
-                  children: [
-                    Icon(
-                      Icons.phonelink_lock_outlined,
-                      size: 56,
-                      color: colorScheme.primary,
+        child: ResponsiveBody(
+          expand: true,
+          builder: (context, bp) {
+            return Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                const Spacer(),
+                Align(
+                  alignment: Alignment.center,
+                  child: ConstrainedBox(
+                    constraints: BoxConstraints(
+                      maxWidth: bp.isDesktop ? 480 : double.infinity,
                     ),
-                    const Gap(AppDesignTokens.spacingLg),
-                    Text(
-                      'Waiting for frontdesk approval',
-                      style: theme.textTheme.titleLarge?.copyWith(
-                        fontWeight: FontWeight.w700,
+                    child: ImshSurfaceCard(
+                      padding: EdgeInsets.all(bp.isMobile ? 16 : 20),
+                      child: Column(
+                        children: [
+                          const ImshSolidIcon(
+                            icon: Icons.phonelink_lock_outlined,
+                            color: ImshAccentColors.amber,
+                            size: 56,
+                            iconSize: 28,
+                            radius: AppDesignTokens.radiusMd,
+                          ),
+                          const Gap(12),
+                          Text(
+                            'Waiting for frontdesk approval',
+                            style: theme.textTheme.titleLarge?.copyWith(
+                              fontWeight: FontWeight.w700,
+                            ),
+                            textAlign: TextAlign.center,
+                          ),
+                          const Gap(10),
+                          Text(
+                            'This device needs frontdesk approval before you can '
+                            'use the patient portal. If you signed in with a '
+                            'different account on this device, approval is required again.',
+                            style: theme.textTheme.bodyMedium?.copyWith(
+                              color: colorScheme.onSurfaceVariant,
+                            ),
+                            textAlign: TextAlign.center,
+                          ),
+                          if (auth.patient != null) ...[
+                            const Gap(10),
+                            Text(
+                              auth.patient!.patientId ??
+                                  auth.patient!.displayFirstName,
+                              style: theme.textTheme.labelLarge?.copyWith(
+                                color: colorScheme.primary,
+                              ),
+                            ),
+                          ],
+                          const Gap(12),
+                          const SizedBox(
+                            width: 28,
+                            height: 28,
+                            child: CircularProgressIndicator(strokeWidth: 2.5),
+                          ),
+                          const Gap(AppDesignTokens.spacingSm),
+                          Text(
+                            'Checking approval status…',
+                            style: theme.textTheme.bodySmall?.copyWith(
+                              color: colorScheme.onSurfaceVariant,
+                            ),
+                          ),
+                        ],
                       ),
-                      textAlign: TextAlign.center,
                     ),
-                    const Gap(AppDesignTokens.spacingMd),
-                    Text(
-                      'This device needs frontdesk approval before you can '
-                      'use the patient portal. If you signed in with a '
-                      'different account on this device, approval is required again.',
-                      style: theme.textTheme.bodyMedium?.copyWith(
-                        color: colorScheme.onSurfaceVariant,
-                      ),
-                      textAlign: TextAlign.center,
-                    ),
-                    if (auth.patient != null) ...[
-                      const Gap(AppDesignTokens.spacingMd),
-                      Text(
-                        auth.patient!.patientId ??
-                            auth.patient!.displayFirstName,
-                        style: theme.textTheme.labelLarge?.copyWith(
-                          color: colorScheme.primary,
-                        ),
-                      ),
-                    ],
-                    const Gap(AppDesignTokens.spacingLg),
-                    const SizedBox(
-                      width: 28,
-                      height: 28,
-                      child: CircularProgressIndicator(strokeWidth: 2.5),
-                    ),
-                    const Gap(AppDesignTokens.spacingSm),
-                    Text(
-                      'Checking approval status…',
-                      style: theme.textTheme.bodySmall?.copyWith(
-                        color: colorScheme.onSurfaceVariant,
-                      ),
-                    ),
-                  ],
+                  ),
                 ),
-              ),
-              const Spacer(),
-              OutlinedButton(
-                onPressed: _loggingOut ? null : _logout,
-                child: _loggingOut
-                    ? const SizedBox(
-                        width: 20,
-                        height: 20,
-                        child: CircularProgressIndicator(strokeWidth: 2),
-                      )
-                    : const Text('Sign out'),
-              ),
-              const Gap(AppDesignTokens.spacingMd),
-            ],
-          ),
+                const Spacer(),
+                OutlinedButton(
+                  onPressed: _loggingOut ? null : _logout,
+                  child: _loggingOut
+                      ? const SizedBox(
+                          width: 20,
+                          height: 20,
+                          child: CircularProgressIndicator(strokeWidth: 2),
+                        )
+                      : const Text('Sign out'),
+                ),
+                const Gap(10),
+              ],
+            );
+          },
         ),
       ),
     );

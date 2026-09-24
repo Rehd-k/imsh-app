@@ -25,7 +25,7 @@ class RadiologyService {
       queryParameters: {
         'page': page,
         'limit': limit,
-        if (forPatientId != null) 'forPatientId': forPatientId,
+        'forPatientId': ?forPatientId,
       },
     );
     return RadiologyReportListResponse.fromJson(resp.data ?? {});
@@ -37,9 +37,7 @@ class RadiologyService {
   }) async {
     final resp = await _dio.get<Map<String, dynamic>>(
       '/patient/radiology-reports/$id',
-      queryParameters: {
-        if (forPatientId != null) 'forPatientId': forPatientId,
-      },
+      queryParameters: {'forPatientId': ?forPatientId},
     );
     return RadiologyReportDetail.fromJson(resp.data ?? {});
   }

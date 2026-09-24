@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 
 import '../../core/theme/app_design_tokens.dart';
+import '../../core/theme/imsh_accent_colors.dart';
+import 'imsh_solid_icon.dart';
 
 class ImshErrorPanel extends StatelessWidget {
   const ImshErrorPanel({
@@ -32,7 +34,15 @@ class ImshErrorPanel extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          Icon(icon, size: 56, color: colorScheme.primary),
+          Center(
+            child: ImshSolidIcon(
+              icon: icon,
+              color: ImshAccentColors.amber,
+              size: 48,
+              iconSize: 24,
+              radius: AppDesignTokens.radiusMd,
+            ),
+          ),
           if (title != null) ...[
             const Gap(AppDesignTokens.spacingLg),
             Text(

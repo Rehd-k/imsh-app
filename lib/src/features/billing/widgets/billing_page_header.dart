@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../../core/theme/imsh_accent_colors.dart';
 import '../../../shared/widgets/imsh_page_header.dart';
 
 class BillingPageHeader extends StatelessWidget {
@@ -11,6 +12,8 @@ class BillingPageHeader extends StatelessWidget {
       title: 'Billing & Receipts',
       subtitle:
           'Manage your medical expenses and download digital receipts.',
+      icon: Icons.payments_outlined,
+      iconColor: ImshAccentColors.amber,
     );
   }
 }

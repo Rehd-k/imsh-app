@@ -166,7 +166,7 @@ class _PoweredByVessel extends StatelessWidget {
           Image.asset(
             'assets/vessellogo.png',
             height: 20,
-            errorBuilder: (_, __, ___) => Text(
+            errorBuilder: (_, _, _) => Text(
               'Vessel',
               style: theme.textTheme.labelLarge?.copyWith(
                 color: colorScheme.primary,

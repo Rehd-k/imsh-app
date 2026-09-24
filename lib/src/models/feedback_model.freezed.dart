@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // coverage:ignore-file
-// ignore_for_file: type=lint
+// ignore_for_file: type=lint, type=warning, deprecated_member_use, deprecated_member_use_from_same_package
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
 part of 'feedback_model.dart';
@@ -9,6 +9,7 @@ part of 'feedback_model.dart';
 // FreezedGenerator
 // **************************************************************************
 
+// GENERATED CODE - DO NOT MODIFY BY HAND
 // dart format off
 T _$identity<T>(T value) => value;
 
@@ -28,16 +29,21 @@ $FeedbackDepartmentCopyWith<FeedbackDepartment> get copyWith => _$FeedbackDepart
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is FeedbackDepartment&&(identical(other.id, id) || other.id == id)&&(identical(other.name, name) || other.name == name));
+  final _this = this as FeedbackDepartment;
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is FeedbackDepartment&&(identical(other.id, _this.id) || other.id == _this.id)&&(identical(other.name, _this.name) || other.name == _this.name));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,name);
+int get hashCode {
+  final _this = this as FeedbackDepartment;
+  return Object.hash(runtimeType,_this.id,_this.name);
+}
 
 @override
 String toString() {
-  return 'FeedbackDepartment(id: $id, name: $name)';
+  final _this = this as FeedbackDepartment;
+  return 'FeedbackDepartment(id: ${_this.id}, name: ${_this.name})';
 }
 
 
@@ -66,7 +72,7 @@ class _$FeedbackDepartmentCopyWithImpl<$Res>
 /// Create a copy of FeedbackDepartment
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? name = null,}) {
-  return _then(_self.copyWith(
+  return _then(FeedbackDepartment(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,name: null == name ? _self.name : name // ignore: cast_nullable_to_non_nullable
 as String,
@@ -229,16 +235,18 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _FeedbackDepartment&&(identical(other.id, id) || other.id == id)&&(identical(other.name, name) || other.name == name));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _FeedbackDepartment&&(identical(other.id, id) || other.id == id)&&(identical(other.name, name) || other.name == name));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,name);
+int get hashCode {
+    return Object.hash(runtimeType,id,name);
+}
 
 @override
 String toString() {
-  return 'FeedbackDepartment(id: $id, name: $name)';
+    return 'FeedbackDepartment(id: $id, name: $name)';
 }
 
 
@@ -294,16 +302,21 @@ $FeedbackResponderCopyWith<FeedbackResponder> get copyWith => _$FeedbackResponde
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is FeedbackResponder&&(identical(other.id, id) || other.id == id)&&(identical(other.firstName, firstName) || other.firstName == firstName)&&(identical(other.lastName, lastName) || other.lastName == lastName));
+  final _this = this as FeedbackResponder;
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is FeedbackResponder&&(identical(other.id, _this.id) || other.id == _this.id)&&(identical(other.firstName, _this.firstName) || other.firstName == _this.firstName)&&(identical(other.lastName, _this.lastName) || other.lastName == _this.lastName));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,firstName,lastName);
+int get hashCode {
+  final _this = this as FeedbackResponder;
+  return Object.hash(runtimeType,_this.id,_this.firstName,_this.lastName);
+}
 
 @override
 String toString() {
-  return 'FeedbackResponder(id: $id, firstName: $firstName, lastName: $lastName)';
+  final _this = this as FeedbackResponder;
+  return 'FeedbackResponder(id: ${_this.id}, firstName: ${_this.firstName}, lastName: ${_this.lastName})';
 }
 
 
@@ -332,7 +345,7 @@ class _$FeedbackResponderCopyWithImpl<$Res>
 /// Create a copy of FeedbackResponder
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? firstName = freezed,Object? lastName = freezed,}) {
-  return _then(_self.copyWith(
+  return _then(FeedbackResponder(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,firstName: freezed == firstName ? _self.firstName : firstName // ignore: cast_nullable_to_non_nullable
 as String?,lastName: freezed == lastName ? _self.lastName : lastName // ignore: cast_nullable_to_non_nullable
@@ -497,16 +510,18 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _FeedbackResponder&&(identical(other.id, id) || other.id == id)&&(identical(other.firstName, firstName) || other.firstName == firstName)&&(identical(other.lastName, lastName) || other.lastName == lastName));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _FeedbackResponder&&(identical(other.id, id) || other.id == id)&&(identical(other.firstName, firstName) || other.firstName == firstName)&&(identical(other.lastName, lastName) || other.lastName == lastName));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,firstName,lastName);
+int get hashCode {
+    return Object.hash(runtimeType,id,firstName,lastName);
+}
 
 @override
 String toString() {
-  return 'FeedbackResponder(id: $id, firstName: $firstName, lastName: $lastName)';
+    return 'FeedbackResponder(id: $id, firstName: $firstName, lastName: $lastName)';
 }
 
 
@@ -563,16 +578,21 @@ $PatientFeedbackCopyWith<PatientFeedback> get copyWith => _$PatientFeedbackCopyW
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is PatientFeedback&&(identical(other.id, id) || other.id == id)&&(identical(other.kind, kind) || other.kind == kind)&&(identical(other.status, status) || other.status == status)&&(identical(other.subject, subject) || other.subject == subject)&&(identical(other.message, message) || other.message == message)&&(identical(other.department, department) || other.department == department)&&(identical(other.staffResponse, staffResponse) || other.staffResponse == staffResponse)&&(identical(other.resolvedAt, resolvedAt) || other.resolvedAt == resolvedAt)&&(identical(other.respondedBy, respondedBy) || other.respondedBy == respondedBy)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.updatedAt, updatedAt) || other.updatedAt == updatedAt));
+  final _this = this as PatientFeedback;
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is PatientFeedback&&(identical(other.id, _this.id) || other.id == _this.id)&&(identical(other.kind, _this.kind) || other.kind == _this.kind)&&(identical(other.status, _this.status) || other.status == _this.status)&&(identical(other.subject, _this.subject) || other.subject == _this.subject)&&(identical(other.message, _this.message) || other.message == _this.message)&&(identical(other.department, _this.department) || other.department == _this.department)&&(identical(other.staffResponse, _this.staffResponse) || other.staffResponse == _this.staffResponse)&&(identical(other.resolvedAt, _this.resolvedAt) || other.resolvedAt == _this.resolvedAt)&&(identical(other.respondedBy, _this.respondedBy) || other.respondedBy == _this.respondedBy)&&(identical(other.createdAt, _this.createdAt) || other.createdAt == _this.createdAt)&&(identical(other.updatedAt, _this.updatedAt) || other.updatedAt == _this.updatedAt));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,kind,status,subject,message,department,staffResponse,resolvedAt,respondedBy,createdAt,updatedAt);
+int get hashCode {
+  final _this = this as PatientFeedback;
+  return Object.hash(runtimeType,_this.id,_this.kind,_this.status,_this.subject,_this.message,_this.department,_this.staffResponse,_this.resolvedAt,_this.respondedBy,_this.createdAt,_this.updatedAt);
+}
 
 @override
 String toString() {
-  return 'PatientFeedback(id: $id, kind: $kind, status: $status, subject: $subject, message: $message, department: $department, staffResponse: $staffResponse, resolvedAt: $resolvedAt, respondedBy: $respondedBy, createdAt: $createdAt, updatedAt: $updatedAt)';
+  final _this = this as PatientFeedback;
+  return 'PatientFeedback(id: ${_this.id}, kind: ${_this.kind}, status: ${_this.status}, subject: ${_this.subject}, message: ${_this.message}, department: ${_this.department}, staffResponse: ${_this.staffResponse}, resolvedAt: ${_this.resolvedAt}, respondedBy: ${_this.respondedBy}, createdAt: ${_this.createdAt}, updatedAt: ${_this.updatedAt})';
 }
 
 
@@ -601,7 +621,7 @@ class _$PatientFeedbackCopyWithImpl<$Res>
 /// Create a copy of PatientFeedback
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? kind = null,Object? status = null,Object? subject = null,Object? message = null,Object? department = freezed,Object? staffResponse = freezed,Object? resolvedAt = freezed,Object? respondedBy = freezed,Object? createdAt = freezed,Object? updatedAt = freezed,}) {
-  return _then(_self.copyWith(
+  return _then(PatientFeedback(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,kind: null == kind ? _self.kind : kind // ignore: cast_nullable_to_non_nullable
 as PatientFeedbackKind,status: null == status ? _self.status : status // ignore: cast_nullable_to_non_nullable
@@ -806,16 +826,18 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _PatientFeedback&&(identical(other.id, id) || other.id == id)&&(identical(other.kind, kind) || other.kind == kind)&&(identical(other.status, status) || other.status == status)&&(identical(other.subject, subject) || other.subject == subject)&&(identical(other.message, message) || other.message == message)&&(identical(other.department, department) || other.department == department)&&(identical(other.staffResponse, staffResponse) || other.staffResponse == staffResponse)&&(identical(other.resolvedAt, resolvedAt) || other.resolvedAt == resolvedAt)&&(identical(other.respondedBy, respondedBy) || other.respondedBy == respondedBy)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.updatedAt, updatedAt) || other.updatedAt == updatedAt));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _PatientFeedback&&(identical(other.id, id) || other.id == id)&&(identical(other.kind, kind) || other.kind == kind)&&(identical(other.status, status) || other.status == status)&&(identical(other.subject, subject) || other.subject == subject)&&(identical(other.message, message) || other.message == message)&&(identical(other.department, department) || other.department == department)&&(identical(other.staffResponse, staffResponse) || other.staffResponse == staffResponse)&&(identical(other.resolvedAt, resolvedAt) || other.resolvedAt == resolvedAt)&&(identical(other.respondedBy, respondedBy) || other.respondedBy == respondedBy)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.updatedAt, updatedAt) || other.updatedAt == updatedAt));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,kind,status,subject,message,department,staffResponse,resolvedAt,respondedBy,createdAt,updatedAt);
+int get hashCode {
+    return Object.hash(runtimeType,id,kind,status,subject,message,department,staffResponse,resolvedAt,respondedBy,createdAt,updatedAt);
+}
 
 @override
 String toString() {
-  return 'PatientFeedback(id: $id, kind: $kind, status: $status, subject: $subject, message: $message, department: $department, staffResponse: $staffResponse, resolvedAt: $resolvedAt, respondedBy: $respondedBy, createdAt: $createdAt, updatedAt: $updatedAt)';
+    return 'PatientFeedback(id: $id, kind: $kind, status: $status, subject: $subject, message: $message, department: $department, staffResponse: $staffResponse, resolvedAt: $resolvedAt, respondedBy: $respondedBy, createdAt: $createdAt, updatedAt: $updatedAt)';
 }
 
 
@@ -904,16 +926,21 @@ $PatientFeedbackListResponseCopyWith<PatientFeedbackListResponse> get copyWith =
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is PatientFeedbackListResponse&&const DeepCollectionEquality().equals(other.data, data)&&(identical(other.total, total) || other.total == total)&&(identical(other.page, page) || other.page == page)&&(identical(other.limit, limit) || other.limit == limit));
+  final _this = this as PatientFeedbackListResponse;
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is PatientFeedbackListResponse&&const DeepCollectionEquality().equals(other.data, _this.data)&&(identical(other.total, _this.total) || other.total == _this.total)&&(identical(other.page, _this.page) || other.page == _this.page)&&(identical(other.limit, _this.limit) || other.limit == _this.limit));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,const DeepCollectionEquality().hash(data),total,page,limit);
+int get hashCode {
+  final _this = this as PatientFeedbackListResponse;
+  return Object.hash(runtimeType,const DeepCollectionEquality().hash(_this.data),_this.total,_this.page,_this.limit);
+}
 
 @override
 String toString() {
-  return 'PatientFeedbackListResponse(data: $data, total: $total, page: $page, limit: $limit)';
+  final _this = this as PatientFeedbackListResponse;
+  return 'PatientFeedbackListResponse(data: ${_this.data}, total: ${_this.total}, page: ${_this.page}, limit: ${_this.limit})';
 }
 
 
@@ -942,7 +969,7 @@ class _$PatientFeedbackListResponseCopyWithImpl<$Res>
 /// Create a copy of PatientFeedbackListResponse
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') @override $Res call({Object? data = null,Object? total = null,Object? page = null,Object? limit = null,}) {
-  return _then(_self.copyWith(
+  return _then(PatientFeedbackListResponse(
 data: null == data ? _self.data : data // ignore: cast_nullable_to_non_nullable
 as List<PatientFeedback>,total: null == total ? _self.total : total // ignore: cast_nullable_to_non_nullable
 as int,page: null == page ? _self.page : page // ignore: cast_nullable_to_non_nullable
@@ -1088,7 +1115,7 @@ return $default(_that.data,_that.total,_that.page,_that.limit);case _:
 @JsonSerializable()
 
 class _PatientFeedbackListResponse implements PatientFeedbackListResponse {
-  const _PatientFeedbackListResponse({final  List<PatientFeedback> data = const [], this.total = 0, this.page = 1, this.limit = 20}): _data = data;
+  const _PatientFeedbackListResponse({ List<PatientFeedback> data = const [], this.total = 0, this.page = 1, this.limit = 20}): _data = data;
   factory _PatientFeedbackListResponse.fromJson(Map<String, dynamic> json) => _$PatientFeedbackListResponseFromJson(json);
 
  final  List<PatientFeedback> _data;
@@ -1115,16 +1142,18 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _PatientFeedbackListResponse&&const DeepCollectionEquality().equals(other._data, _data)&&(identical(other.total, total) || other.total == total)&&(identical(other.page, page) || other.page == page)&&(identical(other.limit, limit) || other.limit == limit));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _PatientFeedbackListResponse&&const DeepCollectionEquality().equals(other.data, _data)&&(identical(other.total, total) || other.total == total)&&(identical(other.page, page) || other.page == page)&&(identical(other.limit, limit) || other.limit == limit));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,const DeepCollectionEquality().hash(_data),total,page,limit);
+int get hashCode {
+    return Object.hash(runtimeType,const DeepCollectionEquality().hash(_data),total,page,limit);
+}
 
 @override
 String toString() {
-  return 'PatientFeedbackListResponse(data: $data, total: $total, page: $page, limit: $limit)';
+    return 'PatientFeedbackListResponse(data: $data, total: $total, page: $page, limit: $limit)';
 }
 
 
@@ -1182,16 +1211,21 @@ $CloseFeedbackResponseCopyWith<CloseFeedbackResponse> get copyWith => _$CloseFee
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is CloseFeedbackResponse&&(identical(other.id, id) || other.id == id)&&(identical(other.status, status) || other.status == status)&&(identical(other.message, message) || other.message == message));
+  final _this = this as CloseFeedbackResponse;
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is CloseFeedbackResponse&&(identical(other.id, _this.id) || other.id == _this.id)&&(identical(other.status, _this.status) || other.status == _this.status)&&(identical(other.message, _this.message) || other.message == _this.message));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,status,message);
+int get hashCode {
+  final _this = this as CloseFeedbackResponse;
+  return Object.hash(runtimeType,_this.id,_this.status,_this.message);
+}
 
 @override
 String toString() {
-  return 'CloseFeedbackResponse(id: $id, status: $status, message: $message)';
+  final _this = this as CloseFeedbackResponse;
+  return 'CloseFeedbackResponse(id: ${_this.id}, status: ${_this.status}, message: ${_this.message})';
 }
 
 
@@ -1220,7 +1254,7 @@ class _$CloseFeedbackResponseCopyWithImpl<$Res>
 /// Create a copy of CloseFeedbackResponse
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? status = null,Object? message = freezed,}) {
-  return _then(_self.copyWith(
+  return _then(CloseFeedbackResponse(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,status: null == status ? _self.status : status // ignore: cast_nullable_to_non_nullable
 as PatientFeedbackStatus,message: freezed == message ? _self.message : message // ignore: cast_nullable_to_non_nullable
@@ -1385,16 +1419,18 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _CloseFeedbackResponse&&(identical(other.id, id) || other.id == id)&&(identical(other.status, status) || other.status == status)&&(identical(other.message, message) || other.message == message));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _CloseFeedbackResponse&&(identical(other.id, id) || other.id == id)&&(identical(other.status, status) || other.status == status)&&(identical(other.message, message) || other.message == message));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,status,message);
+int get hashCode {
+    return Object.hash(runtimeType,id,status,message);
+}
 
 @override
 String toString() {
-  return 'CloseFeedbackResponse(id: $id, status: $status, message: $message)';
+    return 'CloseFeedbackResponse(id: $id, status: $status, message: $message)';
 }
 
 

@@ -2,11 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:intl/intl.dart';
 
-import '../../../core/theme/app_design_tokens.dart';
-import '../../../core/theme/context_extensions.dart';
+import '../../../core/theme/imsh_accent_colors.dart';
 import '../../../helper/app_timezone.dart';
 import '../../../helper/currency_formatter.dart';
 import '../../../models/invoice_model.dart';
+import '../../../shared/widgets/imsh_ellipsis_chip.dart';
+import '../../../shared/widgets/imsh_semantic_badge.dart';
+import '../../../shared/widgets/imsh_solid_icon.dart';
 
 class PaymentHistoryRow extends StatelessWidget {
   const PaymentHistoryRow({
@@ -21,7 +23,7 @@ class PaymentHistoryRow extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final colorScheme = theme.colorScheme;
+    final cs = theme.colorScheme;
 
     final paidLocal = AppTimezone.toLocal(payment.paidAt);
     final dateLabel = DateFormat('MMM d, yyyy').format(paidLocal);
@@ -29,18 +31,16 @@ class PaymentHistoryRow extends StatelessWidget {
     return InkWell(
       onTap: onTap,
       child: Padding(
-        padding: const EdgeInsets.symmetric(
-          vertical: AppDesignTokens.spacingMd,
-        ),
+        padding: const EdgeInsets.symmetric(vertical: 10),
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             SizedBox(
-              width: 96,
+              width: 88,
               child: Text(
                 dateLabel,
                 style: theme.textTheme.bodySmall?.copyWith(
-                  color: colorScheme.onSurfaceVariant,
+                  color: cs.onSurfaceVariant,
                 ),
               ),
             ),
@@ -48,22 +48,23 @@ class PaymentHistoryRow extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(
-                    payment.description,
+                  ImshEllipsisText(
+                    text: payment.description,
                     style: theme.textTheme.titleSmall?.copyWith(
                       fontWeight: FontWeight.w600,
                     ),
                   ),
                   const Gap(2),
-                  Text(
-                    payment.methodDetail,
+                  ImshEllipsisText(
+                    text: payment.methodDetail,
                     style: theme.textTheme.bodySmall?.copyWith(
-                      color: colorScheme.onSurfaceVariant,
+                      color: cs.onSurfaceVariant,
                     ),
                   ),
                 ],
               ),
             ),
+            const Gap(8),
             Column(
               crossAxisAlignment: CrossAxisAlignment.end,
               children: [
@@ -74,26 +75,20 @@ class PaymentHistoryRow extends StatelessWidget {
                   ),
                 ),
                 const Gap(4),
-                Container(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 8,
-                    vertical: 2,
-                  ),
-                  decoration: BoxDecoration(
-                    color: context.imshTheme.primaryHighlight
-                        .withValues(alpha: 0.15),
-                    borderRadius: BorderRadius.circular(4),
-                  ),
-                  child: Text(
-                    payment.status,
-                    style: theme.textTheme.labelSmall?.copyWith(
-                      color: colorScheme.primary,
-                      fontWeight: FontWeight.w700,
-                      letterSpacing: 0.3,
-                    ),
-                  ),
+                ImshEllipsisChip(
+                  label: payment.status.trim().isEmpty ? '—' : payment.status,
+                  tone: ImshSemanticTone.success,
+                  maxWidth: 90,
                 ),
               ],
+            ),
+            const Gap(4),
+            const ImshSolidIcon(
+              icon: Icons.chevron_right,
+              color: ImshAccentColors.indigo,
+              size: 24,
+              iconSize: 14,
+              radius: 6,
             ),
           ],
         ),

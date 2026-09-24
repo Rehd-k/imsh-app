@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
 import '../../../core/theme/app_design_tokens.dart';
-import '../../../core/theme/context_extensions.dart';
+import '../../../core/theme/imsh_accent_colors.dart';
 
 class TrendLineChart extends StatelessWidget {
   const TrendLineChart({
@@ -21,8 +21,9 @@ class TrendLineChart extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final colorScheme = context.colorScheme;
-    final color = lineColor ?? colorScheme.primary;
+    final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
+    final color = lineColor ?? ImshAccentColors.teal;
 
     if (spots.length < 2) {
       return Container(
@@ -36,9 +37,9 @@ class TrendLineChart extends StatelessWidget {
           spots.isEmpty
               ? 'Not enough history to chart yet.'
               : 'Need at least two readings for a trend.',
-          style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                color: colorScheme.onSurfaceVariant,
-              ),
+          style: theme.textTheme.bodyMedium?.copyWith(
+            color: colorScheme.onSurfaceVariant,
+          ),
           textAlign: TextAlign.center,
         ),
       );
@@ -58,7 +59,7 @@ class TrendLineChart extends StatelessWidget {
             show: true,
             drawVerticalLine: false,
             getDrawingHorizontalLine: (value) => FlLine(
-              color: colorScheme.outlineVariant.withValues(alpha: 0.6),
+              color: colorScheme.outlineVariant,
               strokeWidth: 1,
             ),
           ),
@@ -76,9 +77,9 @@ class TrendLineChart extends StatelessWidget {
                 reservedSize: 40,
                 getTitlesWidget: (value, meta) => Text(
                   value.toStringAsFixed(value % 1 == 0 ? 0 : 1),
-                  style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                        color: colorScheme.onSurfaceVariant,
-                      ),
+                  style: theme.textTheme.labelSmall?.copyWith(
+                    color: colorScheme.onSurfaceVariant,
+                  ),
                 ),
               ),
             ),
@@ -101,9 +102,9 @@ class TrendLineChart extends StatelessWidget {
                     padding: const EdgeInsets.only(top: 6),
                     child: Text(
                       labels[index],
-                      style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                            color: colorScheme.onSurfaceVariant,
-                          ),
+                      style: theme.textTheme.labelSmall?.copyWith(
+                        color: colorScheme.onSurfaceVariant,
+                      ),
                     ),
                   );
                 },
@@ -148,8 +149,7 @@ class TrendLineChart extends StatelessWidget {
                 ),
               ),
               belowBarData: BarAreaData(
-                show: true,
-                color: color.withValues(alpha: 0.12),
+                show: false,
               ),
             ),
           ],

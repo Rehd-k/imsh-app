@@ -3,10 +3,14 @@ import 'package:gap/gap.dart';
 import 'package:intl/intl.dart';
 
 import '../../../core/theme/app_design_tokens.dart';
-import '../../../core/theme/context_extensions.dart';
+import '../../../core/theme/imsh_accent_colors.dart';
 import '../../../helper/app_timezone.dart';
 import '../../../helper/currency_formatter.dart';
 import '../../../models/invoice_model.dart';
+import '../../../shared/widgets/imsh_ellipsis_chip.dart';
+import '../../../shared/widgets/imsh_semantic_badge.dart';
+import '../../../shared/widgets/imsh_solid_icon.dart';
+import '../../../shared/widgets/imsh_surface_card.dart';
 
 class UnpaidInvoiceCard extends StatelessWidget {
   const UnpaidInvoiceCard({
@@ -23,94 +27,93 @@ class UnpaidInvoiceCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final colorScheme = theme.colorScheme;
+    final cs = theme.colorScheme;
     final issuedLocal = AppTimezone.toLocal(invoice.issuedAt);
     final dateLabel = DateFormat('MMM d, yyyy').format(issuedLocal);
+    final accent = _accentForInvoice(invoice);
 
-    return Material(
-      color: colorScheme.surfaceContainerLowest,
-      borderRadius: BorderRadius.circular(AppDesignTokens.radiusMd),
-      child: InkWell(
-        onTap: onTap,
-        borderRadius: BorderRadius.circular(AppDesignTokens.radiusMd),
-        child: Container(
-          padding: const EdgeInsets.all(AppDesignTokens.spacingMd),
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(AppDesignTokens.radiusMd),
-            border: Border.all(color: colorScheme.outlineVariant),
+    return ImshSurfaceCard(
+      onTap: onTap,
+      padding: const EdgeInsets.all(10),
+      child: Row(
+        children: [
+          ImshSolidIcon(
+            icon: _iconForInvoice(invoice),
+            color: accent,
+            size: 36,
+            iconSize: 18,
+            radius: AppDesignTokens.radiusMd,
           ),
-          child: Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Container(
-                width: 44,
-                height: 44,
-                decoration: BoxDecoration(
-                  color: context.imshTheme.primaryHighlight
-                      .withValues(alpha: 0.15),
-                  borderRadius: BorderRadius.circular(AppDesignTokens.radiusSm),
+          const Gap(10),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                ImshEllipsisText(
+                  text: invoice.title,
+                  style: theme.textTheme.titleSmall?.copyWith(
+                    fontWeight: FontWeight.w700,
+                  ),
                 ),
-                child: Icon(
-                  _iconForInvoice(invoice),
-                  color: colorScheme.primary,
-                  size: 22,
+                const Gap(2),
+                ImshEllipsisText(
+                  text: 'Inv #${invoice.invoiceNumber} · $dateLabel',
+                  style: theme.textTheme.bodySmall?.copyWith(
+                    color: cs.onSurfaceVariant,
+                  ),
                 ),
-              ),
-              const Gap(AppDesignTokens.spacingMd),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
+                const Gap(6),
+                Row(
                   children: [
                     Text(
-                      invoice.title,
+                      CurrencyFormatter.formatAmount(invoice.balance),
                       style: theme.textTheme.titleSmall?.copyWith(
-                        fontWeight: FontWeight.w700,
+                        fontWeight: FontWeight.w800,
                       ),
                     ),
-                    const Gap(AppDesignTokens.spacingXs),
-                    Text(
-                      'Inv #${invoice.invoiceNumber} • $dateLabel',
-                      style: theme.textTheme.bodySmall?.copyWith(
-                        color: colorScheme.onSurfaceVariant,
-                      ),
-                    ),
-                    const Gap(AppDesignTokens.spacingSm),
-                    Row(
-                      children: [
-                        Text(
-                          CurrencyFormatter.formatAmount(invoice.balance),
-                          style: theme.textTheme.titleSmall?.copyWith(
-                            fontWeight: FontWeight.w700,
-                          ),
-                        ),
-                        const Gap(AppDesignTokens.spacingSm),
-                        _StatusBadge(status: invoice.status),
-                      ],
+                    const Gap(8),
+                    ImshEllipsisChip(
+                      label: invoice.status.isUnpaid
+                          ? 'Unpaid'
+                          : invoice.status.label,
+                      tone: invoice.status.isUnpaid
+                          ? ImshSemanticTone.error
+                          : ImshSemanticTone.info,
+                      maxWidth: 100,
                     ),
                   ],
                 ),
-              ),
-              IconButton(
-                onPressed: onReceiptTap,
-                icon: Container(
-                  padding: const EdgeInsets.all(8),
-                  decoration: BoxDecoration(
-                    color: context.imshTheme.primaryHighlight
-                        .withValues(alpha: 0.12),
-                    shape: BoxShape.circle,
-                  ),
-                  child: Icon(
-                    Icons.receipt_long_outlined,
-                    size: 20,
-                    color: colorScheme.primary,
-                  ),
-                ),
-              ),
-            ],
+              ],
+            ),
           ),
-        ),
+          IconButton(
+            tooltip: 'View bill',
+            onPressed: onReceiptTap,
+            icon: const ImshSolidIcon(
+              icon: Icons.receipt_long_outlined,
+              color: ImshAccentColors.indigo,
+              size: 32,
+              iconSize: 16,
+              radius: 8,
+            ),
+          ),
+        ],
       ),
     );
+  }
+
+  Color _accentForInvoice(InvoiceSummary invoice) {
+    final title = invoice.title.toLowerCase();
+    if (title.contains('lab') || title.contains('panel')) {
+      return ImshAccentColors.blue;
+    }
+    if (title.contains('pharmacy') || title.contains('medication')) {
+      return ImshAccentColors.teal;
+    }
+    if (invoice.billType == BillType.inpatient) {
+      return ImshAccentColors.purple;
+    }
+    return ImshAccentColors.amber;
   }
 
   IconData _iconForInvoice(InvoiceSummary invoice) {
@@ -125,36 +128,5 @@ class UnpaidInvoiceCard extends StatelessWidget {
       return Icons.local_hospital_outlined;
     }
     return Icons.medical_services_outlined;
-  }
-}
-
-class _StatusBadge extends StatelessWidget {
-  const _StatusBadge({required this.status});
-
-  final InvoiceStatus status;
-
-  @override
-  Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    final colorScheme = theme.colorScheme;
-    final isUnpaid = status.isUnpaid;
-    final label = isUnpaid ? 'UNPAID' : status.label.toUpperCase();
-    final color = isUnpaid ? colorScheme.error : colorScheme.primary;
-
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
-      decoration: BoxDecoration(
-        color: color.withValues(alpha: 0.1),
-        borderRadius: BorderRadius.circular(999),
-      ),
-      child: Text(
-        label,
-        style: theme.textTheme.labelSmall?.copyWith(
-          color: color,
-          fontWeight: FontWeight.w700,
-          letterSpacing: 0.4,
-        ),
-      ),
-    );
   }
 }

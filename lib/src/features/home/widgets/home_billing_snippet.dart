@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:gap/gap.dart';
 
-import '../../../core/theme/app_design_tokens.dart';
-import '../../../core/theme/context_extensions.dart';
+import '../../../core/theme/imsh_accent_colors.dart';
 import '../../../helper/currency_formatter.dart';
 import '../../../models/invoice_model.dart';
+import '../../../shared/widgets/imsh_solid_icon.dart';
+import '../../../shared/widgets/imsh_surface_card.dart';
 
 class HomeBillingSnippet extends StatelessWidget {
   const HomeBillingSnippet({
@@ -19,70 +19,75 @@ class HomeBillingSnippet extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final amount = double.tryParse(summary.totalOutstanding) ?? 0;
-    if (amount <= 0) {
-      return const SizedBox.shrink();
-    }
+    if (amount <= 0) return const SizedBox.shrink();
 
     final theme = Theme.of(context);
-    final colorScheme = context.colorScheme;
+    final cs = theme.colorScheme;
 
-    return Padding(
-      padding: const EdgeInsets.symmetric(
-        horizontal: AppDesignTokens.containerPadding,
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          Text(
-            'Billing',
-            style: theme.textTheme.titleMedium?.copyWith(
-              fontWeight: FontWeight.w700,
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        Row(
+          children: [
+            const ImshSolidIcon(
+              icon: Icons.receipt_long_outlined,
+              color: ImshAccentColors.amber,
+              size: 26,
+              iconSize: 14,
+              radius: 7,
             ),
-          ),
-          const Gap(AppDesignTokens.spacingMd),
-          Container(
-            padding: const EdgeInsets.all(AppDesignTokens.spacingMd),
-            decoration: BoxDecoration(
-              color: colorScheme.errorContainer.withValues(alpha: 0.35),
-              borderRadius: BorderRadius.circular(AppDesignTokens.radiusLg),
-              border: Border.all(color: colorScheme.outlineVariant),
+            const SizedBox(width: 8),
+            Text(
+              'Billing',
+              style: theme.textTheme.titleSmall?.copyWith(
+                fontWeight: FontWeight.w800,
+              ),
             ),
-            child: Row(
-              children: [
-                Icon(
-                  Icons.receipt_long_outlined,
-                  color: colorScheme.error,
-                ),
-                const Gap(AppDesignTokens.spacingMd),
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        'Outstanding balance',
-                        style: theme.textTheme.labelSmall?.copyWith(
-                          color: colorScheme.onSurfaceVariant,
-                          fontWeight: FontWeight.w600,
-                        ),
+          ],
+        ),
+        const SizedBox(height: 8),
+        ImshSurfaceCard(
+          padding: const EdgeInsets.all(10),
+          child: Row(
+            children: [
+              const ImshSolidIcon(
+                icon: Icons.payments_outlined,
+                color: ImshAccentColors.amber,
+                size: 30,
+                iconSize: 16,
+                radius: 8,
+              ),
+              const SizedBox(width: 10),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'Outstanding balance',
+                      style: theme.textTheme.labelSmall?.copyWith(
+                        color: cs.onSurfaceVariant,
+                        fontWeight: FontWeight.w600,
                       ),
-                      Text(
-                        CurrencyFormatter.formatAmount(summary.totalOutstanding),
-                        style: theme.textTheme.titleMedium?.copyWith(
-                          fontWeight: FontWeight.w700,
-                        ),
+                    ),
+                    ImshEllipsisText(
+                      text: CurrencyFormatter.formatAmount(
+                        summary.totalOutstanding,
                       ),
-                    ],
-                  ),
+                      style: theme.textTheme.titleSmall?.copyWith(
+                        fontWeight: FontWeight.w800,
+                      ),
+                    ),
+                  ],
                 ),
-                FilledButton(
-                  onPressed: onPayBill,
-                  child: const Text('Pay'),
-                ),
-              ],
-            ),
+              ),
+              FilledButton(
+                onPressed: onPayBill,
+                child: const Text('Pay'),
+              ),
+            ],
           ),
-        ],
-      ),
+        ),
+      ],
     );
   }
 }

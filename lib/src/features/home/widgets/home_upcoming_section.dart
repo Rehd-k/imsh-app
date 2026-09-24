@@ -1,16 +1,222 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:gap/gap.dart';
 import 'package:imsh/app_router.gr.dart';
 import 'package:intl/intl.dart';
 
 import '../../../core/theme/app_design_tokens.dart';
-import '../../../core/theme/context_extensions.dart';
+import '../../../core/theme/imsh_accent_colors.dart';
 import '../../../helper/app_timezone.dart';
 import '../../../helper/date_formatter.dart';
 import '../../../models/appointment_model.dart';
 import '../../../providers/appointments_provider.dart';
+import '../../../shared/widgets/imsh_semantic_badge.dart';
+import '../../../shared/widgets/imsh_solid_icon.dart';
+import '../../../shared/widgets/imsh_surface_card.dart';
+
+class HomeNextVisitCard extends StatelessWidget {
+  const HomeNextVisitCard({
+    super.key,
+    required this.appointment,
+    required this.onOpenBooking,
+    required this.onRequest,
+    required this.onReschedule,
+  });
+
+  final AppointmentSummary? appointment;
+  final VoidCallback onOpenBooking;
+  final VoidCallback onRequest;
+  final void Function(AppointmentSummary appointment) onReschedule;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final cs = theme.colorScheme;
+
+    if (appointment == null) {
+      return ImshSurfaceCard(
+        padding: const EdgeInsets.all(12),
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const ImshSolidIcon(
+              icon: Icons.event_available_outlined,
+              color: ImshAccentColors.blue,
+              size: 34,
+              iconSize: 18,
+              radius: AppDesignTokens.radiusMd,
+            ),
+            const SizedBox(width: 10),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    'No visit scheduled',
+                    style: theme.textTheme.titleSmall?.copyWith(
+                      fontWeight: FontWeight.w800,
+                    ),
+                  ),
+                  const SizedBox(height: 2),
+                  Text(
+                    'Request an appointment and the hospital will confirm.',
+                    style: theme.textTheme.bodySmall?.copyWith(
+                      color: cs.onSurfaceVariant,
+                    ),
+                  ),
+                  const SizedBox(height: 10),
+                  Align(
+                    alignment: Alignment.centerLeft,
+                    child: FilledButton(
+                      onPressed: onRequest,
+                      child: const Text('Request appointment'),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+      );
+    }
+
+    final a = appointment!;
+    final local = AppTimezone.toLocal(a.scheduledAt);
+    final month = DateFormat('MMM').format(local).toUpperCase();
+    final day = DateFormat('d').format(local);
+    final title = a.status == AppointmentStatus.requested
+        ? 'Next request'
+        : 'Next visit';
+
+    return ImshSurfaceCard(
+      padding: const EdgeInsets.all(12),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          Row(
+            children: [
+              const ImshSolidIcon(
+                icon: Icons.calendar_month_outlined,
+                color: ImshAccentColors.indigo,
+                size: 30,
+                iconSize: 16,
+                radius: 8,
+              ),
+              const SizedBox(width: 8),
+              Expanded(
+                child: Text(
+                  title,
+                  style: theme.textTheme.titleSmall?.copyWith(
+                    fontWeight: FontWeight.w800,
+                  ),
+                ),
+              ),
+              ImshSemanticBadge(
+                label: a.status.label,
+                tone: a.status == AppointmentStatus.confirmed
+                    ? ImshSemanticTone.success
+                    : a.status == AppointmentStatus.requested
+                        ? ImshSemanticTone.warning
+                        : ImshSemanticTone.info,
+              ),
+            ],
+          ),
+          const SizedBox(height: 10),
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Container(
+                width: 48,
+                padding: const EdgeInsets.symmetric(vertical: 8),
+                decoration: BoxDecoration(
+                  color: cs.surfaceContainerLow,
+                  borderRadius: BorderRadius.circular(AppDesignTokens.radiusMd),
+                  border: Border.all(color: cs.outlineVariant),
+                ),
+                child: Column(
+                  children: [
+                    Text(
+                      month,
+                      style: theme.textTheme.labelSmall?.copyWith(
+                        color: ImshAccentColors.indigo,
+                        fontWeight: FontWeight.w700,
+                      ),
+                    ),
+                    Text(
+                      day,
+                      style: theme.textTheme.titleLarge?.copyWith(
+                        fontWeight: FontWeight.w800,
+                        height: 1.1,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              const SizedBox(width: 12),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    ImshEllipsisText(
+                      text: a.specialtyLabel,
+                      style: theme.textTheme.titleSmall?.copyWith(
+                        fontWeight: FontWeight.w700,
+                      ),
+                    ),
+                    const SizedBox(height: 2),
+                    ImshEllipsisText(
+                      text:
+                          '${DateFormatter.appointmentCardTime(a.scheduledAt)} · ${a.visitType.label}',
+                      style: theme.textTheme.bodySmall?.copyWith(
+                        color: cs.onSurfaceVariant,
+                      ),
+                    ),
+                    const SizedBox(height: 2),
+                    ImshEllipsisText(
+                      text: a.doctorDisplayName,
+                      style: theme.textTheme.bodySmall?.copyWith(
+                        color: cs.onSurfaceVariant,
+                      ),
+                    ),
+                    if ((a.location?.trim().isNotEmpty) ?? false) ...[
+                      const SizedBox(height: 2),
+                      ImshEllipsisText(
+                        text: a.location!.trim(),
+                        style: theme.textTheme.bodySmall?.copyWith(
+                          color: cs.onSurfaceVariant,
+                        ),
+                      ),
+                    ],
+                  ],
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 10),
+          Row(
+            children: [
+              Expanded(
+                child: OutlinedButton(
+                  onPressed: onOpenBooking,
+                  child: const Text('View all'),
+                ),
+              ),
+              if (a.canReschedule) ...[
+                const SizedBox(width: 8),
+                Expanded(
+                  child: FilledButton(
+                    onPressed: () => onReschedule(a),
+                    child: const Text('Reschedule'),
+                  ),
+                ),
+              ],
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+}
 
 class HomeUpcomingSection extends StatelessWidget {
   const HomeUpcomingSection({
@@ -26,42 +232,34 @@ class HomeUpcomingSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    if (appointments.length <= 1) return const SizedBox.shrink();
     final theme = Theme.of(context);
+    final rest = appointments.skip(1).toList();
 
-    return Padding(
-      padding: const EdgeInsets.symmetric(
-        horizontal: AppDesignTokens.containerPadding,
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          Row(
-            children: [
-              Text(
-                'Upcoming',
-                style: theme.textTheme.titleMedium?.copyWith(
-                  fontWeight: FontWeight.w700,
-                ),
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        Row(
+          children: [
+            Text(
+              'Also upcoming',
+              style: theme.textTheme.titleSmall?.copyWith(
+                fontWeight: FontWeight.w800,
               ),
-              const Spacer(),
-              TextButton(onPressed: onViewAll, child: const Text('View all')),
-            ],
+            ),
+            const Spacer(),
+            TextButton(onPressed: onViewAll, child: const Text('View all')),
+          ],
+        ),
+        const SizedBox(height: 8),
+        for (var i = 0; i < rest.length; i++) ...[
+          if (i > 0) const SizedBox(height: 8),
+          HomeUpcomingAppointmentCard(
+            appointment: rest[i],
+            onReschedule: () => onReschedule(rest[i]),
           ),
-          if (appointments.isEmpty)
-            _EmptyUpcoming(
-              onBook: () => context.router.push(BookAppointmentRoute()),
-            )
-          else
-            for (final appointment in appointments) ...[
-              HomeUpcomingAppointmentCard(
-                appointment: appointment,
-                onReschedule: () => onReschedule(appointment),
-              ),
-              if (appointment != appointments.last)
-                const Gap(AppDesignTokens.spacingMd),
-            ],
         ],
-      ),
+      ],
     );
   }
 }
@@ -79,201 +277,48 @@ class HomeUpcomingAppointmentCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final colorScheme = context.colorScheme;
-    final localDate = AppTimezone.toLocal(appointment.scheduledAt);
-    final monthLabel = DateFormat('MMM').format(localDate).toUpperCase();
-    final dayLabel = DateFormat('d').format(localDate);
-    final title = appointment.specialtyLabel;
+    final cs = theme.colorScheme;
 
-    return Container(
-      decoration: BoxDecoration(
-        color: colorScheme.surfaceContainerLowest,
-        borderRadius: BorderRadius.circular(AppDesignTokens.radiusLg),
-        border: Border.all(color: colorScheme.outlineVariant),
-        boxShadow: context.cardShadow,
-      ),
-      child: IntrinsicHeight(
-        child: Row(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            Container(
-              width: 4,
-              decoration: BoxDecoration(
-                color: colorScheme.primary,
-                borderRadius: const BorderRadius.horizontal(
-                  left: Radius.circular(AppDesignTokens.radiusLg),
-                ),
-              ),
-            ),
-            Expanded(
-              child: Padding(
-                padding: const EdgeInsets.all(AppDesignTokens.spacingMd),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Row(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Container(
-                          width: 52,
-                          padding: const EdgeInsets.symmetric(
-                            vertical: AppDesignTokens.spacingSm,
-                          ),
-                          decoration: BoxDecoration(
-                            color: context.imshTheme.primaryHighlight,
-                            borderRadius: BorderRadius.circular(
-                              AppDesignTokens.radiusMd,
-                            ),
-                          ),
-                          child: Column(
-                            children: [
-                              Text(
-                                monthLabel,
-                                style: theme.textTheme.labelSmall?.copyWith(
-                                  color: colorScheme.primary,
-                                  fontWeight: FontWeight.w700,
-                                ),
-                              ),
-                              Text(
-                                dayLabel,
-                                style: theme.textTheme.titleLarge?.copyWith(
-                                  color: colorScheme.primary,
-                                  fontWeight: FontWeight.w700,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                        const Gap(AppDesignTokens.spacingMd),
-                        Expanded(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                title,
-                                style: theme.textTheme.titleSmall?.copyWith(
-                                  fontWeight: FontWeight.w700,
-                                ),
-                              ),
-                              const Gap(4),
-                              Row(
-                                children: [
-                                  Icon(
-                                    Icons.schedule_outlined,
-                                    size: 14,
-                                    color: colorScheme.onSurfaceVariant,
-                                  ),
-                                  const Gap(4),
-                                  Text(
-                                    DateFormatter.appointmentCardTime(
-                                      appointment.scheduledAt,
-                                    ),
-                                    style: theme.textTheme.bodySmall?.copyWith(
-                                      color: colorScheme.onSurfaceVariant,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                              const Gap(2),
-                              Row(
-                                children: [
-                                  Icon(
-                                    Icons.person_outline,
-                                    size: 14,
-                                    color: colorScheme.onSurfaceVariant,
-                                  ),
-                                  const Gap(4),
-                                  Expanded(
-                                    child: Text(
-                                      '${appointment.doctorDisplayName} · ${appointment.status.label}',
-                                      style: theme.textTheme.bodySmall
-                                          ?.copyWith(
-                                            color: colorScheme.onSurfaceVariant,
-                                          ),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ],
-                          ),
-                        ),
-                      ],
-                    ),
-                    const Gap(AppDesignTokens.spacingMd),
-                    Row(
-                      children: [
-                        if (appointment.canReschedule)
-                          Expanded(
-                            child: OutlinedButton(
-                              onPressed: onReschedule,
-                              child: const Text('Reschedule'),
-                            ),
-                          ),
-                        if (appointment.canReschedule)
-                          const Gap(AppDesignTokens.spacingSm),
-                        Expanded(
-                          child: FilledButton(
-                            onPressed: () {
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                const SnackBar(
-                                  content: Text('Check-in is coming soon.'),
-                                ),
-                              );
-                            },
-                            child: const Text('Check-in Now'),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-class _EmptyUpcoming extends StatelessWidget {
-  const _EmptyUpcoming({required this.onBook});
-
-  final VoidCallback onBook;
-
-  @override
-  Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    final colorScheme = context.colorScheme;
-
-    return Container(
-      padding: const EdgeInsets.all(AppDesignTokens.spacingLg),
-      decoration: BoxDecoration(
-        color: colorScheme.surfaceContainerLow,
-        borderRadius: BorderRadius.circular(AppDesignTokens.radiusLg),
-        border: Border.all(color: colorScheme.outlineVariant),
-      ),
-      child: Column(
+    return ImshSurfaceCard(
+      padding: const EdgeInsets.all(10),
+      child: Row(
         children: [
-          Text(
-            'No upcoming appointments',
-            style: theme.textTheme.titleSmall?.copyWith(
-              fontWeight: FontWeight.w600,
+          const ImshSolidIcon(
+            icon: Icons.event_outlined,
+            color: ImshAccentColors.teal,
+            size: 30,
+            iconSize: 16,
+            radius: 8,
+          ),
+          const SizedBox(width: 10),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                ImshEllipsisText(
+                  text: appointment.specialtyLabel,
+                  style: theme.textTheme.titleSmall?.copyWith(
+                    fontWeight: FontWeight.w700,
+                  ),
+                ),
+                ImshEllipsisText(
+                  text:
+                      '${DateFormatter.appointmentCardDate(appointment.scheduledAt)} · ${DateFormatter.appointmentCardTime(appointment.scheduledAt)}',
+                  style: theme.textTheme.bodySmall?.copyWith(
+                    color: cs.onSurfaceVariant,
+                  ),
+                ),
+                ImshEllipsisText(
+                  text: appointment.doctorDisplayName,
+                  style: theme.textTheme.bodySmall?.copyWith(
+                    color: cs.onSurfaceVariant,
+                  ),
+                ),
+              ],
             ),
           ),
-          const Gap(AppDesignTokens.spacingSm),
-          Text(
-            'Book your next visit with a specialist.',
-            style: theme.textTheme.bodySmall?.copyWith(
-              color: colorScheme.onSurfaceVariant,
-            ),
-            textAlign: TextAlign.center,
-          ),
-          const Gap(AppDesignTokens.spacingMd),
-          FilledButton(
-            onPressed: onBook,
-            child: const Text('Book appointment'),
-          ),
+          if (appointment.canReschedule)
+            TextButton(onPressed: onReschedule, child: const Text('Reschedule')),
         ],
       ),
     );

@@ -5,6 +5,8 @@ part 'family_model.g.dart';
 
 @freezed
 abstract class FamilyMember with _$FamilyMember {
+  const FamilyMember._();
+
   const factory FamilyMember({
     required String id,
     String? patientId,
@@ -18,9 +20,7 @@ abstract class FamilyMember with _$FamilyMember {
 
   factory FamilyMember.fromJson(Map<String, dynamic> json) =>
       _$FamilyMemberFromJson(json);
-}
 
-extension FamilyMemberDisplay on FamilyMember {
   String get displayName {
     final parts = [firstName, surname]
         .whereType<String>()

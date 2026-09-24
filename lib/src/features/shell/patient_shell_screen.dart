@@ -2,6 +2,7 @@ import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:imsh/app_router.gr.dart';
 
+import '../../core/theme/imsh_accent_colors.dart';
 import '../appointments/widgets/appointments_body.dart';
 import '../billing/widgets/billing_body.dart';
 import '../home/widgets/home_body.dart';
@@ -14,6 +15,8 @@ class PatientShellScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final cs = Theme.of(context).colorScheme;
+
     return AutoTabsScaffold(
       routes: const [
         HomeTabRoute(),
@@ -26,30 +29,43 @@ class PatientShellScreen extends StatelessWidget {
         return NavigationBar(
           selectedIndex: tabsRouter.activeIndex,
           onDestinationSelected: tabsRouter.setActiveIndex,
+          indicatorColor: cs.primary.withValues(alpha: 0.12),
           destinations: const [
             NavigationDestination(
-              icon: Icon(Icons.home_outlined),
-              selectedIcon: Icon(Icons.home),
+              icon: Icon(Icons.home_outlined, color: ImshAccentColors.indigo),
+              selectedIcon: Icon(Icons.home, color: ImshAccentColors.indigo),
               label: 'Home',
             ),
             NavigationDestination(
-              icon: Icon(Icons.folder_outlined),
-              selectedIcon: Icon(Icons.folder),
+              icon: Icon(Icons.folder_outlined, color: ImshAccentColors.blue),
+              selectedIcon: Icon(Icons.folder, color: ImshAccentColors.blue),
               label: 'Records',
             ),
             NavigationDestination(
-              icon: Icon(Icons.calendar_month_outlined),
-              selectedIcon: Icon(Icons.calendar_month),
+              icon: Icon(
+                Icons.calendar_month_outlined,
+                color: ImshAccentColors.teal,
+              ),
+              selectedIcon: Icon(
+                Icons.calendar_month,
+                color: ImshAccentColors.teal,
+              ),
               label: 'Booking',
             ),
             NavigationDestination(
-              icon: Icon(Icons.receipt_long_outlined),
-              selectedIcon: Icon(Icons.receipt_long),
+              icon: Icon(
+                Icons.receipt_long_outlined,
+                color: ImshAccentColors.amber,
+              ),
+              selectedIcon: Icon(
+                Icons.receipt_long,
+                color: ImshAccentColors.amber,
+              ),
               label: 'Billing',
             ),
             NavigationDestination(
-              icon: Icon(Icons.person_outline),
-              selectedIcon: Icon(Icons.person),
+              icon: Icon(Icons.person_outline, color: ImshAccentColors.purple),
+              selectedIcon: Icon(Icons.person, color: ImshAccentColors.purple),
               label: 'Account',
             ),
           ],

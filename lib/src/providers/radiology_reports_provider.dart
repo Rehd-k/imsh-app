@@ -1,8 +1,8 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_riverpod/legacy.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 
 import '../models/radiology_report_model.dart';
-import 'auth_provider.dart';
 import 'family_provider.dart';
 import 'service_providers.dart';
 
@@ -108,11 +108,14 @@ final radiologyReportsPagingControllerProvider = Provider.autoDispose((ref) {
   final service = ref.watch(radiologyServiceProvider);
   final forPatientId = watchForPatientId(ref);
   final controller = PagingController<int, RadiologyReportSummary>(
-    firstPageKey: 1,
-  );
-
-  controller.addPageRequestListener((pageKey) async {
-    try {
+    getNextPageKey: (state) {
+      final pages = state.pages;
+      if (pages != null && pages.last.length < radiologyReportsPageSize) {
+        return null;
+      }
+      return state.nextIntPageKey;
+    },
+    fetchPage: (pageKey) async {
       final response = await service.listRadiologyReports(
         page: pageKey,
         limit: radiologyReportsPageSize,
@@ -120,18 +123,9 @@ final radiologyReportsPagingControllerProvider = Provider.autoDispose((ref) {
       );
       ref.read(radiologyStatisticsProvider.notifier).state =
           response.statistics;
-      final isLastPage =
-          response.data.length < radiologyReportsPageSize ||
-          pageKey * radiologyReportsPageSize >= response.total;
-      if (isLastPage) {
-        controller.appendLastPage(response.data);
-      } else {
-        controller.appendPage(response.data, pageKey + 1);
-      }
-    } catch (error) {
-      controller.error = authFlowErrorMessage(error);
-    }
-  });
+      return response.data;
+    },
+  );
 
   ref.onDispose(controller.dispose);
   return controller;

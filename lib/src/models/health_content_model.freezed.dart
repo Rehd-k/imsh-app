@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // coverage:ignore-file
-// ignore_for_file: type=lint
+// ignore_for_file: type=lint, type=warning, deprecated_member_use, deprecated_member_use_from_same_package
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
 part of 'health_content_model.dart';
@@ -9,6 +9,7 @@ part of 'health_content_model.dart';
 // FreezedGenerator
 // **************************************************************************
 
+// GENERATED CODE - DO NOT MODIFY BY HAND
 // dart format off
 T _$identity<T>(T value) => value;
 
@@ -28,16 +29,21 @@ $HealthContentItemCopyWith<HealthContentItem> get copyWith => _$HealthContentIte
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is HealthContentItem&&(identical(other.id, id) || other.id == id)&&(identical(other.title, title) || other.title == title)&&(identical(other.body, body) || other.body == body)&&(identical(other.imageUrl, imageUrl) || other.imageUrl == imageUrl)&&(identical(other.publishedAt, publishedAt) || other.publishedAt == publishedAt)&&(identical(other.expiresAt, expiresAt) || other.expiresAt == expiresAt)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt));
+  final _this = this as HealthContentItem;
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is HealthContentItem&&(identical(other.id, _this.id) || other.id == _this.id)&&(identical(other.title, _this.title) || other.title == _this.title)&&(identical(other.body, _this.body) || other.body == _this.body)&&(identical(other.imageUrl, _this.imageUrl) || other.imageUrl == _this.imageUrl)&&(identical(other.publishedAt, _this.publishedAt) || other.publishedAt == _this.publishedAt)&&(identical(other.expiresAt, _this.expiresAt) || other.expiresAt == _this.expiresAt)&&(identical(other.createdAt, _this.createdAt) || other.createdAt == _this.createdAt));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,title,body,imageUrl,publishedAt,expiresAt,createdAt);
+int get hashCode {
+  final _this = this as HealthContentItem;
+  return Object.hash(runtimeType,_this.id,_this.title,_this.body,_this.imageUrl,_this.publishedAt,_this.expiresAt,_this.createdAt);
+}
 
 @override
 String toString() {
-  return 'HealthContentItem(id: $id, title: $title, body: $body, imageUrl: $imageUrl, publishedAt: $publishedAt, expiresAt: $expiresAt, createdAt: $createdAt)';
+  final _this = this as HealthContentItem;
+  return 'HealthContentItem(id: ${_this.id}, title: ${_this.title}, body: ${_this.body}, imageUrl: ${_this.imageUrl}, publishedAt: ${_this.publishedAt}, expiresAt: ${_this.expiresAt}, createdAt: ${_this.createdAt})';
 }
 
 
@@ -66,7 +72,7 @@ class _$HealthContentItemCopyWithImpl<$Res>
 /// Create a copy of HealthContentItem
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? title = null,Object? body = null,Object? imageUrl = freezed,Object? publishedAt = freezed,Object? expiresAt = freezed,Object? createdAt = freezed,}) {
-  return _then(_self.copyWith(
+  return _then(HealthContentItem(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,title: null == title ? _self.title : title // ignore: cast_nullable_to_non_nullable
 as String,body: null == body ? _self.body : body // ignore: cast_nullable_to_non_nullable
@@ -239,16 +245,18 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _HealthContentItem&&(identical(other.id, id) || other.id == id)&&(identical(other.title, title) || other.title == title)&&(identical(other.body, body) || other.body == body)&&(identical(other.imageUrl, imageUrl) || other.imageUrl == imageUrl)&&(identical(other.publishedAt, publishedAt) || other.publishedAt == publishedAt)&&(identical(other.expiresAt, expiresAt) || other.expiresAt == expiresAt)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _HealthContentItem&&(identical(other.id, id) || other.id == id)&&(identical(other.title, title) || other.title == title)&&(identical(other.body, body) || other.body == body)&&(identical(other.imageUrl, imageUrl) || other.imageUrl == imageUrl)&&(identical(other.publishedAt, publishedAt) || other.publishedAt == publishedAt)&&(identical(other.expiresAt, expiresAt) || other.expiresAt == expiresAt)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,title,body,imageUrl,publishedAt,expiresAt,createdAt);
+int get hashCode {
+    return Object.hash(runtimeType,id,title,body,imageUrl,publishedAt,expiresAt,createdAt);
+}
 
 @override
 String toString() {
-  return 'HealthContentItem(id: $id, title: $title, body: $body, imageUrl: $imageUrl, publishedAt: $publishedAt, expiresAt: $expiresAt, createdAt: $createdAt)';
+    return 'HealthContentItem(id: $id, title: $title, body: $body, imageUrl: $imageUrl, publishedAt: $publishedAt, expiresAt: $expiresAt, createdAt: $createdAt)';
 }
 
 
@@ -309,16 +317,21 @@ $HealthContentListResponseCopyWith<HealthContentListResponse> get copyWith => _$
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is HealthContentListResponse&&const DeepCollectionEquality().equals(other.data, data)&&(identical(other.total, total) || other.total == total)&&(identical(other.skip, skip) || other.skip == skip)&&(identical(other.take, take) || other.take == take));
+  final _this = this as HealthContentListResponse;
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is HealthContentListResponse&&const DeepCollectionEquality().equals(other.data, _this.data)&&(identical(other.total, _this.total) || other.total == _this.total)&&(identical(other.skip, _this.skip) || other.skip == _this.skip)&&(identical(other.take, _this.take) || other.take == _this.take));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,const DeepCollectionEquality().hash(data),total,skip,take);
+int get hashCode {
+  final _this = this as HealthContentListResponse;
+  return Object.hash(runtimeType,const DeepCollectionEquality().hash(_this.data),_this.total,_this.skip,_this.take);
+}
 
 @override
 String toString() {
-  return 'HealthContentListResponse(data: $data, total: $total, skip: $skip, take: $take)';
+  final _this = this as HealthContentListResponse;
+  return 'HealthContentListResponse(data: ${_this.data}, total: ${_this.total}, skip: ${_this.skip}, take: ${_this.take})';
 }
 
 
@@ -347,7 +360,7 @@ class _$HealthContentListResponseCopyWithImpl<$Res>
 /// Create a copy of HealthContentListResponse
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') @override $Res call({Object? data = null,Object? total = null,Object? skip = null,Object? take = null,}) {
-  return _then(_self.copyWith(
+  return _then(HealthContentListResponse(
 data: null == data ? _self.data : data // ignore: cast_nullable_to_non_nullable
 as List<HealthContentItem>,total: null == total ? _self.total : total // ignore: cast_nullable_to_non_nullable
 as int,skip: null == skip ? _self.skip : skip // ignore: cast_nullable_to_non_nullable
@@ -493,7 +506,7 @@ return $default(_that.data,_that.total,_that.skip,_that.take);case _:
 @JsonSerializable()
 
 class _HealthContentListResponse implements HealthContentListResponse {
-  const _HealthContentListResponse({final  List<HealthContentItem> data = const [], this.total = 0, this.skip = 0, this.take = 20}): _data = data;
+  const _HealthContentListResponse({ List<HealthContentItem> data = const [], this.total = 0, this.skip = 0, this.take = 20}): _data = data;
   factory _HealthContentListResponse.fromJson(Map<String, dynamic> json) => _$HealthContentListResponseFromJson(json);
 
  final  List<HealthContentItem> _data;
@@ -520,16 +533,18 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _HealthContentListResponse&&const DeepCollectionEquality().equals(other._data, _data)&&(identical(other.total, total) || other.total == total)&&(identical(other.skip, skip) || other.skip == skip)&&(identical(other.take, take) || other.take == take));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _HealthContentListResponse&&const DeepCollectionEquality().equals(other.data, _data)&&(identical(other.total, total) || other.total == total)&&(identical(other.skip, skip) || other.skip == skip)&&(identical(other.take, take) || other.take == take));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,const DeepCollectionEquality().hash(_data),total,skip,take);
+int get hashCode {
+    return Object.hash(runtimeType,const DeepCollectionEquality().hash(_data),total,skip,take);
+}
 
 @override
 String toString() {
-  return 'HealthContentListResponse(data: $data, total: $total, skip: $skip, take: $take)';
+    return 'HealthContentListResponse(data: $data, total: $total, skip: $skip, take: $take)';
 }
 
 

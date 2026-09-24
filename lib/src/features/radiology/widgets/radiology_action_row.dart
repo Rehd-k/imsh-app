@@ -1,12 +1,13 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:gap/gap.dart';
 import 'package:imsh/app_router.gr.dart';
 
 import '../../../core/theme/app_design_tokens.dart';
-import '../../../core/theme/context_extensions.dart';
+import '../../../core/theme/imsh_accent_colors.dart';
 import '../../../providers/radiology_reports_provider.dart';
+import '../../../shared/widgets/imsh_filter_row.dart';
+import '../../../shared/widgets/imsh_solid_icon.dart';
 import 'radiology_filter_sheet.dart';
 
 class RadiologyActionRow extends ConsumerWidget {
@@ -15,45 +16,33 @@ class RadiologyActionRow extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final filter = ref.watch(radiologyReportFilterProvider);
-    final theme = Theme.of(context);
-    final colorScheme = context.colorScheme;
 
-    return Row(
-      children: [
-        OutlinedButton.icon(
-          onPressed: () => showRadiologyFilterSheet(context, ref),
-          icon: Badge(
-            isLabelVisible: filter.isActive,
-            child: const Icon(Icons.tune, size: 18),
-          ),
-          label: const Text('Filter'),
-          style: OutlinedButton.styleFrom(
-            foregroundColor: colorScheme.onSurface,
-            side: BorderSide(color: colorScheme.outlineVariant),
-            padding: const EdgeInsets.symmetric(
-              horizontal: AppDesignTokens.spacingMd,
-              vertical: AppDesignTokens.spacingSm + 2,
-            ),
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(AppDesignTokens.radiusSm),
-            ),
-          ),
-        ),
-        const Gap(AppDesignTokens.spacingSm),
-        Expanded(
+    return ImshFilterRow(
+      filters: [
+        Flexible(
           child: FilledButton.icon(
             onPressed: () => context.router.push(const AppointmentsRoute()),
             icon: const Icon(Icons.calendar_month_outlined, size: 18),
-            label: const Text('Book Scan'),
+            label: const Text('Book scan'),
             style: FilledButton.styleFrom(
-              backgroundColor: theme.colorScheme.primary,
-              foregroundColor: theme.colorScheme.onPrimary,
-              padding: const EdgeInsets.symmetric(
-                horizontal: AppDesignTokens.spacingMd,
-                vertical: AppDesignTokens.spacingSm + 2,
-              ),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(AppDesignTokens.radiusSm),
+              visualDensity: VisualDensity.compact,
+              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+            ),
+          ),
+        ),
+        Tooltip(
+          message: filter.isActive ? 'Filters (active)' : 'Filters',
+          child: InkWell(
+            onTap: () => showRadiologyFilterSheet(context, ref),
+            borderRadius: BorderRadius.circular(AppDesignTokens.radiusMd),
+            child: Badge(
+              isLabelVisible: filter.isActive,
+              child: const ImshSolidIcon(
+                icon: Icons.tune_rounded,
+                color: ImshAccentColors.indigo,
+                size: 36,
+                iconSize: 18,
+                radius: AppDesignTokens.radiusMd,
               ),
             ),
           ),

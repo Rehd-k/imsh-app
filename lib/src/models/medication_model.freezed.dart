@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // coverage:ignore-file
-// ignore_for_file: type=lint
+// ignore_for_file: type=lint, type=warning, deprecated_member_use, deprecated_member_use_from_same_package
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
 part of 'medication_model.dart';
@@ -9,6 +9,7 @@ part of 'medication_model.dart';
 // FreezedGenerator
 // **************************************************************************
 
+// GENERATED CODE - DO NOT MODIFY BY HAND
 // dart format off
 T _$identity<T>(T value) => value;
 
@@ -28,16 +29,21 @@ $MedicationDoseSummaryCopyWith<MedicationDoseSummary> get copyWith => _$Medicati
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is MedicationDoseSummary&&(identical(other.id, id) || other.id == id)&&(identical(other.prescriptionItemId, prescriptionItemId) || other.prescriptionItemId == prescriptionItemId)&&(identical(other.drugName, drugName) || other.drugName == drugName)&&(identical(other.dosage, dosage) || other.dosage == dosage)&&(identical(other.instructions, instructions) || other.instructions == instructions)&&(identical(other.scheduledAt, scheduledAt) || other.scheduledAt == scheduledAt)&&(identical(other.status, status) || other.status == status));
+  final _this = this as MedicationDoseSummary;
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is MedicationDoseSummary&&(identical(other.id, _this.id) || other.id == _this.id)&&(identical(other.prescriptionItemId, _this.prescriptionItemId) || other.prescriptionItemId == _this.prescriptionItemId)&&(identical(other.drugName, _this.drugName) || other.drugName == _this.drugName)&&(identical(other.dosage, _this.dosage) || other.dosage == _this.dosage)&&(identical(other.instructions, _this.instructions) || other.instructions == _this.instructions)&&(identical(other.scheduledAt, _this.scheduledAt) || other.scheduledAt == _this.scheduledAt)&&(identical(other.status, _this.status) || other.status == _this.status));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,prescriptionItemId,drugName,dosage,instructions,scheduledAt,status);
+int get hashCode {
+  final _this = this as MedicationDoseSummary;
+  return Object.hash(runtimeType,_this.id,_this.prescriptionItemId,_this.drugName,_this.dosage,_this.instructions,_this.scheduledAt,_this.status);
+}
 
 @override
 String toString() {
-  return 'MedicationDoseSummary(id: $id, prescriptionItemId: $prescriptionItemId, drugName: $drugName, dosage: $dosage, instructions: $instructions, scheduledAt: $scheduledAt, status: $status)';
+  final _this = this as MedicationDoseSummary;
+  return 'MedicationDoseSummary(id: ${_this.id}, prescriptionItemId: ${_this.prescriptionItemId}, drugName: ${_this.drugName}, dosage: ${_this.dosage}, instructions: ${_this.instructions}, scheduledAt: ${_this.scheduledAt}, status: ${_this.status})';
 }
 
 
@@ -66,7 +72,7 @@ class _$MedicationDoseSummaryCopyWithImpl<$Res>
 /// Create a copy of MedicationDoseSummary
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? prescriptionItemId = null,Object? drugName = null,Object? dosage = null,Object? instructions = freezed,Object? scheduledAt = null,Object? status = null,}) {
-  return _then(_self.copyWith(
+  return _then(MedicationDoseSummary(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,prescriptionItemId: null == prescriptionItemId ? _self.prescriptionItemId : prescriptionItemId // ignore: cast_nullable_to_non_nullable
 as String,drugName: null == drugName ? _self.drugName : drugName // ignore: cast_nullable_to_non_nullable
@@ -239,16 +245,18 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _MedicationDoseSummary&&(identical(other.id, id) || other.id == id)&&(identical(other.prescriptionItemId, prescriptionItemId) || other.prescriptionItemId == prescriptionItemId)&&(identical(other.drugName, drugName) || other.drugName == drugName)&&(identical(other.dosage, dosage) || other.dosage == dosage)&&(identical(other.instructions, instructions) || other.instructions == instructions)&&(identical(other.scheduledAt, scheduledAt) || other.scheduledAt == scheduledAt)&&(identical(other.status, status) || other.status == status));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _MedicationDoseSummary&&(identical(other.id, id) || other.id == id)&&(identical(other.prescriptionItemId, prescriptionItemId) || other.prescriptionItemId == prescriptionItemId)&&(identical(other.drugName, drugName) || other.drugName == drugName)&&(identical(other.dosage, dosage) || other.dosage == dosage)&&(identical(other.instructions, instructions) || other.instructions == instructions)&&(identical(other.scheduledAt, scheduledAt) || other.scheduledAt == scheduledAt)&&(identical(other.status, status) || other.status == status));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,prescriptionItemId,drugName,dosage,instructions,scheduledAt,status);
+int get hashCode {
+    return Object.hash(runtimeType,id,prescriptionItemId,drugName,dosage,instructions,scheduledAt,status);
+}
 
 @override
 String toString() {
-  return 'MedicationDoseSummary(id: $id, prescriptionItemId: $prescriptionItemId, drugName: $drugName, dosage: $dosage, instructions: $instructions, scheduledAt: $scheduledAt, status: $status)';
+    return 'MedicationDoseSummary(id: $id, prescriptionItemId: $prescriptionItemId, drugName: $drugName, dosage: $dosage, instructions: $instructions, scheduledAt: $scheduledAt, status: $status)';
 }
 
 
@@ -309,16 +317,21 @@ $MedicationScheduleEntryCopyWith<MedicationScheduleEntry> get copyWith => _$Medi
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is MedicationScheduleEntry&&(identical(other.id, id) || other.id == id)&&(identical(other.prescriptionItemId, prescriptionItemId) || other.prescriptionItemId == prescriptionItemId)&&(identical(other.timeOfDay, timeOfDay) || other.timeOfDay == timeOfDay)&&(identical(other.drugName, drugName) || other.drugName == drugName)&&(identical(other.dosage, dosage) || other.dosage == dosage)&&(identical(other.scheduledAt, scheduledAt) || other.scheduledAt == scheduledAt)&&(identical(other.status, status) || other.status == status));
+  final _this = this as MedicationScheduleEntry;
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is MedicationScheduleEntry&&(identical(other.id, _this.id) || other.id == _this.id)&&(identical(other.prescriptionItemId, _this.prescriptionItemId) || other.prescriptionItemId == _this.prescriptionItemId)&&(identical(other.timeOfDay, _this.timeOfDay) || other.timeOfDay == _this.timeOfDay)&&(identical(other.drugName, _this.drugName) || other.drugName == _this.drugName)&&(identical(other.dosage, _this.dosage) || other.dosage == _this.dosage)&&(identical(other.scheduledAt, _this.scheduledAt) || other.scheduledAt == _this.scheduledAt)&&(identical(other.status, _this.status) || other.status == _this.status));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,prescriptionItemId,timeOfDay,drugName,dosage,scheduledAt,status);
+int get hashCode {
+  final _this = this as MedicationScheduleEntry;
+  return Object.hash(runtimeType,_this.id,_this.prescriptionItemId,_this.timeOfDay,_this.drugName,_this.dosage,_this.scheduledAt,_this.status);
+}
 
 @override
 String toString() {
-  return 'MedicationScheduleEntry(id: $id, prescriptionItemId: $prescriptionItemId, timeOfDay: $timeOfDay, drugName: $drugName, dosage: $dosage, scheduledAt: $scheduledAt, status: $status)';
+  final _this = this as MedicationScheduleEntry;
+  return 'MedicationScheduleEntry(id: ${_this.id}, prescriptionItemId: ${_this.prescriptionItemId}, timeOfDay: ${_this.timeOfDay}, drugName: ${_this.drugName}, dosage: ${_this.dosage}, scheduledAt: ${_this.scheduledAt}, status: ${_this.status})';
 }
 
 
@@ -347,7 +360,7 @@ class _$MedicationScheduleEntryCopyWithImpl<$Res>
 /// Create a copy of MedicationScheduleEntry
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? prescriptionItemId = null,Object? timeOfDay = null,Object? drugName = null,Object? dosage = null,Object? scheduledAt = null,Object? status = null,}) {
-  return _then(_self.copyWith(
+  return _then(MedicationScheduleEntry(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,prescriptionItemId: null == prescriptionItemId ? _self.prescriptionItemId : prescriptionItemId // ignore: cast_nullable_to_non_nullable
 as String,timeOfDay: null == timeOfDay ? _self.timeOfDay : timeOfDay // ignore: cast_nullable_to_non_nullable
@@ -520,16 +533,18 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _MedicationScheduleEntry&&(identical(other.id, id) || other.id == id)&&(identical(other.prescriptionItemId, prescriptionItemId) || other.prescriptionItemId == prescriptionItemId)&&(identical(other.timeOfDay, timeOfDay) || other.timeOfDay == timeOfDay)&&(identical(other.drugName, drugName) || other.drugName == drugName)&&(identical(other.dosage, dosage) || other.dosage == dosage)&&(identical(other.scheduledAt, scheduledAt) || other.scheduledAt == scheduledAt)&&(identical(other.status, status) || other.status == status));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _MedicationScheduleEntry&&(identical(other.id, id) || other.id == id)&&(identical(other.prescriptionItemId, prescriptionItemId) || other.prescriptionItemId == prescriptionItemId)&&(identical(other.timeOfDay, timeOfDay) || other.timeOfDay == timeOfDay)&&(identical(other.drugName, drugName) || other.drugName == drugName)&&(identical(other.dosage, dosage) || other.dosage == dosage)&&(identical(other.scheduledAt, scheduledAt) || other.scheduledAt == scheduledAt)&&(identical(other.status, status) || other.status == status));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,prescriptionItemId,timeOfDay,drugName,dosage,scheduledAt,status);
+int get hashCode {
+    return Object.hash(runtimeType,id,prescriptionItemId,timeOfDay,drugName,dosage,scheduledAt,status);
+}
 
 @override
 String toString() {
-  return 'MedicationScheduleEntry(id: $id, prescriptionItemId: $prescriptionItemId, timeOfDay: $timeOfDay, drugName: $drugName, dosage: $dosage, scheduledAt: $scheduledAt, status: $status)';
+    return 'MedicationScheduleEntry(id: $id, prescriptionItemId: $prescriptionItemId, timeOfDay: $timeOfDay, drugName: $drugName, dosage: $dosage, scheduledAt: $scheduledAt, status: $status)';
 }
 
 
@@ -577,7 +592,7 @@ as MedicationDoseStatus,
 /// @nodoc
 mixin _$ActivePrescriptionSummary {
 
- String get id; String get displayName; String get frequencyLabel; int get daysRemaining; int get refillsRemaining; double get supplyProgress; PrescriptionSupplyStatus get supplyStatus;
+ String get id; String get displayName; String get frequencyLabel; int get daysRemaining; int get refillsRemaining; double get supplyProgress; PrescriptionSupplyStatus get supplyStatus; DateTime? get scheduleStartAt; bool get needsScheduleStart; bool get scheduleConfirmed; DateTime? get endDate;
 /// Create a copy of ActivePrescriptionSummary
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -590,16 +605,21 @@ $ActivePrescriptionSummaryCopyWith<ActivePrescriptionSummary> get copyWith => _$
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is ActivePrescriptionSummary&&(identical(other.id, id) || other.id == id)&&(identical(other.displayName, displayName) || other.displayName == displayName)&&(identical(other.frequencyLabel, frequencyLabel) || other.frequencyLabel == frequencyLabel)&&(identical(other.daysRemaining, daysRemaining) || other.daysRemaining == daysRemaining)&&(identical(other.refillsRemaining, refillsRemaining) || other.refillsRemaining == refillsRemaining)&&(identical(other.supplyProgress, supplyProgress) || other.supplyProgress == supplyProgress)&&(identical(other.supplyStatus, supplyStatus) || other.supplyStatus == supplyStatus));
+  final _this = this as ActivePrescriptionSummary;
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is ActivePrescriptionSummary&&(identical(other.id, _this.id) || other.id == _this.id)&&(identical(other.displayName, _this.displayName) || other.displayName == _this.displayName)&&(identical(other.frequencyLabel, _this.frequencyLabel) || other.frequencyLabel == _this.frequencyLabel)&&(identical(other.daysRemaining, _this.daysRemaining) || other.daysRemaining == _this.daysRemaining)&&(identical(other.refillsRemaining, _this.refillsRemaining) || other.refillsRemaining == _this.refillsRemaining)&&(identical(other.supplyProgress, _this.supplyProgress) || other.supplyProgress == _this.supplyProgress)&&(identical(other.supplyStatus, _this.supplyStatus) || other.supplyStatus == _this.supplyStatus)&&(identical(other.scheduleStartAt, _this.scheduleStartAt) || other.scheduleStartAt == _this.scheduleStartAt)&&(identical(other.needsScheduleStart, _this.needsScheduleStart) || other.needsScheduleStart == _this.needsScheduleStart)&&(identical(other.scheduleConfirmed, _this.scheduleConfirmed) || other.scheduleConfirmed == _this.scheduleConfirmed)&&(identical(other.endDate, _this.endDate) || other.endDate == _this.endDate));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,displayName,frequencyLabel,daysRemaining,refillsRemaining,supplyProgress,supplyStatus);
+int get hashCode {
+  final _this = this as ActivePrescriptionSummary;
+  return Object.hash(runtimeType,_this.id,_this.displayName,_this.frequencyLabel,_this.daysRemaining,_this.refillsRemaining,_this.supplyProgress,_this.supplyStatus,_this.scheduleStartAt,_this.needsScheduleStart,_this.scheduleConfirmed,_this.endDate);
+}
 
 @override
 String toString() {
-  return 'ActivePrescriptionSummary(id: $id, displayName: $displayName, frequencyLabel: $frequencyLabel, daysRemaining: $daysRemaining, refillsRemaining: $refillsRemaining, supplyProgress: $supplyProgress, supplyStatus: $supplyStatus)';
+  final _this = this as ActivePrescriptionSummary;
+  return 'ActivePrescriptionSummary(id: ${_this.id}, displayName: ${_this.displayName}, frequencyLabel: ${_this.frequencyLabel}, daysRemaining: ${_this.daysRemaining}, refillsRemaining: ${_this.refillsRemaining}, supplyProgress: ${_this.supplyProgress}, supplyStatus: ${_this.supplyStatus}, scheduleStartAt: ${_this.scheduleStartAt}, needsScheduleStart: ${_this.needsScheduleStart}, scheduleConfirmed: ${_this.scheduleConfirmed}, endDate: ${_this.endDate})';
 }
 
 
@@ -610,7 +630,7 @@ abstract mixin class $ActivePrescriptionSummaryCopyWith<$Res>  {
   factory $ActivePrescriptionSummaryCopyWith(ActivePrescriptionSummary value, $Res Function(ActivePrescriptionSummary) _then) = _$ActivePrescriptionSummaryCopyWithImpl;
 @useResult
 $Res call({
- String id, String displayName, String frequencyLabel, int daysRemaining, int refillsRemaining, double supplyProgress, PrescriptionSupplyStatus supplyStatus
+ String id, String displayName, String frequencyLabel, int daysRemaining, int refillsRemaining, double supplyProgress, PrescriptionSupplyStatus supplyStatus, DateTime? scheduleStartAt, bool needsScheduleStart, bool scheduleConfirmed, DateTime? endDate
 });
 
 
@@ -627,8 +647,8 @@ class _$ActivePrescriptionSummaryCopyWithImpl<$Res>
 
 /// Create a copy of ActivePrescriptionSummary
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? displayName = null,Object? frequencyLabel = null,Object? daysRemaining = null,Object? refillsRemaining = null,Object? supplyProgress = null,Object? supplyStatus = null,}) {
-  return _then(_self.copyWith(
+@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? displayName = null,Object? frequencyLabel = null,Object? daysRemaining = null,Object? refillsRemaining = null,Object? supplyProgress = null,Object? supplyStatus = null,Object? scheduleStartAt = freezed,Object? needsScheduleStart = null,Object? scheduleConfirmed = null,Object? endDate = freezed,}) {
+  return _then(ActivePrescriptionSummary(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,displayName: null == displayName ? _self.displayName : displayName // ignore: cast_nullable_to_non_nullable
 as String,frequencyLabel: null == frequencyLabel ? _self.frequencyLabel : frequencyLabel // ignore: cast_nullable_to_non_nullable
@@ -636,7 +656,11 @@ as String,daysRemaining: null == daysRemaining ? _self.daysRemaining : daysRemai
 as int,refillsRemaining: null == refillsRemaining ? _self.refillsRemaining : refillsRemaining // ignore: cast_nullable_to_non_nullable
 as int,supplyProgress: null == supplyProgress ? _self.supplyProgress : supplyProgress // ignore: cast_nullable_to_non_nullable
 as double,supplyStatus: null == supplyStatus ? _self.supplyStatus : supplyStatus // ignore: cast_nullable_to_non_nullable
-as PrescriptionSupplyStatus,
+as PrescriptionSupplyStatus,scheduleStartAt: freezed == scheduleStartAt ? _self.scheduleStartAt : scheduleStartAt // ignore: cast_nullable_to_non_nullable
+as DateTime?,needsScheduleStart: null == needsScheduleStart ? _self.needsScheduleStart : needsScheduleStart // ignore: cast_nullable_to_non_nullable
+as bool,scheduleConfirmed: null == scheduleConfirmed ? _self.scheduleConfirmed : scheduleConfirmed // ignore: cast_nullable_to_non_nullable
+as bool,endDate: freezed == endDate ? _self.endDate : endDate // ignore: cast_nullable_to_non_nullable
+as DateTime?,
   ));
 }
 
@@ -721,10 +745,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String id,  String displayName,  String frequencyLabel,  int daysRemaining,  int refillsRemaining,  double supplyProgress,  PrescriptionSupplyStatus supplyStatus)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String id,  String displayName,  String frequencyLabel,  int daysRemaining,  int refillsRemaining,  double supplyProgress,  PrescriptionSupplyStatus supplyStatus,  DateTime? scheduleStartAt,  bool needsScheduleStart,  bool scheduleConfirmed,  DateTime? endDate)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _ActivePrescriptionSummary() when $default != null:
-return $default(_that.id,_that.displayName,_that.frequencyLabel,_that.daysRemaining,_that.refillsRemaining,_that.supplyProgress,_that.supplyStatus);case _:
+return $default(_that.id,_that.displayName,_that.frequencyLabel,_that.daysRemaining,_that.refillsRemaining,_that.supplyProgress,_that.supplyStatus,_that.scheduleStartAt,_that.needsScheduleStart,_that.scheduleConfirmed,_that.endDate);case _:
   return orElse();
 
 }
@@ -742,10 +766,10 @@ return $default(_that.id,_that.displayName,_that.frequencyLabel,_that.daysRemain
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String id,  String displayName,  String frequencyLabel,  int daysRemaining,  int refillsRemaining,  double supplyProgress,  PrescriptionSupplyStatus supplyStatus)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String id,  String displayName,  String frequencyLabel,  int daysRemaining,  int refillsRemaining,  double supplyProgress,  PrescriptionSupplyStatus supplyStatus,  DateTime? scheduleStartAt,  bool needsScheduleStart,  bool scheduleConfirmed,  DateTime? endDate)  $default,) {final _that = this;
 switch (_that) {
 case _ActivePrescriptionSummary():
-return $default(_that.id,_that.displayName,_that.frequencyLabel,_that.daysRemaining,_that.refillsRemaining,_that.supplyProgress,_that.supplyStatus);case _:
+return $default(_that.id,_that.displayName,_that.frequencyLabel,_that.daysRemaining,_that.refillsRemaining,_that.supplyProgress,_that.supplyStatus,_that.scheduleStartAt,_that.needsScheduleStart,_that.scheduleConfirmed,_that.endDate);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -762,10 +786,10 @@ return $default(_that.id,_that.displayName,_that.frequencyLabel,_that.daysRemain
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String id,  String displayName,  String frequencyLabel,  int daysRemaining,  int refillsRemaining,  double supplyProgress,  PrescriptionSupplyStatus supplyStatus)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String id,  String displayName,  String frequencyLabel,  int daysRemaining,  int refillsRemaining,  double supplyProgress,  PrescriptionSupplyStatus supplyStatus,  DateTime? scheduleStartAt,  bool needsScheduleStart,  bool scheduleConfirmed,  DateTime? endDate)?  $default,) {final _that = this;
 switch (_that) {
 case _ActivePrescriptionSummary() when $default != null:
-return $default(_that.id,_that.displayName,_that.frequencyLabel,_that.daysRemaining,_that.refillsRemaining,_that.supplyProgress,_that.supplyStatus);case _:
+return $default(_that.id,_that.displayName,_that.frequencyLabel,_that.daysRemaining,_that.refillsRemaining,_that.supplyProgress,_that.supplyStatus,_that.scheduleStartAt,_that.needsScheduleStart,_that.scheduleConfirmed,_that.endDate);case _:
   return null;
 
 }
@@ -777,7 +801,7 @@ return $default(_that.id,_that.displayName,_that.frequencyLabel,_that.daysRemain
 @JsonSerializable()
 
 class _ActivePrescriptionSummary implements ActivePrescriptionSummary {
-  const _ActivePrescriptionSummary({required this.id, required this.displayName, required this.frequencyLabel, required this.daysRemaining, required this.refillsRemaining, required this.supplyProgress, required this.supplyStatus});
+  const _ActivePrescriptionSummary({required this.id, required this.displayName, required this.frequencyLabel, required this.daysRemaining, required this.refillsRemaining, required this.supplyProgress, required this.supplyStatus, this.scheduleStartAt, this.needsScheduleStart = false, this.scheduleConfirmed = true, this.endDate});
   factory _ActivePrescriptionSummary.fromJson(Map<String, dynamic> json) => _$ActivePrescriptionSummaryFromJson(json);
 
 @override final  String id;
@@ -787,6 +811,10 @@ class _ActivePrescriptionSummary implements ActivePrescriptionSummary {
 @override final  int refillsRemaining;
 @override final  double supplyProgress;
 @override final  PrescriptionSupplyStatus supplyStatus;
+@override final  DateTime? scheduleStartAt;
+@override@JsonKey() final  bool needsScheduleStart;
+@override@JsonKey() final  bool scheduleConfirmed;
+@override final  DateTime? endDate;
 
 /// Create a copy of ActivePrescriptionSummary
 /// with the given fields replaced by the non-null parameter values.
@@ -801,16 +829,18 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _ActivePrescriptionSummary&&(identical(other.id, id) || other.id == id)&&(identical(other.displayName, displayName) || other.displayName == displayName)&&(identical(other.frequencyLabel, frequencyLabel) || other.frequencyLabel == frequencyLabel)&&(identical(other.daysRemaining, daysRemaining) || other.daysRemaining == daysRemaining)&&(identical(other.refillsRemaining, refillsRemaining) || other.refillsRemaining == refillsRemaining)&&(identical(other.supplyProgress, supplyProgress) || other.supplyProgress == supplyProgress)&&(identical(other.supplyStatus, supplyStatus) || other.supplyStatus == supplyStatus));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _ActivePrescriptionSummary&&(identical(other.id, id) || other.id == id)&&(identical(other.displayName, displayName) || other.displayName == displayName)&&(identical(other.frequencyLabel, frequencyLabel) || other.frequencyLabel == frequencyLabel)&&(identical(other.daysRemaining, daysRemaining) || other.daysRemaining == daysRemaining)&&(identical(other.refillsRemaining, refillsRemaining) || other.refillsRemaining == refillsRemaining)&&(identical(other.supplyProgress, supplyProgress) || other.supplyProgress == supplyProgress)&&(identical(other.supplyStatus, supplyStatus) || other.supplyStatus == supplyStatus)&&(identical(other.scheduleStartAt, scheduleStartAt) || other.scheduleStartAt == scheduleStartAt)&&(identical(other.needsScheduleStart, needsScheduleStart) || other.needsScheduleStart == needsScheduleStart)&&(identical(other.scheduleConfirmed, scheduleConfirmed) || other.scheduleConfirmed == scheduleConfirmed)&&(identical(other.endDate, endDate) || other.endDate == endDate));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,displayName,frequencyLabel,daysRemaining,refillsRemaining,supplyProgress,supplyStatus);
+int get hashCode {
+    return Object.hash(runtimeType,id,displayName,frequencyLabel,daysRemaining,refillsRemaining,supplyProgress,supplyStatus,scheduleStartAt,needsScheduleStart,scheduleConfirmed,endDate);
+}
 
 @override
 String toString() {
-  return 'ActivePrescriptionSummary(id: $id, displayName: $displayName, frequencyLabel: $frequencyLabel, daysRemaining: $daysRemaining, refillsRemaining: $refillsRemaining, supplyProgress: $supplyProgress, supplyStatus: $supplyStatus)';
+    return 'ActivePrescriptionSummary(id: $id, displayName: $displayName, frequencyLabel: $frequencyLabel, daysRemaining: $daysRemaining, refillsRemaining: $refillsRemaining, supplyProgress: $supplyProgress, supplyStatus: $supplyStatus, scheduleStartAt: $scheduleStartAt, needsScheduleStart: $needsScheduleStart, scheduleConfirmed: $scheduleConfirmed, endDate: $endDate)';
 }
 
 
@@ -821,7 +851,7 @@ abstract mixin class _$ActivePrescriptionSummaryCopyWith<$Res> implements $Activ
   factory _$ActivePrescriptionSummaryCopyWith(_ActivePrescriptionSummary value, $Res Function(_ActivePrescriptionSummary) _then) = __$ActivePrescriptionSummaryCopyWithImpl;
 @override @useResult
 $Res call({
- String id, String displayName, String frequencyLabel, int daysRemaining, int refillsRemaining, double supplyProgress, PrescriptionSupplyStatus supplyStatus
+ String id, String displayName, String frequencyLabel, int daysRemaining, int refillsRemaining, double supplyProgress, PrescriptionSupplyStatus supplyStatus, DateTime? scheduleStartAt, bool needsScheduleStart, bool scheduleConfirmed, DateTime? endDate
 });
 
 
@@ -838,7 +868,7 @@ class __$ActivePrescriptionSummaryCopyWithImpl<$Res>
 
 /// Create a copy of ActivePrescriptionSummary
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? displayName = null,Object? frequencyLabel = null,Object? daysRemaining = null,Object? refillsRemaining = null,Object? supplyProgress = null,Object? supplyStatus = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? displayName = null,Object? frequencyLabel = null,Object? daysRemaining = null,Object? refillsRemaining = null,Object? supplyProgress = null,Object? supplyStatus = null,Object? scheduleStartAt = freezed,Object? needsScheduleStart = null,Object? scheduleConfirmed = null,Object? endDate = freezed,}) {
   return _then(_ActivePrescriptionSummary(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,displayName: null == displayName ? _self.displayName : displayName // ignore: cast_nullable_to_non_nullable
@@ -847,7 +877,11 @@ as String,daysRemaining: null == daysRemaining ? _self.daysRemaining : daysRemai
 as int,refillsRemaining: null == refillsRemaining ? _self.refillsRemaining : refillsRemaining // ignore: cast_nullable_to_non_nullable
 as int,supplyProgress: null == supplyProgress ? _self.supplyProgress : supplyProgress // ignore: cast_nullable_to_non_nullable
 as double,supplyStatus: null == supplyStatus ? _self.supplyStatus : supplyStatus // ignore: cast_nullable_to_non_nullable
-as PrescriptionSupplyStatus,
+as PrescriptionSupplyStatus,scheduleStartAt: freezed == scheduleStartAt ? _self.scheduleStartAt : scheduleStartAt // ignore: cast_nullable_to_non_nullable
+as DateTime?,needsScheduleStart: null == needsScheduleStart ? _self.needsScheduleStart : needsScheduleStart // ignore: cast_nullable_to_non_nullable
+as bool,scheduleConfirmed: null == scheduleConfirmed ? _self.scheduleConfirmed : scheduleConfirmed // ignore: cast_nullable_to_non_nullable
+as bool,endDate: freezed == endDate ? _self.endDate : endDate // ignore: cast_nullable_to_non_nullable
+as DateTime?,
   ));
 }
 
@@ -871,16 +905,21 @@ $MedicationDashboardResponseCopyWith<MedicationDashboardResponse> get copyWith =
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is MedicationDashboardResponse&&const DeepCollectionEquality().equals(other.nextDoses, nextDoses)&&const DeepCollectionEquality().equals(other.todaySchedule, todaySchedule)&&const DeepCollectionEquality().equals(other.activePrescriptions, activePrescriptions));
+  final _this = this as MedicationDashboardResponse;
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is MedicationDashboardResponse&&const DeepCollectionEquality().equals(other.nextDoses, _this.nextDoses)&&const DeepCollectionEquality().equals(other.todaySchedule, _this.todaySchedule)&&const DeepCollectionEquality().equals(other.activePrescriptions, _this.activePrescriptions));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,const DeepCollectionEquality().hash(nextDoses),const DeepCollectionEquality().hash(todaySchedule),const DeepCollectionEquality().hash(activePrescriptions));
+int get hashCode {
+  final _this = this as MedicationDashboardResponse;
+  return Object.hash(runtimeType,const DeepCollectionEquality().hash(_this.nextDoses),const DeepCollectionEquality().hash(_this.todaySchedule),const DeepCollectionEquality().hash(_this.activePrescriptions));
+}
 
 @override
 String toString() {
-  return 'MedicationDashboardResponse(nextDoses: $nextDoses, todaySchedule: $todaySchedule, activePrescriptions: $activePrescriptions)';
+  final _this = this as MedicationDashboardResponse;
+  return 'MedicationDashboardResponse(nextDoses: ${_this.nextDoses}, todaySchedule: ${_this.todaySchedule}, activePrescriptions: ${_this.activePrescriptions})';
 }
 
 
@@ -909,7 +948,7 @@ class _$MedicationDashboardResponseCopyWithImpl<$Res>
 /// Create a copy of MedicationDashboardResponse
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') @override $Res call({Object? nextDoses = null,Object? todaySchedule = null,Object? activePrescriptions = null,}) {
-  return _then(_self.copyWith(
+  return _then(MedicationDashboardResponse(
 nextDoses: null == nextDoses ? _self.nextDoses : nextDoses // ignore: cast_nullable_to_non_nullable
 as List<MedicationDoseSummary>,todaySchedule: null == todaySchedule ? _self.todaySchedule : todaySchedule // ignore: cast_nullable_to_non_nullable
 as List<MedicationScheduleEntry>,activePrescriptions: null == activePrescriptions ? _self.activePrescriptions : activePrescriptions // ignore: cast_nullable_to_non_nullable
@@ -1054,7 +1093,7 @@ return $default(_that.nextDoses,_that.todaySchedule,_that.activePrescriptions);c
 @JsonSerializable()
 
 class _MedicationDashboardResponse implements MedicationDashboardResponse {
-  const _MedicationDashboardResponse({final  List<MedicationDoseSummary> nextDoses = const [], final  List<MedicationScheduleEntry> todaySchedule = const [], final  List<ActivePrescriptionSummary> activePrescriptions = const []}): _nextDoses = nextDoses,_todaySchedule = todaySchedule,_activePrescriptions = activePrescriptions;
+  const _MedicationDashboardResponse({ List<MedicationDoseSummary> nextDoses = const [],  List<MedicationScheduleEntry> todaySchedule = const [],  List<ActivePrescriptionSummary> activePrescriptions = const []}): _nextDoses = nextDoses,_todaySchedule = todaySchedule,_activePrescriptions = activePrescriptions;
   factory _MedicationDashboardResponse.fromJson(Map<String, dynamic> json) => _$MedicationDashboardResponseFromJson(json);
 
  final  List<MedicationDoseSummary> _nextDoses;
@@ -1092,16 +1131,18 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _MedicationDashboardResponse&&const DeepCollectionEquality().equals(other._nextDoses, _nextDoses)&&const DeepCollectionEquality().equals(other._todaySchedule, _todaySchedule)&&const DeepCollectionEquality().equals(other._activePrescriptions, _activePrescriptions));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _MedicationDashboardResponse&&const DeepCollectionEquality().equals(other.nextDoses, _nextDoses)&&const DeepCollectionEquality().equals(other.todaySchedule, _todaySchedule)&&const DeepCollectionEquality().equals(other.activePrescriptions, _activePrescriptions));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,const DeepCollectionEquality().hash(_nextDoses),const DeepCollectionEquality().hash(_todaySchedule),const DeepCollectionEquality().hash(_activePrescriptions));
+int get hashCode {
+    return Object.hash(runtimeType,const DeepCollectionEquality().hash(_nextDoses),const DeepCollectionEquality().hash(_todaySchedule),const DeepCollectionEquality().hash(_activePrescriptions));
+}
 
 @override
 String toString() {
-  return 'MedicationDashboardResponse(nextDoses: $nextDoses, todaySchedule: $todaySchedule, activePrescriptions: $activePrescriptions)';
+    return 'MedicationDashboardResponse(nextDoses: $nextDoses, todaySchedule: $todaySchedule, activePrescriptions: $activePrescriptions)';
 }
 
 
@@ -1143,6 +1184,843 @@ as List<ActivePrescriptionSummary>,
 
 
 /// @nodoc
+mixin _$MedicationCalendarResponse {
+
+ List<MedicationScheduleEntry> get doses;
+/// Create a copy of MedicationCalendarResponse
+/// with the given fields replaced by the non-null parameter values.
+@JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+$MedicationCalendarResponseCopyWith<MedicationCalendarResponse> get copyWith => _$MedicationCalendarResponseCopyWithImpl<MedicationCalendarResponse>(this as MedicationCalendarResponse, _$identity);
+
+  /// Serializes this MedicationCalendarResponse to a JSON map.
+  Map<String, dynamic> toJson();
+
+
+@override
+bool operator ==(Object other) {
+  final _this = this as MedicationCalendarResponse;
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is MedicationCalendarResponse&&const DeepCollectionEquality().equals(other.doses, _this.doses));
+}
+
+@JsonKey(includeFromJson: false, includeToJson: false)
+@override
+int get hashCode {
+  final _this = this as MedicationCalendarResponse;
+  return Object.hash(runtimeType,const DeepCollectionEquality().hash(_this.doses));
+}
+
+@override
+String toString() {
+  final _this = this as MedicationCalendarResponse;
+  return 'MedicationCalendarResponse(doses: ${_this.doses})';
+}
+
+
+}
+
+/// @nodoc
+abstract mixin class $MedicationCalendarResponseCopyWith<$Res>  {
+  factory $MedicationCalendarResponseCopyWith(MedicationCalendarResponse value, $Res Function(MedicationCalendarResponse) _then) = _$MedicationCalendarResponseCopyWithImpl;
+@useResult
+$Res call({
+ List<MedicationScheduleEntry> doses
+});
+
+
+
+
+}
+/// @nodoc
+class _$MedicationCalendarResponseCopyWithImpl<$Res>
+    implements $MedicationCalendarResponseCopyWith<$Res> {
+  _$MedicationCalendarResponseCopyWithImpl(this._self, this._then);
+
+  final MedicationCalendarResponse _self;
+  final $Res Function(MedicationCalendarResponse) _then;
+
+/// Create a copy of MedicationCalendarResponse
+/// with the given fields replaced by the non-null parameter values.
+@pragma('vm:prefer-inline') @override $Res call({Object? doses = null,}) {
+  return _then(MedicationCalendarResponse(
+doses: null == doses ? _self.doses : doses // ignore: cast_nullable_to_non_nullable
+as List<MedicationScheduleEntry>,
+  ));
+}
+
+}
+
+
+/// Adds pattern-matching-related methods to [MedicationCalendarResponse].
+extension MedicationCalendarResponsePatterns on MedicationCalendarResponse {
+/// A variant of `map` that fallback to returning `orElse`.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case _:
+///     return orElse();
+/// }
+/// ```
+
+@optionalTypeArgs TResult maybeMap<TResult extends Object?>(TResult Function( _MedicationCalendarResponse value)?  $default,{required TResult orElse(),}){
+final _that = this;
+switch (_that) {
+case _MedicationCalendarResponse() when $default != null:
+return $default(_that);case _:
+  return orElse();
+
+}
+}
+/// A `switch`-like method, using callbacks.
+///
+/// Callbacks receives the raw object, upcasted.
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case final Subclass2 value:
+///     return ...;
+/// }
+/// ```
+
+@optionalTypeArgs TResult map<TResult extends Object?>(TResult Function( _MedicationCalendarResponse value)  $default,){
+final _that = this;
+switch (_that) {
+case _MedicationCalendarResponse():
+return $default(_that);case _:
+  throw StateError('Unexpected subclass');
+
+}
+}
+/// A variant of `map` that fallback to returning `null`.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case _:
+///     return null;
+/// }
+/// ```
+
+@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>(TResult? Function( _MedicationCalendarResponse value)?  $default,){
+final _that = this;
+switch (_that) {
+case _MedicationCalendarResponse() when $default != null:
+return $default(_that);case _:
+  return null;
+
+}
+}
+/// A variant of `when` that fallback to an `orElse` callback.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case _:
+///     return orElse();
+/// }
+/// ```
+
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( List<MedicationScheduleEntry> doses)?  $default,{required TResult orElse(),}) {final _that = this;
+switch (_that) {
+case _MedicationCalendarResponse() when $default != null:
+return $default(_that.doses);case _:
+  return orElse();
+
+}
+}
+/// A `switch`-like method, using callbacks.
+///
+/// As opposed to `map`, this offers destructuring.
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case Subclass2(:final field2):
+///     return ...;
+/// }
+/// ```
+
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( List<MedicationScheduleEntry> doses)  $default,) {final _that = this;
+switch (_that) {
+case _MedicationCalendarResponse():
+return $default(_that.doses);case _:
+  throw StateError('Unexpected subclass');
+
+}
+}
+/// A variant of `when` that fallback to returning `null`
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case _:
+///     return null;
+/// }
+/// ```
+
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( List<MedicationScheduleEntry> doses)?  $default,) {final _that = this;
+switch (_that) {
+case _MedicationCalendarResponse() when $default != null:
+return $default(_that.doses);case _:
+  return null;
+
+}
+}
+
+}
+
+/// @nodoc
+@JsonSerializable()
+
+class _MedicationCalendarResponse implements MedicationCalendarResponse {
+  const _MedicationCalendarResponse({ List<MedicationScheduleEntry> doses = const []}): _doses = doses;
+  factory _MedicationCalendarResponse.fromJson(Map<String, dynamic> json) => _$MedicationCalendarResponseFromJson(json);
+
+ final  List<MedicationScheduleEntry> _doses;
+@override@JsonKey() List<MedicationScheduleEntry> get doses {
+  if (_doses is EqualUnmodifiableListView) return _doses;
+  // ignore: implicit_dynamic_type
+  return EqualUnmodifiableListView(_doses);
+}
+
+
+/// Create a copy of MedicationCalendarResponse
+/// with the given fields replaced by the non-null parameter values.
+@override @JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+_$MedicationCalendarResponseCopyWith<_MedicationCalendarResponse> get copyWith => __$MedicationCalendarResponseCopyWithImpl<_MedicationCalendarResponse>(this, _$identity);
+
+@override
+Map<String, dynamic> toJson() {
+  return _$MedicationCalendarResponseToJson(this, );
+}
+
+@override
+bool operator ==(Object other) {
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _MedicationCalendarResponse&&const DeepCollectionEquality().equals(other.doses, _doses));
+}
+
+@JsonKey(includeFromJson: false, includeToJson: false)
+@override
+int get hashCode {
+    return Object.hash(runtimeType,const DeepCollectionEquality().hash(_doses));
+}
+
+@override
+String toString() {
+    return 'MedicationCalendarResponse(doses: $doses)';
+}
+
+
+}
+
+/// @nodoc
+abstract mixin class _$MedicationCalendarResponseCopyWith<$Res> implements $MedicationCalendarResponseCopyWith<$Res> {
+  factory _$MedicationCalendarResponseCopyWith(_MedicationCalendarResponse value, $Res Function(_MedicationCalendarResponse) _then) = __$MedicationCalendarResponseCopyWithImpl;
+@override @useResult
+$Res call({
+ List<MedicationScheduleEntry> doses
+});
+
+
+
+
+}
+/// @nodoc
+class __$MedicationCalendarResponseCopyWithImpl<$Res>
+    implements _$MedicationCalendarResponseCopyWith<$Res> {
+  __$MedicationCalendarResponseCopyWithImpl(this._self, this._then);
+
+  final _MedicationCalendarResponse _self;
+  final $Res Function(_MedicationCalendarResponse) _then;
+
+/// Create a copy of MedicationCalendarResponse
+/// with the given fields replaced by the non-null parameter values.
+@override @pragma('vm:prefer-inline') $Res call({Object? doses = null,}) {
+  return _then(_MedicationCalendarResponse(
+doses: null == doses ? _self._doses : doses // ignore: cast_nullable_to_non_nullable
+as List<MedicationScheduleEntry>,
+  ));
+}
+
+
+}
+
+
+/// @nodoc
+mixin _$PrescriptionDosesResponse {
+
+ String get prescriptionId; String get displayName; List<MedicationScheduleEntry> get doses;
+/// Create a copy of PrescriptionDosesResponse
+/// with the given fields replaced by the non-null parameter values.
+@JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+$PrescriptionDosesResponseCopyWith<PrescriptionDosesResponse> get copyWith => _$PrescriptionDosesResponseCopyWithImpl<PrescriptionDosesResponse>(this as PrescriptionDosesResponse, _$identity);
+
+  /// Serializes this PrescriptionDosesResponse to a JSON map.
+  Map<String, dynamic> toJson();
+
+
+@override
+bool operator ==(Object other) {
+  final _this = this as PrescriptionDosesResponse;
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is PrescriptionDosesResponse&&(identical(other.prescriptionId, _this.prescriptionId) || other.prescriptionId == _this.prescriptionId)&&(identical(other.displayName, _this.displayName) || other.displayName == _this.displayName)&&const DeepCollectionEquality().equals(other.doses, _this.doses));
+}
+
+@JsonKey(includeFromJson: false, includeToJson: false)
+@override
+int get hashCode {
+  final _this = this as PrescriptionDosesResponse;
+  return Object.hash(runtimeType,_this.prescriptionId,_this.displayName,const DeepCollectionEquality().hash(_this.doses));
+}
+
+@override
+String toString() {
+  final _this = this as PrescriptionDosesResponse;
+  return 'PrescriptionDosesResponse(prescriptionId: ${_this.prescriptionId}, displayName: ${_this.displayName}, doses: ${_this.doses})';
+}
+
+
+}
+
+/// @nodoc
+abstract mixin class $PrescriptionDosesResponseCopyWith<$Res>  {
+  factory $PrescriptionDosesResponseCopyWith(PrescriptionDosesResponse value, $Res Function(PrescriptionDosesResponse) _then) = _$PrescriptionDosesResponseCopyWithImpl;
+@useResult
+$Res call({
+ String prescriptionId, String displayName, List<MedicationScheduleEntry> doses
+});
+
+
+
+
+}
+/// @nodoc
+class _$PrescriptionDosesResponseCopyWithImpl<$Res>
+    implements $PrescriptionDosesResponseCopyWith<$Res> {
+  _$PrescriptionDosesResponseCopyWithImpl(this._self, this._then);
+
+  final PrescriptionDosesResponse _self;
+  final $Res Function(PrescriptionDosesResponse) _then;
+
+/// Create a copy of PrescriptionDosesResponse
+/// with the given fields replaced by the non-null parameter values.
+@pragma('vm:prefer-inline') @override $Res call({Object? prescriptionId = null,Object? displayName = null,Object? doses = null,}) {
+  return _then(PrescriptionDosesResponse(
+prescriptionId: null == prescriptionId ? _self.prescriptionId : prescriptionId // ignore: cast_nullable_to_non_nullable
+as String,displayName: null == displayName ? _self.displayName : displayName // ignore: cast_nullable_to_non_nullable
+as String,doses: null == doses ? _self.doses : doses // ignore: cast_nullable_to_non_nullable
+as List<MedicationScheduleEntry>,
+  ));
+}
+
+}
+
+
+/// Adds pattern-matching-related methods to [PrescriptionDosesResponse].
+extension PrescriptionDosesResponsePatterns on PrescriptionDosesResponse {
+/// A variant of `map` that fallback to returning `orElse`.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case _:
+///     return orElse();
+/// }
+/// ```
+
+@optionalTypeArgs TResult maybeMap<TResult extends Object?>(TResult Function( _PrescriptionDosesResponse value)?  $default,{required TResult orElse(),}){
+final _that = this;
+switch (_that) {
+case _PrescriptionDosesResponse() when $default != null:
+return $default(_that);case _:
+  return orElse();
+
+}
+}
+/// A `switch`-like method, using callbacks.
+///
+/// Callbacks receives the raw object, upcasted.
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case final Subclass2 value:
+///     return ...;
+/// }
+/// ```
+
+@optionalTypeArgs TResult map<TResult extends Object?>(TResult Function( _PrescriptionDosesResponse value)  $default,){
+final _that = this;
+switch (_that) {
+case _PrescriptionDosesResponse():
+return $default(_that);case _:
+  throw StateError('Unexpected subclass');
+
+}
+}
+/// A variant of `map` that fallback to returning `null`.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case _:
+///     return null;
+/// }
+/// ```
+
+@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>(TResult? Function( _PrescriptionDosesResponse value)?  $default,){
+final _that = this;
+switch (_that) {
+case _PrescriptionDosesResponse() when $default != null:
+return $default(_that);case _:
+  return null;
+
+}
+}
+/// A variant of `when` that fallback to an `orElse` callback.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case _:
+///     return orElse();
+/// }
+/// ```
+
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String prescriptionId,  String displayName,  List<MedicationScheduleEntry> doses)?  $default,{required TResult orElse(),}) {final _that = this;
+switch (_that) {
+case _PrescriptionDosesResponse() when $default != null:
+return $default(_that.prescriptionId,_that.displayName,_that.doses);case _:
+  return orElse();
+
+}
+}
+/// A `switch`-like method, using callbacks.
+///
+/// As opposed to `map`, this offers destructuring.
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case Subclass2(:final field2):
+///     return ...;
+/// }
+/// ```
+
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String prescriptionId,  String displayName,  List<MedicationScheduleEntry> doses)  $default,) {final _that = this;
+switch (_that) {
+case _PrescriptionDosesResponse():
+return $default(_that.prescriptionId,_that.displayName,_that.doses);case _:
+  throw StateError('Unexpected subclass');
+
+}
+}
+/// A variant of `when` that fallback to returning `null`
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case _:
+///     return null;
+/// }
+/// ```
+
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String prescriptionId,  String displayName,  List<MedicationScheduleEntry> doses)?  $default,) {final _that = this;
+switch (_that) {
+case _PrescriptionDosesResponse() when $default != null:
+return $default(_that.prescriptionId,_that.displayName,_that.doses);case _:
+  return null;
+
+}
+}
+
+}
+
+/// @nodoc
+@JsonSerializable()
+
+class _PrescriptionDosesResponse implements PrescriptionDosesResponse {
+  const _PrescriptionDosesResponse({required this.prescriptionId, required this.displayName,  List<MedicationScheduleEntry> doses = const []}): _doses = doses;
+  factory _PrescriptionDosesResponse.fromJson(Map<String, dynamic> json) => _$PrescriptionDosesResponseFromJson(json);
+
+@override final  String prescriptionId;
+@override final  String displayName;
+ final  List<MedicationScheduleEntry> _doses;
+@override@JsonKey() List<MedicationScheduleEntry> get doses {
+  if (_doses is EqualUnmodifiableListView) return _doses;
+  // ignore: implicit_dynamic_type
+  return EqualUnmodifiableListView(_doses);
+}
+
+
+/// Create a copy of PrescriptionDosesResponse
+/// with the given fields replaced by the non-null parameter values.
+@override @JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+_$PrescriptionDosesResponseCopyWith<_PrescriptionDosesResponse> get copyWith => __$PrescriptionDosesResponseCopyWithImpl<_PrescriptionDosesResponse>(this, _$identity);
+
+@override
+Map<String, dynamic> toJson() {
+  return _$PrescriptionDosesResponseToJson(this, );
+}
+
+@override
+bool operator ==(Object other) {
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _PrescriptionDosesResponse&&(identical(other.prescriptionId, prescriptionId) || other.prescriptionId == prescriptionId)&&(identical(other.displayName, displayName) || other.displayName == displayName)&&const DeepCollectionEquality().equals(other.doses, _doses));
+}
+
+@JsonKey(includeFromJson: false, includeToJson: false)
+@override
+int get hashCode {
+    return Object.hash(runtimeType,prescriptionId,displayName,const DeepCollectionEquality().hash(_doses));
+}
+
+@override
+String toString() {
+    return 'PrescriptionDosesResponse(prescriptionId: $prescriptionId, displayName: $displayName, doses: $doses)';
+}
+
+
+}
+
+/// @nodoc
+abstract mixin class _$PrescriptionDosesResponseCopyWith<$Res> implements $PrescriptionDosesResponseCopyWith<$Res> {
+  factory _$PrescriptionDosesResponseCopyWith(_PrescriptionDosesResponse value, $Res Function(_PrescriptionDosesResponse) _then) = __$PrescriptionDosesResponseCopyWithImpl;
+@override @useResult
+$Res call({
+ String prescriptionId, String displayName, List<MedicationScheduleEntry> doses
+});
+
+
+
+
+}
+/// @nodoc
+class __$PrescriptionDosesResponseCopyWithImpl<$Res>
+    implements _$PrescriptionDosesResponseCopyWith<$Res> {
+  __$PrescriptionDosesResponseCopyWithImpl(this._self, this._then);
+
+  final _PrescriptionDosesResponse _self;
+  final $Res Function(_PrescriptionDosesResponse) _then;
+
+/// Create a copy of PrescriptionDosesResponse
+/// with the given fields replaced by the non-null parameter values.
+@override @pragma('vm:prefer-inline') $Res call({Object? prescriptionId = null,Object? displayName = null,Object? doses = null,}) {
+  return _then(_PrescriptionDosesResponse(
+prescriptionId: null == prescriptionId ? _self.prescriptionId : prescriptionId // ignore: cast_nullable_to_non_nullable
+as String,displayName: null == displayName ? _self.displayName : displayName // ignore: cast_nullable_to_non_nullable
+as String,doses: null == doses ? _self._doses : doses // ignore: cast_nullable_to_non_nullable
+as List<MedicationScheduleEntry>,
+  ));
+}
+
+
+}
+
+
+/// @nodoc
+mixin _$ScheduleUpdateResponse {
+
+ String get id; DateTime? get patientScheduleStartAt; DateTime? get scheduleConfirmedAt; int get dosesGenerated;
+/// Create a copy of ScheduleUpdateResponse
+/// with the given fields replaced by the non-null parameter values.
+@JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+$ScheduleUpdateResponseCopyWith<ScheduleUpdateResponse> get copyWith => _$ScheduleUpdateResponseCopyWithImpl<ScheduleUpdateResponse>(this as ScheduleUpdateResponse, _$identity);
+
+  /// Serializes this ScheduleUpdateResponse to a JSON map.
+  Map<String, dynamic> toJson();
+
+
+@override
+bool operator ==(Object other) {
+  final _this = this as ScheduleUpdateResponse;
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is ScheduleUpdateResponse&&(identical(other.id, _this.id) || other.id == _this.id)&&(identical(other.patientScheduleStartAt, _this.patientScheduleStartAt) || other.patientScheduleStartAt == _this.patientScheduleStartAt)&&(identical(other.scheduleConfirmedAt, _this.scheduleConfirmedAt) || other.scheduleConfirmedAt == _this.scheduleConfirmedAt)&&(identical(other.dosesGenerated, _this.dosesGenerated) || other.dosesGenerated == _this.dosesGenerated));
+}
+
+@JsonKey(includeFromJson: false, includeToJson: false)
+@override
+int get hashCode {
+  final _this = this as ScheduleUpdateResponse;
+  return Object.hash(runtimeType,_this.id,_this.patientScheduleStartAt,_this.scheduleConfirmedAt,_this.dosesGenerated);
+}
+
+@override
+String toString() {
+  final _this = this as ScheduleUpdateResponse;
+  return 'ScheduleUpdateResponse(id: ${_this.id}, patientScheduleStartAt: ${_this.patientScheduleStartAt}, scheduleConfirmedAt: ${_this.scheduleConfirmedAt}, dosesGenerated: ${_this.dosesGenerated})';
+}
+
+
+}
+
+/// @nodoc
+abstract mixin class $ScheduleUpdateResponseCopyWith<$Res>  {
+  factory $ScheduleUpdateResponseCopyWith(ScheduleUpdateResponse value, $Res Function(ScheduleUpdateResponse) _then) = _$ScheduleUpdateResponseCopyWithImpl;
+@useResult
+$Res call({
+ String id, DateTime? patientScheduleStartAt, DateTime? scheduleConfirmedAt, int dosesGenerated
+});
+
+
+
+
+}
+/// @nodoc
+class _$ScheduleUpdateResponseCopyWithImpl<$Res>
+    implements $ScheduleUpdateResponseCopyWith<$Res> {
+  _$ScheduleUpdateResponseCopyWithImpl(this._self, this._then);
+
+  final ScheduleUpdateResponse _self;
+  final $Res Function(ScheduleUpdateResponse) _then;
+
+/// Create a copy of ScheduleUpdateResponse
+/// with the given fields replaced by the non-null parameter values.
+@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? patientScheduleStartAt = freezed,Object? scheduleConfirmedAt = freezed,Object? dosesGenerated = null,}) {
+  return _then(ScheduleUpdateResponse(
+id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
+as String,patientScheduleStartAt: freezed == patientScheduleStartAt ? _self.patientScheduleStartAt : patientScheduleStartAt // ignore: cast_nullable_to_non_nullable
+as DateTime?,scheduleConfirmedAt: freezed == scheduleConfirmedAt ? _self.scheduleConfirmedAt : scheduleConfirmedAt // ignore: cast_nullable_to_non_nullable
+as DateTime?,dosesGenerated: null == dosesGenerated ? _self.dosesGenerated : dosesGenerated // ignore: cast_nullable_to_non_nullable
+as int,
+  ));
+}
+
+}
+
+
+/// Adds pattern-matching-related methods to [ScheduleUpdateResponse].
+extension ScheduleUpdateResponsePatterns on ScheduleUpdateResponse {
+/// A variant of `map` that fallback to returning `orElse`.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case _:
+///     return orElse();
+/// }
+/// ```
+
+@optionalTypeArgs TResult maybeMap<TResult extends Object?>(TResult Function( _ScheduleUpdateResponse value)?  $default,{required TResult orElse(),}){
+final _that = this;
+switch (_that) {
+case _ScheduleUpdateResponse() when $default != null:
+return $default(_that);case _:
+  return orElse();
+
+}
+}
+/// A `switch`-like method, using callbacks.
+///
+/// Callbacks receives the raw object, upcasted.
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case final Subclass2 value:
+///     return ...;
+/// }
+/// ```
+
+@optionalTypeArgs TResult map<TResult extends Object?>(TResult Function( _ScheduleUpdateResponse value)  $default,){
+final _that = this;
+switch (_that) {
+case _ScheduleUpdateResponse():
+return $default(_that);case _:
+  throw StateError('Unexpected subclass');
+
+}
+}
+/// A variant of `map` that fallback to returning `null`.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case _:
+///     return null;
+/// }
+/// ```
+
+@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>(TResult? Function( _ScheduleUpdateResponse value)?  $default,){
+final _that = this;
+switch (_that) {
+case _ScheduleUpdateResponse() when $default != null:
+return $default(_that);case _:
+  return null;
+
+}
+}
+/// A variant of `when` that fallback to an `orElse` callback.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case _:
+///     return orElse();
+/// }
+/// ```
+
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String id,  DateTime? patientScheduleStartAt,  DateTime? scheduleConfirmedAt,  int dosesGenerated)?  $default,{required TResult orElse(),}) {final _that = this;
+switch (_that) {
+case _ScheduleUpdateResponse() when $default != null:
+return $default(_that.id,_that.patientScheduleStartAt,_that.scheduleConfirmedAt,_that.dosesGenerated);case _:
+  return orElse();
+
+}
+}
+/// A `switch`-like method, using callbacks.
+///
+/// As opposed to `map`, this offers destructuring.
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case Subclass2(:final field2):
+///     return ...;
+/// }
+/// ```
+
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String id,  DateTime? patientScheduleStartAt,  DateTime? scheduleConfirmedAt,  int dosesGenerated)  $default,) {final _that = this;
+switch (_that) {
+case _ScheduleUpdateResponse():
+return $default(_that.id,_that.patientScheduleStartAt,_that.scheduleConfirmedAt,_that.dosesGenerated);case _:
+  throw StateError('Unexpected subclass');
+
+}
+}
+/// A variant of `when` that fallback to returning `null`
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case _:
+///     return null;
+/// }
+/// ```
+
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String id,  DateTime? patientScheduleStartAt,  DateTime? scheduleConfirmedAt,  int dosesGenerated)?  $default,) {final _that = this;
+switch (_that) {
+case _ScheduleUpdateResponse() when $default != null:
+return $default(_that.id,_that.patientScheduleStartAt,_that.scheduleConfirmedAt,_that.dosesGenerated);case _:
+  return null;
+
+}
+}
+
+}
+
+/// @nodoc
+@JsonSerializable()
+
+class _ScheduleUpdateResponse implements ScheduleUpdateResponse {
+  const _ScheduleUpdateResponse({required this.id, this.patientScheduleStartAt, this.scheduleConfirmedAt, this.dosesGenerated = 0});
+  factory _ScheduleUpdateResponse.fromJson(Map<String, dynamic> json) => _$ScheduleUpdateResponseFromJson(json);
+
+@override final  String id;
+@override final  DateTime? patientScheduleStartAt;
+@override final  DateTime? scheduleConfirmedAt;
+@override@JsonKey() final  int dosesGenerated;
+
+/// Create a copy of ScheduleUpdateResponse
+/// with the given fields replaced by the non-null parameter values.
+@override @JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+_$ScheduleUpdateResponseCopyWith<_ScheduleUpdateResponse> get copyWith => __$ScheduleUpdateResponseCopyWithImpl<_ScheduleUpdateResponse>(this, _$identity);
+
+@override
+Map<String, dynamic> toJson() {
+  return _$ScheduleUpdateResponseToJson(this, );
+}
+
+@override
+bool operator ==(Object other) {
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _ScheduleUpdateResponse&&(identical(other.id, id) || other.id == id)&&(identical(other.patientScheduleStartAt, patientScheduleStartAt) || other.patientScheduleStartAt == patientScheduleStartAt)&&(identical(other.scheduleConfirmedAt, scheduleConfirmedAt) || other.scheduleConfirmedAt == scheduleConfirmedAt)&&(identical(other.dosesGenerated, dosesGenerated) || other.dosesGenerated == dosesGenerated));
+}
+
+@JsonKey(includeFromJson: false, includeToJson: false)
+@override
+int get hashCode {
+    return Object.hash(runtimeType,id,patientScheduleStartAt,scheduleConfirmedAt,dosesGenerated);
+}
+
+@override
+String toString() {
+    return 'ScheduleUpdateResponse(id: $id, patientScheduleStartAt: $patientScheduleStartAt, scheduleConfirmedAt: $scheduleConfirmedAt, dosesGenerated: $dosesGenerated)';
+}
+
+
+}
+
+/// @nodoc
+abstract mixin class _$ScheduleUpdateResponseCopyWith<$Res> implements $ScheduleUpdateResponseCopyWith<$Res> {
+  factory _$ScheduleUpdateResponseCopyWith(_ScheduleUpdateResponse value, $Res Function(_ScheduleUpdateResponse) _then) = __$ScheduleUpdateResponseCopyWithImpl;
+@override @useResult
+$Res call({
+ String id, DateTime? patientScheduleStartAt, DateTime? scheduleConfirmedAt, int dosesGenerated
+});
+
+
+
+
+}
+/// @nodoc
+class __$ScheduleUpdateResponseCopyWithImpl<$Res>
+    implements _$ScheduleUpdateResponseCopyWith<$Res> {
+  __$ScheduleUpdateResponseCopyWithImpl(this._self, this._then);
+
+  final _ScheduleUpdateResponse _self;
+  final $Res Function(_ScheduleUpdateResponse) _then;
+
+/// Create a copy of ScheduleUpdateResponse
+/// with the given fields replaced by the non-null parameter values.
+@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? patientScheduleStartAt = freezed,Object? scheduleConfirmedAt = freezed,Object? dosesGenerated = null,}) {
+  return _then(_ScheduleUpdateResponse(
+id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
+as String,patientScheduleStartAt: freezed == patientScheduleStartAt ? _self.patientScheduleStartAt : patientScheduleStartAt // ignore: cast_nullable_to_non_nullable
+as DateTime?,scheduleConfirmedAt: freezed == scheduleConfirmedAt ? _self.scheduleConfirmedAt : scheduleConfirmedAt // ignore: cast_nullable_to_non_nullable
+as DateTime?,dosesGenerated: null == dosesGenerated ? _self.dosesGenerated : dosesGenerated // ignore: cast_nullable_to_non_nullable
+as int,
+  ));
+}
+
+
+}
+
+
+/// @nodoc
 mixin _$MarkDoseTakenResponse {
 
  String get id; MedicationDoseStatus get status; DateTime get takenAt;
@@ -1158,16 +2036,21 @@ $MarkDoseTakenResponseCopyWith<MarkDoseTakenResponse> get copyWith => _$MarkDose
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is MarkDoseTakenResponse&&(identical(other.id, id) || other.id == id)&&(identical(other.status, status) || other.status == status)&&(identical(other.takenAt, takenAt) || other.takenAt == takenAt));
+  final _this = this as MarkDoseTakenResponse;
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is MarkDoseTakenResponse&&(identical(other.id, _this.id) || other.id == _this.id)&&(identical(other.status, _this.status) || other.status == _this.status)&&(identical(other.takenAt, _this.takenAt) || other.takenAt == _this.takenAt));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,status,takenAt);
+int get hashCode {
+  final _this = this as MarkDoseTakenResponse;
+  return Object.hash(runtimeType,_this.id,_this.status,_this.takenAt);
+}
 
 @override
 String toString() {
-  return 'MarkDoseTakenResponse(id: $id, status: $status, takenAt: $takenAt)';
+  final _this = this as MarkDoseTakenResponse;
+  return 'MarkDoseTakenResponse(id: ${_this.id}, status: ${_this.status}, takenAt: ${_this.takenAt})';
 }
 
 
@@ -1196,7 +2079,7 @@ class _$MarkDoseTakenResponseCopyWithImpl<$Res>
 /// Create a copy of MarkDoseTakenResponse
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? status = null,Object? takenAt = null,}) {
-  return _then(_self.copyWith(
+  return _then(MarkDoseTakenResponse(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,status: null == status ? _self.status : status // ignore: cast_nullable_to_non_nullable
 as MedicationDoseStatus,takenAt: null == takenAt ? _self.takenAt : takenAt // ignore: cast_nullable_to_non_nullable
@@ -1361,16 +2244,18 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _MarkDoseTakenResponse&&(identical(other.id, id) || other.id == id)&&(identical(other.status, status) || other.status == status)&&(identical(other.takenAt, takenAt) || other.takenAt == takenAt));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _MarkDoseTakenResponse&&(identical(other.id, id) || other.id == id)&&(identical(other.status, status) || other.status == status)&&(identical(other.takenAt, takenAt) || other.takenAt == takenAt));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,status,takenAt);
+int get hashCode {
+    return Object.hash(runtimeType,id,status,takenAt);
+}
 
 @override
 String toString() {
-  return 'MarkDoseTakenResponse(id: $id, status: $status, takenAt: $takenAt)';
+    return 'MarkDoseTakenResponse(id: $id, status: $status, takenAt: $takenAt)';
 }
 
 
@@ -1427,16 +2312,21 @@ $PrescriptionHistorySummaryCopyWith<PrescriptionHistorySummary> get copyWith => 
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is PrescriptionHistorySummary&&(identical(other.id, id) || other.id == id)&&(identical(other.displayName, displayName) || other.displayName == displayName)&&(identical(other.frequencyLabel, frequencyLabel) || other.frequencyLabel == frequencyLabel)&&(identical(other.status, status) || other.status == status)&&(identical(other.startDate, startDate) || other.startDate == startDate)&&(identical(other.endDate, endDate) || other.endDate == endDate)&&(identical(other.doctorName, doctorName) || other.doctorName == doctorName));
+  final _this = this as PrescriptionHistorySummary;
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is PrescriptionHistorySummary&&(identical(other.id, _this.id) || other.id == _this.id)&&(identical(other.displayName, _this.displayName) || other.displayName == _this.displayName)&&(identical(other.frequencyLabel, _this.frequencyLabel) || other.frequencyLabel == _this.frequencyLabel)&&(identical(other.status, _this.status) || other.status == _this.status)&&(identical(other.startDate, _this.startDate) || other.startDate == _this.startDate)&&(identical(other.endDate, _this.endDate) || other.endDate == _this.endDate)&&(identical(other.doctorName, _this.doctorName) || other.doctorName == _this.doctorName));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,displayName,frequencyLabel,status,startDate,endDate,doctorName);
+int get hashCode {
+  final _this = this as PrescriptionHistorySummary;
+  return Object.hash(runtimeType,_this.id,_this.displayName,_this.frequencyLabel,_this.status,_this.startDate,_this.endDate,_this.doctorName);
+}
 
 @override
 String toString() {
-  return 'PrescriptionHistorySummary(id: $id, displayName: $displayName, frequencyLabel: $frequencyLabel, status: $status, startDate: $startDate, endDate: $endDate, doctorName: $doctorName)';
+  final _this = this as PrescriptionHistorySummary;
+  return 'PrescriptionHistorySummary(id: ${_this.id}, displayName: ${_this.displayName}, frequencyLabel: ${_this.frequencyLabel}, status: ${_this.status}, startDate: ${_this.startDate}, endDate: ${_this.endDate}, doctorName: ${_this.doctorName})';
 }
 
 
@@ -1465,7 +2355,7 @@ class _$PrescriptionHistorySummaryCopyWithImpl<$Res>
 /// Create a copy of PrescriptionHistorySummary
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? displayName = null,Object? frequencyLabel = null,Object? status = null,Object? startDate = freezed,Object? endDate = freezed,Object? doctorName = null,}) {
-  return _then(_self.copyWith(
+  return _then(PrescriptionHistorySummary(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,displayName: null == displayName ? _self.displayName : displayName // ignore: cast_nullable_to_non_nullable
 as String,frequencyLabel: null == frequencyLabel ? _self.frequencyLabel : frequencyLabel // ignore: cast_nullable_to_non_nullable
@@ -1638,16 +2528,18 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _PrescriptionHistorySummary&&(identical(other.id, id) || other.id == id)&&(identical(other.displayName, displayName) || other.displayName == displayName)&&(identical(other.frequencyLabel, frequencyLabel) || other.frequencyLabel == frequencyLabel)&&(identical(other.status, status) || other.status == status)&&(identical(other.startDate, startDate) || other.startDate == startDate)&&(identical(other.endDate, endDate) || other.endDate == endDate)&&(identical(other.doctorName, doctorName) || other.doctorName == doctorName));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _PrescriptionHistorySummary&&(identical(other.id, id) || other.id == id)&&(identical(other.displayName, displayName) || other.displayName == displayName)&&(identical(other.frequencyLabel, frequencyLabel) || other.frequencyLabel == frequencyLabel)&&(identical(other.status, status) || other.status == status)&&(identical(other.startDate, startDate) || other.startDate == startDate)&&(identical(other.endDate, endDate) || other.endDate == endDate)&&(identical(other.doctorName, doctorName) || other.doctorName == doctorName));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,displayName,frequencyLabel,status,startDate,endDate,doctorName);
+int get hashCode {
+    return Object.hash(runtimeType,id,displayName,frequencyLabel,status,startDate,endDate,doctorName);
+}
 
 @override
 String toString() {
-  return 'PrescriptionHistorySummary(id: $id, displayName: $displayName, frequencyLabel: $frequencyLabel, status: $status, startDate: $startDate, endDate: $endDate, doctorName: $doctorName)';
+    return 'PrescriptionHistorySummary(id: $id, displayName: $displayName, frequencyLabel: $frequencyLabel, status: $status, startDate: $startDate, endDate: $endDate, doctorName: $doctorName)';
 }
 
 
@@ -1708,16 +2600,21 @@ $PrescriptionHistoryListResponseCopyWith<PrescriptionHistoryListResponse> get co
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is PrescriptionHistoryListResponse&&const DeepCollectionEquality().equals(other.data, data)&&(identical(other.total, total) || other.total == total)&&(identical(other.page, page) || other.page == page)&&(identical(other.limit, limit) || other.limit == limit));
+  final _this = this as PrescriptionHistoryListResponse;
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is PrescriptionHistoryListResponse&&const DeepCollectionEquality().equals(other.data, _this.data)&&(identical(other.total, _this.total) || other.total == _this.total)&&(identical(other.page, _this.page) || other.page == _this.page)&&(identical(other.limit, _this.limit) || other.limit == _this.limit));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,const DeepCollectionEquality().hash(data),total,page,limit);
+int get hashCode {
+  final _this = this as PrescriptionHistoryListResponse;
+  return Object.hash(runtimeType,const DeepCollectionEquality().hash(_this.data),_this.total,_this.page,_this.limit);
+}
 
 @override
 String toString() {
-  return 'PrescriptionHistoryListResponse(data: $data, total: $total, page: $page, limit: $limit)';
+  final _this = this as PrescriptionHistoryListResponse;
+  return 'PrescriptionHistoryListResponse(data: ${_this.data}, total: ${_this.total}, page: ${_this.page}, limit: ${_this.limit})';
 }
 
 
@@ -1746,7 +2643,7 @@ class _$PrescriptionHistoryListResponseCopyWithImpl<$Res>
 /// Create a copy of PrescriptionHistoryListResponse
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') @override $Res call({Object? data = null,Object? total = null,Object? page = null,Object? limit = null,}) {
-  return _then(_self.copyWith(
+  return _then(PrescriptionHistoryListResponse(
 data: null == data ? _self.data : data // ignore: cast_nullable_to_non_nullable
 as List<PrescriptionHistorySummary>,total: null == total ? _self.total : total // ignore: cast_nullable_to_non_nullable
 as int,page: null == page ? _self.page : page // ignore: cast_nullable_to_non_nullable
@@ -1892,7 +2789,7 @@ return $default(_that.data,_that.total,_that.page,_that.limit);case _:
 @JsonSerializable()
 
 class _PrescriptionHistoryListResponse implements PrescriptionHistoryListResponse {
-  const _PrescriptionHistoryListResponse({final  List<PrescriptionHistorySummary> data = const [], this.total = 0, this.page = 1, this.limit = 20}): _data = data;
+  const _PrescriptionHistoryListResponse({ List<PrescriptionHistorySummary> data = const [], this.total = 0, this.page = 1, this.limit = 20}): _data = data;
   factory _PrescriptionHistoryListResponse.fromJson(Map<String, dynamic> json) => _$PrescriptionHistoryListResponseFromJson(json);
 
  final  List<PrescriptionHistorySummary> _data;
@@ -1919,16 +2816,18 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _PrescriptionHistoryListResponse&&const DeepCollectionEquality().equals(other._data, _data)&&(identical(other.total, total) || other.total == total)&&(identical(other.page, page) || other.page == page)&&(identical(other.limit, limit) || other.limit == limit));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _PrescriptionHistoryListResponse&&const DeepCollectionEquality().equals(other.data, _data)&&(identical(other.total, total) || other.total == total)&&(identical(other.page, page) || other.page == page)&&(identical(other.limit, limit) || other.limit == limit));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,const DeepCollectionEquality().hash(_data),total,page,limit);
+int get hashCode {
+    return Object.hash(runtimeType,const DeepCollectionEquality().hash(_data),total,page,limit);
+}
 
 @override
 String toString() {
-  return 'PrescriptionHistoryListResponse(data: $data, total: $total, page: $page, limit: $limit)';
+    return 'PrescriptionHistoryListResponse(data: $data, total: $total, page: $page, limit: $limit)';
 }
 
 
@@ -1986,16 +2885,21 @@ $RefillRequestResponseCopyWith<RefillRequestResponse> get copyWith => _$RefillRe
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is RefillRequestResponse&&(identical(other.id, id) || other.id == id)&&(identical(other.prescriptionId, prescriptionId) || other.prescriptionId == prescriptionId)&&(identical(other.status, status) || other.status == status)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt));
+  final _this = this as RefillRequestResponse;
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is RefillRequestResponse&&(identical(other.id, _this.id) || other.id == _this.id)&&(identical(other.prescriptionId, _this.prescriptionId) || other.prescriptionId == _this.prescriptionId)&&(identical(other.status, _this.status) || other.status == _this.status)&&(identical(other.createdAt, _this.createdAt) || other.createdAt == _this.createdAt));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,prescriptionId,status,createdAt);
+int get hashCode {
+  final _this = this as RefillRequestResponse;
+  return Object.hash(runtimeType,_this.id,_this.prescriptionId,_this.status,_this.createdAt);
+}
 
 @override
 String toString() {
-  return 'RefillRequestResponse(id: $id, prescriptionId: $prescriptionId, status: $status, createdAt: $createdAt)';
+  final _this = this as RefillRequestResponse;
+  return 'RefillRequestResponse(id: ${_this.id}, prescriptionId: ${_this.prescriptionId}, status: ${_this.status}, createdAt: ${_this.createdAt})';
 }
 
 
@@ -2024,7 +2928,7 @@ class _$RefillRequestResponseCopyWithImpl<$Res>
 /// Create a copy of RefillRequestResponse
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? prescriptionId = null,Object? status = null,Object? createdAt = null,}) {
-  return _then(_self.copyWith(
+  return _then(RefillRequestResponse(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,prescriptionId: null == prescriptionId ? _self.prescriptionId : prescriptionId // ignore: cast_nullable_to_non_nullable
 as String,status: null == status ? _self.status : status // ignore: cast_nullable_to_non_nullable
@@ -2191,16 +3095,18 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _RefillRequestResponse&&(identical(other.id, id) || other.id == id)&&(identical(other.prescriptionId, prescriptionId) || other.prescriptionId == prescriptionId)&&(identical(other.status, status) || other.status == status)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _RefillRequestResponse&&(identical(other.id, id) || other.id == id)&&(identical(other.prescriptionId, prescriptionId) || other.prescriptionId == prescriptionId)&&(identical(other.status, status) || other.status == status)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,prescriptionId,status,createdAt);
+int get hashCode {
+    return Object.hash(runtimeType,id,prescriptionId,status,createdAt);
+}
 
 @override
 String toString() {
-  return 'RefillRequestResponse(id: $id, prescriptionId: $prescriptionId, status: $status, createdAt: $createdAt)';
+    return 'RefillRequestResponse(id: $id, prescriptionId: $prescriptionId, status: $status, createdAt: $createdAt)';
 }
 
 

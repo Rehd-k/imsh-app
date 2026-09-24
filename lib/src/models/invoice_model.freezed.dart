@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // coverage:ignore-file
-// ignore_for_file: type=lint
+// ignore_for_file: type=lint, type=warning, deprecated_member_use, deprecated_member_use_from_same_package
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
 part of 'invoice_model.dart';
@@ -9,6 +9,7 @@ part of 'invoice_model.dart';
 // FreezedGenerator
 // **************************************************************************
 
+// GENERATED CODE - DO NOT MODIFY BY HAND
 // dart format off
 T _$identity<T>(T value) => value;
 
@@ -28,16 +29,21 @@ $BillingSummaryResponseCopyWith<BillingSummaryResponse> get copyWith => _$Billin
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is BillingSummaryResponse&&(identical(other.totalOutstanding, totalOutstanding) || other.totalOutstanding == totalOutstanding)&&(identical(other.unpaidInvoiceCount, unpaidInvoiceCount) || other.unpaidInvoiceCount == unpaidInvoiceCount)&&(identical(other.nextDueDate, nextDueDate) || other.nextDueDate == nextDueDate)&&(identical(other.daysUntilDue, daysUntilDue) || other.daysUntilDue == daysUntilDue)&&(identical(other.currency, currency) || other.currency == currency));
+  final _this = this as BillingSummaryResponse;
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is BillingSummaryResponse&&(identical(other.totalOutstanding, _this.totalOutstanding) || other.totalOutstanding == _this.totalOutstanding)&&(identical(other.unpaidInvoiceCount, _this.unpaidInvoiceCount) || other.unpaidInvoiceCount == _this.unpaidInvoiceCount)&&(identical(other.nextDueDate, _this.nextDueDate) || other.nextDueDate == _this.nextDueDate)&&(identical(other.daysUntilDue, _this.daysUntilDue) || other.daysUntilDue == _this.daysUntilDue)&&(identical(other.currency, _this.currency) || other.currency == _this.currency));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,totalOutstanding,unpaidInvoiceCount,nextDueDate,daysUntilDue,currency);
+int get hashCode {
+  final _this = this as BillingSummaryResponse;
+  return Object.hash(runtimeType,_this.totalOutstanding,_this.unpaidInvoiceCount,_this.nextDueDate,_this.daysUntilDue,_this.currency);
+}
 
 @override
 String toString() {
-  return 'BillingSummaryResponse(totalOutstanding: $totalOutstanding, unpaidInvoiceCount: $unpaidInvoiceCount, nextDueDate: $nextDueDate, daysUntilDue: $daysUntilDue, currency: $currency)';
+  final _this = this as BillingSummaryResponse;
+  return 'BillingSummaryResponse(totalOutstanding: ${_this.totalOutstanding}, unpaidInvoiceCount: ${_this.unpaidInvoiceCount}, nextDueDate: ${_this.nextDueDate}, daysUntilDue: ${_this.daysUntilDue}, currency: ${_this.currency})';
 }
 
 
@@ -66,7 +72,7 @@ class _$BillingSummaryResponseCopyWithImpl<$Res>
 /// Create a copy of BillingSummaryResponse
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') @override $Res call({Object? totalOutstanding = null,Object? unpaidInvoiceCount = null,Object? nextDueDate = freezed,Object? daysUntilDue = null,Object? currency = null,}) {
-  return _then(_self.copyWith(
+  return _then(BillingSummaryResponse(
 totalOutstanding: null == totalOutstanding ? _self.totalOutstanding : totalOutstanding // ignore: cast_nullable_to_non_nullable
 as String,unpaidInvoiceCount: null == unpaidInvoiceCount ? _self.unpaidInvoiceCount : unpaidInvoiceCount // ignore: cast_nullable_to_non_nullable
 as int,nextDueDate: freezed == nextDueDate ? _self.nextDueDate : nextDueDate // ignore: cast_nullable_to_non_nullable
@@ -235,16 +241,18 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _BillingSummaryResponse&&(identical(other.totalOutstanding, totalOutstanding) || other.totalOutstanding == totalOutstanding)&&(identical(other.unpaidInvoiceCount, unpaidInvoiceCount) || other.unpaidInvoiceCount == unpaidInvoiceCount)&&(identical(other.nextDueDate, nextDueDate) || other.nextDueDate == nextDueDate)&&(identical(other.daysUntilDue, daysUntilDue) || other.daysUntilDue == daysUntilDue)&&(identical(other.currency, currency) || other.currency == currency));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _BillingSummaryResponse&&(identical(other.totalOutstanding, totalOutstanding) || other.totalOutstanding == totalOutstanding)&&(identical(other.unpaidInvoiceCount, unpaidInvoiceCount) || other.unpaidInvoiceCount == unpaidInvoiceCount)&&(identical(other.nextDueDate, nextDueDate) || other.nextDueDate == nextDueDate)&&(identical(other.daysUntilDue, daysUntilDue) || other.daysUntilDue == daysUntilDue)&&(identical(other.currency, currency) || other.currency == currency));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,totalOutstanding,unpaidInvoiceCount,nextDueDate,daysUntilDue,currency);
+int get hashCode {
+    return Object.hash(runtimeType,totalOutstanding,unpaidInvoiceCount,nextDueDate,daysUntilDue,currency);
+}
 
 @override
 String toString() {
-  return 'BillingSummaryResponse(totalOutstanding: $totalOutstanding, unpaidInvoiceCount: $unpaidInvoiceCount, nextDueDate: $nextDueDate, daysUntilDue: $daysUntilDue, currency: $currency)';
+    return 'BillingSummaryResponse(totalOutstanding: $totalOutstanding, unpaidInvoiceCount: $unpaidInvoiceCount, nextDueDate: $nextDueDate, daysUntilDue: $daysUntilDue, currency: $currency)';
 }
 
 
@@ -303,16 +311,21 @@ $InvoiceSummaryCopyWith<InvoiceSummary> get copyWith => _$InvoiceSummaryCopyWith
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is InvoiceSummary&&(identical(other.id, id) || other.id == id)&&(identical(other.invoiceNumber, invoiceNumber) || other.invoiceNumber == invoiceNumber)&&(identical(other.title, title) || other.title == title)&&(identical(other.billType, billType) || other.billType == billType)&&(identical(other.status, status) || other.status == status)&&(identical(other.issuedAt, issuedAt) || other.issuedAt == issuedAt)&&(identical(other.totalAmount, totalAmount) || other.totalAmount == totalAmount)&&(identical(other.amountPaid, amountPaid) || other.amountPaid == amountPaid)&&(identical(other.balance, balance) || other.balance == balance));
+  final _this = this as InvoiceSummary;
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is InvoiceSummary&&(identical(other.id, _this.id) || other.id == _this.id)&&(identical(other.invoiceNumber, _this.invoiceNumber) || other.invoiceNumber == _this.invoiceNumber)&&(identical(other.title, _this.title) || other.title == _this.title)&&(identical(other.billType, _this.billType) || other.billType == _this.billType)&&(identical(other.status, _this.status) || other.status == _this.status)&&(identical(other.issuedAt, _this.issuedAt) || other.issuedAt == _this.issuedAt)&&(identical(other.totalAmount, _this.totalAmount) || other.totalAmount == _this.totalAmount)&&(identical(other.amountPaid, _this.amountPaid) || other.amountPaid == _this.amountPaid)&&(identical(other.balance, _this.balance) || other.balance == _this.balance));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,invoiceNumber,title,billType,status,issuedAt,totalAmount,amountPaid,balance);
+int get hashCode {
+  final _this = this as InvoiceSummary;
+  return Object.hash(runtimeType,_this.id,_this.invoiceNumber,_this.title,_this.billType,_this.status,_this.issuedAt,_this.totalAmount,_this.amountPaid,_this.balance);
+}
 
 @override
 String toString() {
-  return 'InvoiceSummary(id: $id, invoiceNumber: $invoiceNumber, title: $title, billType: $billType, status: $status, issuedAt: $issuedAt, totalAmount: $totalAmount, amountPaid: $amountPaid, balance: $balance)';
+  final _this = this as InvoiceSummary;
+  return 'InvoiceSummary(id: ${_this.id}, invoiceNumber: ${_this.invoiceNumber}, title: ${_this.title}, billType: ${_this.billType}, status: ${_this.status}, issuedAt: ${_this.issuedAt}, totalAmount: ${_this.totalAmount}, amountPaid: ${_this.amountPaid}, balance: ${_this.balance})';
 }
 
 
@@ -341,7 +354,7 @@ class _$InvoiceSummaryCopyWithImpl<$Res>
 /// Create a copy of InvoiceSummary
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? invoiceNumber = null,Object? title = null,Object? billType = null,Object? status = null,Object? issuedAt = null,Object? totalAmount = null,Object? amountPaid = null,Object? balance = null,}) {
-  return _then(_self.copyWith(
+  return _then(InvoiceSummary(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,invoiceNumber: null == invoiceNumber ? _self.invoiceNumber : invoiceNumber // ignore: cast_nullable_to_non_nullable
 as String,title: null == title ? _self.title : title // ignore: cast_nullable_to_non_nullable
@@ -518,16 +531,18 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _InvoiceSummary&&(identical(other.id, id) || other.id == id)&&(identical(other.invoiceNumber, invoiceNumber) || other.invoiceNumber == invoiceNumber)&&(identical(other.title, title) || other.title == title)&&(identical(other.billType, billType) || other.billType == billType)&&(identical(other.status, status) || other.status == status)&&(identical(other.issuedAt, issuedAt) || other.issuedAt == issuedAt)&&(identical(other.totalAmount, totalAmount) || other.totalAmount == totalAmount)&&(identical(other.amountPaid, amountPaid) || other.amountPaid == amountPaid)&&(identical(other.balance, balance) || other.balance == balance));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _InvoiceSummary&&(identical(other.id, id) || other.id == id)&&(identical(other.invoiceNumber, invoiceNumber) || other.invoiceNumber == invoiceNumber)&&(identical(other.title, title) || other.title == title)&&(identical(other.billType, billType) || other.billType == billType)&&(identical(other.status, status) || other.status == status)&&(identical(other.issuedAt, issuedAt) || other.issuedAt == issuedAt)&&(identical(other.totalAmount, totalAmount) || other.totalAmount == totalAmount)&&(identical(other.amountPaid, amountPaid) || other.amountPaid == amountPaid)&&(identical(other.balance, balance) || other.balance == balance));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,invoiceNumber,title,billType,status,issuedAt,totalAmount,amountPaid,balance);
+int get hashCode {
+    return Object.hash(runtimeType,id,invoiceNumber,title,billType,status,issuedAt,totalAmount,amountPaid,balance);
+}
 
 @override
 String toString() {
-  return 'InvoiceSummary(id: $id, invoiceNumber: $invoiceNumber, title: $title, billType: $billType, status: $status, issuedAt: $issuedAt, totalAmount: $totalAmount, amountPaid: $amountPaid, balance: $balance)';
+    return 'InvoiceSummary(id: $id, invoiceNumber: $invoiceNumber, title: $title, billType: $billType, status: $status, issuedAt: $issuedAt, totalAmount: $totalAmount, amountPaid: $amountPaid, balance: $balance)';
 }
 
 
@@ -590,16 +605,21 @@ $InvoiceListResponseCopyWith<InvoiceListResponse> get copyWith => _$InvoiceListR
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is InvoiceListResponse&&const DeepCollectionEquality().equals(other.data, data)&&(identical(other.total, total) || other.total == total)&&(identical(other.page, page) || other.page == page)&&(identical(other.limit, limit) || other.limit == limit));
+  final _this = this as InvoiceListResponse;
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is InvoiceListResponse&&const DeepCollectionEquality().equals(other.data, _this.data)&&(identical(other.total, _this.total) || other.total == _this.total)&&(identical(other.page, _this.page) || other.page == _this.page)&&(identical(other.limit, _this.limit) || other.limit == _this.limit));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,const DeepCollectionEquality().hash(data),total,page,limit);
+int get hashCode {
+  final _this = this as InvoiceListResponse;
+  return Object.hash(runtimeType,const DeepCollectionEquality().hash(_this.data),_this.total,_this.page,_this.limit);
+}
 
 @override
 String toString() {
-  return 'InvoiceListResponse(data: $data, total: $total, page: $page, limit: $limit)';
+  final _this = this as InvoiceListResponse;
+  return 'InvoiceListResponse(data: ${_this.data}, total: ${_this.total}, page: ${_this.page}, limit: ${_this.limit})';
 }
 
 
@@ -628,7 +648,7 @@ class _$InvoiceListResponseCopyWithImpl<$Res>
 /// Create a copy of InvoiceListResponse
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') @override $Res call({Object? data = null,Object? total = null,Object? page = null,Object? limit = null,}) {
-  return _then(_self.copyWith(
+  return _then(InvoiceListResponse(
 data: null == data ? _self.data : data // ignore: cast_nullable_to_non_nullable
 as List<InvoiceSummary>,total: null == total ? _self.total : total // ignore: cast_nullable_to_non_nullable
 as int,page: null == page ? _self.page : page // ignore: cast_nullable_to_non_nullable
@@ -774,7 +794,7 @@ return $default(_that.data,_that.total,_that.page,_that.limit);case _:
 @JsonSerializable()
 
 class _InvoiceListResponse implements InvoiceListResponse {
-  const _InvoiceListResponse({required final  List<InvoiceSummary> data, this.total = 0, this.page = 1, this.limit = 20}): _data = data;
+  const _InvoiceListResponse({required  List<InvoiceSummary> data, this.total = 0, this.page = 1, this.limit = 20}): _data = data;
   factory _InvoiceListResponse.fromJson(Map<String, dynamic> json) => _$InvoiceListResponseFromJson(json);
 
  final  List<InvoiceSummary> _data;
@@ -801,16 +821,18 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _InvoiceListResponse&&const DeepCollectionEquality().equals(other._data, _data)&&(identical(other.total, total) || other.total == total)&&(identical(other.page, page) || other.page == page)&&(identical(other.limit, limit) || other.limit == limit));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _InvoiceListResponse&&const DeepCollectionEquality().equals(other.data, _data)&&(identical(other.total, total) || other.total == total)&&(identical(other.page, page) || other.page == page)&&(identical(other.limit, limit) || other.limit == limit));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,const DeepCollectionEquality().hash(_data),total,page,limit);
+int get hashCode {
+    return Object.hash(runtimeType,const DeepCollectionEquality().hash(_data),total,page,limit);
+}
 
 @override
 String toString() {
-  return 'InvoiceListResponse(data: $data, total: $total, page: $page, limit: $limit)';
+    return 'InvoiceListResponse(data: $data, total: $total, page: $page, limit: $limit)';
 }
 
 
@@ -868,16 +890,21 @@ $PatientAdmissionSummaryCopyWith<PatientAdmissionSummary> get copyWith => _$Pati
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is PatientAdmissionSummary&&(identical(other.id, id) || other.id == id)&&(identical(other.wardName, wardName) || other.wardName == wardName)&&(identical(other.admittedAt, admittedAt) || other.admittedAt == admittedAt)&&(identical(other.dischargedAt, dischargedAt) || other.dischargedAt == dischargedAt)&&(identical(other.status, status) || other.status == status));
+  final _this = this as PatientAdmissionSummary;
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is PatientAdmissionSummary&&(identical(other.id, _this.id) || other.id == _this.id)&&(identical(other.wardName, _this.wardName) || other.wardName == _this.wardName)&&(identical(other.admittedAt, _this.admittedAt) || other.admittedAt == _this.admittedAt)&&(identical(other.dischargedAt, _this.dischargedAt) || other.dischargedAt == _this.dischargedAt)&&(identical(other.status, _this.status) || other.status == _this.status));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,wardName,admittedAt,dischargedAt,status);
+int get hashCode {
+  final _this = this as PatientAdmissionSummary;
+  return Object.hash(runtimeType,_this.id,_this.wardName,_this.admittedAt,_this.dischargedAt,_this.status);
+}
 
 @override
 String toString() {
-  return 'PatientAdmissionSummary(id: $id, wardName: $wardName, admittedAt: $admittedAt, dischargedAt: $dischargedAt, status: $status)';
+  final _this = this as PatientAdmissionSummary;
+  return 'PatientAdmissionSummary(id: ${_this.id}, wardName: ${_this.wardName}, admittedAt: ${_this.admittedAt}, dischargedAt: ${_this.dischargedAt}, status: ${_this.status})';
 }
 
 
@@ -906,7 +933,7 @@ class _$PatientAdmissionSummaryCopyWithImpl<$Res>
 /// Create a copy of PatientAdmissionSummary
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? wardName = null,Object? admittedAt = null,Object? dischargedAt = freezed,Object? status = null,}) {
-  return _then(_self.copyWith(
+  return _then(PatientAdmissionSummary(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,wardName: null == wardName ? _self.wardName : wardName // ignore: cast_nullable_to_non_nullable
 as String,admittedAt: null == admittedAt ? _self.admittedAt : admittedAt // ignore: cast_nullable_to_non_nullable
@@ -1075,16 +1102,18 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _PatientAdmissionSummary&&(identical(other.id, id) || other.id == id)&&(identical(other.wardName, wardName) || other.wardName == wardName)&&(identical(other.admittedAt, admittedAt) || other.admittedAt == admittedAt)&&(identical(other.dischargedAt, dischargedAt) || other.dischargedAt == dischargedAt)&&(identical(other.status, status) || other.status == status));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _PatientAdmissionSummary&&(identical(other.id, id) || other.id == id)&&(identical(other.wardName, wardName) || other.wardName == wardName)&&(identical(other.admittedAt, admittedAt) || other.admittedAt == admittedAt)&&(identical(other.dischargedAt, dischargedAt) || other.dischargedAt == dischargedAt)&&(identical(other.status, status) || other.status == status));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,wardName,admittedAt,dischargedAt,status);
+int get hashCode {
+    return Object.hash(runtimeType,id,wardName,admittedAt,dischargedAt,status);
+}
 
 @override
 String toString() {
-  return 'PatientAdmissionSummary(id: $id, wardName: $wardName, admittedAt: $admittedAt, dischargedAt: $dischargedAt, status: $status)';
+    return 'PatientAdmissionSummary(id: $id, wardName: $wardName, admittedAt: $admittedAt, dischargedAt: $dischargedAt, status: $status)';
 }
 
 
@@ -1143,16 +1172,21 @@ $BreakdownLineItemCopyWith<BreakdownLineItem> get copyWith => _$BreakdownLineIte
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is BreakdownLineItem&&(identical(other.id, id) || other.id == id)&&(identical(other.description, description) || other.description == description)&&(identical(other.unitPrice, unitPrice) || other.unitPrice == unitPrice)&&(identical(other.quantity, quantity) || other.quantity == quantity)&&(identical(other.lineTotal, lineTotal) || other.lineTotal == lineTotal)&&(identical(other.amountPaid, amountPaid) || other.amountPaid == amountPaid)&&(identical(other.balance, balance) || other.balance == balance)&&(identical(other.isRecurringDaily, isRecurringDaily) || other.isRecurringDaily == isRecurringDaily)&&(identical(other.billableDays, billableDays) || other.billableDays == billableDays)&&(identical(other.usageSummary, usageSummary) || other.usageSummary == usageSummary));
+  final _this = this as BreakdownLineItem;
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is BreakdownLineItem&&(identical(other.id, _this.id) || other.id == _this.id)&&(identical(other.description, _this.description) || other.description == _this.description)&&(identical(other.unitPrice, _this.unitPrice) || other.unitPrice == _this.unitPrice)&&(identical(other.quantity, _this.quantity) || other.quantity == _this.quantity)&&(identical(other.lineTotal, _this.lineTotal) || other.lineTotal == _this.lineTotal)&&(identical(other.amountPaid, _this.amountPaid) || other.amountPaid == _this.amountPaid)&&(identical(other.balance, _this.balance) || other.balance == _this.balance)&&(identical(other.isRecurringDaily, _this.isRecurringDaily) || other.isRecurringDaily == _this.isRecurringDaily)&&(identical(other.billableDays, _this.billableDays) || other.billableDays == _this.billableDays)&&(identical(other.usageSummary, _this.usageSummary) || other.usageSummary == _this.usageSummary));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,description,unitPrice,quantity,lineTotal,amountPaid,balance,isRecurringDaily,billableDays,usageSummary);
+int get hashCode {
+  final _this = this as BreakdownLineItem;
+  return Object.hash(runtimeType,_this.id,_this.description,_this.unitPrice,_this.quantity,_this.lineTotal,_this.amountPaid,_this.balance,_this.isRecurringDaily,_this.billableDays,_this.usageSummary);
+}
 
 @override
 String toString() {
-  return 'BreakdownLineItem(id: $id, description: $description, unitPrice: $unitPrice, quantity: $quantity, lineTotal: $lineTotal, amountPaid: $amountPaid, balance: $balance, isRecurringDaily: $isRecurringDaily, billableDays: $billableDays, usageSummary: $usageSummary)';
+  final _this = this as BreakdownLineItem;
+  return 'BreakdownLineItem(id: ${_this.id}, description: ${_this.description}, unitPrice: ${_this.unitPrice}, quantity: ${_this.quantity}, lineTotal: ${_this.lineTotal}, amountPaid: ${_this.amountPaid}, balance: ${_this.balance}, isRecurringDaily: ${_this.isRecurringDaily}, billableDays: ${_this.billableDays}, usageSummary: ${_this.usageSummary})';
 }
 
 
@@ -1181,7 +1215,7 @@ class _$BreakdownLineItemCopyWithImpl<$Res>
 /// Create a copy of BreakdownLineItem
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? description = null,Object? unitPrice = null,Object? quantity = null,Object? lineTotal = null,Object? amountPaid = null,Object? balance = null,Object? isRecurringDaily = null,Object? billableDays = freezed,Object? usageSummary = freezed,}) {
-  return _then(_self.copyWith(
+  return _then(BreakdownLineItem(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,description: null == description ? _self.description : description // ignore: cast_nullable_to_non_nullable
 as String,unitPrice: null == unitPrice ? _self.unitPrice : unitPrice // ignore: cast_nullable_to_non_nullable
@@ -1360,16 +1394,18 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _BreakdownLineItem&&(identical(other.id, id) || other.id == id)&&(identical(other.description, description) || other.description == description)&&(identical(other.unitPrice, unitPrice) || other.unitPrice == unitPrice)&&(identical(other.quantity, quantity) || other.quantity == quantity)&&(identical(other.lineTotal, lineTotal) || other.lineTotal == lineTotal)&&(identical(other.amountPaid, amountPaid) || other.amountPaid == amountPaid)&&(identical(other.balance, balance) || other.balance == balance)&&(identical(other.isRecurringDaily, isRecurringDaily) || other.isRecurringDaily == isRecurringDaily)&&(identical(other.billableDays, billableDays) || other.billableDays == billableDays)&&(identical(other.usageSummary, usageSummary) || other.usageSummary == usageSummary));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _BreakdownLineItem&&(identical(other.id, id) || other.id == id)&&(identical(other.description, description) || other.description == description)&&(identical(other.unitPrice, unitPrice) || other.unitPrice == unitPrice)&&(identical(other.quantity, quantity) || other.quantity == quantity)&&(identical(other.lineTotal, lineTotal) || other.lineTotal == lineTotal)&&(identical(other.amountPaid, amountPaid) || other.amountPaid == amountPaid)&&(identical(other.balance, balance) || other.balance == balance)&&(identical(other.isRecurringDaily, isRecurringDaily) || other.isRecurringDaily == isRecurringDaily)&&(identical(other.billableDays, billableDays) || other.billableDays == billableDays)&&(identical(other.usageSummary, usageSummary) || other.usageSummary == usageSummary));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,description,unitPrice,quantity,lineTotal,amountPaid,balance,isRecurringDaily,billableDays,usageSummary);
+int get hashCode {
+    return Object.hash(runtimeType,id,description,unitPrice,quantity,lineTotal,amountPaid,balance,isRecurringDaily,billableDays,usageSummary);
+}
 
 @override
 String toString() {
-  return 'BreakdownLineItem(id: $id, description: $description, unitPrice: $unitPrice, quantity: $quantity, lineTotal: $lineTotal, amountPaid: $amountPaid, balance: $balance, isRecurringDaily: $isRecurringDaily, billableDays: $billableDays, usageSummary: $usageSummary)';
+    return 'BreakdownLineItem(id: $id, description: $description, unitPrice: $unitPrice, quantity: $quantity, lineTotal: $lineTotal, amountPaid: $amountPaid, balance: $balance, isRecurringDaily: $isRecurringDaily, billableDays: $billableDays, usageSummary: $usageSummary)';
 }
 
 
@@ -1433,16 +1469,21 @@ $BreakdownCategoryCopyWith<BreakdownCategory> get copyWith => _$BreakdownCategor
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is BreakdownCategory&&(identical(other.category, category) || other.category == category)&&(identical(other.label, label) || other.label == label)&&(identical(other.subtotal, subtotal) || other.subtotal == subtotal)&&(identical(other.amountPaid, amountPaid) || other.amountPaid == amountPaid)&&(identical(other.balance, balance) || other.balance == balance)&&const DeepCollectionEquality().equals(other.items, items));
+  final _this = this as BreakdownCategory;
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is BreakdownCategory&&(identical(other.category, _this.category) || other.category == _this.category)&&(identical(other.label, _this.label) || other.label == _this.label)&&(identical(other.subtotal, _this.subtotal) || other.subtotal == _this.subtotal)&&(identical(other.amountPaid, _this.amountPaid) || other.amountPaid == _this.amountPaid)&&(identical(other.balance, _this.balance) || other.balance == _this.balance)&&const DeepCollectionEquality().equals(other.items, _this.items));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,category,label,subtotal,amountPaid,balance,const DeepCollectionEquality().hash(items));
+int get hashCode {
+  final _this = this as BreakdownCategory;
+  return Object.hash(runtimeType,_this.category,_this.label,_this.subtotal,_this.amountPaid,_this.balance,const DeepCollectionEquality().hash(_this.items));
+}
 
 @override
 String toString() {
-  return 'BreakdownCategory(category: $category, label: $label, subtotal: $subtotal, amountPaid: $amountPaid, balance: $balance, items: $items)';
+  final _this = this as BreakdownCategory;
+  return 'BreakdownCategory(category: ${_this.category}, label: ${_this.label}, subtotal: ${_this.subtotal}, amountPaid: ${_this.amountPaid}, balance: ${_this.balance}, items: ${_this.items})';
 }
 
 
@@ -1471,7 +1512,7 @@ class _$BreakdownCategoryCopyWithImpl<$Res>
 /// Create a copy of BreakdownCategory
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') @override $Res call({Object? category = null,Object? label = null,Object? subtotal = null,Object? amountPaid = null,Object? balance = null,Object? items = null,}) {
-  return _then(_self.copyWith(
+  return _then(BreakdownCategory(
 category: null == category ? _self.category : category // ignore: cast_nullable_to_non_nullable
 as ChargeCategory,label: null == label ? _self.label : label // ignore: cast_nullable_to_non_nullable
 as String,subtotal: null == subtotal ? _self.subtotal : subtotal // ignore: cast_nullable_to_non_nullable
@@ -1619,7 +1660,7 @@ return $default(_that.category,_that.label,_that.subtotal,_that.amountPaid,_that
 @JsonSerializable()
 
 class _BreakdownCategory implements BreakdownCategory {
-  const _BreakdownCategory({required this.category, required this.label, @ApiAmountConverter() required this.subtotal, @ApiAmountConverter() required this.amountPaid, @ApiAmountConverter() required this.balance, final  List<BreakdownLineItem> items = const []}): _items = items;
+  const _BreakdownCategory({required this.category, required this.label, @ApiAmountConverter() required this.subtotal, @ApiAmountConverter() required this.amountPaid, @ApiAmountConverter() required this.balance,  List<BreakdownLineItem> items = const []}): _items = items;
   factory _BreakdownCategory.fromJson(Map<String, dynamic> json) => _$BreakdownCategoryFromJson(json);
 
 @override final  ChargeCategory category;
@@ -1648,16 +1689,18 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _BreakdownCategory&&(identical(other.category, category) || other.category == category)&&(identical(other.label, label) || other.label == label)&&(identical(other.subtotal, subtotal) || other.subtotal == subtotal)&&(identical(other.amountPaid, amountPaid) || other.amountPaid == amountPaid)&&(identical(other.balance, balance) || other.balance == balance)&&const DeepCollectionEquality().equals(other._items, _items));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _BreakdownCategory&&(identical(other.category, category) || other.category == category)&&(identical(other.label, label) || other.label == label)&&(identical(other.subtotal, subtotal) || other.subtotal == subtotal)&&(identical(other.amountPaid, amountPaid) || other.amountPaid == amountPaid)&&(identical(other.balance, balance) || other.balance == balance)&&const DeepCollectionEquality().equals(other.items, _items));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,category,label,subtotal,amountPaid,balance,const DeepCollectionEquality().hash(_items));
+int get hashCode {
+    return Object.hash(runtimeType,category,label,subtotal,amountPaid,balance,const DeepCollectionEquality().hash(_items));
+}
 
 @override
 String toString() {
-  return 'BreakdownCategory(category: $category, label: $label, subtotal: $subtotal, amountPaid: $amountPaid, balance: $balance, items: $items)';
+    return 'BreakdownCategory(category: $category, label: $label, subtotal: $subtotal, amountPaid: $amountPaid, balance: $balance, items: $items)';
 }
 
 
@@ -1717,16 +1760,21 @@ $InvoicePaymentSummaryCopyWith<InvoicePaymentSummary> get copyWith => _$InvoiceP
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is InvoicePaymentSummary&&(identical(other.id, id) || other.id == id)&&(identical(other.amount, amount) || other.amount == amount)&&(identical(other.method, method) || other.method == method)&&(identical(other.methodLabel, methodLabel) || other.methodLabel == methodLabel)&&(identical(other.paidAt, paidAt) || other.paidAt == paidAt)&&(identical(other.reference, reference) || other.reference == reference));
+  final _this = this as InvoicePaymentSummary;
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is InvoicePaymentSummary&&(identical(other.id, _this.id) || other.id == _this.id)&&(identical(other.amount, _this.amount) || other.amount == _this.amount)&&(identical(other.method, _this.method) || other.method == _this.method)&&(identical(other.methodLabel, _this.methodLabel) || other.methodLabel == _this.methodLabel)&&(identical(other.paidAt, _this.paidAt) || other.paidAt == _this.paidAt)&&(identical(other.reference, _this.reference) || other.reference == _this.reference));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,amount,method,methodLabel,paidAt,reference);
+int get hashCode {
+  final _this = this as InvoicePaymentSummary;
+  return Object.hash(runtimeType,_this.id,_this.amount,_this.method,_this.methodLabel,_this.paidAt,_this.reference);
+}
 
 @override
 String toString() {
-  return 'InvoicePaymentSummary(id: $id, amount: $amount, method: $method, methodLabel: $methodLabel, paidAt: $paidAt, reference: $reference)';
+  final _this = this as InvoicePaymentSummary;
+  return 'InvoicePaymentSummary(id: ${_this.id}, amount: ${_this.amount}, method: ${_this.method}, methodLabel: ${_this.methodLabel}, paidAt: ${_this.paidAt}, reference: ${_this.reference})';
 }
 
 
@@ -1755,7 +1803,7 @@ class _$InvoicePaymentSummaryCopyWithImpl<$Res>
 /// Create a copy of InvoicePaymentSummary
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? amount = null,Object? method = freezed,Object? methodLabel = null,Object? paidAt = null,Object? reference = freezed,}) {
-  return _then(_self.copyWith(
+  return _then(InvoicePaymentSummary(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,amount: null == amount ? _self.amount : amount // ignore: cast_nullable_to_non_nullable
 as String,method: freezed == method ? _self.method : method // ignore: cast_nullable_to_non_nullable
@@ -1926,16 +1974,18 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _InvoicePaymentSummary&&(identical(other.id, id) || other.id == id)&&(identical(other.amount, amount) || other.amount == amount)&&(identical(other.method, method) || other.method == method)&&(identical(other.methodLabel, methodLabel) || other.methodLabel == methodLabel)&&(identical(other.paidAt, paidAt) || other.paidAt == paidAt)&&(identical(other.reference, reference) || other.reference == reference));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _InvoicePaymentSummary&&(identical(other.id, id) || other.id == id)&&(identical(other.amount, amount) || other.amount == amount)&&(identical(other.method, method) || other.method == method)&&(identical(other.methodLabel, methodLabel) || other.methodLabel == methodLabel)&&(identical(other.paidAt, paidAt) || other.paidAt == paidAt)&&(identical(other.reference, reference) || other.reference == reference));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,amount,method,methodLabel,paidAt,reference);
+int get hashCode {
+    return Object.hash(runtimeType,id,amount,method,methodLabel,paidAt,reference);
+}
 
 @override
 String toString() {
-  return 'InvoicePaymentSummary(id: $id, amount: $amount, method: $method, methodLabel: $methodLabel, paidAt: $paidAt, reference: $reference)';
+    return 'InvoicePaymentSummary(id: $id, amount: $amount, method: $method, methodLabel: $methodLabel, paidAt: $paidAt, reference: $reference)';
 }
 
 
@@ -1995,16 +2045,21 @@ $InvoiceDetailCopyWith<InvoiceDetail> get copyWith => _$InvoiceDetailCopyWithImp
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is InvoiceDetail&&(identical(other.id, id) || other.id == id)&&(identical(other.invoiceNumber, invoiceNumber) || other.invoiceNumber == invoiceNumber)&&(identical(other.billType, billType) || other.billType == billType)&&(identical(other.status, status) || other.status == status)&&(identical(other.issuedAt, issuedAt) || other.issuedAt == issuedAt)&&(identical(other.totalAmount, totalAmount) || other.totalAmount == totalAmount)&&(identical(other.amountPaid, amountPaid) || other.amountPaid == amountPaid)&&(identical(other.balance, balance) || other.balance == balance)&&(identical(other.admission, admission) || other.admission == admission)&&const DeepCollectionEquality().equals(other.breakdown, breakdown)&&const DeepCollectionEquality().equals(other.payments, payments));
+  final _this = this as InvoiceDetail;
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is InvoiceDetail&&(identical(other.id, _this.id) || other.id == _this.id)&&(identical(other.invoiceNumber, _this.invoiceNumber) || other.invoiceNumber == _this.invoiceNumber)&&(identical(other.billType, _this.billType) || other.billType == _this.billType)&&(identical(other.status, _this.status) || other.status == _this.status)&&(identical(other.issuedAt, _this.issuedAt) || other.issuedAt == _this.issuedAt)&&(identical(other.totalAmount, _this.totalAmount) || other.totalAmount == _this.totalAmount)&&(identical(other.amountPaid, _this.amountPaid) || other.amountPaid == _this.amountPaid)&&(identical(other.balance, _this.balance) || other.balance == _this.balance)&&(identical(other.admission, _this.admission) || other.admission == _this.admission)&&const DeepCollectionEquality().equals(other.breakdown, _this.breakdown)&&const DeepCollectionEquality().equals(other.payments, _this.payments));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,invoiceNumber,billType,status,issuedAt,totalAmount,amountPaid,balance,admission,const DeepCollectionEquality().hash(breakdown),const DeepCollectionEquality().hash(payments));
+int get hashCode {
+  final _this = this as InvoiceDetail;
+  return Object.hash(runtimeType,_this.id,_this.invoiceNumber,_this.billType,_this.status,_this.issuedAt,_this.totalAmount,_this.amountPaid,_this.balance,_this.admission,const DeepCollectionEquality().hash(_this.breakdown),const DeepCollectionEquality().hash(_this.payments));
+}
 
 @override
 String toString() {
-  return 'InvoiceDetail(id: $id, invoiceNumber: $invoiceNumber, billType: $billType, status: $status, issuedAt: $issuedAt, totalAmount: $totalAmount, amountPaid: $amountPaid, balance: $balance, admission: $admission, breakdown: $breakdown, payments: $payments)';
+  final _this = this as InvoiceDetail;
+  return 'InvoiceDetail(id: ${_this.id}, invoiceNumber: ${_this.invoiceNumber}, billType: ${_this.billType}, status: ${_this.status}, issuedAt: ${_this.issuedAt}, totalAmount: ${_this.totalAmount}, amountPaid: ${_this.amountPaid}, balance: ${_this.balance}, admission: ${_this.admission}, breakdown: ${_this.breakdown}, payments: ${_this.payments})';
 }
 
 
@@ -2033,7 +2088,7 @@ class _$InvoiceDetailCopyWithImpl<$Res>
 /// Create a copy of InvoiceDetail
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? invoiceNumber = null,Object? billType = null,Object? status = null,Object? issuedAt = null,Object? totalAmount = null,Object? amountPaid = null,Object? balance = null,Object? admission = freezed,Object? breakdown = null,Object? payments = null,}) {
-  return _then(_self.copyWith(
+  return _then(InvoiceDetail(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,invoiceNumber: null == invoiceNumber ? _self.invoiceNumber : invoiceNumber // ignore: cast_nullable_to_non_nullable
 as String,billType: null == billType ? _self.billType : billType // ignore: cast_nullable_to_non_nullable
@@ -2198,7 +2253,7 @@ return $default(_that.id,_that.invoiceNumber,_that.billType,_that.status,_that.i
 @JsonSerializable()
 
 class _InvoiceDetail implements InvoiceDetail {
-  const _InvoiceDetail({required this.id, required this.invoiceNumber, required this.billType, required this.status, required this.issuedAt, @ApiAmountConverter() required this.totalAmount, @ApiAmountConverter() required this.amountPaid, @ApiAmountConverter() required this.balance, this.admission, final  List<BreakdownCategory> breakdown = const [], final  List<InvoicePaymentSummary> payments = const []}): _breakdown = breakdown,_payments = payments;
+  const _InvoiceDetail({required this.id, required this.invoiceNumber, required this.billType, required this.status, required this.issuedAt, @ApiAmountConverter() required this.totalAmount, @ApiAmountConverter() required this.amountPaid, @ApiAmountConverter() required this.balance, this.admission,  List<BreakdownCategory> breakdown = const [],  List<InvoicePaymentSummary> payments = const []}): _breakdown = breakdown,_payments = payments;
   factory _InvoiceDetail.fromJson(Map<String, dynamic> json) => _$InvoiceDetailFromJson(json);
 
 @override final  String id;
@@ -2238,16 +2293,18 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _InvoiceDetail&&(identical(other.id, id) || other.id == id)&&(identical(other.invoiceNumber, invoiceNumber) || other.invoiceNumber == invoiceNumber)&&(identical(other.billType, billType) || other.billType == billType)&&(identical(other.status, status) || other.status == status)&&(identical(other.issuedAt, issuedAt) || other.issuedAt == issuedAt)&&(identical(other.totalAmount, totalAmount) || other.totalAmount == totalAmount)&&(identical(other.amountPaid, amountPaid) || other.amountPaid == amountPaid)&&(identical(other.balance, balance) || other.balance == balance)&&(identical(other.admission, admission) || other.admission == admission)&&const DeepCollectionEquality().equals(other._breakdown, _breakdown)&&const DeepCollectionEquality().equals(other._payments, _payments));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _InvoiceDetail&&(identical(other.id, id) || other.id == id)&&(identical(other.invoiceNumber, invoiceNumber) || other.invoiceNumber == invoiceNumber)&&(identical(other.billType, billType) || other.billType == billType)&&(identical(other.status, status) || other.status == status)&&(identical(other.issuedAt, issuedAt) || other.issuedAt == issuedAt)&&(identical(other.totalAmount, totalAmount) || other.totalAmount == totalAmount)&&(identical(other.amountPaid, amountPaid) || other.amountPaid == amountPaid)&&(identical(other.balance, balance) || other.balance == balance)&&(identical(other.admission, admission) || other.admission == admission)&&const DeepCollectionEquality().equals(other.breakdown, _breakdown)&&const DeepCollectionEquality().equals(other.payments, _payments));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,invoiceNumber,billType,status,issuedAt,totalAmount,amountPaid,balance,admission,const DeepCollectionEquality().hash(_breakdown),const DeepCollectionEquality().hash(_payments));
+int get hashCode {
+    return Object.hash(runtimeType,id,invoiceNumber,billType,status,issuedAt,totalAmount,amountPaid,balance,admission,const DeepCollectionEquality().hash(_breakdown),const DeepCollectionEquality().hash(_payments));
+}
 
 @override
 String toString() {
-  return 'InvoiceDetail(id: $id, invoiceNumber: $invoiceNumber, billType: $billType, status: $status, issuedAt: $issuedAt, totalAmount: $totalAmount, amountPaid: $amountPaid, balance: $balance, admission: $admission, breakdown: $breakdown, payments: $payments)';
+    return 'InvoiceDetail(id: $id, invoiceNumber: $invoiceNumber, billType: $billType, status: $status, issuedAt: $issuedAt, totalAmount: $totalAmount, amountPaid: $amountPaid, balance: $balance, admission: $admission, breakdown: $breakdown, payments: $payments)';
 }
 
 
@@ -2324,16 +2381,21 @@ $PaymentHistoryItemCopyWith<PaymentHistoryItem> get copyWith => _$PaymentHistory
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is PaymentHistoryItem&&(identical(other.id, id) || other.id == id)&&(identical(other.invoiceId, invoiceId) || other.invoiceId == invoiceId)&&(identical(other.invoiceNumber, invoiceNumber) || other.invoiceNumber == invoiceNumber)&&(identical(other.description, description) || other.description == description)&&(identical(other.amount, amount) || other.amount == amount)&&(identical(other.method, method) || other.method == method)&&(identical(other.methodLabel, methodLabel) || other.methodLabel == methodLabel)&&(identical(other.methodDetail, methodDetail) || other.methodDetail == methodDetail)&&(identical(other.paidAt, paidAt) || other.paidAt == paidAt)&&(identical(other.status, status) || other.status == status));
+  final _this = this as PaymentHistoryItem;
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is PaymentHistoryItem&&(identical(other.id, _this.id) || other.id == _this.id)&&(identical(other.invoiceId, _this.invoiceId) || other.invoiceId == _this.invoiceId)&&(identical(other.invoiceNumber, _this.invoiceNumber) || other.invoiceNumber == _this.invoiceNumber)&&(identical(other.description, _this.description) || other.description == _this.description)&&(identical(other.amount, _this.amount) || other.amount == _this.amount)&&(identical(other.method, _this.method) || other.method == _this.method)&&(identical(other.methodLabel, _this.methodLabel) || other.methodLabel == _this.methodLabel)&&(identical(other.methodDetail, _this.methodDetail) || other.methodDetail == _this.methodDetail)&&(identical(other.paidAt, _this.paidAt) || other.paidAt == _this.paidAt)&&(identical(other.status, _this.status) || other.status == _this.status));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,invoiceId,invoiceNumber,description,amount,method,methodLabel,methodDetail,paidAt,status);
+int get hashCode {
+  final _this = this as PaymentHistoryItem;
+  return Object.hash(runtimeType,_this.id,_this.invoiceId,_this.invoiceNumber,_this.description,_this.amount,_this.method,_this.methodLabel,_this.methodDetail,_this.paidAt,_this.status);
+}
 
 @override
 String toString() {
-  return 'PaymentHistoryItem(id: $id, invoiceId: $invoiceId, invoiceNumber: $invoiceNumber, description: $description, amount: $amount, method: $method, methodLabel: $methodLabel, methodDetail: $methodDetail, paidAt: $paidAt, status: $status)';
+  final _this = this as PaymentHistoryItem;
+  return 'PaymentHistoryItem(id: ${_this.id}, invoiceId: ${_this.invoiceId}, invoiceNumber: ${_this.invoiceNumber}, description: ${_this.description}, amount: ${_this.amount}, method: ${_this.method}, methodLabel: ${_this.methodLabel}, methodDetail: ${_this.methodDetail}, paidAt: ${_this.paidAt}, status: ${_this.status})';
 }
 
 
@@ -2362,7 +2424,7 @@ class _$PaymentHistoryItemCopyWithImpl<$Res>
 /// Create a copy of PaymentHistoryItem
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? invoiceId = null,Object? invoiceNumber = null,Object? description = null,Object? amount = null,Object? method = freezed,Object? methodLabel = null,Object? methodDetail = null,Object? paidAt = null,Object? status = null,}) {
-  return _then(_self.copyWith(
+  return _then(PaymentHistoryItem(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,invoiceId: null == invoiceId ? _self.invoiceId : invoiceId // ignore: cast_nullable_to_non_nullable
 as String,invoiceNumber: null == invoiceNumber ? _self.invoiceNumber : invoiceNumber // ignore: cast_nullable_to_non_nullable
@@ -2541,16 +2603,18 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _PaymentHistoryItem&&(identical(other.id, id) || other.id == id)&&(identical(other.invoiceId, invoiceId) || other.invoiceId == invoiceId)&&(identical(other.invoiceNumber, invoiceNumber) || other.invoiceNumber == invoiceNumber)&&(identical(other.description, description) || other.description == description)&&(identical(other.amount, amount) || other.amount == amount)&&(identical(other.method, method) || other.method == method)&&(identical(other.methodLabel, methodLabel) || other.methodLabel == methodLabel)&&(identical(other.methodDetail, methodDetail) || other.methodDetail == methodDetail)&&(identical(other.paidAt, paidAt) || other.paidAt == paidAt)&&(identical(other.status, status) || other.status == status));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _PaymentHistoryItem&&(identical(other.id, id) || other.id == id)&&(identical(other.invoiceId, invoiceId) || other.invoiceId == invoiceId)&&(identical(other.invoiceNumber, invoiceNumber) || other.invoiceNumber == invoiceNumber)&&(identical(other.description, description) || other.description == description)&&(identical(other.amount, amount) || other.amount == amount)&&(identical(other.method, method) || other.method == method)&&(identical(other.methodLabel, methodLabel) || other.methodLabel == methodLabel)&&(identical(other.methodDetail, methodDetail) || other.methodDetail == methodDetail)&&(identical(other.paidAt, paidAt) || other.paidAt == paidAt)&&(identical(other.status, status) || other.status == status));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,invoiceId,invoiceNumber,description,amount,method,methodLabel,methodDetail,paidAt,status);
+int get hashCode {
+    return Object.hash(runtimeType,id,invoiceId,invoiceNumber,description,amount,method,methodLabel,methodDetail,paidAt,status);
+}
 
 @override
 String toString() {
-  return 'PaymentHistoryItem(id: $id, invoiceId: $invoiceId, invoiceNumber: $invoiceNumber, description: $description, amount: $amount, method: $method, methodLabel: $methodLabel, methodDetail: $methodDetail, paidAt: $paidAt, status: $status)';
+    return 'PaymentHistoryItem(id: $id, invoiceId: $invoiceId, invoiceNumber: $invoiceNumber, description: $description, amount: $amount, method: $method, methodLabel: $methodLabel, methodDetail: $methodDetail, paidAt: $paidAt, status: $status)';
 }
 
 
@@ -2614,16 +2678,21 @@ $PaymentListResponseCopyWith<PaymentListResponse> get copyWith => _$PaymentListR
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is PaymentListResponse&&const DeepCollectionEquality().equals(other.data, data)&&(identical(other.total, total) || other.total == total)&&(identical(other.page, page) || other.page == page)&&(identical(other.limit, limit) || other.limit == limit));
+  final _this = this as PaymentListResponse;
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is PaymentListResponse&&const DeepCollectionEquality().equals(other.data, _this.data)&&(identical(other.total, _this.total) || other.total == _this.total)&&(identical(other.page, _this.page) || other.page == _this.page)&&(identical(other.limit, _this.limit) || other.limit == _this.limit));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,const DeepCollectionEquality().hash(data),total,page,limit);
+int get hashCode {
+  final _this = this as PaymentListResponse;
+  return Object.hash(runtimeType,const DeepCollectionEquality().hash(_this.data),_this.total,_this.page,_this.limit);
+}
 
 @override
 String toString() {
-  return 'PaymentListResponse(data: $data, total: $total, page: $page, limit: $limit)';
+  final _this = this as PaymentListResponse;
+  return 'PaymentListResponse(data: ${_this.data}, total: ${_this.total}, page: ${_this.page}, limit: ${_this.limit})';
 }
 
 
@@ -2652,7 +2721,7 @@ class _$PaymentListResponseCopyWithImpl<$Res>
 /// Create a copy of PaymentListResponse
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') @override $Res call({Object? data = null,Object? total = null,Object? page = null,Object? limit = null,}) {
-  return _then(_self.copyWith(
+  return _then(PaymentListResponse(
 data: null == data ? _self.data : data // ignore: cast_nullable_to_non_nullable
 as List<PaymentHistoryItem>,total: null == total ? _self.total : total // ignore: cast_nullable_to_non_nullable
 as int,page: null == page ? _self.page : page // ignore: cast_nullable_to_non_nullable
@@ -2798,7 +2867,7 @@ return $default(_that.data,_that.total,_that.page,_that.limit);case _:
 @JsonSerializable()
 
 class _PaymentListResponse implements PaymentListResponse {
-  const _PaymentListResponse({required final  List<PaymentHistoryItem> data, this.total = 0, this.page = 1, this.limit = 20}): _data = data;
+  const _PaymentListResponse({required  List<PaymentHistoryItem> data, this.total = 0, this.page = 1, this.limit = 20}): _data = data;
   factory _PaymentListResponse.fromJson(Map<String, dynamic> json) => _$PaymentListResponseFromJson(json);
 
  final  List<PaymentHistoryItem> _data;
@@ -2825,16 +2894,18 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _PaymentListResponse&&const DeepCollectionEquality().equals(other._data, _data)&&(identical(other.total, total) || other.total == total)&&(identical(other.page, page) || other.page == page)&&(identical(other.limit, limit) || other.limit == limit));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _PaymentListResponse&&const DeepCollectionEquality().equals(other.data, _data)&&(identical(other.total, total) || other.total == total)&&(identical(other.page, page) || other.page == page)&&(identical(other.limit, limit) || other.limit == limit));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,const DeepCollectionEquality().hash(_data),total,page,limit);
+int get hashCode {
+    return Object.hash(runtimeType,const DeepCollectionEquality().hash(_data),total,page,limit);
+}
 
 @override
 String toString() {
-  return 'PaymentListResponse(data: $data, total: $total, page: $page, limit: $limit)';
+    return 'PaymentListResponse(data: $data, total: $total, page: $page, limit: $limit)';
 }
 
 
@@ -2892,16 +2963,21 @@ $ReceiptResponseCopyWith<ReceiptResponse> get copyWith => _$ReceiptResponseCopyW
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is ReceiptResponse&&(identical(other.id, id) || other.id == id)&&(identical(other.invoiceNumber, invoiceNumber) || other.invoiceNumber == invoiceNumber)&&(identical(other.amount, amount) || other.amount == amount)&&(identical(other.paidAt, paidAt) || other.paidAt == paidAt)&&(identical(other.method, method) || other.method == method)&&(identical(other.methodLabel, methodLabel) || other.methodLabel == methodLabel)&&(identical(other.url, url) || other.url == url));
+  final _this = this as ReceiptResponse;
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is ReceiptResponse&&(identical(other.id, _this.id) || other.id == _this.id)&&(identical(other.invoiceNumber, _this.invoiceNumber) || other.invoiceNumber == _this.invoiceNumber)&&(identical(other.amount, _this.amount) || other.amount == _this.amount)&&(identical(other.paidAt, _this.paidAt) || other.paidAt == _this.paidAt)&&(identical(other.method, _this.method) || other.method == _this.method)&&(identical(other.methodLabel, _this.methodLabel) || other.methodLabel == _this.methodLabel)&&(identical(other.url, _this.url) || other.url == _this.url));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,invoiceNumber,amount,paidAt,method,methodLabel,url);
+int get hashCode {
+  final _this = this as ReceiptResponse;
+  return Object.hash(runtimeType,_this.id,_this.invoiceNumber,_this.amount,_this.paidAt,_this.method,_this.methodLabel,_this.url);
+}
 
 @override
 String toString() {
-  return 'ReceiptResponse(id: $id, invoiceNumber: $invoiceNumber, amount: $amount, paidAt: $paidAt, method: $method, methodLabel: $methodLabel, url: $url)';
+  final _this = this as ReceiptResponse;
+  return 'ReceiptResponse(id: ${_this.id}, invoiceNumber: ${_this.invoiceNumber}, amount: ${_this.amount}, paidAt: ${_this.paidAt}, method: ${_this.method}, methodLabel: ${_this.methodLabel}, url: ${_this.url})';
 }
 
 
@@ -2930,7 +3006,7 @@ class _$ReceiptResponseCopyWithImpl<$Res>
 /// Create a copy of ReceiptResponse
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? invoiceNumber = null,Object? amount = null,Object? paidAt = null,Object? method = freezed,Object? methodLabel = null,Object? url = freezed,}) {
-  return _then(_self.copyWith(
+  return _then(ReceiptResponse(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,invoiceNumber: null == invoiceNumber ? _self.invoiceNumber : invoiceNumber // ignore: cast_nullable_to_non_nullable
 as String,amount: null == amount ? _self.amount : amount // ignore: cast_nullable_to_non_nullable
@@ -3103,16 +3179,18 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _ReceiptResponse&&(identical(other.id, id) || other.id == id)&&(identical(other.invoiceNumber, invoiceNumber) || other.invoiceNumber == invoiceNumber)&&(identical(other.amount, amount) || other.amount == amount)&&(identical(other.paidAt, paidAt) || other.paidAt == paidAt)&&(identical(other.method, method) || other.method == method)&&(identical(other.methodLabel, methodLabel) || other.methodLabel == methodLabel)&&(identical(other.url, url) || other.url == url));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _ReceiptResponse&&(identical(other.id, id) || other.id == id)&&(identical(other.invoiceNumber, invoiceNumber) || other.invoiceNumber == invoiceNumber)&&(identical(other.amount, amount) || other.amount == amount)&&(identical(other.paidAt, paidAt) || other.paidAt == paidAt)&&(identical(other.method, method) || other.method == method)&&(identical(other.methodLabel, methodLabel) || other.methodLabel == methodLabel)&&(identical(other.url, url) || other.url == url));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,invoiceNumber,amount,paidAt,method,methodLabel,url);
+int get hashCode {
+    return Object.hash(runtimeType,id,invoiceNumber,amount,paidAt,method,methodLabel,url);
+}
 
 @override
 String toString() {
-  return 'ReceiptResponse(id: $id, invoiceNumber: $invoiceNumber, amount: $amount, paidAt: $paidAt, method: $method, methodLabel: $methodLabel, url: $url)';
+    return 'ReceiptResponse(id: $id, invoiceNumber: $invoiceNumber, amount: $amount, paidAt: $paidAt, method: $method, methodLabel: $methodLabel, url: $url)';
 }
 
 
@@ -3170,16 +3248,21 @@ $BillingDashboardCopyWith<BillingDashboard> get copyWith => _$BillingDashboardCo
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is BillingDashboard&&(identical(other.summary, summary) || other.summary == summary)&&const DeepCollectionEquality().equals(other.unpaidInvoices, unpaidInvoices)&&(identical(other.unpaidTotal, unpaidTotal) || other.unpaidTotal == unpaidTotal)&&const DeepCollectionEquality().equals(other.recentPayments, recentPayments)&&(identical(other.paymentsTotal, paymentsTotal) || other.paymentsTotal == paymentsTotal));
+  final _this = this as BillingDashboard;
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is BillingDashboard&&(identical(other.summary, _this.summary) || other.summary == _this.summary)&&const DeepCollectionEquality().equals(other.unpaidInvoices, _this.unpaidInvoices)&&(identical(other.unpaidTotal, _this.unpaidTotal) || other.unpaidTotal == _this.unpaidTotal)&&const DeepCollectionEquality().equals(other.recentPayments, _this.recentPayments)&&(identical(other.paymentsTotal, _this.paymentsTotal) || other.paymentsTotal == _this.paymentsTotal));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,summary,const DeepCollectionEquality().hash(unpaidInvoices),unpaidTotal,const DeepCollectionEquality().hash(recentPayments),paymentsTotal);
+int get hashCode {
+  final _this = this as BillingDashboard;
+  return Object.hash(runtimeType,_this.summary,const DeepCollectionEquality().hash(_this.unpaidInvoices),_this.unpaidTotal,const DeepCollectionEquality().hash(_this.recentPayments),_this.paymentsTotal);
+}
 
 @override
 String toString() {
-  return 'BillingDashboard(summary: $summary, unpaidInvoices: $unpaidInvoices, unpaidTotal: $unpaidTotal, recentPayments: $recentPayments, paymentsTotal: $paymentsTotal)';
+  final _this = this as BillingDashboard;
+  return 'BillingDashboard(summary: ${_this.summary}, unpaidInvoices: ${_this.unpaidInvoices}, unpaidTotal: ${_this.unpaidTotal}, recentPayments: ${_this.recentPayments}, paymentsTotal: ${_this.paymentsTotal})';
 }
 
 
@@ -3208,7 +3291,7 @@ class _$BillingDashboardCopyWithImpl<$Res>
 /// Create a copy of BillingDashboard
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') @override $Res call({Object? summary = null,Object? unpaidInvoices = null,Object? unpaidTotal = null,Object? recentPayments = null,Object? paymentsTotal = null,}) {
-  return _then(_self.copyWith(
+  return _then(BillingDashboard(
 summary: null == summary ? _self.summary : summary // ignore: cast_nullable_to_non_nullable
 as BillingSummaryResponse,unpaidInvoices: null == unpaidInvoices ? _self.unpaidInvoices : unpaidInvoices // ignore: cast_nullable_to_non_nullable
 as List<InvoiceSummary>,unpaidTotal: null == unpaidTotal ? _self.unpaidTotal : unpaidTotal // ignore: cast_nullable_to_non_nullable
@@ -3364,7 +3447,7 @@ return $default(_that.summary,_that.unpaidInvoices,_that.unpaidTotal,_that.recen
 
 
 class _BillingDashboard implements BillingDashboard {
-  const _BillingDashboard({required this.summary, required final  List<InvoiceSummary> unpaidInvoices, required this.unpaidTotal, required final  List<PaymentHistoryItem> recentPayments, required this.paymentsTotal}): _unpaidInvoices = unpaidInvoices,_recentPayments = recentPayments;
+  const _BillingDashboard({required this.summary, required  List<InvoiceSummary> unpaidInvoices, required this.unpaidTotal, required  List<PaymentHistoryItem> recentPayments, required this.paymentsTotal}): _unpaidInvoices = unpaidInvoices,_recentPayments = recentPayments;
   
 
 @override final  BillingSummaryResponse summary;
@@ -3395,16 +3478,18 @@ _$BillingDashboardCopyWith<_BillingDashboard> get copyWith => __$BillingDashboar
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _BillingDashboard&&(identical(other.summary, summary) || other.summary == summary)&&const DeepCollectionEquality().equals(other._unpaidInvoices, _unpaidInvoices)&&(identical(other.unpaidTotal, unpaidTotal) || other.unpaidTotal == unpaidTotal)&&const DeepCollectionEquality().equals(other._recentPayments, _recentPayments)&&(identical(other.paymentsTotal, paymentsTotal) || other.paymentsTotal == paymentsTotal));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _BillingDashboard&&(identical(other.summary, summary) || other.summary == summary)&&const DeepCollectionEquality().equals(other.unpaidInvoices, _unpaidInvoices)&&(identical(other.unpaidTotal, unpaidTotal) || other.unpaidTotal == unpaidTotal)&&const DeepCollectionEquality().equals(other.recentPayments, _recentPayments)&&(identical(other.paymentsTotal, paymentsTotal) || other.paymentsTotal == paymentsTotal));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,summary,const DeepCollectionEquality().hash(_unpaidInvoices),unpaidTotal,const DeepCollectionEquality().hash(_recentPayments),paymentsTotal);
+int get hashCode {
+    return Object.hash(runtimeType,summary,const DeepCollectionEquality().hash(_unpaidInvoices),unpaidTotal,const DeepCollectionEquality().hash(_recentPayments),paymentsTotal);
+}
 
 @override
 String toString() {
-  return 'BillingDashboard(summary: $summary, unpaidInvoices: $unpaidInvoices, unpaidTotal: $unpaidTotal, recentPayments: $recentPayments, paymentsTotal: $paymentsTotal)';
+    return 'BillingDashboard(summary: $summary, unpaidInvoices: $unpaidInvoices, unpaidTotal: $unpaidTotal, recentPayments: $recentPayments, paymentsTotal: $paymentsTotal)';
 }
 
 

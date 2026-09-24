@@ -1,35 +1,21 @@
 import 'package:flutter/material.dart';
-import 'package:gap/gap.dart';
 
-import '../../../core/theme/app_design_tokens.dart';
-import '../../../core/theme/context_extensions.dart';
+import '../../../core/theme/imsh_accent_colors.dart';
+import '../../../shared/widgets/imsh_page_header.dart';
 
 class LabPageHeader extends StatelessWidget {
-  const LabPageHeader({super.key});
+  const LabPageHeader({super.key, this.trailing});
+
+  final Widget? trailing;
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    final colorScheme = context.colorScheme;
-
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          'Lab Results',
-          style: theme.textTheme.headlineSmall?.copyWith(
-            fontWeight: FontWeight.w700,
-            color: colorScheme.onSurface,
-          ),
-        ),
-        const Gap(AppDesignTokens.spacingSm),
-        Text(
-          'View and track your diagnostic medical reports.',
-          style: theme.textTheme.bodyMedium?.copyWith(
-            color: colorScheme.onSurfaceVariant,
-          ),
-        ),
-      ],
+    return ImshPageHeader(
+      title: 'Lab results',
+      subtitle: 'View and track your diagnostic medical reports.',
+      icon: Icons.science_outlined,
+      iconColor: ImshAccentColors.teal,
+      trailing: trailing,
     );
   }
 }

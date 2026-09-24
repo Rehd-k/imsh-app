@@ -18,7 +18,7 @@ class LabService {
       queryParameters: {
         'page': page,
         'limit': limit,
-        if (forPatientId != null) 'forPatientId': forPatientId,
+        'forPatientId': ?forPatientId,
       },
     );
     return LabResultListResponse.fromJson(resp.data ?? {});
@@ -30,9 +30,7 @@ class LabService {
   }) async {
     final resp = await _dio.get<Map<String, dynamic>>(
       '/patient/lab-reports/$id',
-      queryParameters: {
-        if (forPatientId != null) 'forPatientId': forPatientId,
-      },
+      queryParameters: {'forPatientId': ?forPatientId},
     );
     return LabResultDetail.fromJson(resp.data ?? {});
   }

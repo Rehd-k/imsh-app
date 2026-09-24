@@ -4,6 +4,7 @@ import 'package:gap/gap.dart';
 import '../../../core/theme/app_design_tokens.dart';
 import '../../../helper/currency_formatter.dart';
 import '../../../models/invoice_model.dart';
+import '../../../shared/widgets/imsh_surface_card.dart';
 
 class BreakdownCategorySection extends StatelessWidget {
   const BreakdownCategorySection({
@@ -18,60 +19,53 @@ class BreakdownCategorySection extends StatelessWidget {
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
 
-    return Container(
-      margin: const EdgeInsets.only(bottom: AppDesignTokens.spacingMd),
-      decoration: BoxDecoration(
-        color: colorScheme.surfaceContainerLowest,
-        borderRadius: BorderRadius.circular(AppDesignTokens.radiusMd),
-        border: Border.all(color: colorScheme.outlineVariant),
-      ),
-      child: Theme(
-        data: theme.copyWith(dividerColor: Colors.transparent),
-        child: ExpansionTile(
-          initiallyExpanded: true,
-          tilePadding: const EdgeInsets.symmetric(
-            horizontal: AppDesignTokens.spacingMd,
-            vertical: AppDesignTokens.spacingXs,
-          ),
-          childrenPadding: const EdgeInsets.fromLTRB(
-            AppDesignTokens.spacingMd,
-            0,
-            AppDesignTokens.spacingMd,
-            AppDesignTokens.spacingMd,
-          ),
-          title: Row(
-            children: [
-              Expanded(
-                child: Text(
-                  category.label,
-                  style: theme.textTheme.titleSmall?.copyWith(
-                    fontWeight: FontWeight.w700,
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 10),
+      child: ImshSurfaceCard(
+        padding: EdgeInsets.zero,
+        child: Theme(
+          data: theme.copyWith(dividerColor: Colors.transparent),
+          child: ExpansionTile(
+            initiallyExpanded: true,
+            tilePadding: const EdgeInsets.symmetric(
+              horizontal: 10,
+              vertical: AppDesignTokens.spacingXs,
+            ),
+            childrenPadding: const EdgeInsets.fromLTRB(10, 0, 10, 10),
+            title: Row(
+              children: [
+                Expanded(
+                  child: Text(
+                    category.label,
+                    style: theme.textTheme.titleSmall?.copyWith(
+                      fontWeight: FontWeight.w700,
+                    ),
                   ),
                 ),
-              ),
-              Text(
-                CurrencyFormatter.formatAmount(category.balance),
-                style: theme.textTheme.titleSmall?.copyWith(
-                  fontWeight: FontWeight.w700,
-                  color: category.balance != '0.00'
-                      ? colorScheme.error
-                      : colorScheme.onSurface,
+                Text(
+                  CurrencyFormatter.formatAmount(category.balance),
+                  style: theme.textTheme.titleSmall?.copyWith(
+                    fontWeight: FontWeight.w700,
+                    color: category.balance != '0.00'
+                        ? colorScheme.error
+                        : colorScheme.onSurface,
+                  ),
+                ),
+              ],
+            ),
+            subtitle: Padding(
+              padding: const EdgeInsets.only(top: 4),
+              child: Text(
+                'Paid ${CurrencyFormatter.formatAmount(category.amountPaid)} of ${CurrencyFormatter.formatAmount(category.subtotal)}',
+                style: theme.textTheme.bodySmall?.copyWith(
+                  color: colorScheme.onSurfaceVariant,
                 ),
               ),
-            ],
-          ),
-          subtitle: Padding(
-            padding: const EdgeInsets.only(top: 4),
-            child: Text(
-              'Paid ${CurrencyFormatter.formatAmount(category.amountPaid)} of ${CurrencyFormatter.formatAmount(category.subtotal)}',
-              style: theme.textTheme.bodySmall?.copyWith(
-                color: colorScheme.onSurfaceVariant,
-              ),
             ),
+            children: category.items
+                .map((item) => _BreakdownLineRow(item: item))
+                .toList(),
           ),
-          children: category.items
-              .map((item) => _BreakdownLineRow(item: item))
-              .toList(),
         ),
       ),
     );
@@ -89,7 +83,7 @@ class _BreakdownLineRow extends StatelessWidget {
     final colorScheme = theme.colorScheme;
 
     return Padding(
-      padding: const EdgeInsets.only(bottom: AppDesignTokens.spacingMd),
+      padding: const EdgeInsets.only(bottom: 10),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [

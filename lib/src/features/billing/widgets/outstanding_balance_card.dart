@@ -2,9 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 
 import '../../../core/theme/app_design_tokens.dart';
-import '../../../core/theme/context_extensions.dart';
-import '../../../helper/currency_formatter.dart';
+import '../../../core/theme/imsh_accent_colors.dart';
+import '../../../shared/widgets/imsh_solid_icon.dart';
+import '../../../shared/widgets/imsh_surface_card.dart';
 
+/// Compact pay / breakdown actions under the billing KPI strip.
 class OutstandingBalanceCard extends StatelessWidget {
   const OutstandingBalanceCard({
     super.key,
@@ -20,82 +22,73 @@ class OutstandingBalanceCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final colorScheme = theme.colorScheme;
+    final cs = theme.colorScheme;
+    final hasBalance = (double.tryParse(totalOutstanding) ?? 0) > 0;
 
-    return Container(
-      width: double.infinity,
-      padding: const EdgeInsets.all(AppDesignTokens.spacingLg),
-      decoration: BoxDecoration(
-        gradient: LinearGradient(
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-          colors: [
-            colorScheme.primaryContainer,
-            colorScheme.primary,
-          ],
-        ),
-        borderRadius: BorderRadius.circular(AppDesignTokens.radiusLg),
-        boxShadow: context.cardShadow,
-      ),
+    return ImshSurfaceCard(
+      padding: const EdgeInsets.all(10),
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          Text(
-            'TOTAL OUTSTANDING BALANCE',
-            style: theme.textTheme.labelSmall?.copyWith(
-              color: colorScheme.onPrimary.withValues(alpha: 0.85),
-              letterSpacing: 0.8,
-              fontWeight: FontWeight.w600,
-            ),
-          ),
-          const Gap(AppDesignTokens.spacingSm),
-          Text(
-            CurrencyFormatter.formatAmount(totalOutstanding),
-            style: theme.textTheme.headlineMedium?.copyWith(
-              color: colorScheme.onPrimary,
-              fontWeight: FontWeight.w700,
-            ),
-          ),
-          const Gap(AppDesignTokens.spacingLg),
           Row(
             children: [
-              Expanded(
-                child: FilledButton(
-                  onPressed: onPayNow,
-                  style: FilledButton.styleFrom(
-                    backgroundColor: colorScheme.onPrimary,
-                    foregroundColor: colorScheme.primary,
-                    padding: const EdgeInsets.symmetric(vertical: 14),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(
-                        AppDesignTokens.radiusMd,
-                      ),
-                    ),
-                  ),
-                  child: const Text('Pay Now'),
-                ),
+              ImshSolidIcon(
+                icon: hasBalance
+                    ? Icons.payments_outlined
+                    : Icons.check_circle_outline,
+                color: hasBalance
+                    ? ImshAccentColors.amber
+                    : ImshAccentColors.green,
+                size: 34,
+                iconSize: 18,
+                radius: AppDesignTokens.radiusMd,
               ),
-              const Gap(AppDesignTokens.spacingMd),
+              const Gap(10),
               Expanded(
-                child: OutlinedButton(
-                  onPressed: onViewBreakdown,
-                  style: OutlinedButton.styleFrom(
-                    foregroundColor: colorScheme.onPrimary,
-                    side: BorderSide(
-                      color: colorScheme.onPrimary.withValues(alpha: 0.7),
-                    ),
-                    padding: const EdgeInsets.symmetric(vertical: 14),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(
-                        AppDesignTokens.radiusMd,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      hasBalance
+                          ? 'Settle outstanding balance'
+                          : 'Nothing due',
+                      style: theme.textTheme.titleSmall?.copyWith(
+                        fontWeight: FontWeight.w700,
                       ),
                     ),
-                  ),
-                  child: const Text('View Breakdown'),
+                    Text(
+                      hasBalance
+                          ? 'Pay at the desk or view bill breakdown.'
+                          : 'You have no outstanding hospital bills.',
+                      style: theme.textTheme.bodySmall?.copyWith(
+                        color: cs.onSurfaceVariant,
+                      ),
+                    ),
+                  ],
                 ),
               ),
             ],
           ),
+          if (hasBalance) ...[
+            const Gap(10),
+            Row(
+              children: [
+                Expanded(
+                  child: OutlinedButton(
+                    onPressed: onViewBreakdown,
+                    child: const Text('Breakdown'),
+                  ),
+                ),
+                const Gap(8),
+                Expanded(
+                  child: FilledButton(
+                    onPressed: onPayNow,
+                    child: const Text('Pay now'),
+                  ),
+                ),
+              ],
+            ),
+          ],
         ],
       ),
     );

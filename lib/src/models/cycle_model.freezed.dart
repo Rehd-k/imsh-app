@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // coverage:ignore-file
-// ignore_for_file: type=lint
+// ignore_for_file: type=lint, type=warning, deprecated_member_use, deprecated_member_use_from_same_package
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
 part of 'cycle_model.dart';
@@ -9,6 +9,7 @@ part of 'cycle_model.dart';
 // FreezedGenerator
 // **************************************************************************
 
+// GENERATED CODE - DO NOT MODIFY BY HAND
 // dart format off
 T _$identity<T>(T value) => value;
 
@@ -28,16 +29,21 @@ $CycleSettingsCopyWith<CycleSettings> get copyWith => _$CycleSettingsCopyWithImp
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is CycleSettings&&(identical(other.cycleLengthDays, cycleLengthDays) || other.cycleLengthDays == cycleLengthDays)&&(identical(other.periodLengthDays, periodLengthDays) || other.periodLengthDays == periodLengthDays)&&(identical(other.isDefault, isDefault) || other.isDefault == isDefault));
+  final _this = this as CycleSettings;
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is CycleSettings&&(identical(other.cycleLengthDays, _this.cycleLengthDays) || other.cycleLengthDays == _this.cycleLengthDays)&&(identical(other.periodLengthDays, _this.periodLengthDays) || other.periodLengthDays == _this.periodLengthDays)&&(identical(other.isDefault, _this.isDefault) || other.isDefault == _this.isDefault));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,cycleLengthDays,periodLengthDays,isDefault);
+int get hashCode {
+  final _this = this as CycleSettings;
+  return Object.hash(runtimeType,_this.cycleLengthDays,_this.periodLengthDays,_this.isDefault);
+}
 
 @override
 String toString() {
-  return 'CycleSettings(cycleLengthDays: $cycleLengthDays, periodLengthDays: $periodLengthDays, isDefault: $isDefault)';
+  final _this = this as CycleSettings;
+  return 'CycleSettings(cycleLengthDays: ${_this.cycleLengthDays}, periodLengthDays: ${_this.periodLengthDays}, isDefault: ${_this.isDefault})';
 }
 
 
@@ -66,7 +72,7 @@ class _$CycleSettingsCopyWithImpl<$Res>
 /// Create a copy of CycleSettings
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') @override $Res call({Object? cycleLengthDays = null,Object? periodLengthDays = null,Object? isDefault = null,}) {
-  return _then(_self.copyWith(
+  return _then(CycleSettings(
 cycleLengthDays: null == cycleLengthDays ? _self.cycleLengthDays : cycleLengthDays // ignore: cast_nullable_to_non_nullable
 as int,periodLengthDays: null == periodLengthDays ? _self.periodLengthDays : periodLengthDays // ignore: cast_nullable_to_non_nullable
 as int,isDefault: null == isDefault ? _self.isDefault : isDefault // ignore: cast_nullable_to_non_nullable
@@ -231,16 +237,18 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _CycleSettings&&(identical(other.cycleLengthDays, cycleLengthDays) || other.cycleLengthDays == cycleLengthDays)&&(identical(other.periodLengthDays, periodLengthDays) || other.periodLengthDays == periodLengthDays)&&(identical(other.isDefault, isDefault) || other.isDefault == isDefault));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _CycleSettings&&(identical(other.cycleLengthDays, cycleLengthDays) || other.cycleLengthDays == cycleLengthDays)&&(identical(other.periodLengthDays, periodLengthDays) || other.periodLengthDays == periodLengthDays)&&(identical(other.isDefault, isDefault) || other.isDefault == isDefault));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,cycleLengthDays,periodLengthDays,isDefault);
+int get hashCode {
+    return Object.hash(runtimeType,cycleLengthDays,periodLengthDays,isDefault);
+}
 
 @override
 String toString() {
-  return 'CycleSettings(cycleLengthDays: $cycleLengthDays, periodLengthDays: $periodLengthDays, isDefault: $isDefault)';
+    return 'CycleSettings(cycleLengthDays: $cycleLengthDays, periodLengthDays: $periodLengthDays, isDefault: $isDefault)';
 }
 
 
@@ -297,16 +305,21 @@ $CyclePeriodCopyWith<CyclePeriod> get copyWith => _$CyclePeriodCopyWithImpl<Cycl
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is CyclePeriod&&(identical(other.id, id) || other.id == id)&&(identical(other.startDate, startDate) || other.startDate == startDate)&&(identical(other.endDate, endDate) || other.endDate == endDate)&&(identical(other.flow, flow) || other.flow == flow)&&(identical(other.notes, notes) || other.notes == notes)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.updatedAt, updatedAt) || other.updatedAt == updatedAt));
+  final _this = this as CyclePeriod;
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is CyclePeriod&&(identical(other.id, _this.id) || other.id == _this.id)&&(identical(other.startDate, _this.startDate) || other.startDate == _this.startDate)&&(identical(other.endDate, _this.endDate) || other.endDate == _this.endDate)&&(identical(other.flow, _this.flow) || other.flow == _this.flow)&&(identical(other.notes, _this.notes) || other.notes == _this.notes)&&(identical(other.createdAt, _this.createdAt) || other.createdAt == _this.createdAt)&&(identical(other.updatedAt, _this.updatedAt) || other.updatedAt == _this.updatedAt));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,startDate,endDate,flow,notes,createdAt,updatedAt);
+int get hashCode {
+  final _this = this as CyclePeriod;
+  return Object.hash(runtimeType,_this.id,_this.startDate,_this.endDate,_this.flow,_this.notes,_this.createdAt,_this.updatedAt);
+}
 
 @override
 String toString() {
-  return 'CyclePeriod(id: $id, startDate: $startDate, endDate: $endDate, flow: $flow, notes: $notes, createdAt: $createdAt, updatedAt: $updatedAt)';
+  final _this = this as CyclePeriod;
+  return 'CyclePeriod(id: ${_this.id}, startDate: ${_this.startDate}, endDate: ${_this.endDate}, flow: ${_this.flow}, notes: ${_this.notes}, createdAt: ${_this.createdAt}, updatedAt: ${_this.updatedAt})';
 }
 
 
@@ -335,7 +348,7 @@ class _$CyclePeriodCopyWithImpl<$Res>
 /// Create a copy of CyclePeriod
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? startDate = null,Object? endDate = freezed,Object? flow = freezed,Object? notes = freezed,Object? createdAt = freezed,Object? updatedAt = freezed,}) {
-  return _then(_self.copyWith(
+  return _then(CyclePeriod(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,startDate: null == startDate ? _self.startDate : startDate // ignore: cast_nullable_to_non_nullable
 as String,endDate: freezed == endDate ? _self.endDate : endDate // ignore: cast_nullable_to_non_nullable
@@ -508,16 +521,18 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _CyclePeriod&&(identical(other.id, id) || other.id == id)&&(identical(other.startDate, startDate) || other.startDate == startDate)&&(identical(other.endDate, endDate) || other.endDate == endDate)&&(identical(other.flow, flow) || other.flow == flow)&&(identical(other.notes, notes) || other.notes == notes)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.updatedAt, updatedAt) || other.updatedAt == updatedAt));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _CyclePeriod&&(identical(other.id, id) || other.id == id)&&(identical(other.startDate, startDate) || other.startDate == startDate)&&(identical(other.endDate, endDate) || other.endDate == endDate)&&(identical(other.flow, flow) || other.flow == flow)&&(identical(other.notes, notes) || other.notes == notes)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.updatedAt, updatedAt) || other.updatedAt == updatedAt));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,startDate,endDate,flow,notes,createdAt,updatedAt);
+int get hashCode {
+    return Object.hash(runtimeType,id,startDate,endDate,flow,notes,createdAt,updatedAt);
+}
 
 @override
 String toString() {
-  return 'CyclePeriod(id: $id, startDate: $startDate, endDate: $endDate, flow: $flow, notes: $notes, createdAt: $createdAt, updatedAt: $updatedAt)';
+    return 'CyclePeriod(id: $id, startDate: $startDate, endDate: $endDate, flow: $flow, notes: $notes, createdAt: $createdAt, updatedAt: $updatedAt)';
 }
 
 
@@ -578,16 +593,21 @@ $CycleSummaryResponseCopyWith<CycleSummaryResponse> get copyWith => _$CycleSumma
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is CycleSummaryResponse&&(identical(other.configured, configured) || other.configured == configured)&&(identical(other.pregnancyPaused, pregnancyPaused) || other.pregnancyPaused == pregnancyPaused)&&(identical(other.today, today) || other.today == today)&&(identical(other.headline, headline) || other.headline == headline)&&(identical(other.cycleDay, cycleDay) || other.cycleDay == cycleDay)&&(identical(other.daysUntilNext, daysUntilNext) || other.daysUntilNext == daysUntilNext)&&(identical(other.nextPeriodStart, nextPeriodStart) || other.nextPeriodStart == nextPeriodStart)&&(identical(other.currentPeriodStart, currentPeriodStart) || other.currentPeriodStart == currentPeriodStart));
+  final _this = this as CycleSummaryResponse;
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is CycleSummaryResponse&&(identical(other.configured, _this.configured) || other.configured == _this.configured)&&(identical(other.pregnancyPaused, _this.pregnancyPaused) || other.pregnancyPaused == _this.pregnancyPaused)&&(identical(other.today, _this.today) || other.today == _this.today)&&(identical(other.headline, _this.headline) || other.headline == _this.headline)&&(identical(other.cycleDay, _this.cycleDay) || other.cycleDay == _this.cycleDay)&&(identical(other.daysUntilNext, _this.daysUntilNext) || other.daysUntilNext == _this.daysUntilNext)&&(identical(other.nextPeriodStart, _this.nextPeriodStart) || other.nextPeriodStart == _this.nextPeriodStart)&&(identical(other.currentPeriodStart, _this.currentPeriodStart) || other.currentPeriodStart == _this.currentPeriodStart));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,configured,pregnancyPaused,today,headline,cycleDay,daysUntilNext,nextPeriodStart,currentPeriodStart);
+int get hashCode {
+  final _this = this as CycleSummaryResponse;
+  return Object.hash(runtimeType,_this.configured,_this.pregnancyPaused,_this.today,_this.headline,_this.cycleDay,_this.daysUntilNext,_this.nextPeriodStart,_this.currentPeriodStart);
+}
 
 @override
 String toString() {
-  return 'CycleSummaryResponse(configured: $configured, pregnancyPaused: $pregnancyPaused, today: $today, headline: $headline, cycleDay: $cycleDay, daysUntilNext: $daysUntilNext, nextPeriodStart: $nextPeriodStart, currentPeriodStart: $currentPeriodStart)';
+  final _this = this as CycleSummaryResponse;
+  return 'CycleSummaryResponse(configured: ${_this.configured}, pregnancyPaused: ${_this.pregnancyPaused}, today: ${_this.today}, headline: ${_this.headline}, cycleDay: ${_this.cycleDay}, daysUntilNext: ${_this.daysUntilNext}, nextPeriodStart: ${_this.nextPeriodStart}, currentPeriodStart: ${_this.currentPeriodStart})';
 }
 
 
@@ -616,7 +636,7 @@ class _$CycleSummaryResponseCopyWithImpl<$Res>
 /// Create a copy of CycleSummaryResponse
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') @override $Res call({Object? configured = null,Object? pregnancyPaused = null,Object? today = freezed,Object? headline = null,Object? cycleDay = freezed,Object? daysUntilNext = freezed,Object? nextPeriodStart = freezed,Object? currentPeriodStart = freezed,}) {
-  return _then(_self.copyWith(
+  return _then(CycleSummaryResponse(
 configured: null == configured ? _self.configured : configured // ignore: cast_nullable_to_non_nullable
 as bool,pregnancyPaused: null == pregnancyPaused ? _self.pregnancyPaused : pregnancyPaused // ignore: cast_nullable_to_non_nullable
 as bool,today: freezed == today ? _self.today : today // ignore: cast_nullable_to_non_nullable
@@ -791,16 +811,18 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _CycleSummaryResponse&&(identical(other.configured, configured) || other.configured == configured)&&(identical(other.pregnancyPaused, pregnancyPaused) || other.pregnancyPaused == pregnancyPaused)&&(identical(other.today, today) || other.today == today)&&(identical(other.headline, headline) || other.headline == headline)&&(identical(other.cycleDay, cycleDay) || other.cycleDay == cycleDay)&&(identical(other.daysUntilNext, daysUntilNext) || other.daysUntilNext == daysUntilNext)&&(identical(other.nextPeriodStart, nextPeriodStart) || other.nextPeriodStart == nextPeriodStart)&&(identical(other.currentPeriodStart, currentPeriodStart) || other.currentPeriodStart == currentPeriodStart));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _CycleSummaryResponse&&(identical(other.configured, configured) || other.configured == configured)&&(identical(other.pregnancyPaused, pregnancyPaused) || other.pregnancyPaused == pregnancyPaused)&&(identical(other.today, today) || other.today == today)&&(identical(other.headline, headline) || other.headline == headline)&&(identical(other.cycleDay, cycleDay) || other.cycleDay == cycleDay)&&(identical(other.daysUntilNext, daysUntilNext) || other.daysUntilNext == daysUntilNext)&&(identical(other.nextPeriodStart, nextPeriodStart) || other.nextPeriodStart == nextPeriodStart)&&(identical(other.currentPeriodStart, currentPeriodStart) || other.currentPeriodStart == currentPeriodStart));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,configured,pregnancyPaused,today,headline,cycleDay,daysUntilNext,nextPeriodStart,currentPeriodStart);
+int get hashCode {
+    return Object.hash(runtimeType,configured,pregnancyPaused,today,headline,cycleDay,daysUntilNext,nextPeriodStart,currentPeriodStart);
+}
 
 @override
 String toString() {
-  return 'CycleSummaryResponse(configured: $configured, pregnancyPaused: $pregnancyPaused, today: $today, headline: $headline, cycleDay: $cycleDay, daysUntilNext: $daysUntilNext, nextPeriodStart: $nextPeriodStart, currentPeriodStart: $currentPeriodStart)';
+    return 'CycleSummaryResponse(configured: $configured, pregnancyPaused: $pregnancyPaused, today: $today, headline: $headline, cycleDay: $cycleDay, daysUntilNext: $daysUntilNext, nextPeriodStart: $nextPeriodStart, currentPeriodStart: $currentPeriodStart)';
 }
 
 
@@ -862,16 +884,21 @@ $CycleCalendarResponseCopyWith<CycleCalendarResponse> get copyWith => _$CycleCal
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is CycleCalendarResponse&&(identical(other.configured, configured) || other.configured == configured)&&(identical(other.pregnancyPaused, pregnancyPaused) || other.pregnancyPaused == pregnancyPaused)&&(identical(other.year, year) || other.year == year)&&(identical(other.month, month) || other.month == month)&&(identical(other.today, today) || other.today == today)&&(identical(other.settings, settings) || other.settings == settings)&&const DeepCollectionEquality().equals(other.periods, periods)&&const DeepCollectionEquality().equals(other.predictedDays, predictedDays)&&(identical(other.headline, headline) || other.headline == headline)&&(identical(other.cycleDay, cycleDay) || other.cycleDay == cycleDay)&&(identical(other.daysUntilNext, daysUntilNext) || other.daysUntilNext == daysUntilNext)&&(identical(other.nextPeriodStart, nextPeriodStart) || other.nextPeriodStart == nextPeriodStart)&&(identical(other.currentPeriodStart, currentPeriodStart) || other.currentPeriodStart == currentPeriodStart));
+  final _this = this as CycleCalendarResponse;
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is CycleCalendarResponse&&(identical(other.configured, _this.configured) || other.configured == _this.configured)&&(identical(other.pregnancyPaused, _this.pregnancyPaused) || other.pregnancyPaused == _this.pregnancyPaused)&&(identical(other.year, _this.year) || other.year == _this.year)&&(identical(other.month, _this.month) || other.month == _this.month)&&(identical(other.today, _this.today) || other.today == _this.today)&&(identical(other.settings, _this.settings) || other.settings == _this.settings)&&const DeepCollectionEquality().equals(other.periods, _this.periods)&&const DeepCollectionEquality().equals(other.predictedDays, _this.predictedDays)&&(identical(other.headline, _this.headline) || other.headline == _this.headline)&&(identical(other.cycleDay, _this.cycleDay) || other.cycleDay == _this.cycleDay)&&(identical(other.daysUntilNext, _this.daysUntilNext) || other.daysUntilNext == _this.daysUntilNext)&&(identical(other.nextPeriodStart, _this.nextPeriodStart) || other.nextPeriodStart == _this.nextPeriodStart)&&(identical(other.currentPeriodStart, _this.currentPeriodStart) || other.currentPeriodStart == _this.currentPeriodStart));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,configured,pregnancyPaused,year,month,today,settings,const DeepCollectionEquality().hash(periods),const DeepCollectionEquality().hash(predictedDays),headline,cycleDay,daysUntilNext,nextPeriodStart,currentPeriodStart);
+int get hashCode {
+  final _this = this as CycleCalendarResponse;
+  return Object.hash(runtimeType,_this.configured,_this.pregnancyPaused,_this.year,_this.month,_this.today,_this.settings,const DeepCollectionEquality().hash(_this.periods),const DeepCollectionEquality().hash(_this.predictedDays),_this.headline,_this.cycleDay,_this.daysUntilNext,_this.nextPeriodStart,_this.currentPeriodStart);
+}
 
 @override
 String toString() {
-  return 'CycleCalendarResponse(configured: $configured, pregnancyPaused: $pregnancyPaused, year: $year, month: $month, today: $today, settings: $settings, periods: $periods, predictedDays: $predictedDays, headline: $headline, cycleDay: $cycleDay, daysUntilNext: $daysUntilNext, nextPeriodStart: $nextPeriodStart, currentPeriodStart: $currentPeriodStart)';
+  final _this = this as CycleCalendarResponse;
+  return 'CycleCalendarResponse(configured: ${_this.configured}, pregnancyPaused: ${_this.pregnancyPaused}, year: ${_this.year}, month: ${_this.month}, today: ${_this.today}, settings: ${_this.settings}, periods: ${_this.periods}, predictedDays: ${_this.predictedDays}, headline: ${_this.headline}, cycleDay: ${_this.cycleDay}, daysUntilNext: ${_this.daysUntilNext}, nextPeriodStart: ${_this.nextPeriodStart}, currentPeriodStart: ${_this.currentPeriodStart})';
 }
 
 
@@ -900,7 +927,7 @@ class _$CycleCalendarResponseCopyWithImpl<$Res>
 /// Create a copy of CycleCalendarResponse
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') @override $Res call({Object? configured = null,Object? pregnancyPaused = null,Object? year = null,Object? month = null,Object? today = freezed,Object? settings = null,Object? periods = null,Object? predictedDays = null,Object? headline = null,Object? cycleDay = freezed,Object? daysUntilNext = freezed,Object? nextPeriodStart = freezed,Object? currentPeriodStart = freezed,}) {
-  return _then(_self.copyWith(
+  return _then(CycleCalendarResponse(
 configured: null == configured ? _self.configured : configured // ignore: cast_nullable_to_non_nullable
 as bool,pregnancyPaused: null == pregnancyPaused ? _self.pregnancyPaused : pregnancyPaused // ignore: cast_nullable_to_non_nullable
 as bool,year: null == year ? _self.year : year // ignore: cast_nullable_to_non_nullable
@@ -1064,7 +1091,7 @@ return $default(_that.configured,_that.pregnancyPaused,_that.year,_that.month,_t
 @JsonSerializable()
 
 class _CycleCalendarResponse implements CycleCalendarResponse {
-  const _CycleCalendarResponse({this.configured = false, this.pregnancyPaused = false, required this.year, required this.month, this.today, required this.settings, final  List<CyclePeriod> periods = const [], final  List<String> predictedDays = const [], this.headline = 'Log your last period to start tracking', this.cycleDay, this.daysUntilNext, this.nextPeriodStart, this.currentPeriodStart}): _periods = periods,_predictedDays = predictedDays;
+  const _CycleCalendarResponse({this.configured = false, this.pregnancyPaused = false, required this.year, required this.month, this.today, required this.settings,  List<CyclePeriod> periods = const [],  List<String> predictedDays = const [], this.headline = 'Log your last period to start tracking', this.cycleDay, this.daysUntilNext, this.nextPeriodStart, this.currentPeriodStart}): _periods = periods,_predictedDays = predictedDays;
   factory _CycleCalendarResponse.fromJson(Map<String, dynamic> json) => _$CycleCalendarResponseFromJson(json);
 
 @override@JsonKey() final  bool configured;
@@ -1106,16 +1133,18 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _CycleCalendarResponse&&(identical(other.configured, configured) || other.configured == configured)&&(identical(other.pregnancyPaused, pregnancyPaused) || other.pregnancyPaused == pregnancyPaused)&&(identical(other.year, year) || other.year == year)&&(identical(other.month, month) || other.month == month)&&(identical(other.today, today) || other.today == today)&&(identical(other.settings, settings) || other.settings == settings)&&const DeepCollectionEquality().equals(other._periods, _periods)&&const DeepCollectionEquality().equals(other._predictedDays, _predictedDays)&&(identical(other.headline, headline) || other.headline == headline)&&(identical(other.cycleDay, cycleDay) || other.cycleDay == cycleDay)&&(identical(other.daysUntilNext, daysUntilNext) || other.daysUntilNext == daysUntilNext)&&(identical(other.nextPeriodStart, nextPeriodStart) || other.nextPeriodStart == nextPeriodStart)&&(identical(other.currentPeriodStart, currentPeriodStart) || other.currentPeriodStart == currentPeriodStart));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _CycleCalendarResponse&&(identical(other.configured, configured) || other.configured == configured)&&(identical(other.pregnancyPaused, pregnancyPaused) || other.pregnancyPaused == pregnancyPaused)&&(identical(other.year, year) || other.year == year)&&(identical(other.month, month) || other.month == month)&&(identical(other.today, today) || other.today == today)&&(identical(other.settings, settings) || other.settings == settings)&&const DeepCollectionEquality().equals(other.periods, _periods)&&const DeepCollectionEquality().equals(other.predictedDays, _predictedDays)&&(identical(other.headline, headline) || other.headline == headline)&&(identical(other.cycleDay, cycleDay) || other.cycleDay == cycleDay)&&(identical(other.daysUntilNext, daysUntilNext) || other.daysUntilNext == daysUntilNext)&&(identical(other.nextPeriodStart, nextPeriodStart) || other.nextPeriodStart == nextPeriodStart)&&(identical(other.currentPeriodStart, currentPeriodStart) || other.currentPeriodStart == currentPeriodStart));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,configured,pregnancyPaused,year,month,today,settings,const DeepCollectionEquality().hash(_periods),const DeepCollectionEquality().hash(_predictedDays),headline,cycleDay,daysUntilNext,nextPeriodStart,currentPeriodStart);
+int get hashCode {
+    return Object.hash(runtimeType,configured,pregnancyPaused,year,month,today,settings,const DeepCollectionEquality().hash(_periods),const DeepCollectionEquality().hash(_predictedDays),headline,cycleDay,daysUntilNext,nextPeriodStart,currentPeriodStart);
+}
 
 @override
 String toString() {
-  return 'CycleCalendarResponse(configured: $configured, pregnancyPaused: $pregnancyPaused, year: $year, month: $month, today: $today, settings: $settings, periods: $periods, predictedDays: $predictedDays, headline: $headline, cycleDay: $cycleDay, daysUntilNext: $daysUntilNext, nextPeriodStart: $nextPeriodStart, currentPeriodStart: $currentPeriodStart)';
+    return 'CycleCalendarResponse(configured: $configured, pregnancyPaused: $pregnancyPaused, year: $year, month: $month, today: $today, settings: $settings, periods: $periods, predictedDays: $predictedDays, headline: $headline, cycleDay: $cycleDay, daysUntilNext: $daysUntilNext, nextPeriodStart: $nextPeriodStart, currentPeriodStart: $currentPeriodStart)';
 }
 
 

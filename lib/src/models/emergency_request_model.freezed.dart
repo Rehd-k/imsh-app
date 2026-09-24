@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // coverage:ignore-file
-// ignore_for_file: type=lint
+// ignore_for_file: type=lint, type=warning, deprecated_member_use, deprecated_member_use_from_same_package
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
 part of 'emergency_request_model.dart';
@@ -9,6 +9,7 @@ part of 'emergency_request_model.dart';
 // FreezedGenerator
 // **************************************************************************
 
+// GENERATED CODE - DO NOT MODIFY BY HAND
 // dart format off
 T _$identity<T>(T value) => value;
 
@@ -28,16 +29,21 @@ $EmergencyResponderCopyWith<EmergencyResponder> get copyWith => _$EmergencyRespo
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is EmergencyResponder&&(identical(other.id, id) || other.id == id)&&(identical(other.firstName, firstName) || other.firstName == firstName)&&(identical(other.lastName, lastName) || other.lastName == lastName));
+  final _this = this as EmergencyResponder;
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is EmergencyResponder&&(identical(other.id, _this.id) || other.id == _this.id)&&(identical(other.firstName, _this.firstName) || other.firstName == _this.firstName)&&(identical(other.lastName, _this.lastName) || other.lastName == _this.lastName));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,firstName,lastName);
+int get hashCode {
+  final _this = this as EmergencyResponder;
+  return Object.hash(runtimeType,_this.id,_this.firstName,_this.lastName);
+}
 
 @override
 String toString() {
-  return 'EmergencyResponder(id: $id, firstName: $firstName, lastName: $lastName)';
+  final _this = this as EmergencyResponder;
+  return 'EmergencyResponder(id: ${_this.id}, firstName: ${_this.firstName}, lastName: ${_this.lastName})';
 }
 
 
@@ -66,7 +72,7 @@ class _$EmergencyResponderCopyWithImpl<$Res>
 /// Create a copy of EmergencyResponder
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? firstName = freezed,Object? lastName = freezed,}) {
-  return _then(_self.copyWith(
+  return _then(EmergencyResponder(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,firstName: freezed == firstName ? _self.firstName : firstName // ignore: cast_nullable_to_non_nullable
 as String?,lastName: freezed == lastName ? _self.lastName : lastName // ignore: cast_nullable_to_non_nullable
@@ -231,16 +237,18 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _EmergencyResponder&&(identical(other.id, id) || other.id == id)&&(identical(other.firstName, firstName) || other.firstName == firstName)&&(identical(other.lastName, lastName) || other.lastName == lastName));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _EmergencyResponder&&(identical(other.id, id) || other.id == id)&&(identical(other.firstName, firstName) || other.firstName == firstName)&&(identical(other.lastName, lastName) || other.lastName == lastName));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,firstName,lastName);
+int get hashCode {
+    return Object.hash(runtimeType,id,firstName,lastName);
+}
 
 @override
 String toString() {
-  return 'EmergencyResponder(id: $id, firstName: $firstName, lastName: $lastName)';
+    return 'EmergencyResponder(id: $id, firstName: $firstName, lastName: $lastName)';
 }
 
 
@@ -297,16 +305,21 @@ $EmergencyRequestCopyWith<EmergencyRequest> get copyWith => _$EmergencyRequestCo
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is EmergencyRequest&&(identical(other.id, id) || other.id == id)&&(identical(other.status, status) || other.status == status)&&(identical(other.latitude, latitude) || other.latitude == latitude)&&(identical(other.longitude, longitude) || other.longitude == longitude)&&(identical(other.accuracyMeters, accuracyMeters) || other.accuracyMeters == accuracyMeters)&&(identical(other.addressText, addressText) || other.addressText == addressText)&&(identical(other.description, description) || other.description == description)&&(identical(other.voiceUrl, voiceUrl) || other.voiceUrl == voiceUrl)&&(identical(other.videoUrl, videoUrl) || other.videoUrl == videoUrl)&&(identical(other.staffNote, staffNote) || other.staffNote == staffNote)&&(identical(other.respondedBy, respondedBy) || other.respondedBy == respondedBy)&&(identical(other.acknowledgedAt, acknowledgedAt) || other.acknowledgedAt == acknowledgedAt)&&(identical(other.dispatchedAt, dispatchedAt) || other.dispatchedAt == dispatchedAt)&&(identical(other.closedAt, closedAt) || other.closedAt == closedAt)&&(identical(other.cancelledAt, cancelledAt) || other.cancelledAt == cancelledAt)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.updatedAt, updatedAt) || other.updatedAt == updatedAt));
+  final _this = this as EmergencyRequest;
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is EmergencyRequest&&(identical(other.id, _this.id) || other.id == _this.id)&&(identical(other.status, _this.status) || other.status == _this.status)&&(identical(other.latitude, _this.latitude) || other.latitude == _this.latitude)&&(identical(other.longitude, _this.longitude) || other.longitude == _this.longitude)&&(identical(other.accuracyMeters, _this.accuracyMeters) || other.accuracyMeters == _this.accuracyMeters)&&(identical(other.addressText, _this.addressText) || other.addressText == _this.addressText)&&(identical(other.description, _this.description) || other.description == _this.description)&&(identical(other.voiceUrl, _this.voiceUrl) || other.voiceUrl == _this.voiceUrl)&&(identical(other.videoUrl, _this.videoUrl) || other.videoUrl == _this.videoUrl)&&(identical(other.staffNote, _this.staffNote) || other.staffNote == _this.staffNote)&&(identical(other.respondedBy, _this.respondedBy) || other.respondedBy == _this.respondedBy)&&(identical(other.acknowledgedAt, _this.acknowledgedAt) || other.acknowledgedAt == _this.acknowledgedAt)&&(identical(other.dispatchedAt, _this.dispatchedAt) || other.dispatchedAt == _this.dispatchedAt)&&(identical(other.closedAt, _this.closedAt) || other.closedAt == _this.closedAt)&&(identical(other.cancelledAt, _this.cancelledAt) || other.cancelledAt == _this.cancelledAt)&&(identical(other.createdAt, _this.createdAt) || other.createdAt == _this.createdAt)&&(identical(other.updatedAt, _this.updatedAt) || other.updatedAt == _this.updatedAt));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,status,latitude,longitude,accuracyMeters,addressText,description,voiceUrl,videoUrl,staffNote,respondedBy,acknowledgedAt,dispatchedAt,closedAt,cancelledAt,createdAt,updatedAt);
+int get hashCode {
+  final _this = this as EmergencyRequest;
+  return Object.hash(runtimeType,_this.id,_this.status,_this.latitude,_this.longitude,_this.accuracyMeters,_this.addressText,_this.description,_this.voiceUrl,_this.videoUrl,_this.staffNote,_this.respondedBy,_this.acknowledgedAt,_this.dispatchedAt,_this.closedAt,_this.cancelledAt,_this.createdAt,_this.updatedAt);
+}
 
 @override
 String toString() {
-  return 'EmergencyRequest(id: $id, status: $status, latitude: $latitude, longitude: $longitude, accuracyMeters: $accuracyMeters, addressText: $addressText, description: $description, voiceUrl: $voiceUrl, videoUrl: $videoUrl, staffNote: $staffNote, respondedBy: $respondedBy, acknowledgedAt: $acknowledgedAt, dispatchedAt: $dispatchedAt, closedAt: $closedAt, cancelledAt: $cancelledAt, createdAt: $createdAt, updatedAt: $updatedAt)';
+  final _this = this as EmergencyRequest;
+  return 'EmergencyRequest(id: ${_this.id}, status: ${_this.status}, latitude: ${_this.latitude}, longitude: ${_this.longitude}, accuracyMeters: ${_this.accuracyMeters}, addressText: ${_this.addressText}, description: ${_this.description}, voiceUrl: ${_this.voiceUrl}, videoUrl: ${_this.videoUrl}, staffNote: ${_this.staffNote}, respondedBy: ${_this.respondedBy}, acknowledgedAt: ${_this.acknowledgedAt}, dispatchedAt: ${_this.dispatchedAt}, closedAt: ${_this.closedAt}, cancelledAt: ${_this.cancelledAt}, createdAt: ${_this.createdAt}, updatedAt: ${_this.updatedAt})';
 }
 
 
@@ -335,7 +348,7 @@ class _$EmergencyRequestCopyWithImpl<$Res>
 /// Create a copy of EmergencyRequest
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? status = null,Object? latitude = null,Object? longitude = null,Object? accuracyMeters = freezed,Object? addressText = freezed,Object? description = freezed,Object? voiceUrl = freezed,Object? videoUrl = freezed,Object? staffNote = freezed,Object? respondedBy = freezed,Object? acknowledgedAt = freezed,Object? dispatchedAt = freezed,Object? closedAt = freezed,Object? cancelledAt = freezed,Object? createdAt = freezed,Object? updatedAt = freezed,}) {
-  return _then(_self.copyWith(
+  return _then(EmergencyRequest(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,status: null == status ? _self.status : status // ignore: cast_nullable_to_non_nullable
 as EmergencyRequestStatus,latitude: null == latitude ? _self.latitude : latitude // ignore: cast_nullable_to_non_nullable
@@ -540,16 +553,18 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _EmergencyRequest&&(identical(other.id, id) || other.id == id)&&(identical(other.status, status) || other.status == status)&&(identical(other.latitude, latitude) || other.latitude == latitude)&&(identical(other.longitude, longitude) || other.longitude == longitude)&&(identical(other.accuracyMeters, accuracyMeters) || other.accuracyMeters == accuracyMeters)&&(identical(other.addressText, addressText) || other.addressText == addressText)&&(identical(other.description, description) || other.description == description)&&(identical(other.voiceUrl, voiceUrl) || other.voiceUrl == voiceUrl)&&(identical(other.videoUrl, videoUrl) || other.videoUrl == videoUrl)&&(identical(other.staffNote, staffNote) || other.staffNote == staffNote)&&(identical(other.respondedBy, respondedBy) || other.respondedBy == respondedBy)&&(identical(other.acknowledgedAt, acknowledgedAt) || other.acknowledgedAt == acknowledgedAt)&&(identical(other.dispatchedAt, dispatchedAt) || other.dispatchedAt == dispatchedAt)&&(identical(other.closedAt, closedAt) || other.closedAt == closedAt)&&(identical(other.cancelledAt, cancelledAt) || other.cancelledAt == cancelledAt)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.updatedAt, updatedAt) || other.updatedAt == updatedAt));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _EmergencyRequest&&(identical(other.id, id) || other.id == id)&&(identical(other.status, status) || other.status == status)&&(identical(other.latitude, latitude) || other.latitude == latitude)&&(identical(other.longitude, longitude) || other.longitude == longitude)&&(identical(other.accuracyMeters, accuracyMeters) || other.accuracyMeters == accuracyMeters)&&(identical(other.addressText, addressText) || other.addressText == addressText)&&(identical(other.description, description) || other.description == description)&&(identical(other.voiceUrl, voiceUrl) || other.voiceUrl == voiceUrl)&&(identical(other.videoUrl, videoUrl) || other.videoUrl == videoUrl)&&(identical(other.staffNote, staffNote) || other.staffNote == staffNote)&&(identical(other.respondedBy, respondedBy) || other.respondedBy == respondedBy)&&(identical(other.acknowledgedAt, acknowledgedAt) || other.acknowledgedAt == acknowledgedAt)&&(identical(other.dispatchedAt, dispatchedAt) || other.dispatchedAt == dispatchedAt)&&(identical(other.closedAt, closedAt) || other.closedAt == closedAt)&&(identical(other.cancelledAt, cancelledAt) || other.cancelledAt == cancelledAt)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.updatedAt, updatedAt) || other.updatedAt == updatedAt));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,status,latitude,longitude,accuracyMeters,addressText,description,voiceUrl,videoUrl,staffNote,respondedBy,acknowledgedAt,dispatchedAt,closedAt,cancelledAt,createdAt,updatedAt);
+int get hashCode {
+    return Object.hash(runtimeType,id,status,latitude,longitude,accuracyMeters,addressText,description,voiceUrl,videoUrl,staffNote,respondedBy,acknowledgedAt,dispatchedAt,closedAt,cancelledAt,createdAt,updatedAt);
+}
 
 @override
 String toString() {
-  return 'EmergencyRequest(id: $id, status: $status, latitude: $latitude, longitude: $longitude, accuracyMeters: $accuracyMeters, addressText: $addressText, description: $description, voiceUrl: $voiceUrl, videoUrl: $videoUrl, staffNote: $staffNote, respondedBy: $respondedBy, acknowledgedAt: $acknowledgedAt, dispatchedAt: $dispatchedAt, closedAt: $closedAt, cancelledAt: $cancelledAt, createdAt: $createdAt, updatedAt: $updatedAt)';
+    return 'EmergencyRequest(id: $id, status: $status, latitude: $latitude, longitude: $longitude, accuracyMeters: $accuracyMeters, addressText: $addressText, description: $description, voiceUrl: $voiceUrl, videoUrl: $videoUrl, staffNote: $staffNote, respondedBy: $respondedBy, acknowledgedAt: $acknowledgedAt, dispatchedAt: $dispatchedAt, closedAt: $closedAt, cancelledAt: $cancelledAt, createdAt: $createdAt, updatedAt: $updatedAt)';
 }
 
 
@@ -632,16 +647,21 @@ $EmergencyRequestListResponseCopyWith<EmergencyRequestListResponse> get copyWith
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is EmergencyRequestListResponse&&const DeepCollectionEquality().equals(other.data, data)&&(identical(other.total, total) || other.total == total)&&(identical(other.page, page) || other.page == page)&&(identical(other.limit, limit) || other.limit == limit));
+  final _this = this as EmergencyRequestListResponse;
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is EmergencyRequestListResponse&&const DeepCollectionEquality().equals(other.data, _this.data)&&(identical(other.total, _this.total) || other.total == _this.total)&&(identical(other.page, _this.page) || other.page == _this.page)&&(identical(other.limit, _this.limit) || other.limit == _this.limit));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,const DeepCollectionEquality().hash(data),total,page,limit);
+int get hashCode {
+  final _this = this as EmergencyRequestListResponse;
+  return Object.hash(runtimeType,const DeepCollectionEquality().hash(_this.data),_this.total,_this.page,_this.limit);
+}
 
 @override
 String toString() {
-  return 'EmergencyRequestListResponse(data: $data, total: $total, page: $page, limit: $limit)';
+  final _this = this as EmergencyRequestListResponse;
+  return 'EmergencyRequestListResponse(data: ${_this.data}, total: ${_this.total}, page: ${_this.page}, limit: ${_this.limit})';
 }
 
 
@@ -670,7 +690,7 @@ class _$EmergencyRequestListResponseCopyWithImpl<$Res>
 /// Create a copy of EmergencyRequestListResponse
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') @override $Res call({Object? data = null,Object? total = null,Object? page = null,Object? limit = null,}) {
-  return _then(_self.copyWith(
+  return _then(EmergencyRequestListResponse(
 data: null == data ? _self.data : data // ignore: cast_nullable_to_non_nullable
 as List<EmergencyRequest>,total: null == total ? _self.total : total // ignore: cast_nullable_to_non_nullable
 as int,page: null == page ? _self.page : page // ignore: cast_nullable_to_non_nullable
@@ -816,7 +836,7 @@ return $default(_that.data,_that.total,_that.page,_that.limit);case _:
 @JsonSerializable()
 
 class _EmergencyRequestListResponse implements EmergencyRequestListResponse {
-  const _EmergencyRequestListResponse({final  List<EmergencyRequest> data = const [], this.total = 0, this.page = 1, this.limit = 20}): _data = data;
+  const _EmergencyRequestListResponse({ List<EmergencyRequest> data = const [], this.total = 0, this.page = 1, this.limit = 20}): _data = data;
   factory _EmergencyRequestListResponse.fromJson(Map<String, dynamic> json) => _$EmergencyRequestListResponseFromJson(json);
 
  final  List<EmergencyRequest> _data;
@@ -843,16 +863,18 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _EmergencyRequestListResponse&&const DeepCollectionEquality().equals(other._data, _data)&&(identical(other.total, total) || other.total == total)&&(identical(other.page, page) || other.page == page)&&(identical(other.limit, limit) || other.limit == limit));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _EmergencyRequestListResponse&&const DeepCollectionEquality().equals(other.data, _data)&&(identical(other.total, total) || other.total == total)&&(identical(other.page, page) || other.page == page)&&(identical(other.limit, limit) || other.limit == limit));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,const DeepCollectionEquality().hash(_data),total,page,limit);
+int get hashCode {
+    return Object.hash(runtimeType,const DeepCollectionEquality().hash(_data),total,page,limit);
+}
 
 @override
 String toString() {
-  return 'EmergencyRequestListResponse(data: $data, total: $total, page: $page, limit: $limit)';
+    return 'EmergencyRequestListResponse(data: $data, total: $total, page: $page, limit: $limit)';
 }
 
 

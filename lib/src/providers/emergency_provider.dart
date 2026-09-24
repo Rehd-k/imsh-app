@@ -1,4 +1,5 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_riverpod/legacy.dart';
 
 import '../models/emergency_request_model.dart';
 import 'auth_provider.dart';
@@ -28,7 +29,7 @@ final submitEmergencyProvider =
       SubmitEmergencyNotifier.new,
     );
 
-class SubmitEmergencyNotifier extends AutoDisposeAsyncNotifier<bool> {
+class SubmitEmergencyNotifier extends AsyncNotifier<bool> {
   @override
   Future<bool> build() async => false;
 
@@ -52,7 +53,7 @@ final submitGuestEmergencyProvider =
       SubmitGuestEmergencyNotifier.new,
     );
 
-class SubmitGuestEmergencyNotifier extends AutoDisposeAsyncNotifier<bool> {
+class SubmitGuestEmergencyNotifier extends AsyncNotifier<bool> {
   @override
   Future<bool> build() async => false;
 
@@ -75,12 +76,12 @@ final cancelEmergencyProvider =
       CancelEmergencyNotifier.new,
     );
 
-class CancelEmergencyNotifier extends AutoDisposeAsyncNotifier<Set<String>> {
+class CancelEmergencyNotifier extends AsyncNotifier<Set<String>> {
   @override
   Future<Set<String>> build() async => {};
 
   Future<void> cancel(String id) async {
-    final inFlight = {...?state.valueOrNull};
+    final inFlight = {...?state.value};
     if (inFlight.contains(id)) return;
     inFlight.add(id);
     state = AsyncData(inFlight);
@@ -90,12 +91,12 @@ class CancelEmergencyNotifier extends AutoDisposeAsyncNotifier<Set<String>> {
       _invalidateEmergency(ref);
       ref.invalidate(emergencyDetailProvider(id));
     } finally {
-      final updated = {...?state.valueOrNull}..remove(id);
+      final updated = {...?state.value}..remove(id);
       state = AsyncData(updated);
     }
   }
 
-  bool isCancelling(String id) => state.valueOrNull?.contains(id) ?? false;
+  bool isCancelling(String id) => state.value?.contains(id) ?? false;
 }
 
 void _invalidateEmergency(Ref ref) {

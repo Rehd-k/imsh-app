@@ -1,13 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:gap/gap.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../../../core/theme/app_design_tokens.dart';
-import '../../../core/theme/context_extensions.dart';
+import '../../../core/theme/imsh_accent_colors.dart';
 import '../../../helper/date_formatter.dart';
 import '../../../models/radiology_report_model.dart';
 import '../../../providers/service_providers.dart';
+import '../../../shared/widgets/imsh_ellipsis_chip.dart';
+import '../../../shared/widgets/imsh_page_header.dart';
+import '../../../shared/widgets/imsh_solid_icon.dart';
+import '../../../shared/widgets/imsh_surface_card.dart';
 import '../radiology_pdf_download.dart';
 import 'patient_radiology_image_carousel.dart';
 import 'radiology_status_badge.dart';
@@ -35,34 +38,64 @@ class RadiologyReportDetailSections extends ConsumerWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
+        ImshPageHeader(
+          title: detail.displayTitle,
+          subtitle: DateFormatter.fullDate(detail.performedAt),
+          icon: detail.modality.icon,
+          iconColor: ImshAccentColors.indigo,
+          trailing: RadiologyStatusBadge(status: detail.status),
+        ),
+        const SizedBox(height: 12),
         _HeaderCard(detail: detail),
         if (detail.paymentRequired) ...[
-          const Gap(AppDesignTokens.spacingMd),
-          _SectionCard(
-            title: 'Results',
-            child: Text(
-              'Your imaging results will be available here once payment '
-              'for this study is completed.',
-              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                color: context.colorScheme.onSurfaceVariant,
-              ),
+          const SizedBox(height: 10),
+          ImshSurfaceCard(
+            padding: const EdgeInsets.all(12),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const ImshSectionHeader(
+                  title: 'Results',
+                  icon: Icons.lock_outline,
+                  iconColor: ImshAccentColors.amber,
+                ),
+                const SizedBox(height: 10),
+                Text(
+                  'Your imaging results will be available here once payment '
+                  'for this study is completed.',
+                  style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                    color: Theme.of(context).colorScheme.onSurfaceVariant,
+                  ),
+                ),
+              ],
             ),
           ),
         ],
         if (detail.images.isNotEmpty) ...[
-          const Gap(AppDesignTokens.spacingMd),
-          _SectionCard(
-            title: 'Files',
-            child: PatientRadiologyImageCarousel(
-              service: radiologyService,
-              reportId: detail.id,
-              images: detail.images,
-              height: 220,
+          const SizedBox(height: 10),
+          ImshSurfaceCard(
+            padding: const EdgeInsets.all(12),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const ImshSectionHeader(
+                  title: 'Files',
+                  icon: Icons.photo_library_outlined,
+                  iconColor: ImshAccentColors.purple,
+                ),
+                const SizedBox(height: 10),
+                PatientRadiologyImageCarousel(
+                  service: radiologyService,
+                  reportId: detail.id,
+                  images: detail.images,
+                  height: 220,
+                ),
+              ],
             ),
           ),
         ],
         if (!detail.paymentRequired) ...[
-          const Gap(AppDesignTokens.spacingMd),
+          const SizedBox(height: 10),
           _FileActionButton(
             label: 'Download PDF report',
             icon: Icons.picture_as_pdf_outlined,
@@ -75,7 +108,7 @@ class RadiologyReportDetailSections extends ConsumerWidget {
           ),
         ],
         if (detail.dicomUrl?.isNotEmpty == true) ...[
-          const Gap(AppDesignTokens.spacingMd),
+          const SizedBox(height: 10),
           _FileActionButton(
             label: 'Open DICOM viewer',
             icon: Icons.view_in_ar_outlined,
@@ -83,55 +116,62 @@ class RadiologyReportDetailSections extends ConsumerWidget {
           ),
         ],
         if (detail.findings?.isNotEmpty == true) ...[
-          const Gap(AppDesignTokens.spacingMd),
-          _SectionCard(
+          const SizedBox(height: 10),
+          _TextSection(
             title: 'Findings',
-            child: Text(
-              detail.findings!,
-              style: Theme.of(context).textTheme.bodyMedium,
-            ),
+            icon: Icons.find_in_page_outlined,
+            iconColor: ImshAccentColors.teal,
+            body: detail.findings!,
           ),
         ],
         if (detail.impression?.isNotEmpty == true) ...[
-          const Gap(AppDesignTokens.spacingMd),
-          _SectionCard(
+          const SizedBox(height: 10),
+          _TextSection(
             title: 'Impression',
-            child: Text(
-              detail.impression!,
-              style: Theme.of(context).textTheme.bodyMedium,
-            ),
+            icon: Icons.psychology_outlined,
+            iconColor: ImshAccentColors.indigo,
+            body: detail.impression!,
           ),
         ],
         if (detail.recommendations?.isNotEmpty == true) ...[
-          const Gap(AppDesignTokens.spacingMd),
-          _SectionCard(
+          const SizedBox(height: 10),
+          _TextSection(
             title: 'Recommendations',
-            child: Text(
-              detail.recommendations!,
-              style: Theme.of(context).textTheme.bodyMedium,
-            ),
+            icon: Icons.lightbulb_outline,
+            iconColor: ImshAccentColors.amber,
+            body: detail.recommendations!,
           ),
         ],
         if (detail.severity != null) ...[
-          const Gap(AppDesignTokens.spacingMd),
-          _SectionCard(
-            title: 'Severity',
-            child: Text(
-              detail.severity!.label,
-              style: Theme.of(
-                context,
-              ).textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.w500),
+          const SizedBox(height: 10),
+          ImshSurfaceCard(
+            padding: const EdgeInsets.all(12),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const ImshSectionHeader(
+                  title: 'Severity',
+                  icon: Icons.priority_high_outlined,
+                  iconColor: ImshAccentColors.pink,
+                ),
+                const SizedBox(height: 10),
+                Text(
+                  detail.severity!.label,
+                  style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+              ],
             ),
           ),
         ],
         if (detail.reportBody?.isNotEmpty == true) ...[
-          const Gap(AppDesignTokens.spacingMd),
-          _SectionCard(
+          const SizedBox(height: 10),
+          _TextSection(
             title: 'Report',
-            child: Text(
-              detail.reportBody!,
-              style: Theme.of(context).textTheme.bodyMedium,
-            ),
+            icon: Icons.description_outlined,
+            iconColor: ImshAccentColors.blue,
+            body: detail.reportBody!,
           ),
         ],
         if (!detail.paymentRequired &&
@@ -141,15 +181,26 @@ class RadiologyReportDetailSections extends ConsumerWidget {
             detail.reportBody == null &&
             detail.images.isEmpty &&
             !detail.status.isComplete) ...[
-          const Gap(AppDesignTokens.spacingMd),
-          _SectionCard(
-            title: 'Report',
-            child: Text(
-              'Your imaging report is not available yet. Check back once '
-              'processing is complete.',
-              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                color: context.colorScheme.onSurfaceVariant,
-              ),
+          const SizedBox(height: 10),
+          ImshSurfaceCard(
+            padding: const EdgeInsets.all(12),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const ImshSectionHeader(
+                  title: 'Report',
+                  icon: Icons.hourglass_empty_outlined,
+                  iconColor: ImshAccentColors.amber,
+                ),
+                const SizedBox(height: 10),
+                Text(
+                  'Your imaging report is not available yet. Check back once '
+                  'processing is complete.',
+                  style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                    color: Theme.of(context).colorScheme.onSurfaceVariant,
+                  ),
+                ),
+              ],
             ),
           ),
         ],
@@ -166,43 +217,76 @@ class _HeaderCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final colorScheme = context.colorScheme;
+    final radiologist =
+        detail.radiologistName.trim().isEmpty ? '—' : detail.radiologistName;
 
-    return _SectionCard(
-      title: 'Imaging report',
-      trailing: RadiologyStatusBadge(status: detail.status),
+    return ImshSurfaceCard(
+      padding: const EdgeInsets.all(12),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
-            detail.displayTitle,
-            style: theme.textTheme.titleLarge?.copyWith(
+          const ImshSectionHeader(
+            title: 'Imaging report',
+            icon: Icons.assignment_outlined,
+            iconColor: ImshAccentColors.indigo,
+          ),
+          const SizedBox(height: 10),
+          ImshEllipsisText(
+            text: radiologist,
+            style: theme.textTheme.bodyMedium?.copyWith(
               fontWeight: FontWeight.w600,
             ),
           ),
-          const Gap(AppDesignTokens.spacingXs),
-          Text(
-            DateFormatter.fullDate(detail.performedAt),
-            style: theme.textTheme.bodyMedium?.copyWith(
-              color: colorScheme.onSurfaceVariant,
-            ),
-          ),
-          const Gap(AppDesignTokens.spacingSm),
-          Text(
-            detail.radiologistName,
-            style: theme.textTheme.bodyMedium?.copyWith(
-              fontWeight: FontWeight.w500,
-            ),
-          ),
-          const Gap(AppDesignTokens.spacingMd),
+          const SizedBox(height: 10),
           _LabelValueList(
             rows: [
-              ('Referring doctor', detail.referringDoctorName),
+              (
+                'Referring doctor',
+                detail.referringDoctorName.trim().isEmpty
+                    ? '—'
+                    : detail.referringDoctorName,
+              ),
               ('Modality', detail.modality.label),
               ('Status', detail.status.label),
               if (detail.verifiedAt != null)
                 ('Verified', DateFormatter.dateTime(detail.verifiedAt!)),
             ],
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _TextSection extends StatelessWidget {
+  const _TextSection({
+    required this.title,
+    required this.icon,
+    required this.iconColor,
+    required this.body,
+  });
+
+  final String title;
+  final IconData icon;
+  final Color iconColor;
+  final String body;
+
+  @override
+  Widget build(BuildContext context) {
+    return ImshSurfaceCard(
+      padding: const EdgeInsets.all(12),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          ImshSectionHeader(
+            title: title,
+            icon: icon,
+            iconColor: iconColor,
+          ),
+          const SizedBox(height: 10),
+          Text(
+            body,
+            style: Theme.of(context).textTheme.bodyMedium,
           ),
         ],
       ),
@@ -230,61 +314,13 @@ class _FileActionButton extends StatelessWidget {
         icon: Icon(icon),
         label: Text(label),
         style: OutlinedButton.styleFrom(
-          foregroundColor: Theme.of(context).colorScheme.primary,
+          foregroundColor: ImshAccentColors.blue,
           side: BorderSide(color: Theme.of(context).colorScheme.outlineVariant),
-          padding: const EdgeInsets.symmetric(
-            horizontal: AppDesignTokens.spacingMd,
-            vertical: AppDesignTokens.spacingSm + 4,
-          ),
+          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(AppDesignTokens.radiusSm),
           ),
         ),
-      ),
-    );
-  }
-}
-
-class _SectionCard extends StatelessWidget {
-  const _SectionCard({required this.title, required this.child, this.trailing});
-
-  final String title;
-  final Widget child;
-  final Widget? trailing;
-
-  @override
-  Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    final colorScheme = context.colorScheme;
-
-    return Container(
-      width: double.infinity,
-      padding: const EdgeInsets.all(AppDesignTokens.spacingMd),
-      decoration: BoxDecoration(
-        color: colorScheme.surfaceContainerLowest,
-        borderRadius: BorderRadius.circular(AppDesignTokens.radiusLg),
-        border: Border.all(color: colorScheme.outlineVariant),
-        boxShadow: context.cardShadow,
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            children: [
-              Expanded(
-                child: Text(
-                  title,
-                  style: theme.textTheme.titleMedium?.copyWith(
-                    fontWeight: FontWeight.w600,
-                  ),
-                ),
-              ),
-              if (trailing != null) trailing!,
-            ],
-          ),
-          const Gap(AppDesignTokens.spacingMd),
-          child,
-        ],
       ),
     );
   }
@@ -298,7 +334,7 @@ class _LabelValueList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final colorScheme = context.colorScheme;
+    final cs = theme.colorScheme;
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -307,17 +343,17 @@ class _LabelValueList extends StatelessWidget {
           Text(
             label,
             style: theme.textTheme.labelMedium?.copyWith(
-              color: colorScheme.onSurfaceVariant,
+              color: cs.onSurfaceVariant,
             ),
           ),
-          const Gap(AppDesignTokens.spacingXs),
-          Text(
-            value,
+          const SizedBox(height: 2),
+          ImshEllipsisText(
+            text: value.trim().isEmpty ? '—' : value,
             style: theme.textTheme.bodyMedium?.copyWith(
               fontWeight: FontWeight.w500,
             ),
           ),
-          if ((label, value) != rows.last) const Gap(AppDesignTokens.spacingSm),
+          if ((label, value) != rows.last) const SizedBox(height: 8),
         ],
       ],
     );

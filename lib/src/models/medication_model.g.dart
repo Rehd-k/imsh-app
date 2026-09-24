@@ -80,6 +80,14 @@ _ActivePrescriptionSummary _$ActivePrescriptionSummaryFromJson(
     _$PrescriptionSupplyStatusEnumMap,
     json['supplyStatus'],
   ),
+  scheduleStartAt: json['scheduleStartAt'] == null
+      ? null
+      : DateTime.parse(json['scheduleStartAt'] as String),
+  needsScheduleStart: json['needsScheduleStart'] as bool? ?? false,
+  scheduleConfirmed: json['scheduleConfirmed'] as bool? ?? true,
+  endDate: json['endDate'] == null
+      ? null
+      : DateTime.parse(json['endDate'] as String),
 );
 
 Map<String, dynamic> _$ActivePrescriptionSummaryToJson(
@@ -92,6 +100,10 @@ Map<String, dynamic> _$ActivePrescriptionSummaryToJson(
   'refillsRemaining': instance.refillsRemaining,
   'supplyProgress': instance.supplyProgress,
   'supplyStatus': _$PrescriptionSupplyStatusEnumMap[instance.supplyStatus]!,
+  'scheduleStartAt': instance.scheduleStartAt?.toIso8601String(),
+  'needsScheduleStart': instance.needsScheduleStart,
+  'scheduleConfirmed': instance.scheduleConfirmed,
+  'endDate': instance.endDate?.toIso8601String(),
 };
 
 const _$PrescriptionSupplyStatusEnumMap = {
@@ -133,6 +145,66 @@ Map<String, dynamic> _$MedicationDashboardResponseToJson(
   'nextDoses': instance.nextDoses,
   'todaySchedule': instance.todaySchedule,
   'activePrescriptions': instance.activePrescriptions,
+};
+
+_MedicationCalendarResponse _$MedicationCalendarResponseFromJson(
+  Map<String, dynamic> json,
+) => _MedicationCalendarResponse(
+  doses:
+      (json['doses'] as List<dynamic>?)
+          ?.map(
+            (e) => MedicationScheduleEntry.fromJson(e as Map<String, dynamic>),
+          )
+          .toList() ??
+      const [],
+);
+
+Map<String, dynamic> _$MedicationCalendarResponseToJson(
+  _MedicationCalendarResponse instance,
+) => <String, dynamic>{'doses': instance.doses};
+
+_PrescriptionDosesResponse _$PrescriptionDosesResponseFromJson(
+  Map<String, dynamic> json,
+) => _PrescriptionDosesResponse(
+  prescriptionId: json['prescriptionId'] as String,
+  displayName: json['displayName'] as String,
+  doses:
+      (json['doses'] as List<dynamic>?)
+          ?.map(
+            (e) => MedicationScheduleEntry.fromJson(e as Map<String, dynamic>),
+          )
+          .toList() ??
+      const [],
+);
+
+Map<String, dynamic> _$PrescriptionDosesResponseToJson(
+  _PrescriptionDosesResponse instance,
+) => <String, dynamic>{
+  'prescriptionId': instance.prescriptionId,
+  'displayName': instance.displayName,
+  'doses': instance.doses,
+};
+
+_ScheduleUpdateResponse _$ScheduleUpdateResponseFromJson(
+  Map<String, dynamic> json,
+) => _ScheduleUpdateResponse(
+  id: json['id'] as String,
+  patientScheduleStartAt: json['patientScheduleStartAt'] == null
+      ? null
+      : DateTime.parse(json['patientScheduleStartAt'] as String),
+  scheduleConfirmedAt: json['scheduleConfirmedAt'] == null
+      ? null
+      : DateTime.parse(json['scheduleConfirmedAt'] as String),
+  dosesGenerated: (json['dosesGenerated'] as num?)?.toInt() ?? 0,
+);
+
+Map<String, dynamic> _$ScheduleUpdateResponseToJson(
+  _ScheduleUpdateResponse instance,
+) => <String, dynamic>{
+  'id': instance.id,
+  'patientScheduleStartAt': instance.patientScheduleStartAt?.toIso8601String(),
+  'scheduleConfirmedAt': instance.scheduleConfirmedAt?.toIso8601String(),
+  'dosesGenerated': instance.dosesGenerated,
 };
 
 _MarkDoseTakenResponse _$MarkDoseTakenResponseFromJson(

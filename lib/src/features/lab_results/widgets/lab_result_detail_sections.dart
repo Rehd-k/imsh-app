@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:gap/gap.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../../../core/theme/app_design_tokens.dart';
-import '../../../core/theme/context_extensions.dart';
+import '../../../core/theme/imsh_accent_colors.dart';
 import '../../../helper/date_formatter.dart';
 import '../../../models/lab_result_model.dart';
+import '../../../shared/widgets/imsh_ellipsis_chip.dart';
+import '../../../shared/widgets/imsh_page_header.dart';
+import '../../../shared/widgets/imsh_solid_icon.dart';
+import '../../../shared/widgets/imsh_surface_card.dart';
 import 'lab_result_status_badge.dart';
 import 'lab_result_value_row.dart';
 
@@ -32,20 +35,34 @@ class LabResultDetailSections extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final testNames = detail.panels.map((p) => p.testName).toList();
+    final title = testNames.isEmpty ? 'Laboratory test' : testNames.join(', ');
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        _HeaderCard(detail: detail, summaryStatus: _summaryStatus),
+        ImshPageHeader(
+          title: title,
+          subtitle: DateFormatter.fullDate(detail.orderedAt),
+          icon: Icons.science_outlined,
+          iconColor: ImshAccentColors.teal,
+          trailing: LabResultStatusBadge(
+            status: _summaryStatus,
+            orderStatus: detail.status,
+          ),
+        ),
+        const SizedBox(height: 12),
+        _HeaderCard(detail: detail),
         if (detail.pdfUrl?.isNotEmpty == true) ...[
-          const Gap(AppDesignTokens.spacingMd),
+          const SizedBox(height: 10),
           _PdfActionButton(pdfUrl: detail.pdfUrl!),
         ],
         for (final panel in detail.panels) ...[
-          const Gap(AppDesignTokens.spacingMd),
+          const SizedBox(height: 10),
           _PanelSection(panel: panel),
         ],
         if (detail.panels.isEmpty) ...[
-          const Gap(AppDesignTokens.spacingMd),
+          const SizedBox(height: 10),
           const _PendingResultsCard(),
         ],
       ],
@@ -54,65 +71,42 @@ class LabResultDetailSections extends StatelessWidget {
 }
 
 class _HeaderCard extends StatelessWidget {
-  const _HeaderCard({
-    required this.detail,
-    required this.summaryStatus,
-  });
+  const _HeaderCard({required this.detail});
 
   final LabResultDetail detail;
-  final LabSummaryStatus summaryStatus;
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final colorScheme = context.colorScheme;
-    final testNames = detail.panels.map((p) => p.testName).toList();
+    final doctor = detail.doctorName.trim().isEmpty ? '—' : detail.doctorName;
 
-    return _SectionCard(
-      title: 'Lab order',
-      trailing: LabResultStatusBadge(
-        status: summaryStatus,
-        orderStatus: detail.status,
-      ),
+    return ImshSurfaceCard(
+      padding: const EdgeInsets.all(12),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          if (testNames.isNotEmpty)
-            Text(
-              testNames.join(', '),
-              style: theme.textTheme.titleLarge?.copyWith(
-                fontWeight: FontWeight.w600,
-              ),
-            )
-          else
-            Text(
-              'Laboratory test',
-              style: theme.textTheme.titleLarge?.copyWith(
-                fontWeight: FontWeight.w600,
-              ),
-            ),
-          const Gap(AppDesignTokens.spacingXs),
-          Text(
-            DateFormatter.fullDate(detail.orderedAt),
+          ImshSectionHeader(
+            title: 'Lab order',
+            icon: Icons.assignment_outlined,
+            iconColor: ImshAccentColors.indigo,
+          ),
+          const SizedBox(height: 10),
+          ImshEllipsisText(
+            text: doctor,
             style: theme.textTheme.bodyMedium?.copyWith(
-              color: colorScheme.onSurfaceVariant,
+              fontWeight: FontWeight.w600,
             ),
           ),
-          const Gap(AppDesignTokens.spacingSm),
-          Text(
-            detail.doctorName,
-            style: theme.textTheme.bodyMedium?.copyWith(
-              fontWeight: FontWeight.w500,
-            ),
+          const SizedBox(height: 10),
+          _LabelValueList(
+            rows: [
+              ('Order status', detail.status.label),
+              if (detail.completedAt != null)
+                ('Completed', DateFormatter.dateTime(detail.completedAt!)),
+              if (detail.verifiedAt != null)
+                ('Verified', DateFormatter.dateTime(detail.verifiedAt!)),
+            ],
           ),
-          const Gap(AppDesignTokens.spacingMd),
-          _LabelValueList(rows: [
-            ('Order status', detail.status.label),
-            if (detail.completedAt != null)
-              ('Completed', DateFormatter.dateTime(detail.completedAt!)),
-            if (detail.verifiedAt != null)
-              ('Verified', DateFormatter.dateTime(detail.verifiedAt!)),
-          ]),
         ],
       ),
     );
@@ -126,21 +120,31 @@ class _PanelSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return _SectionCard(
-      title: panel.testName,
-      child: panel.results.isEmpty
-          ? Text(
+    final theme = Theme.of(context);
+    final cs = theme.colorScheme;
+
+    return ImshSurfaceCard(
+      padding: const EdgeInsets.all(12),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          ImshSectionHeader(
+            title: panel.testName.trim().isEmpty ? '—' : panel.testName,
+            icon: Icons.biotech_outlined,
+            iconColor: ImshAccentColors.purple,
+          ),
+          const SizedBox(height: 10),
+          if (panel.results.isEmpty)
+            Text(
               'Results pending',
-              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                    color: context.colorScheme.onSurfaceVariant,
-                  ),
+              style: theme.textTheme.bodyMedium?.copyWith(
+                color: cs.onSurfaceVariant,
+              ),
             )
-          : Column(
-              children: [
-                for (final line in panel.results)
-                  LabResultValueRow(line: line),
-              ],
-            ),
+          else
+            for (final line in panel.results) LabResultValueRow(line: line),
+        ],
+      ),
     );
   }
 }
@@ -150,13 +154,28 @@ class _PendingResultsCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return _SectionCard(
-      title: 'Results',
-      child: Text(
-        'Your test results are not available yet. Check back once processing is complete.',
-        style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-              color: context.colorScheme.onSurfaceVariant,
+    final theme = Theme.of(context);
+    final cs = theme.colorScheme;
+
+    return ImshSurfaceCard(
+      padding: const EdgeInsets.all(12),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const ImshSectionHeader(
+            title: 'Results',
+            icon: Icons.hourglass_empty_outlined,
+            iconColor: ImshAccentColors.amber,
+          ),
+          const SizedBox(height: 10),
+          Text(
+            'Your test results are not available yet. Check back once '
+            'processing is complete.',
+            style: theme.textTheme.bodyMedium?.copyWith(
+              color: cs.onSurfaceVariant,
             ),
+          ),
+        ],
       ),
     );
   }
@@ -187,65 +206,13 @@ class _PdfActionButton extends StatelessWidget {
         icon: const Icon(Icons.picture_as_pdf_outlined),
         label: const Text('Download PDF report'),
         style: OutlinedButton.styleFrom(
-          foregroundColor: Theme.of(context).colorScheme.primary,
+          foregroundColor: ImshAccentColors.blue,
           side: BorderSide(color: Theme.of(context).colorScheme.outlineVariant),
-          padding: const EdgeInsets.symmetric(
-            horizontal: AppDesignTokens.spacingMd,
-            vertical: AppDesignTokens.spacingSm + 4,
-          ),
+          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(AppDesignTokens.radiusSm),
           ),
         ),
-      ),
-    );
-  }
-}
-
-class _SectionCard extends StatelessWidget {
-  const _SectionCard({
-    required this.title,
-    required this.child,
-    this.trailing,
-  });
-
-  final String title;
-  final Widget child;
-  final Widget? trailing;
-
-  @override
-  Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    final colorScheme = context.colorScheme;
-
-    return Container(
-      width: double.infinity,
-      padding: const EdgeInsets.all(AppDesignTokens.spacingMd),
-      decoration: BoxDecoration(
-        color: colorScheme.surfaceContainerLowest,
-        borderRadius: BorderRadius.circular(AppDesignTokens.radiusLg),
-        border: Border.all(color: colorScheme.outlineVariant),
-        boxShadow: context.cardShadow,
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            children: [
-              Expanded(
-                child: Text(
-                  title,
-                  style: theme.textTheme.titleMedium?.copyWith(
-                    fontWeight: FontWeight.w600,
-                  ),
-                ),
-              ),
-              if (trailing != null) trailing!,
-            ],
-          ),
-          const Gap(AppDesignTokens.spacingMd),
-          child,
-        ],
       ),
     );
   }
@@ -259,7 +226,7 @@ class _LabelValueList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final colorScheme = context.colorScheme;
+    final cs = theme.colorScheme;
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -268,18 +235,17 @@ class _LabelValueList extends StatelessWidget {
           Text(
             label,
             style: theme.textTheme.labelMedium?.copyWith(
-              color: colorScheme.onSurfaceVariant,
+              color: cs.onSurfaceVariant,
             ),
           ),
-          const Gap(AppDesignTokens.spacingXs),
-          Text(
-            value,
+          const SizedBox(height: 2),
+          ImshEllipsisText(
+            text: value.trim().isEmpty ? '—' : value,
             style: theme.textTheme.bodyMedium?.copyWith(
               fontWeight: FontWeight.w500,
             ),
           ),
-          if ((label, value) != rows.last)
-            const Gap(AppDesignTokens.spacingSm),
+          if ((label, value) != rows.last) const SizedBox(height: 8),
         ],
       ],
     );

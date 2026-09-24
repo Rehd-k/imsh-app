@@ -1,13 +1,13 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
-import 'package:gap/gap.dart';
 import 'package:imsh/app_router.gr.dart';
 import 'package:intl/intl.dart';
 
-import '../../../core/theme/app_design_tokens.dart';
-import '../../../core/theme/context_extensions.dart';
+import '../../../core/theme/imsh_accent_colors.dart';
 import '../../../helper/app_timezone.dart';
 import '../../../models/medication_model.dart';
+import '../../../shared/widgets/imsh_solid_icon.dart';
+import '../../../shared/widgets/imsh_surface_card.dart';
 
 class HomeMedicationsSection extends StatelessWidget {
   const HomeMedicationsSection({
@@ -23,100 +23,95 @@ class HomeMedicationsSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    if (!_hasContent) {
-      return const SizedBox.shrink();
-    }
+    if (!_hasContent) return const SizedBox.shrink();
 
     final theme = Theme.of(context);
+    final cs = theme.colorScheme;
     final previewDose = nextDoses.isNotEmpty ? nextDoses.first : null;
     final previewSchedule = todaySchedule.take(2).toList();
 
-    return Padding(
-      padding: const EdgeInsets.symmetric(
-        horizontal: AppDesignTokens.containerPadding,
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          Row(
-            children: [
-              Text(
-                'Medications',
-                style: theme.textTheme.titleMedium?.copyWith(
-                  fontWeight: FontWeight.w700,
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        Row(
+          children: [
+            const ImshSolidIcon(
+              icon: Icons.medication_outlined,
+              color: ImshAccentColors.teal,
+              size: 26,
+              iconSize: 14,
+              radius: 7,
+            ),
+            const SizedBox(width: 8),
+            Text(
+              'Medications',
+              style: theme.textTheme.titleSmall?.copyWith(
+                fontWeight: FontWeight.w800,
+              ),
+            ),
+            const Spacer(),
+            TextButton(
+              onPressed: () => context.router.push(const MedicationsRoute()),
+              child: const Text('View all'),
+            ),
+          ],
+        ),
+        const SizedBox(height: 8),
+        if (previewDose != null) ...[
+          ImshSurfaceCard(
+            padding: const EdgeInsets.all(10),
+            child: Row(
+              children: [
+                const ImshSolidIcon(
+                  icon: Icons.schedule_outlined,
+                  color: ImshAccentColors.indigo,
+                  size: 30,
+                  iconSize: 16,
+                  radius: 8,
                 ),
-              ),
-              const Spacer(),
-              TextButton(
-                onPressed: () => context.router.push(const MedicationsRoute()),
-                child: const Text('View all'),
-              ),
-            ],
+                const SizedBox(width: 10),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        'Next dose',
+                        style: theme.textTheme.labelSmall?.copyWith(
+                          color: cs.onSurfaceVariant,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                      ImshEllipsisText(
+                        text: '${previewDose.drugName} ${previewDose.dosage}',
+                        style: theme.textTheme.titleSmall?.copyWith(
+                          fontWeight: FontWeight.w700,
+                        ),
+                      ),
+                      ImshEllipsisText(
+                        text:
+                            '${_formatTime(previewDose.scheduledAt)} · ${previewDose.instructions}',
+                        style: theme.textTheme.bodySmall?.copyWith(
+                          color: cs.onSurfaceVariant,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
           ),
-          if (previewDose != null) ...[
-            _NextDosePreview(dose: previewDose),
-            const Gap(AppDesignTokens.spacingMd),
-          ],
-          for (final entry in previewSchedule) ...[
-            _SchedulePreviewRow(entry: entry),
-            if (entry != previewSchedule.last)
-              const Gap(AppDesignTokens.spacingSm),
-          ],
+          if (previewSchedule.isNotEmpty) const SizedBox(height: 8),
         ],
-      ),
+        for (var i = 0; i < previewSchedule.length; i++) ...[
+          if (i > 0) const SizedBox(height: 6),
+          _SchedulePreviewRow(entry: previewSchedule[i]),
+        ],
+      ],
     );
   }
-}
-
-class _NextDosePreview extends StatelessWidget {
-  const _NextDosePreview({required this.dose});
-
-  final MedicationDoseSummary dose;
 
   String _formatTime(DateTime date) {
     return DateFormat('h:mm a').format(AppTimezone.toLocal(date));
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    final colorScheme = context.colorScheme;
-
-    return Container(
-      padding: const EdgeInsets.all(AppDesignTokens.spacingMd),
-      decoration: BoxDecoration(
-        color: colorScheme.primary,
-        borderRadius: BorderRadius.circular(AppDesignTokens.radiusLg),
-        boxShadow: context.cardShadow,
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            'Next dose',
-            style: theme.textTheme.labelSmall?.copyWith(
-              color: colorScheme.onPrimary.withValues(alpha: 0.85),
-              fontWeight: FontWeight.w600,
-            ),
-          ),
-          const Gap(AppDesignTokens.spacingSm),
-          Text(
-            '${dose.drugName} ${dose.dosage}',
-            style: theme.textTheme.titleMedium?.copyWith(
-              color: colorScheme.onPrimary,
-              fontWeight: FontWeight.w700,
-            ),
-          ),
-          const Gap(4),
-          Text(
-            '${_formatTime(dose.scheduledAt)} · ${dose.instructions}',
-            style: theme.textTheme.bodySmall?.copyWith(
-              color: colorScheme.onPrimary.withValues(alpha: 0.9),
-            ),
-          ),
-        ],
-      ),
-    );
   }
 }
 
@@ -128,41 +123,33 @@ class _SchedulePreviewRow extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final colorScheme = context.colorScheme;
+    final cs = theme.colorScheme;
     final isTaken = entry.status == MedicationDoseStatus.taken;
 
-    return Container(
-      padding: const EdgeInsets.symmetric(
-        horizontal: AppDesignTokens.spacingMd,
-        vertical: AppDesignTokens.spacingSm,
-      ),
-      decoration: BoxDecoration(
-        color: colorScheme.surfaceContainerLow,
-        borderRadius: BorderRadius.circular(AppDesignTokens.radiusMd),
-        border: Border.all(color: colorScheme.outlineVariant),
-      ),
+    return ImshSurfaceCard(
+      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
       child: Row(
         children: [
-          Icon(
-            isTaken ? Icons.check_circle : Icons.schedule_outlined,
-            size: 18,
-            color: isTaken
-                ? context.imshTheme.onSuccessContainer
-                : colorScheme.primary,
+          ImshSolidIcon(
+            icon: isTaken ? Icons.check_circle_outline : Icons.schedule_outlined,
+            color: isTaken ? ImshAccentColors.green : ImshAccentColors.blue,
+            size: 28,
+            iconSize: 15,
+            radius: 7,
           ),
-          const Gap(AppDesignTokens.spacingSm),
+          const SizedBox(width: 10),
           Expanded(
-            child: Text(
-              '${entry.drugName} ${entry.dosage}',
+            child: ImshEllipsisText(
+              text: '${entry.drugName} ${entry.dosage}',
               style: theme.textTheme.bodyMedium?.copyWith(
-                fontWeight: FontWeight.w500,
+                fontWeight: FontWeight.w600,
               ),
             ),
           ),
           Text(
             entry.timeOfDay.label,
             style: theme.textTheme.labelSmall?.copyWith(
-              color: colorScheme.onSurfaceVariant,
+              color: cs.onSurfaceVariant,
             ),
           ),
         ],

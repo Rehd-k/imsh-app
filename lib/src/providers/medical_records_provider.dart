@@ -3,7 +3,6 @@ import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 
 import '../models/medical_records_dashboard_model.dart';
 import '../models/medical_record_model.dart';
-import 'auth_provider.dart';
 import 'family_provider.dart';
 import 'service_providers.dart';
 
@@ -26,27 +25,23 @@ final encounterDetailProvider = FutureProvider.autoDispose
 final medicalRecordsPagingControllerProvider = Provider.autoDispose((ref) {
   final service = ref.watch(medicalRecordServiceProvider);
   final forPatientId = watchForPatientId(ref);
-  final controller = PagingController<int, EncounterSummary>(firstPageKey: 1);
-
-  controller.addPageRequestListener((pageKey) async {
-    try {
+  final controller = PagingController<int, EncounterSummary>(
+    getNextPageKey: (state) {
+      final pages = state.pages;
+      if (pages != null && pages.last.length < medicalRecordsPageSize) {
+        return null;
+      }
+      return state.nextIntPageKey;
+    },
+    fetchPage: (pageKey) async {
       final response = await service.listMedicalRecords(
         page: pageKey,
         limit: medicalRecordsPageSize,
         forPatientId: forPatientId,
       );
-      final isLastPage =
-          response.data.length < medicalRecordsPageSize ||
-          pageKey * medicalRecordsPageSize >= response.total;
-      if (isLastPage) {
-        controller.appendLastPage(response.data);
-      } else {
-        controller.appendPage(response.data, pageKey + 1);
-      }
-    } catch (error) {
-      controller.error = authFlowErrorMessage(error);
-    }
-  });
+      return response.data;
+    },
+  );
 
   ref.onDispose(controller.dispose);
   return controller;

@@ -17,7 +17,7 @@ class AppointmentService {
       '/patient/appointments/dashboard',
       queryParameters: {
         'status': status.apiValue,
-        if (forPatientId != null) 'forPatientId': forPatientId,
+        'forPatientId': ?forPatientId,
       },
     );
     return AppointmentsDashboardResponse.fromJson(resp.data ?? {});
@@ -35,7 +35,7 @@ class AppointmentService {
         'status': status.apiValue,
         'page': page,
         'limit': limit,
-        if (forPatientId != null) 'forPatientId': forPatientId,
+        'forPatientId': ?forPatientId,
       },
     );
     return AppointmentListResponse.fromJson(resp.data ?? {});
@@ -47,9 +47,7 @@ class AppointmentService {
   }) async {
     final resp = await _dio.get<Map<String, dynamic>>(
       '/patient/appointments/$id',
-      queryParameters: {
-        if (forPatientId != null) 'forPatientId': forPatientId,
-      },
+      queryParameters: {'forPatientId': ?forPatientId},
     );
     return AppointmentDetail.fromJson(resp.data ?? {});
   }
@@ -114,10 +112,7 @@ class AppointmentService {
   }) async {
     final resp = await _dio.get<Map<String, dynamic>>(
       '/patient/appointments/availability',
-      queryParameters: {
-        'doctorId': doctorId,
-        'date': date,
-      },
+      queryParameters: {'doctorId': doctorId, 'date': date},
     );
     return AvailabilityResponse.fromJson(resp.data ?? {});
   }

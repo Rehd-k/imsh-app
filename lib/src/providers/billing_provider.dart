@@ -2,7 +2,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 
 import '../models/invoice_model.dart';
-import 'auth_provider.dart';
 import 'service_providers.dart';
 
 const billingPaymentsPageSize = 5;
@@ -52,28 +51,21 @@ final receiptProvider = FutureProvider.autoDispose.family<ReceiptResponse, Strin
 final billingPaymentsPagingControllerProvider = Provider.autoDispose((ref) {
   final service = ref.watch(billingServiceProvider);
   final controller = PagingController<int, PaymentHistoryItem>(
-    firstPageKey: 1,
-  );
-
-  controller.addPageRequestListener((pageKey) async {
-    try {
+    getNextPageKey: (state) {
+      final pages = state.pages;
+      if (pages != null && pages.last.length < billingPaymentsPageSize) {
+        return null;
+      }
+      return state.nextIntPageKey;
+    },
+    fetchPage: (pageKey) async {
       final response = await service.listPayments(
         page: pageKey,
         limit: billingPaymentsPageSize,
       );
-      final total = response.total > 0 ? response.total : response.data.length;
-      final isLastPage =
-          response.data.length < billingPaymentsPageSize ||
-          pageKey * billingPaymentsPageSize >= total;
-      if (isLastPage) {
-        controller.appendLastPage(response.data);
-      } else {
-        controller.appendPage(response.data, pageKey + 1);
-      }
-    } catch (error) {
-      controller.error = authFlowErrorMessage(error);
-    }
-  });
+      return response.data;
+    },
+  );
 
   ref.onDispose(controller.dispose);
   return controller;
@@ -82,28 +74,22 @@ final billingPaymentsPagingControllerProvider = Provider.autoDispose((ref) {
 final unpaidInvoicesPagingControllerProvider = Provider.autoDispose((ref) {
   final service = ref.watch(billingServiceProvider);
   final controller = PagingController<int, InvoiceSummary>(
-    firstPageKey: 1,
-  );
-
-  controller.addPageRequestListener((pageKey) async {
-    try {
+    getNextPageKey: (state) {
+      final pages = state.pages;
+      if (pages != null && pages.last.length < billingInvoicesPageSize) {
+        return null;
+      }
+      return state.nextIntPageKey;
+    },
+    fetchPage: (pageKey) async {
       final response = await service.listInvoices(
         page: pageKey,
         limit: billingInvoicesPageSize,
         status: 'UNPAID',
       );
-      final isLastPage =
-          response.data.length < billingInvoicesPageSize ||
-          pageKey * billingInvoicesPageSize >= response.total;
-      if (isLastPage) {
-        controller.appendLastPage(response.data);
-      } else {
-        controller.appendPage(response.data, pageKey + 1);
-      }
-    } catch (error) {
-      controller.error = authFlowErrorMessage(error);
-    }
-  });
+      return response.data;
+    },
+  );
 
   ref.onDispose(controller.dispose);
   return controller;

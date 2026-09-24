@@ -1,4 +1,5 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_riverpod/legacy.dart';
 
 import '../models/feedback_model.dart';
 import 'auth_provider.dart';
@@ -34,7 +35,7 @@ final submitFeedbackProvider =
       SubmitFeedbackNotifier.new,
     );
 
-class SubmitFeedbackNotifier extends AutoDisposeAsyncNotifier<bool> {
+class SubmitFeedbackNotifier extends AsyncNotifier<bool> {
   @override
   Future<bool> build() async => false;
 
@@ -75,12 +76,12 @@ final closeFeedbackProvider =
       CloseFeedbackNotifier.new,
     );
 
-class CloseFeedbackNotifier extends AutoDisposeAsyncNotifier<Set<String>> {
+class CloseFeedbackNotifier extends AsyncNotifier<Set<String>> {
   @override
   Future<Set<String>> build() async => {};
 
   Future<void> close(String feedbackId) async {
-    final inFlight = {...?state.valueOrNull};
+    final inFlight = {...?state.value};
     if (inFlight.contains(feedbackId)) return;
 
     inFlight.add(feedbackId);
@@ -92,13 +93,13 @@ class CloseFeedbackNotifier extends AutoDisposeAsyncNotifier<Set<String>> {
       _invalidateFeedback(ref);
       ref.invalidate(feedbackDetailProvider(feedbackId));
     } finally {
-      final updated = {...?state.valueOrNull}..remove(feedbackId);
+      final updated = {...?state.value}..remove(feedbackId);
       state = AsyncData(updated);
     }
   }
 
   bool isClosing(String feedbackId) =>
-      state.valueOrNull?.contains(feedbackId) ?? false;
+      state.value?.contains(feedbackId) ?? false;
 }
 
 void _invalidateFeedback(Ref ref) {

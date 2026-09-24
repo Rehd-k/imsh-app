@@ -1,11 +1,15 @@
 import 'package:flutter/material.dart';
-import 'package:gap/gap.dart';
+import 'package:intl/intl.dart';
 
 import '../../../core/theme/app_design_tokens.dart';
-import '../../../core/theme/context_extensions.dart';
+import '../../../core/theme/imsh_accent_colors.dart';
 import '../../../core/utils/api_media_url.dart';
+import '../../../helper/app_timezone.dart';
 import '../../../helper/date_formatter.dart';
 import '../../../models/appointment_model.dart';
+import '../../../shared/widgets/imsh_ellipsis_chip.dart';
+import '../../../shared/widgets/imsh_solid_icon.dart';
+import '../../../shared/widgets/imsh_surface_card.dart';
 import 'appointment_status_badge.dart';
 
 class DoctorAvatar extends StatelessWidget {
@@ -22,6 +26,7 @@ class DoctorAvatar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     final resolvedUrl = resolveApiMediaUrl(avatarUrl);
     if (resolvedUrl != null && resolvedUrl.isNotEmpty) {
       return CircleAvatar(
@@ -37,15 +42,21 @@ class DoctorAvatar extends StatelessWidget {
         .map((part) => part[0].toUpperCase())
         .join();
 
-    return CircleAvatar(
-      radius: size / 2,
-      backgroundColor: context.imshTheme.primaryHighlight,
+    return Container(
+      width: size,
+      height: size,
+      alignment: Alignment.center,
+      decoration: BoxDecoration(
+        color: ImshAccentColors.teal,
+        borderRadius: BorderRadius.circular(size / 2),
+      ),
       child: Text(
-        initials,
-        style: Theme.of(context).textTheme.titleSmall?.copyWith(
-              color: context.colorScheme.primary,
-              fontWeight: FontWeight.w700,
-            ),
+        initials.isEmpty ? '—' : initials,
+        style: theme.textTheme.titleSmall?.copyWith(
+          color: Colors.white,
+          fontWeight: FontWeight.w700,
+          fontSize: size * 0.32,
+        ),
       ),
     );
   }
@@ -68,85 +79,90 @@ class NextAppointmentCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final colorScheme = context.colorScheme;
+    final cs = theme.colorScheme;
+    final local = AppTimezone.toLocal(appointment.scheduledAt);
+    final month = DateFormat('MMM').format(local).toUpperCase();
+    final day = DateFormat('d').format(local);
+    final timeValue = appointment.status == AppointmentStatus.requested
+        ? 'Awaiting confirm'
+        : DateFormatter.appointmentCardTime(appointment.scheduledAt);
+    final title = appointment.status == AppointmentStatus.requested
+        ? 'Next request'
+        : 'Next visit';
 
     return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
+      crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        Row(
-          children: [
-            Text(
-              'NEXT APPOINTMENT',
-              style: theme.textTheme.labelSmall?.copyWith(
-                color: colorScheme.onSurfaceVariant,
-                fontWeight: FontWeight.w600,
-                letterSpacing: 0.8,
-              ),
-            ),
-            const Spacer(),
-            AppointmentStatusBadge(status: appointment.status),
-          ],
+        ImshSectionHeader(
+          title: title,
+          icon: Icons.event_available_outlined,
+          iconColor: ImshAccentColors.indigo,
+          trailing: AppointmentStatusBadge(status: appointment.status),
         ),
-        const Gap(AppDesignTokens.spacingSm),
-        Container(
-          decoration: BoxDecoration(
-            color: colorScheme.surfaceContainerLowest,
-            borderRadius: BorderRadius.circular(AppDesignTokens.radiusLg),
-            border: Border.all(color: colorScheme.outlineVariant),
-            boxShadow: context.cardShadow,
-          ),
-          child: IntrinsicHeight(
-            child: Row(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                Container(
-                  width: 4,
-                  decoration: BoxDecoration(
-                    color: colorScheme.primary,
-                    borderRadius: const BorderRadius.horizontal(
-                      left: Radius.circular(AppDesignTokens.radiusLg),
+        const SizedBox(height: 8),
+        ImshSurfaceCard(
+          padding: const EdgeInsets.all(12),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Container(
+                    width: 48,
+                    padding: const EdgeInsets.symmetric(vertical: 8),
+                    decoration: BoxDecoration(
+                      color: cs.surfaceContainerLow,
+                      borderRadius:
+                          BorderRadius.circular(AppDesignTokens.radiusMd),
+                      border: Border.all(color: cs.outlineVariant),
+                    ),
+                    child: Column(
+                      children: [
+                        Text(
+                          month,
+                          style: theme.textTheme.labelSmall?.copyWith(
+                            color: ImshAccentColors.teal,
+                            fontWeight: FontWeight.w700,
+                          ),
+                        ),
+                        Text(
+                          day,
+                          style: theme.textTheme.titleLarge?.copyWith(
+                            fontWeight: FontWeight.w800,
+                            height: 1.1,
+                          ),
+                        ),
+                      ],
                     ),
                   ),
-                ),
-                Expanded(
-                  child: Padding(
-                    padding: const EdgeInsets.all(AppDesignTokens.spacingMd),
+                  const SizedBox(width: 12),
+                  Expanded(
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Row(
                           children: [
                             DoctorAvatar(
-                              name: appointment.doctor.name,
+                              name: appointment.doctorDisplayName,
                               avatarUrl: appointment.doctor.avatarUrl,
-                              size: 56,
+                              size: 40,
                             ),
-                            const Gap(AppDesignTokens.spacingMd),
+                            const SizedBox(width: 8),
                             Expanded(
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  Text(
-                                    appointment.doctorDisplayName,
-                                    style:
-                                        theme.textTheme.titleMedium?.copyWith(
+                                  ImshEllipsisText(
+                                    text: appointment.doctorDisplayName,
+                                    style: theme.textTheme.titleSmall?.copyWith(
                                       fontWeight: FontWeight.w700,
                                     ),
                                   ),
-                                  const Gap(2),
-                                  Text(
-                                    appointment.specialtyLabel,
-                                    style:
-                                        theme.textTheme.bodyMedium?.copyWith(
-                                      color: colorScheme.primary,
-                                      fontWeight: FontWeight.w500,
-                                    ),
-                                  ),
-                                  const Gap(2),
-                                  Text(
-                                    appointment.visitType.label,
+                                  ImshEllipsisText(
+                                    text: appointment.specialtyLabel,
                                     style: theme.textTheme.bodySmall?.copyWith(
-                                      color: colorScheme.onSurfaceVariant,
+                                      color: cs.onSurfaceVariant,
                                     ),
                                   ),
                                 ],
@@ -154,176 +170,61 @@ class NextAppointmentCard extends StatelessWidget {
                             ),
                           ],
                         ),
-                        const Gap(AppDesignTokens.spacingMd),
-                        Row(
-                          children: [
-                            Expanded(
-                              child: _InfoTile(
-                                icon: Icons.calendar_today_outlined,
-                                label: 'DATE',
-                                value: DateFormatter.appointmentCardDate(
-                                  appointment.scheduledAt,
-                                ),
-                              ),
-                            ),
-                            const Gap(AppDesignTokens.spacingSm),
-                            Expanded(
-                              child: _InfoTile(
-                                icon: appointment.status ==
-                                        AppointmentStatus.requested
-                                    ? Icons.hourglass_top_outlined
-                                    : Icons.schedule_outlined,
-                                label: appointment.status ==
-                                        AppointmentStatus.requested
-                                    ? 'STATUS'
-                                    : 'TIME',
-                                value: appointment.status ==
-                                        AppointmentStatus.requested
-                                    ? 'Awaiting confirm'
-                                    : DateFormatter.appointmentCardTime(
-                                        appointment.scheduledAt,
-                                      ),
-                              ),
-                            ),
-                          ],
-                        ),
-                        const Gap(AppDesignTokens.spacingMd),
-                        Container(
-                          width: double.infinity,
-                          padding: const EdgeInsets.all(
-                            AppDesignTokens.spacingMd,
-                          ),
-                          decoration: BoxDecoration(
-                            color: colorScheme.surfaceContainerLow,
-                            borderRadius: BorderRadius.circular(
-                              AppDesignTokens.radiusMd,
-                            ),
-                          ),
-                          child: Row(
-                            children: [
-                              Icon(
-                                Icons.location_on_outlined,
-                                size: 18,
-                                color: colorScheme.onSurfaceVariant,
-                              ),
-                              const Gap(AppDesignTokens.spacingSm),
-                              Expanded(
-                                child: Text(
-                                  appointment.locationLabel,
-                                  style: theme.textTheme.bodyMedium?.copyWith(
-                                    color: colorScheme.onSurfaceVariant,
-                                  ),
-                                ),
-                              ),
-                            ],
+                        const SizedBox(height: 8),
+                        ImshEllipsisText(
+                          text:
+                              '$timeValue · ${appointment.visitType.label}',
+                          style: theme.textTheme.bodySmall?.copyWith(
+                            color: cs.onSurfaceVariant,
                           ),
                         ),
-                        const Gap(AppDesignTokens.spacingMd),
-                        Row(
-                          children: [
-                            if (appointment.canReschedule)
-                              Expanded(
-                                child: OutlinedButton(
-                                  onPressed: onReschedule,
-                                  child: const Text('Reschedule'),
-                                ),
-                              ),
-                            if (appointment.canReschedule &&
-                                appointment.canCancel)
-                              const Gap(AppDesignTokens.spacingSm),
-                            if (appointment.canCancel)
-                              Expanded(
-                                child: FilledButton(
-                                  onPressed: isCancelling ? null : onCancel,
-                                  style: FilledButton.styleFrom(
-                                    backgroundColor:
-                                        colorScheme.errorContainer,
-                                    foregroundColor:
-                                        colorScheme.onErrorContainer,
-                                  ),
-                                  child: isCancelling
-                                      ? const SizedBox(
-                                          width: 18,
-                                          height: 18,
-                                          child: CircularProgressIndicator(
-                                            strokeWidth: 2,
-                                          ),
-                                        )
-                                      : const Text('Cancel'),
-                                ),
-                              ),
-                          ],
+                        const SizedBox(height: 2),
+                        ImshEllipsisText(
+                          text: appointment.locationLabel,
+                          style: theme.textTheme.bodySmall?.copyWith(
+                            color: cs.onSurfaceVariant,
+                          ),
                         ),
                       ],
                     ),
                   ),
-                ),
-              ],
-            ),
+                ],
+              ),
+              const SizedBox(height: 10),
+              Row(
+                children: [
+                  if (appointment.canReschedule)
+                    Expanded(
+                      child: OutlinedButton(
+                        onPressed: onReschedule,
+                        child: const Text('Reschedule'),
+                      ),
+                    ),
+                  if (appointment.canReschedule && appointment.canCancel)
+                    const SizedBox(width: 8),
+                  if (appointment.canCancel)
+                    Expanded(
+                      child: FilledButton(
+                        onPressed: isCancelling ? null : onCancel,
+                        style: FilledButton.styleFrom(
+                          backgroundColor: cs.errorContainer,
+                          foregroundColor: cs.onErrorContainer,
+                        ),
+                        child: isCancelling
+                            ? const SizedBox(
+                                width: 18,
+                                height: 18,
+                                child: CircularProgressIndicator(strokeWidth: 2),
+                              )
+                            : const Text('Cancel'),
+                      ),
+                    ),
+                ],
+              ),
+            ],
           ),
         ),
       ],
-    );
-  }
-}
-
-class _InfoTile extends StatelessWidget {
-  const _InfoTile({
-    required this.icon,
-    required this.label,
-    required this.value,
-  });
-
-  final IconData icon;
-  final String label;
-  final String value;
-
-  @override
-  Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    final colorScheme = context.colorScheme;
-
-    return Container(
-      padding: const EdgeInsets.all(AppDesignTokens.spacingMd),
-      decoration: BoxDecoration(
-        color: colorScheme.surfaceContainerLow,
-        borderRadius: BorderRadius.circular(AppDesignTokens.radiusMd),
-      ),
-      child: Row(
-        children: [
-          Container(
-            width: 36,
-            height: 36,
-            decoration: BoxDecoration(
-              color: context.imshTheme.primaryHighlight,
-              borderRadius: BorderRadius.circular(AppDesignTokens.radiusSm),
-            ),
-            child: Icon(icon, size: 18, color: colorScheme.primary),
-          ),
-          const Gap(AppDesignTokens.spacingSm),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  label,
-                  style: theme.textTheme.labelSmall?.copyWith(
-                    color: colorScheme.onSurfaceVariant,
-                    fontWeight: FontWeight.w600,
-                    letterSpacing: 0.5,
-                  ),
-                ),
-                Text(
-                  value,
-                  style: theme.textTheme.bodyMedium?.copyWith(
-                    fontWeight: FontWeight.w600,
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ],
-      ),
     );
   }
 }

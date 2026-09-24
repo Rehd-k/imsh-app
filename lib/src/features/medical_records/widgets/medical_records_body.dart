@@ -1,134 +1,277 @@
+import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:gap/gap.dart';
+import 'package:imsh/app_router.gr.dart';
 import 'package:printing/printing.dart';
 
-import '../../../core/theme/app_design_tokens.dart';
-import '../../../core/theme/context_extensions.dart';
+import '../../../core/responsive.dart';
+import '../../../core/theme/imsh_accent_colors.dart';
 import '../../../helper/date_formatter.dart';
-import '../../../models/family_model.dart';
 import '../../../models/medical_records_dashboard_model.dart';
 import '../../../providers/auth_provider.dart';
 import '../../../providers/family_provider.dart';
 import '../../../providers/medical_records_provider.dart';
 import '../../../providers/service_providers.dart';
 import '../../../shared/widgets/family_subject_banner.dart';
+import '../../../shared/widgets/imsh_ellipsis_chip.dart';
+import '../../../shared/widgets/imsh_error_panel.dart';
+import '../../../shared/widgets/imsh_kpi_tile.dart';
+import '../../../shared/widgets/imsh_page_header.dart';
+import '../../../shared/widgets/imsh_semantic_badge.dart';
 import '../../../shared/widgets/imsh_sliver_app_bar.dart';
+import '../../../shared/widgets/imsh_solid_icon.dart';
+import '../../../shared/widgets/imsh_surface_card.dart';
 import '../pdf/diagnoses_pdf.dart';
 
 class MedicalRecordsBody extends ConsumerWidget {
   const MedicalRecordsBody({super.key});
 
+  static const sectionGap = 12.0;
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final dashboardAsync = ref.watch(medicalRecordsDashboardProvider);
 
-    return RefreshIndicator(
-      onRefresh: () async => ref.invalidate(medicalRecordsDashboardProvider),
-      child: dashboardAsync.when(
-        loading: () => const CustomScrollView(
-          physics: AlwaysScrollableScrollPhysics(),
-          slivers: [
-            ImshSliverAppBar(),
-            SliverToBoxAdapter(child: FamilySubjectBanner()),
-            SliverFillRemaining(
-              hasScrollBody: false,
-              child: Center(child: CircularProgressIndicator()),
-            ),
-          ],
-        ),
-        error: (error, _) => CustomScrollView(
+    return dashboardAsync.when(
+      loading: () => const _RecordsLoading(),
+      error: (error, _) => _RecordsError(
+        message: authFlowErrorMessage(error),
+        onRetry: () => ref.invalidate(medicalRecordsDashboardProvider),
+      ),
+      data: (dashboard) => RefreshIndicator(
+        onRefresh: () async {
+          ref.invalidate(medicalRecordsDashboardProvider);
+          await ref.read(medicalRecordsDashboardProvider.future);
+        },
+        child: CustomScrollView(
           physics: const AlwaysScrollableScrollPhysics(),
           slivers: [
             const ImshSliverAppBar(),
             const SliverToBoxAdapter(child: FamilySubjectBanner()),
             SliverFillRemaining(
-              hasScrollBody: false,
-              child: _ErrorState(
-                message: authFlowErrorMessage(error),
-                onRetry: () => ref.invalidate(medicalRecordsDashboardProvider),
+              hasScrollBody: true,
+              child: ResponsiveBody(
+                center: false,
+                bottomPadding: 24,
+                builder: (context, bp) {
+                  final showRail = bp.isDesktop;
+                  final useSnapKpis = bp.maxWidth < 520;
+
+                  final main = _RecordsMainColumn(
+                    dashboard: dashboard,
+                    useSnapKpis: useSnapKpis,
+                    showInlineSideSections: !showRail,
+                    onDownloadPdf: () => _downloadDiagnosesPdf(context, ref),
+                    onOpenDiagnoses: () => _openDiagnosesModal(context, ref),
+                    onViewLabs: () =>
+                        context.router.push(const LabResultsRoute()),
+                  );
+
+                  if (!showRail) {
+                    return SingleChildScrollView(
+                      physics: const AlwaysScrollableScrollPhysics(),
+                      child: main,
+                    );
+                  }
+
+                  return Row(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      Expanded(
+                        flex: 9,
+                        child: SingleChildScrollView(
+                          physics: const AlwaysScrollableScrollPhysics(),
+                          child: main,
+                        ),
+                      ),
+                      const SizedBox(width: 12),
+                      Expanded(
+                        flex: 3,
+                        child: _RecordsSideRail(dashboard: dashboard),
+                      ),
+                    ],
+                  );
+                },
               ),
             ),
           ],
         ),
-        data: (dashboard) {
-          final theme = Theme.of(context);
-          final colorScheme = context.colorScheme;
-
-          return CustomScrollView(
-            physics: const AlwaysScrollableScrollPhysics(),
-            slivers: [
-              const ImshSliverAppBar(),
-              const SliverToBoxAdapter(child: FamilySubjectBanner()),
-              SliverPadding(
-                padding: const EdgeInsets.fromLTRB(16, 16, 16, 48),
-                sliver: SliverList(
-                  delegate: SliverChildListDelegate([
-                    Text(
-                      'Medical Records',
-                      style: theme.textTheme.displaySmall?.copyWith(
-                        fontWeight: FontWeight.w700,
-                        color: colorScheme.primary,
-                      ),
-                    ),
-                    const Gap(16),
-                    const _SearchField(),
-                    const Gap(16),
-                    _CriticalAllergiesCard(allergies: dashboard.allergies),
-                    const Gap(16),
-                    _VitalsCard(
-                      bloodType: dashboard.bloodType,
-                      heightCm: dashboard.heightCm,
-                      weightKg: dashboard.weightKg,
-                    ),
-                    const Gap(24),
-                    _SectionHeader(
-                      title: 'Past Diagnoses',
-                      source: 'From diagnoses entered by your doctor',
-                      actionLabel: 'Download PDF',
-                      onAction: () => _downloadDiagnosesPdf(context, ref),
-                    ),
-                    const Gap(8),
-                    ...dashboard.recentDiagnoses
-                        .take(2)
-                        .map(
-                          (diagnosis) => _DiagnosisItem(
-                            diagnosis: diagnosis,
-                            onTap: () => _openDiagnosesModal(context, ref),
-                          ),
-                        ),
-                    if (dashboard.recentDiagnoses.isEmpty)
-                      const _EmptySectionText('No diagnoses on file.'),
-                    if (dashboard.recentDiagnoses.isNotEmpty)
-                      Align(
-                        alignment: Alignment.centerLeft,
-                        child: TextButton(
-                          onPressed: () => _openDiagnosesModal(context, ref),
-                          child: const Text('View all diagnoses'),
-                        ),
-                      ),
-                    const Gap(24),
-                    const _SectionHeader(
-                      title: 'Immunization Record',
-                      source: 'Recorded by nursing and medical records staff',
-                    ),
-                    const Gap(8),
-                    _ImmunizationGrid(immunizations: dashboard.immunizations),
-                    const Gap(24),
-                    const _SectionHeader(
-                      title: 'Recent Lab Results',
-                      source: 'From your latest laboratory reports',
-                    ),
-                    const Gap(8),
-                    _LabResultsCard(labs: dashboard.recentLabResults),
-                  ]),
-                ),
-              ),
-            ],
-          );
-        },
       ),
     );
+  }
+}
+
+class _RecordsMainColumn extends StatelessWidget {
+  const _RecordsMainColumn({
+    required this.dashboard,
+    required this.useSnapKpis,
+    required this.showInlineSideSections,
+    required this.onDownloadPdf,
+    required this.onOpenDiagnoses,
+    required this.onViewLabs,
+  });
+
+  final MedicalRecordsDashboardResponse dashboard;
+  final bool useSnapKpis;
+  final bool showInlineSideSections;
+  final VoidCallback onDownloadPdf;
+  final VoidCallback onOpenDiagnoses;
+  final VoidCallback onViewLabs;
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        ImshPageHeader(
+          title: 'Medical Records',
+          subtitle: 'Allergies, diagnoses, immunizations, and labs.',
+          icon: Icons.folder_shared_outlined,
+          iconColor: ImshAccentColors.blue,
+          trailing: IconButton(
+            tooltip: 'Download diagnoses PDF',
+            onPressed: onDownloadPdf,
+            icon: const Icon(Icons.picture_as_pdf_outlined),
+          ),
+        ),
+        const SizedBox(height: 10),
+        _RecordsKpiStrip(dashboard: dashboard, useSnapStrip: useSnapKpis),
+        const SizedBox(height: MedicalRecordsBody.sectionGap),
+        const _SearchField(),
+        const SizedBox(height: MedicalRecordsBody.sectionGap),
+        _CriticalAllergiesCard(allergies: dashboard.allergies),
+        const SizedBox(height: MedicalRecordsBody.sectionGap),
+        _DiagnosesSection(
+          diagnoses: dashboard.recentDiagnoses,
+          onOpenAll: onOpenDiagnoses,
+          onDownloadPdf: onDownloadPdf,
+        ),
+        if (showInlineSideSections) ...[
+          const SizedBox(height: MedicalRecordsBody.sectionGap),
+          _ProfileMetricsCard(
+            bloodType: dashboard.bloodType,
+            heightCm: dashboard.heightCm,
+            weightKg: dashboard.weightKg,
+          ),
+          const SizedBox(height: MedicalRecordsBody.sectionGap),
+          _ImmunizationsSection(immunizations: dashboard.immunizations),
+        ],
+        const SizedBox(height: MedicalRecordsBody.sectionGap),
+        _LabResultsSection(
+          labs: dashboard.recentLabResults,
+          onViewAll: onViewLabs,
+        ),
+        const SizedBox(height: 8),
+      ],
+    );
+  }
+}
+
+class _RecordsSideRail extends StatelessWidget {
+  const _RecordsSideRail({required this.dashboard});
+
+  final MedicalRecordsDashboardResponse dashboard;
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        _ProfileMetricsCard(
+          bloodType: dashboard.bloodType,
+          heightCm: dashboard.heightCm,
+          weightKg: dashboard.weightKg,
+        ),
+        const SizedBox(height: MedicalRecordsBody.sectionGap),
+        Expanded(
+          child: ImshSurfaceCard(
+            padding: const EdgeInsets.all(10),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                ImshSectionHeader(
+                  title: 'Immunizations',
+                  icon: Icons.vaccines_outlined,
+                  iconColor: ImshAccentColors.teal,
+                ),
+                const SizedBox(height: 8),
+                Expanded(
+                  child: dashboard.immunizations.isEmpty
+                      ? const _CompactEmpty('No immunizations on file.')
+                      : ListView.separated(
+                          itemCount: dashboard.immunizations.length,
+                          separatorBuilder: (_, _) => const SizedBox(height: 6),
+                          itemBuilder: (context, index) => _ImmunizationTile(
+                            item: dashboard.immunizations[index],
+                          ),
+                        ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+class _RecordsKpiStrip extends StatelessWidget {
+  const _RecordsKpiStrip({
+    required this.dashboard,
+    this.useSnapStrip = false,
+  });
+
+  final MedicalRecordsDashboardResponse dashboard;
+  final bool useSnapStrip;
+
+  @override
+  Widget build(BuildContext context) {
+    final allergies = dashboard.allergies
+        .where((a) => a.name.trim().isNotEmpty)
+        .length;
+    final vitals = dashboard.latestVitals;
+    final pulse = vitals?.pulseRate;
+    final bpValue = vitals == null ? '—' : vitals.bloodPressureDisplay;
+    final bpCaption =
+        (vitals?.bloodPressureStatus?.trim().isNotEmpty ?? false)
+            ? vitals!.bloodPressureStatus!.trim()
+            : (vitals?.hasBloodPressure ?? false)
+                ? 'Latest reading'
+                : 'No reading';
+    final diagnoses = dashboard.recentDiagnoses.length;
+
+    final items = [
+      ImshKpiItem(
+        label: 'Allergies',
+        value: allergies > 0 ? '$allergies' : '—',
+        caption: allergies > 0 ? 'On file' : 'None recorded',
+        icon: Icons.warning_amber_rounded,
+        accent: ImshAccentColors.amber,
+      ),
+      ImshKpiItem(
+        label: 'Blood pressure',
+        value: bpValue,
+        caption: bpCaption,
+        icon: Icons.bloodtype_outlined,
+        accent: ImshAccentColors.blue,
+      ),
+      ImshKpiItem(
+        label: 'Heart rate',
+        value: pulse == null ? '—' : '$pulse',
+        caption: pulse == null ? 'No reading' : 'bpm',
+        icon: Icons.monitor_heart_outlined,
+        accent: ImshAccentColors.pink,
+      ),
+      ImshKpiItem(
+        label: 'Diagnoses',
+        value: diagnoses > 0 ? '$diagnoses' : '—',
+        caption: diagnoses > 0 ? 'Recent' : 'None on file',
+        icon: Icons.medical_information_outlined,
+        accent: ImshAccentColors.indigo,
+      ),
+    ];
+
+    return ImshKpiStrip(items: items, useSnapStrip: useSnapStrip);
   }
 }
 
@@ -137,24 +280,27 @@ class _SearchField extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final colorScheme = context.colorScheme;
+    final theme = Theme.of(context);
+    final cs = theme.colorScheme;
 
-    return Container(
-      height: 48,
-      padding: const EdgeInsets.symmetric(horizontal: 12),
-      decoration: BoxDecoration(
-        color: colorScheme.surfaceContainerLowest,
-        border: Border.all(color: colorScheme.outlineVariant),
-        borderRadius: BorderRadius.circular(12),
-      ),
+    return ImshSurfaceCard(
+      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
       child: Row(
         children: [
-          Icon(Icons.search, color: colorScheme.onSurfaceVariant),
-          const Gap(8),
+          ImshSolidIcon(
+            icon: Icons.search,
+            color: ImshAccentColors.indigo,
+            size: 28,
+            iconSize: 14,
+            radius: 8,
+          ),
+          const SizedBox(width: 8),
           Expanded(
             child: Text(
               'Search diagnoses, immunizations, or labs',
-              style: TextStyle(color: colorScheme.onSurfaceVariant),
+              style: theme.textTheme.bodyMedium?.copyWith(
+                color: cs.onSurfaceVariant,
+              ),
             ),
           ),
         ],
@@ -170,45 +316,40 @@ class _CriticalAllergiesCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final colorScheme = context.colorScheme;
+    final theme = Theme.of(context);
+    final cs = theme.colorScheme;
+    final known = allergies.where((a) => a.name.trim().isNotEmpty).toList();
 
-    return Container(
-      padding: const EdgeInsets.all(12),
-      decoration: BoxDecoration(
-        color: colorScheme.errorContainer,
-        borderRadius: BorderRadius.circular(12),
-        border: Border(left: BorderSide(color: colorScheme.error, width: 4)),
-      ),
+    return ImshSurfaceCard(
+      padding: const EdgeInsets.all(10),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Row(
-            children: [
-              Icon(Icons.warning_amber_rounded, color: colorScheme.error),
-              const Gap(4),
-              Text(
-                'Critical Allergies',
-                style: TextStyle(
-                  fontWeight: FontWeight.w700,
-                  color: colorScheme.error,
-                ),
-              ),
-            ],
+          ImshSectionHeader(
+            title: 'Critical allergies',
+            icon: Icons.warning_amber_rounded,
+            iconColor: ImshAccentColors.amber,
           ),
-          const Gap(10),
-          if (allergies.isEmpty)
-            const _EmptySectionText('No known allergies.')
+          const SizedBox(height: 8),
+          if (known.isEmpty)
+            Text(
+              'No known allergies.',
+              style: theme.textTheme.bodySmall?.copyWith(
+                color: cs.onSurfaceVariant,
+              ),
+            )
           else
             Wrap(
-              spacing: 8,
-              runSpacing: 8,
-              children: allergies
-                  .where((item) => item.name.isNotEmpty)
+              spacing: 6,
+              runSpacing: 6,
+              children: known
                   .map(
-                    (item) => _Tag(
-                      text: item.severity?.trim().isNotEmpty == true
+                    (item) => ImshEllipsisChip(
+                      label: item.severity?.trim().isNotEmpty == true
                           ? '${item.name} (${_titleCaseStatus(item.severity!)})'
                           : item.name,
+                      tone: ImshSemanticTone.error,
+                      maxWidth: 220,
                     ),
                   )
                   .toList(),
@@ -219,8 +360,8 @@ class _CriticalAllergiesCard extends StatelessWidget {
   }
 }
 
-class _VitalsCard extends StatelessWidget {
-  const _VitalsCard({
+class _ProfileMetricsCard extends StatelessWidget {
+  const _ProfileMetricsCard({
     required this.bloodType,
     required this.heightCm,
     required this.weightKg,
@@ -232,115 +373,149 @@ class _VitalsCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final colorScheme = context.colorScheme;
-
     String metric(Object? value, String unit) {
-      if (value == null) return '-- $unit';
+      if (value == null) return '—';
       if (value is num) return '${value.toStringAsFixed(0)} $unit';
       if (value is String && value.trim().isNotEmpty) return '$value $unit';
-      return '-- $unit';
+      return '—';
     }
 
-    return Container(
-      padding: const EdgeInsets.all(14),
-      decoration: BoxDecoration(
-        color: colorScheme.surfaceContainerLowest,
-        borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: colorScheme.outlineVariant),
-      ),
+    return ImshSurfaceCard(
+      padding: const EdgeInsets.all(10),
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          Row(
-            children: [
-              Expanded(
-                child: _Metric(
-                  label: 'Blood Type',
-                  value: bloodType?.trim().isNotEmpty == true
-                      ? bloodType!
-                      : '--',
-                ),
-              ),
-              _divider(colorScheme.outlineVariant),
-              Expanded(
-                child: _Metric(label: 'Height', value: metric(heightCm, 'cm')),
-              ),
-              _divider(colorScheme.outlineVariant),
-              Expanded(
-                child: _Metric(label: 'Weight', value: metric(weightKg, 'kg')),
-              ),
-            ],
+          const ImshSectionHeader(
+            title: 'Profile metrics',
+            icon: Icons.monitor_weight_outlined,
+            iconColor: ImshAccentColors.purple,
           ),
-          Text(
-            'Source: /patient/medical-records/dashboard',
-            style: TextStyle(fontSize: 11, color: colorScheme.onSurfaceVariant),
+          const SizedBox(height: 8),
+          _MetricRow(
+            icon: Icons.bloodtype_outlined,
+            accent: ImshAccentColors.pink,
+            label: 'Blood type',
+            value: bloodType?.trim().isNotEmpty == true ? bloodType! : '—',
+          ),
+          const SizedBox(height: 6),
+          _MetricRow(
+            icon: Icons.height,
+            accent: ImshAccentColors.teal,
+            label: 'Height',
+            value: metric(heightCm, 'cm'),
+          ),
+          const SizedBox(height: 6),
+          _MetricRow(
+            icon: Icons.scale_outlined,
+            accent: ImshAccentColors.green,
+            label: 'Weight',
+            value: metric(weightKg, 'kg'),
           ),
         ],
       ),
     );
   }
-
-  Widget _divider(Color color) {
-    return Container(
-      width: 1,
-      height: 48,
-      margin: const EdgeInsets.symmetric(horizontal: 10),
-      color: color,
-    );
-  }
 }
 
-class _SectionHeader extends StatelessWidget {
-  const _SectionHeader({
-    required this.title,
-    required this.source,
-    this.actionLabel,
-    this.onAction,
+class _MetricRow extends StatelessWidget {
+  const _MetricRow({
+    required this.icon,
+    required this.accent,
+    required this.label,
+    required this.value,
   });
 
-  final String title;
-  final String source;
-  final String? actionLabel;
-  final VoidCallback? onAction;
+  final IconData icon;
+  final Color accent;
+  final String label;
+  final String value;
 
   @override
   Widget build(BuildContext context) {
-    final colorScheme = context.colorScheme;
+    final theme = Theme.of(context);
+    final cs = theme.colorScheme;
 
     return Row(
       children: [
+        ImshSolidIcon(
+          icon: icon,
+          color: accent,
+          size: 28,
+          iconSize: 14,
+          radius: 8,
+        ),
+        const SizedBox(width: 8),
         Expanded(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(
-                title,
-                style: const TextStyle(
-                  fontSize: 28,
-                  fontWeight: FontWeight.w700,
+              ImshEllipsisText(
+                text: label,
+                style: theme.textTheme.labelSmall?.copyWith(
+                  color: cs.onSurfaceVariant,
+                  fontWeight: FontWeight.w600,
                 ),
               ),
-              Text(
-                source,
-                style: TextStyle(
-                  fontSize: 11,
-                  color: colorScheme.onSurfaceVariant,
+              ImshEllipsisText(
+                text: value,
+                style: theme.textTheme.titleSmall?.copyWith(
+                  fontWeight: FontWeight.w800,
                 ),
               ),
             ],
           ),
         ),
-        if (actionLabel != null)
-          TextButton(
-            onPressed: onAction,
-            child: Text(
-              actionLabel!,
-              style: TextStyle(
-                color: colorScheme.primary,
-                fontWeight: FontWeight.w600,
-              ),
+      ],
+    );
+  }
+}
+
+class _DiagnosesSection extends StatelessWidget {
+  const _DiagnosesSection({
+    required this.diagnoses,
+    required this.onOpenAll,
+    required this.onDownloadPdf,
+  });
+
+  final List<DashboardDiagnosis> diagnoses;
+  final VoidCallback onOpenAll;
+  final VoidCallback onDownloadPdf;
+
+  @override
+  Widget build(BuildContext context) {
+    final preview = diagnoses.take(2).toList();
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        ImshSectionHeader(
+          title: 'Past diagnoses',
+          icon: Icons.health_and_safety_outlined,
+          iconColor: ImshAccentColors.blue,
+          trailing: TextButton(
+            onPressed: onDownloadPdf,
+            child: const Text('PDF'),
+          ),
+        ),
+        const SizedBox(height: 8),
+        if (preview.isEmpty)
+          const ImshSurfaceCard(
+            padding: EdgeInsets.all(10),
+            child: _CompactEmpty('No diagnoses on file.'),
+          )
+        else ...[
+          for (var i = 0; i < preview.length; i++) ...[
+            if (i > 0) const SizedBox(height: 6),
+            _DiagnosisItem(diagnosis: preview[i], onTap: onOpenAll),
+          ],
+          Align(
+            alignment: Alignment.centerLeft,
+            child: TextButton(
+              onPressed: onOpenAll,
+              child: const Text('View all diagnoses'),
             ),
           ),
+        ],
       ],
     );
   }
@@ -354,154 +529,193 @@ class _DiagnosisItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final colorScheme = context.colorScheme;
+    final theme = Theme.of(context);
+    final cs = theme.colorScheme;
 
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 12),
-      child: Material(
-        color: colorScheme.surfaceContainerLowest,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(14),
-          side: BorderSide(color: colorScheme.outlineVariant),
-        ),
-        child: InkWell(
-          onTap: onTap,
-          borderRadius: BorderRadius.circular(14),
-          child: Padding(
-            padding: const EdgeInsets.all(12),
-            child: Row(
+    return ImshSurfaceCard(
+      padding: const EdgeInsets.all(10),
+      onTap: onTap,
+      child: Row(
+        children: [
+          const ImshSolidIcon(
+            icon: Icons.health_and_safety_outlined,
+            color: ImshAccentColors.indigo,
+            size: 32,
+            iconSize: 16,
+            radius: 8,
+          ),
+          const SizedBox(width: 10),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Container(
-                  width: 40,
-                  height: 40,
-                  decoration: BoxDecoration(
-                    color: colorScheme.primary.withValues(alpha: 0.15),
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                  child: Icon(
-                    Icons.health_and_safety,
-                    color: colorScheme.primary,
+                ImshEllipsisText(
+                  text: diagnosis.title.isNotEmpty
+                      ? diagnosis.title
+                      : 'Diagnosis',
+                  style: theme.textTheme.titleSmall?.copyWith(
+                    fontWeight: FontWeight.w700,
                   ),
                 ),
-                const Gap(10),
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        diagnosis.title.isNotEmpty
-                            ? diagnosis.title
-                            : 'Diagnosis',
-                        style: const TextStyle(
-                          fontWeight: FontWeight.w700,
-                          fontSize: 17,
-                        ),
+                const SizedBox(height: 2),
+                ImshEllipsisText(
+                  text: diagnosis.doctorName.isNotEmpty
+                      ? 'Dr. ${diagnosis.doctorName}'
+                      : 'Diagnosing doctor unavailable',
+                  style: theme.textTheme.bodySmall?.copyWith(
+                    color: cs.onSurfaceVariant,
+                  ),
+                ),
+                if (diagnosis.specialty?.trim().isNotEmpty == true) ...[
+                  const SizedBox(height: 2),
+                  ImshEllipsisText(
+                    text: diagnosis.specialty!,
+                    style: theme.textTheme.bodySmall?.copyWith(
+                      color: cs.onSurfaceVariant,
+                      fontSize: 12,
+                    ),
+                  ),
+                ],
+                const SizedBox(height: 6),
+                Row(
+                  children: [
+                    if (diagnosis.icdCode?.trim().isNotEmpty == true) ...[
+                      ImshEllipsisChip(
+                        label: diagnosis.icdCode!,
+                        tone: ImshSemanticTone.neutral,
+                        maxWidth: 100,
                       ),
-                      Text(
-                        diagnosis.doctorName.isNotEmpty
-                            ? 'Diagnosed by Dr. ${diagnosis.doctorName}'
-                            : 'Diagnosing doctor unavailable',
-                        style: TextStyle(
-                          color: colorScheme.onSurfaceVariant,
-                          fontSize: 13,
-                        ),
-                      ),
-                      if (diagnosis.specialty?.trim().isNotEmpty == true)
-                        Text(
-                          diagnosis.specialty!,
-                          style: TextStyle(
-                            color: colorScheme.onSurfaceVariant,
-                            fontSize: 12,
-                          ),
-                        ),
-                      const Gap(6),
-                      Row(
-                        children: [
-                          if (diagnosis.icdCode?.trim().isNotEmpty == true) ...[
-                            _StatusPill(text: diagnosis.icdCode!),
-                            const Gap(8),
-                          ],
-                          Text(
-                            diagnosis.diagnosedAt == null
-                                ? '--'
-                                : _monthYear(diagnosis.diagnosedAt!),
-                            style: TextStyle(
-                              color: colorScheme.onSurfaceVariant,
-                              fontSize: 12,
-                            ),
-                          ),
-                        ],
-                      ),
+                      const SizedBox(width: 8),
                     ],
-                  ),
+                    Flexible(
+                      child: ImshEllipsisText(
+                        text: diagnosis.diagnosedAt == null
+                            ? '—'
+                            : _monthYear(diagnosis.diagnosedAt!),
+                        style: theme.textTheme.bodySmall?.copyWith(
+                          color: cs.onSurfaceVariant,
+                          fontSize: 12,
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
-                Icon(Icons.chevron_right, color: colorScheme.onSurfaceVariant),
               ],
             ),
           ),
-        ),
+          Icon(Icons.chevron_right, color: cs.onSurfaceVariant),
+        ],
       ),
     );
   }
 }
 
-class _ImmunizationGrid extends StatelessWidget {
-  const _ImmunizationGrid({required this.immunizations});
+class _ImmunizationsSection extends StatelessWidget {
+  const _ImmunizationsSection({required this.immunizations});
 
   final List<DashboardImmunization> immunizations;
 
   @override
   Widget build(BuildContext context) {
-    if (immunizations.isEmpty) {
-      return const _EmptySectionText('No immunizations on file.');
-    }
-
-    final preview = immunizations.take(2).toList();
-    return Row(
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        for (var i = 0; i < preview.length; i++) ...[
-          Expanded(child: _ImmunizationCard(item: preview[i])),
-          if (i < preview.length - 1) const Gap(10),
-        ],
+        const ImshSectionHeader(
+          title: 'Immunization record',
+          icon: Icons.vaccines_outlined,
+          iconColor: ImshAccentColors.teal,
+        ),
+        const SizedBox(height: 8),
+        if (immunizations.isEmpty)
+          const ImshSurfaceCard(
+            padding: EdgeInsets.all(10),
+            child: _CompactEmpty('No immunizations on file.'),
+          )
+        else
+          LayoutBuilder(
+            builder: (context, constraints) {
+              final sideBySide = constraints.maxWidth >= 520;
+              final preview = immunizations.take(2).toList();
+              if (!sideBySide) {
+                return Column(
+                  children: [
+                    for (var i = 0; i < preview.length; i++) ...[
+                      if (i > 0) const SizedBox(height: 6),
+                      _ImmunizationTile(item: preview[i]),
+                    ],
+                  ],
+                );
+              }
+              return Row(
+                children: [
+                  for (var i = 0; i < preview.length; i++) ...[
+                    if (i > 0) const SizedBox(width: 8),
+                    Expanded(child: _ImmunizationTile(item: preview[i])),
+                  ],
+                ],
+              );
+            },
+          ),
       ],
     );
   }
 }
 
-class _LabResultsCard extends StatelessWidget {
-  const _LabResultsCard({required this.labs});
+class _ImmunizationTile extends StatelessWidget {
+  const _ImmunizationTile({required this.item});
 
-  final List<DashboardLabResult> labs;
+  final DashboardImmunization item;
 
   @override
   Widget build(BuildContext context) {
-    final colorScheme = context.colorScheme;
-    final rows = labs.take(3).map(_LabRow.fromSummary).toList();
+    final theme = Theme.of(context);
+    final cs = theme.colorScheme;
 
-    return Container(
-      decoration: BoxDecoration(
-        color: colorScheme.surfaceContainerLowest,
-        borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: colorScheme.outlineVariant),
-      ),
-      child: Column(
+    return ImshSurfaceCard(
+      padding: const EdgeInsets.all(10),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const _LabHeader(),
-          for (final row in rows) _LabDataRow(row: row),
-          if (rows.isEmpty)
-            const Padding(
-              padding: EdgeInsets.all(10),
-              child: _EmptySectionText('No lab results returned by backend.'),
-            ),
-          Divider(height: 1, color: colorScheme.outlineVariant),
-          Padding(
-            padding: const EdgeInsets.symmetric(vertical: 12),
-            child: Text(
-              'View All Lab History',
-              style: TextStyle(
-                color: colorScheme.primary,
-                fontWeight: FontWeight.w600,
-              ),
+          const ImshSolidIcon(
+            icon: Icons.vaccines_outlined,
+            color: ImshAccentColors.teal,
+            size: 30,
+            iconSize: 16,
+            radius: 8,
+          ),
+          const SizedBox(width: 8),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                ImshEllipsisText(
+                  text: item.vaccineName.isNotEmpty
+                      ? item.vaccineName
+                      : 'Immunization',
+                  style: theme.textTheme.titleSmall?.copyWith(
+                    fontWeight: FontWeight.w700,
+                  ),
+                ),
+                if (item.detail?.trim().isNotEmpty == true) ...[
+                  const SizedBox(height: 2),
+                  ImshEllipsisText(
+                    text: item.detail!,
+                    style: theme.textTheme.bodySmall?.copyWith(
+                      color: cs.onSurfaceVariant,
+                    ),
+                  ),
+                ],
+                const SizedBox(height: 4),
+                ImshEllipsisText(
+                  text: item.date == null
+                      ? '—'
+                      : DateFormatter.medicalDate(item.date!),
+                  style: theme.textTheme.bodySmall?.copyWith(
+                    color: cs.onSurfaceVariant,
+                    fontSize: 12,
+                  ),
+                ),
+              ],
             ),
           ),
         ],
@@ -510,276 +724,182 @@ class _LabResultsCard extends StatelessWidget {
   }
 }
 
-class _ErrorState extends StatelessWidget {
-  const _ErrorState({required this.message, required this.onRetry});
+class _LabResultsSection extends StatelessWidget {
+  const _LabResultsSection({
+    required this.labs,
+    required this.onViewAll,
+  });
+
+  final List<DashboardLabResult> labs;
+  final VoidCallback onViewAll;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final rows = labs.take(3).toList();
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        ImshSectionHeader(
+          title: 'Recent lab results',
+          icon: Icons.science_outlined,
+          iconColor: ImshAccentColors.purple,
+          trailing: TextButton(
+            onPressed: onViewAll,
+            child: const Text('View all'),
+          ),
+        ),
+        const SizedBox(height: 8),
+        ImshSurfaceCard(
+          padding: const EdgeInsets.all(10),
+          child: rows.isEmpty
+              ? const _CompactEmpty('No lab results returned by backend.')
+              : Column(
+                  children: [
+                    for (var i = 0; i < rows.length; i++) ...[
+                      if (i > 0) const SizedBox(height: 6),
+                      _LabRowTile(row: rows[i]),
+                    ],
+                    const SizedBox(height: 4),
+                    Align(
+                      alignment: Alignment.center,
+                      child: TextButton(
+                        onPressed: onViewAll,
+                        child: Text(
+                          'View all lab history',
+                          style: theme.textTheme.labelLarge?.copyWith(
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+        ),
+      ],
+    );
+  }
+}
+
+class _LabRowTile extends StatelessWidget {
+  const _LabRowTile({required this.row});
+
+  final DashboardLabResult row;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final cs = theme.colorScheme;
+    final status = row.status?.trim().isNotEmpty == true
+        ? _titleCaseStatus(row.status!)
+        : 'Normal';
+    final statusKey = status.toLowerCase();
+    final tone = statusKey == 'high' || statusKey == 'critical'
+        ? ImshSemanticTone.error
+        : statusKey == 'low' || statusKey == 'pending'
+            ? ImshSemanticTone.warning
+            : ImshSemanticTone.success;
+
+    return Row(
+      children: [
+        const ImshSolidIcon(
+          icon: Icons.biotech_outlined,
+          color: ImshAccentColors.blue,
+          size: 28,
+          iconSize: 14,
+          radius: 8,
+        ),
+        const SizedBox(width: 8),
+        Expanded(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              ImshEllipsisText(
+                text: row.testName.isNotEmpty ? row.testName : '—',
+                style: theme.textTheme.bodyMedium?.copyWith(
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+              const SizedBox(height: 2),
+              ImshEllipsisText(
+                text: [
+                  row.result?.trim().isNotEmpty == true ? row.result! : '—',
+                  if (row.referenceRange?.trim().isNotEmpty == true)
+                    'Range ${row.referenceRange}',
+                ].join(' · '),
+                style: theme.textTheme.bodySmall?.copyWith(
+                  color: cs.onSurfaceVariant,
+                ),
+              ),
+            ],
+          ),
+        ),
+        const SizedBox(width: 8),
+        ImshEllipsisChip(label: status, tone: tone, maxWidth: 90),
+      ],
+    );
+  }
+}
+
+class _CompactEmpty extends StatelessWidget {
+  const _CompactEmpty(this.message);
+
+  final String message;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final cs = theme.colorScheme;
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 8),
+      child: Text(
+        message,
+        style: theme.textTheme.bodySmall?.copyWith(
+          color: cs.onSurfaceVariant,
+        ),
+      ),
+    );
+  }
+}
+
+class _RecordsLoading extends StatelessWidget {
+  const _RecordsLoading();
+
+  @override
+  Widget build(BuildContext context) {
+    return const CustomScrollView(
+      physics: AlwaysScrollableScrollPhysics(),
+      slivers: [
+        ImshSliverAppBar(),
+        SliverToBoxAdapter(child: FamilySubjectBanner()),
+        SliverFillRemaining(
+          hasScrollBody: false,
+          child: Center(child: CircularProgressIndicator()),
+        ),
+      ],
+    );
+  }
+}
+
+class _RecordsError extends StatelessWidget {
+  const _RecordsError({required this.message, required this.onRetry});
 
   final String message;
   final VoidCallback onRetry;
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-
-    return Padding(
-      padding: const EdgeInsets.all(AppDesignTokens.spacing2xl),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Icon(Icons.error_outline, size: 48, color: theme.colorScheme.error),
-          const Gap(AppDesignTokens.spacingMd),
-          Text(
-            message,
-            style: theme.textTheme.bodyMedium,
-            textAlign: TextAlign.center,
-          ),
-          const Gap(AppDesignTokens.spacingMd),
-          FilledButton(onPressed: onRetry, child: const Text('Try again')),
-        ],
-      ),
-    );
-  }
-}
-
-class _Metric extends StatelessWidget {
-  const _Metric({required this.label, required this.value});
-
-  final String label;
-  final String value;
-
-  @override
-  Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    final colorScheme = context.colorScheme;
-
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          label,
-          style: theme.textTheme.bodySmall?.copyWith(
-            color: colorScheme.onSurfaceVariant,
-          ),
-        ),
-        const Gap(2),
-        Text(
-          value,
-          style: theme.textTheme.headlineSmall?.copyWith(
-            fontWeight: FontWeight.w700,
-            color: colorScheme.primary,
-          ),
+    return CustomScrollView(
+      physics: const AlwaysScrollableScrollPhysics(),
+      slivers: [
+        const ImshSliverAppBar(),
+        const SliverToBoxAdapter(child: FamilySubjectBanner()),
+        SliverFillRemaining(
+          hasScrollBody: false,
+          child: ImshErrorPanel(message: message, onRetry: onRetry),
         ),
       ],
-    );
-  }
-}
-
-class _Tag extends StatelessWidget {
-  const _Tag({required this.text});
-
-  final String text;
-
-  @override
-  Widget build(BuildContext context) {
-    final colorScheme = context.colorScheme;
-
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
-      decoration: BoxDecoration(
-        color: colorScheme.errorContainer,
-        borderRadius: BorderRadius.circular(99),
-      ),
-      child: Text(
-        text,
-        style: TextStyle(
-          color: colorScheme.error,
-          fontWeight: FontWeight.w700,
-          fontSize: 12,
-        ),
-      ),
-    );
-  }
-}
-
-class _StatusPill extends StatelessWidget {
-  const _StatusPill({required this.text});
-
-  final String text;
-
-  @override
-  Widget build(BuildContext context) {
-    final colorScheme = context.colorScheme;
-
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-      decoration: BoxDecoration(
-        color: colorScheme.surfaceContainerLow,
-        borderRadius: BorderRadius.circular(99),
-      ),
-      child: Text(
-        text,
-        style: TextStyle(fontSize: 11, color: colorScheme.onSurfaceVariant),
-      ),
-    );
-  }
-}
-
-class _ImmunizationCard extends StatelessWidget {
-  const _ImmunizationCard({required this.item});
-
-  final DashboardImmunization item;
-
-  @override
-  Widget build(BuildContext context) {
-    final colorScheme = context.colorScheme;
-
-    return Container(
-      padding: const EdgeInsets.all(12),
-      decoration: BoxDecoration(
-        color: colorScheme.surfaceContainerLowest,
-        borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: colorScheme.outlineVariant),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Icon(Icons.vaccines_outlined, color: colorScheme.primary),
-          const Gap(6),
-          Text(
-            item.vaccineName.isNotEmpty ? item.vaccineName : 'Immunization',
-            style: const TextStyle(fontWeight: FontWeight.w600),
-          ),
-          if (item.detail?.trim().isNotEmpty == true) ...[
-            const Gap(2),
-            Text(
-              item.detail!,
-              style: TextStyle(
-                fontSize: 12,
-                color: colorScheme.onSurfaceVariant,
-              ),
-            ),
-          ],
-          const Gap(8),
-          Text(
-            item.date == null ? '--' : DateFormatter.medicalDate(item.date!),
-            style: TextStyle(fontSize: 12, color: colorScheme.onSurfaceVariant),
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-class _LabHeader extends StatelessWidget {
-  const _LabHeader();
-
-  @override
-  Widget build(BuildContext context) {
-    const style = TextStyle(fontWeight: FontWeight.w600, fontSize: 12);
-    return const Padding(
-      padding: EdgeInsets.all(10),
-      child: Row(
-        children: [
-          Expanded(child: Text('Test Name', style: style)),
-          Expanded(child: Text('Result', style: style)),
-          Expanded(child: Text('Range', style: style)),
-          Expanded(child: Text('Status', style: style)),
-        ],
-      ),
-    );
-  }
-}
-
-class _LabDataRow extends StatelessWidget {
-  const _LabDataRow({required this.row});
-
-  final _LabRow row;
-
-  @override
-  Widget build(BuildContext context) {
-    final colorScheme = context.colorScheme;
-    final imsh = context.imshTheme;
-
-    var statusColor = imsh.onSuccessContainer;
-    final statusKey = row.status.toLowerCase();
-    if (statusKey == 'high' || statusKey == 'critical') {
-      statusColor = colorScheme.error;
-    } else if (statusKey == 'low' || statusKey == 'pending') {
-      statusColor = imsh.onWarningContainer;
-    }
-
-    return Container(
-      padding: const EdgeInsets.all(10),
-      decoration: BoxDecoration(
-        border: Border(top: BorderSide(color: colorScheme.outlineVariant)),
-      ),
-      child: Row(
-        children: [
-          Expanded(
-            child: Text(row.testName, style: const TextStyle(fontSize: 12)),
-          ),
-          Expanded(
-            child: Text(row.result, style: const TextStyle(fontSize: 12)),
-          ),
-          Expanded(
-            child: Text(row.range, style: const TextStyle(fontSize: 12)),
-          ),
-          Expanded(
-            child: Text(
-              row.status,
-              style: TextStyle(
-                fontSize: 12,
-                fontWeight: FontWeight.w700,
-                color: statusColor,
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-class _LabRow {
-  const _LabRow({
-    required this.testName,
-    required this.result,
-    required this.range,
-    required this.status,
-  });
-
-  final String testName;
-  final String result;
-  final String range;
-  final String status;
-
-  factory _LabRow.fromSummary(DashboardLabResult summary) {
-    return _LabRow(
-      testName: summary.testName.isNotEmpty ? summary.testName : '--',
-      result: summary.result?.trim().isNotEmpty == true
-          ? summary.result!
-          : '--',
-      range: summary.referenceRange?.trim().isNotEmpty == true
-          ? summary.referenceRange!
-          : '--',
-      status: _titleCaseStatus(
-        summary.status?.trim().isNotEmpty == true ? summary.status! : 'NORMAL',
-      ),
-    );
-  }
-}
-
-class _EmptySectionText extends StatelessWidget {
-  const _EmptySectionText(this.text);
-
-  final String text;
-
-  @override
-  Widget build(BuildContext context) {
-    final colorScheme = context.colorScheme;
-
-    return Text(
-      text,
-      style: TextStyle(color: colorScheme.onSurfaceVariant, fontSize: 12),
     );
   }
 }
@@ -841,44 +961,57 @@ Future<void> _openDiagnosesModal(BuildContext context, WidgetRef ref) async {
       isScrollControlled: true,
       showDragHandle: true,
       builder: (sheetContext) {
+        final maxW = AppBreakpoints.of(sheetContext).dialogWidth(sheetContext);
         return SafeArea(
-          child: Padding(
-            padding: const EdgeInsets.fromLTRB(16, 8, 16, 24),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                Text(
-                  'Past diagnoses',
-                  style: Theme.of(
-                    sheetContext,
-                  ).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.w700),
-                ),
-                const Gap(12),
-                if (diagnoses.isEmpty)
-                  const _EmptySectionText('No diagnoses on file.')
-                else
-                  ConstrainedBox(
-                    constraints: BoxConstraints(
-                      maxHeight: MediaQuery.sizeOf(sheetContext).height * 0.55,
+          child: Align(
+            alignment: Alignment.bottomCenter,
+            child: ConstrainedBox(
+              constraints: BoxConstraints(maxWidth: maxW),
+              child: Padding(
+                padding: const EdgeInsets.fromLTRB(16, 8, 16, 24),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    const ImshSectionHeader(
+                      title: 'Past diagnoses',
+                      icon: Icons.health_and_safety_outlined,
+                      iconColor: ImshAccentColors.blue,
                     ),
-                    child: ListView.builder(
-                      shrinkWrap: true,
-                      itemCount: diagnoses.length,
-                      itemBuilder: (context, index) =>
-                          _DiagnosisItem(diagnosis: diagnoses[index]),
+                    const SizedBox(height: 12),
+                    if (diagnoses.isEmpty)
+                      const _CompactEmpty('No diagnoses on file.')
+                    else
+                      ConstrainedBox(
+                        constraints: BoxConstraints(
+                          maxHeight:
+                              MediaQuery.sizeOf(sheetContext).height * 0.55,
+                        ),
+                        child: ListView.separated(
+                          shrinkWrap: true,
+                          itemCount: diagnoses.length,
+                          separatorBuilder: (_, _) =>
+                              const SizedBox(height: 6),
+                          itemBuilder: (context, index) =>
+                              _DiagnosisItem(diagnosis: diagnoses[index]),
+                        ),
+                      ),
+                    const SizedBox(height: 8),
+                    FilledButton.icon(
+                      onPressed: () {
+                        Navigator.of(sheetContext).pop();
+                        _downloadDiagnosesPdf(
+                          context,
+                          ref,
+                          diagnoses: diagnoses,
+                        );
+                      },
+                      icon: const Icon(Icons.picture_as_pdf_outlined),
+                      label: const Text('Download PDF'),
                     ),
-                  ),
-                const Gap(8),
-                FilledButton.icon(
-                  onPressed: () {
-                    Navigator.of(sheetContext).pop();
-                    _downloadDiagnosesPdf(context, ref, diagnoses: diagnoses);
-                  },
-                  icon: const Icon(Icons.picture_as_pdf_outlined),
-                  label: const Text('Download PDF'),
+                  ],
                 ),
-              ],
+              ),
             ),
           ),
         );

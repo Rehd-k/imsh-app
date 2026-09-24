@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:gap/gap.dart';
 
-import '../../../core/theme/app_design_tokens.dart';
-import '../../../core/theme/context_extensions.dart';
+import '../../../core/theme/imsh_accent_colors.dart';
 import '../../../helper/date_formatter.dart';
 import '../../../models/medical_record_model.dart';
+import '../../../shared/widgets/imsh_solid_icon.dart';
+import '../../../shared/widgets/imsh_surface_card.dart';
 import 'encounter_status_badge.dart';
 
 class EncounterCard extends StatelessWidget {
@@ -20,90 +20,80 @@ class EncounterCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final colorScheme = context.colorScheme;
+    final cs = theme.colorScheme;
 
     return Padding(
-      padding: const EdgeInsets.only(bottom: AppDesignTokens.spacingMd),
-      child: Material(
-        color: colorScheme.surfaceContainerLowest,
-        elevation: 0,
-        shadowColor: Colors.black.withValues(alpha: 0.05),
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(AppDesignTokens.radiusLg),
-          side: BorderSide(color: colorScheme.outlineVariant),
-        ),
-        child: InkWell(
-          onTap: onTap,
-          borderRadius: BorderRadius.circular(AppDesignTokens.radiusLg),
-          child: Container(
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(AppDesignTokens.radiusLg),
-              boxShadow: context.cardShadow,
-            ),
-            padding: const EdgeInsets.all(AppDesignTokens.spacingMd),
-            child: Column(
+      padding: const EdgeInsets.only(bottom: 10),
+      child: ImshSurfaceCard(
+        padding: const EdgeInsets.all(10),
+        onTap: onTap,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            encounter.encounterType.label,
-                            style: theme.textTheme.titleMedium?.copyWith(
-                              fontWeight: FontWeight.w600,
-                              color: colorScheme.onSurface,
-                            ),
-                          ),
-                          const Gap(AppDesignTokens.spacingXs),
-                          Text(
-                            DateFormatter.medicalDate(encounter.startTime),
-                            style: theme.textTheme.bodySmall?.copyWith(
-                              color: colorScheme.onSurfaceVariant,
-                            ),
-                          ),
-                        ],
+                const ImshSolidIcon(
+                  icon: Icons.folder_shared_outlined,
+                  color: ImshAccentColors.blue,
+                  size: 32,
+                  iconSize: 16,
+                  radius: 8,
+                ),
+                const SizedBox(width: 10),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      ImshEllipsisText(
+                        text: encounter.encounterType.label,
+                        style: theme.textTheme.titleSmall?.copyWith(
+                          fontWeight: FontWeight.w700,
+                          color: cs.onSurface,
+                        ),
                       ),
-                    ),
-                    EncounterStatusBadge(status: encounter.status),
-                  ],
-                ),
-                const Gap(AppDesignTokens.spacingSm),
-                Text(
-                  encounter.doctorName,
-                  style: theme.textTheme.bodyMedium?.copyWith(
-                    fontWeight: FontWeight.w500,
+                      const SizedBox(height: 2),
+                      ImshEllipsisText(
+                        text: DateFormatter.medicalDate(encounter.startTime),
+                        style: theme.textTheme.bodySmall?.copyWith(
+                          color: cs.onSurfaceVariant,
+                        ),
+                      ),
+                    ],
                   ),
                 ),
-                if (encounter.chiefComplaint?.isNotEmpty == true) ...[
-                  const Gap(AppDesignTokens.spacingXs),
-                  Text(
-                    encounter.chiefComplaint!,
-                    style: theme.textTheme.bodyMedium?.copyWith(
-                      color: colorScheme.onSurfaceVariant,
-                    ),
-                    maxLines: 2,
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                ],
-                if (encounter.primaryDiagnosis?.isNotEmpty == true) ...[
-                  const Gap(AppDesignTokens.spacingSm),
-                  Text(
-                    encounter.primaryDiagnosis!,
-                    style: theme.textTheme.bodySmall?.copyWith(
-                      color: colorScheme.primaryContainer,
-                      fontWeight: FontWeight.w500,
-                    ),
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                ],
+                EncounterStatusBadge(status: encounter.status),
               ],
             ),
-          ),
+            const SizedBox(height: 8),
+            ImshEllipsisText(
+              text: encounter.doctorName,
+              style: theme.textTheme.bodyMedium?.copyWith(
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+            if (encounter.chiefComplaint?.isNotEmpty == true) ...[
+              const SizedBox(height: 4),
+              Text(
+                encounter.chiefComplaint!,
+                style: theme.textTheme.bodyMedium?.copyWith(
+                  color: cs.onSurfaceVariant,
+                ),
+                maxLines: 2,
+                overflow: TextOverflow.ellipsis,
+              ),
+            ],
+            if (encounter.primaryDiagnosis?.isNotEmpty == true) ...[
+              const SizedBox(height: 6),
+              ImshEllipsisText(
+                text: encounter.primaryDiagnosis!,
+                style: theme.textTheme.bodySmall?.copyWith(
+                  color: ImshAccentColors.indigo,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+            ],
+          ],
         ),
       ),
     );

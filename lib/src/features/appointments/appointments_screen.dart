@@ -1,15 +1,19 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:gap/gap.dart';
 import 'package:imsh/app_router.gr.dart';
 
-import '../../core/theme/app_design_tokens.dart';
-import '../../core/theme/context_extensions.dart';
+import '../../core/responsive.dart';
+import '../../core/theme/imsh_accent_colors.dart';
 import '../../helper/date_formatter.dart';
 import '../../models/appointment_model.dart';
 import '../../providers/appointments_provider.dart';
 import '../../shared/widgets/imsh_app_bar.dart';
+import '../../shared/widgets/imsh_ellipsis_chip.dart';
+import '../../shared/widgets/imsh_error_panel.dart';
+import '../../shared/widgets/imsh_page_header.dart';
+import '../../shared/widgets/imsh_solid_icon.dart';
+import '../../shared/widgets/imsh_surface_card.dart';
 import 'widgets/appointment_status_badge.dart';
 import 'widgets/appointments_body.dart';
 import 'widgets/next_appointment_card.dart';
@@ -25,8 +29,7 @@ class AppointmentsScreen extends ConsumerWidget {
         title: const Text('Ibom Specialist'),
         actions: [
           IconButton(
-            onPressed: () =>
-                context.router.push(const NotificationsRoute()),
+            onPressed: () => context.router.push(const NotificationsRoute()),
             icon: const Icon(Icons.notifications_outlined),
           ),
         ],
@@ -60,215 +63,215 @@ class AppointmentDetailScreen extends ConsumerWidget {
       appBar: ImshAppBar(title: const Text('Appointment')),
       body: detailAsync.when(
         loading: () => const Center(child: CircularProgressIndicator()),
-        error: (error, _) => _DetailError(
+        error: (error, _) => ImshErrorPanel(
           message: appointmentErrorMessage(error),
           onRetry: () => ref.invalidate(appointmentDetailProvider(id)),
         ),
         data: (detail) {
-          final colorScheme = context.colorScheme;
+          final theme = Theme.of(context);
+          final cs = theme.colorScheme;
+          final timeValue = detail.status == AppointmentStatus.requested
+              ? 'To be confirmed'
+              : DateFormatter.appointmentCardTime(detail.scheduledAt);
 
-          return SingleChildScrollView(
-          padding: const EdgeInsets.all(AppDesignTokens.containerPadding),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              Row(
-                children: [
-                  Expanded(
-                    child: Text(
-                      detail.doctorDisplayName,
-                      style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                            fontWeight: FontWeight.w700,
-                          ),
-                    ),
-                  ),
-                  AppointmentStatusBadge(status: detail.status),
-                ],
-              ),
-              const Gap(AppDesignTokens.spacingXs),
-              Text(
-                detail.specialtyLabel,
-                style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                      color: colorScheme.primary,
-                      fontWeight: FontWeight.w500,
-                    ),
-              ),
-              const Gap(AppDesignTokens.spacingXs),
-              Text(
-                detail.visitType.label,
-                style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                      color: colorScheme.onSurfaceVariant,
-                    ),
-              ),
-              const Gap(AppDesignTokens.spacingLg),
-              Row(
-                children: [
-                  DoctorAvatar(
-                    name: detail.doctorDisplayName,
-                    avatarUrl: detail.doctor.avatarUrl,
-                    size: 72,
-                  ),
-                  const Gap(AppDesignTokens.spacingMd),
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        _DetailRow(
-                          icon: Icons.calendar_today_outlined,
-                          label: 'Date',
-                          value: DateFormatter.appointmentCardDate(
-                            detail.scheduledAt,
-                          ),
-                        ),
-                        const Gap(AppDesignTokens.spacingSm),
-                        _DetailRow(
-                          icon: detail.status == AppointmentStatus.requested
-                              ? Icons.hourglass_top_outlined
-                              : Icons.schedule_outlined,
-                          label: detail.status == AppointmentStatus.requested
-                              ? 'Time'
-                              : 'Time',
-                          value: detail.status == AppointmentStatus.requested
-                              ? 'To be confirmed'
-                              : DateFormatter.appointmentCardTime(
-                                  detail.scheduledAt,
-                                ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
-              ),
-              const Gap(AppDesignTokens.spacingLg),
-              Container(
-                width: double.infinity,
-                padding: const EdgeInsets.all(AppDesignTokens.spacingMd),
-                decoration: BoxDecoration(
-                  color: colorScheme.surfaceContainerLow,
-                  borderRadius:
-                      BorderRadius.circular(AppDesignTokens.radiusMd),
-                ),
-                child: Row(
+          return ResponsiveBody(
+            expand: false,
+            builder: (context, bp) {
+              return SingleChildScrollView(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
-                    Icon(
-                      Icons.location_on_outlined,
-                      color: colorScheme.onSurfaceVariant,
+                    ImshPageHeader(
+                      title: detail.specialtyLabel,
+                      subtitle: detail.visitType.label,
+                      icon: Icons.event_note_outlined,
+                      iconColor: ImshAccentColors.teal,
+                      trailing: AppointmentStatusBadge(status: detail.status),
                     ),
-                    const Gap(AppDesignTokens.spacingSm),
-                    Expanded(child: Text(detail.locationLabel)),
+                    const SizedBox(height: 12),
+                    ImshSurfaceCard(
+                      padding: const EdgeInsets.all(12),
+                      child: Row(
+                        children: [
+                          DoctorAvatar(
+                            name: detail.doctorDisplayName,
+                            avatarUrl: detail.doctor.avatarUrl,
+                            size: 56,
+                          ),
+                          const SizedBox(width: 12),
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                ImshEllipsisText(
+                                  text: detail.doctorDisplayName,
+                                  style: theme.textTheme.titleMedium?.copyWith(
+                                    fontWeight: FontWeight.w700,
+                                  ),
+                                ),
+                                const SizedBox(height: 2),
+                                ImshEllipsisText(
+                                  text: detail.specialtyLabel,
+                                  style: theme.textTheme.bodySmall?.copyWith(
+                                    color: cs.onSurfaceVariant,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    const SizedBox(height: 12),
+                    ImshSurfaceCard(
+                      padding: const EdgeInsets.all(12),
+                      child: Column(
+                        children: [
+                          _DetailFact(
+                            icon: Icons.calendar_today_outlined,
+                            accent: ImshAccentColors.teal,
+                            label: 'Date',
+                            value: DateFormatter.appointmentCardDate(
+                              detail.scheduledAt,
+                            ),
+                          ),
+                          const SizedBox(height: 10),
+                          _DetailFact(
+                            icon: detail.status == AppointmentStatus.requested
+                                ? Icons.hourglass_top_outlined
+                                : Icons.schedule_outlined,
+                            accent: ImshAccentColors.indigo,
+                            label: 'Time',
+                            value: timeValue,
+                          ),
+                          const SizedBox(height: 10),
+                          _DetailFact(
+                            icon: Icons.location_on_outlined,
+                            accent: ImshAccentColors.purple,
+                            label: 'Location',
+                            value: detail.locationLabel,
+                          ),
+                          const SizedBox(height: 10),
+                          _DetailFact(
+                            icon: detail.visitType ==
+                                    AppointmentVisitType.telemedicine
+                                ? Icons.videocam_outlined
+                                : Icons.local_hospital_outlined,
+                            accent: ImshAccentColors.blue,
+                            label: 'Visit type',
+                            value: detail.visitType.label,
+                          ),
+                        ],
+                      ),
+                    ),
+                    if (detail.reason?.trim().isNotEmpty == true) ...[
+                      const SizedBox(height: 12),
+                      ImshSectionHeader(
+                        title: 'Reason',
+                        icon: Icons.notes_outlined,
+                        iconColor: ImshAccentColors.amber,
+                      ),
+                      const SizedBox(height: 8),
+                      ImshSurfaceCard(
+                        padding: const EdgeInsets.all(12),
+                        child: Text(
+                          detail.reason!.trim(),
+                          style: theme.textTheme.bodyMedium,
+                        ),
+                      ),
+                    ],
+                    if (detail.notes?.trim().isNotEmpty == true) ...[
+                      const SizedBox(height: 12),
+                      ImshSectionHeader(
+                        title: 'Notes',
+                        icon: Icons.sticky_note_2_outlined,
+                        iconColor: ImshAccentColors.pink,
+                      ),
+                      const SizedBox(height: 8),
+                      ImshSurfaceCard(
+                        padding: const EdgeInsets.all(12),
+                        child: Text(
+                          detail.notes!.trim(),
+                          style: theme.textTheme.bodyMedium?.copyWith(
+                            color: cs.onSurfaceVariant,
+                          ),
+                        ),
+                      ),
+                    ],
+                    if (detail.canReschedule) ...[
+                      const SizedBox(height: 16),
+                      OutlinedButton(
+                        onPressed: () {
+                          ref
+                              .read(bookingWizardProvider.notifier)
+                              .startReschedule(appointmentId: detail.id);
+                          context.router.push(
+                            BookAppointmentRoute(appointmentId: detail.id),
+                          );
+                        },
+                        child: const Text('Reschedule'),
+                      ),
+                    ],
                   ],
                 ),
-              ),
-              if (detail.reason?.isNotEmpty == true) ...[
-                const Gap(AppDesignTokens.spacingLg),
-                Text(
-                  'Reason',
-                  style: Theme.of(context).textTheme.titleSmall?.copyWith(
-                        fontWeight: FontWeight.w700,
-                      ),
-                ),
-                const Gap(AppDesignTokens.spacingXs),
-                Text(detail.reason!),
-              ],
-              if (detail.notes?.isNotEmpty == true) ...[
-                const Gap(AppDesignTokens.spacingLg),
-                Text(
-                  'Notes',
-                  style: Theme.of(context).textTheme.titleSmall?.copyWith(
-                        fontWeight: FontWeight.w700,
-                      ),
-                ),
-                const Gap(AppDesignTokens.spacingXs),
-                Text(
-                  detail.notes!,
-                  style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                        color: colorScheme.onSurfaceVariant,
-                      ),
-                ),
-              ],
-              const Gap(AppDesignTokens.spacing2xl),
-              if (detail.canReschedule)
-                OutlinedButton(
-                  onPressed: () {
-                    ref.read(bookingWizardProvider.notifier).startReschedule(
-                          appointmentId: detail.id,
-                        );
-                    context.router.push(
-                      BookAppointmentRoute(appointmentId: detail.id),
-                    );
-                  },
-                  child: const Text('Reschedule'),
-                ),
-            ],
-          ),
-        );
+              );
+            },
+          );
         },
       ),
     );
   }
 }
 
-class _DetailRow extends StatelessWidget {
-  const _DetailRow({
+class _DetailFact extends StatelessWidget {
+  const _DetailFact({
     required this.icon,
+    required this.accent,
     required this.label,
     required this.value,
   });
 
   final IconData icon;
+  final Color accent;
   final String label;
   final String value;
 
   @override
   Widget build(BuildContext context) {
-    final colorScheme = context.colorScheme;
+    final theme = Theme.of(context);
+    final cs = theme.colorScheme;
 
     return Row(
       children: [
-        Icon(icon, size: 18, color: colorScheme.onSurfaceVariant),
-        const Gap(AppDesignTokens.spacingSm),
-        Text(
-          '$label: ',
-          style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                color: colorScheme.onSurfaceVariant,
-              ),
+        ImshSolidIcon(
+          icon: icon,
+          color: accent,
+          size: 30,
+          iconSize: 16,
+          radius: 8,
         ),
-        Text(
-          value,
-          style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                fontWeight: FontWeight.w600,
+        const SizedBox(width: 10),
+        Expanded(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                label,
+                style: theme.textTheme.labelSmall?.copyWith(
+                  color: cs.onSurfaceVariant,
+                  fontWeight: FontWeight.w600,
+                ),
               ),
+              ImshEllipsisText(
+                text: value,
+                style: theme.textTheme.bodyMedium?.copyWith(
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+            ],
+          ),
         ),
       ],
-    );
-  }
-}
-
-class _DetailError extends StatelessWidget {
-  const _DetailError({
-    required this.message,
-    required this.onRetry,
-  });
-
-  final String message;
-  final VoidCallback onRetry;
-
-  @override
-  Widget build(BuildContext context) {
-    return Center(
-      child: Padding(
-        padding: const EdgeInsets.all(AppDesignTokens.spacing2xl),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Icon(Icons.error_outline, size: 48, color: Theme.of(context).colorScheme.error),
-            const Gap(AppDesignTokens.spacingMd),
-            Text(message, textAlign: TextAlign.center),
-            const Gap(AppDesignTokens.spacingMd),
-            FilledButton(onPressed: onRetry, child: const Text('Retry')),
-          ],
-        ),
-      ),
     );
   }
 }

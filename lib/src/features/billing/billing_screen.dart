@@ -5,12 +5,19 @@ import 'package:gap/gap.dart';
 import 'package:imsh/app_router.gr.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 
+import '../../core/responsive.dart';
 import '../../core/theme/app_design_tokens.dart';
+import '../../core/theme/imsh_accent_colors.dart';
 import '../../helper/currency_formatter.dart';
 import '../../models/invoice_model.dart';
 import '../../providers/auth_provider.dart';
 import '../../providers/billing_provider.dart';
 import '../../shared/widgets/imsh_app_bar.dart';
+import '../../shared/widgets/imsh_empty_state.dart';
+import '../../shared/widgets/imsh_error_panel.dart';
+import '../../shared/widgets/imsh_page_header.dart';
+import '../../shared/widgets/imsh_solid_icon.dart';
+import '../../shared/widgets/imsh_surface_card.dart';
 import 'widgets/bill_detail_body.dart';
 import 'widgets/unpaid_invoice_card.dart';
 
@@ -24,46 +31,54 @@ class BillsScreen extends ConsumerWidget {
 
     return Scaffold(
       appBar: ImshAppBar(title: const Text('Unpaid bills')),
-      body: RefreshIndicator(
-        onRefresh: () async => pagingController.refresh(),
-        child: PagedListView<int, InvoiceSummary>(
-          padding: const EdgeInsets.all(AppDesignTokens.containerPadding),
-          pagingController: pagingController,
-          builderDelegate: PagedChildBuilderDelegate<InvoiceSummary>(
-            itemBuilder: (context, invoice, index) => Padding(
-              padding: const EdgeInsets.only(bottom: AppDesignTokens.spacingMd),
-              child: UnpaidInvoiceCard(
-                invoice: invoice,
-                onTap: () => context.router.push(
-                  BillDetailRoute(id: invoice.id),
+      body: ResponsiveBody(
+        expand: false,
+        builder: (context, bp) => RefreshIndicator(
+          onRefresh: () async => pagingController.refresh(),
+          child: PagingListener<int, InvoiceSummary>(
+            controller: pagingController,
+            builder: (context, state, fetchNextPage) =>
+                PagedListView<int, InvoiceSummary>(
+              padding: EdgeInsets.zero,
+              state: state,
+              fetchNextPage: fetchNextPage,
+              builderDelegate: PagedChildBuilderDelegate<InvoiceSummary>(
+                itemBuilder: (context, invoice, index) => Padding(
+                  padding: const EdgeInsets.only(bottom: 10),
+                  child: UnpaidInvoiceCard(
+                    invoice: invoice,
+                    onTap: () => context.router.push(
+                      BillDetailRoute(id: invoice.id),
+                    ),
+                    onReceiptTap: () => context.router.push(
+                      BillDetailRoute(id: invoice.id),
+                    ),
+                  ),
                 ),
-                onReceiptTap: () => context.router.push(
-                  BillDetailRoute(id: invoice.id),
+                firstPageErrorIndicatorBuilder: (context) => ImshErrorPanel(
+                  message: authFlowErrorMessage(
+                    state.error ?? 'Unable to load bills',
+                  ),
+                  onRetry: pagingController.refresh,
                 ),
-              ),
-            ),
-            firstPageErrorIndicatorBuilder: (context) => _ListError(
-              message: authFlowErrorMessage(
-                pagingController.error ?? 'Unable to load bills',
-              ),
-              onRetry: pagingController.refresh,
-            ),
-            newPageErrorIndicatorBuilder: (context) => _ListError(
-              message: authFlowErrorMessage(
-                pagingController.error ?? 'Unable to load more',
-              ),
-              onRetry: () => pagingController.retryLastFailedRequest(),
-            ),
-            firstPageProgressIndicatorBuilder: (context) => const Center(
-              child: Padding(
-                padding: EdgeInsets.all(AppDesignTokens.spacing2xl),
-                child: CircularProgressIndicator(),
-              ),
-            ),
-            noItemsFoundIndicatorBuilder: (context) => const Center(
-              child: Padding(
-                padding: EdgeInsets.all(AppDesignTokens.spacing2xl),
-                child: Text('No unpaid bills.'),
+                newPageErrorIndicatorBuilder: (context) => ImshErrorPanel(
+                  message: authFlowErrorMessage(
+                    state.error ?? 'Unable to load more',
+                  ),
+                  onRetry: fetchNextPage,
+                ),
+                firstPageProgressIndicatorBuilder: (context) => const Center(
+                  child: Padding(
+                    padding: EdgeInsets.all(AppDesignTokens.spacing2xl),
+                    child: CircularProgressIndicator(),
+                  ),
+                ),
+                noItemsFoundIndicatorBuilder: (context) => const ImshEmptyState(
+                  title: 'No unpaid bills',
+                  message: 'You have no outstanding invoices.',
+                  icon: Icons.check_circle_outline,
+                  iconColor: ImshAccentColors.green,
+                ),
               ),
             ),
           ),
@@ -90,13 +105,15 @@ class BillDetailScreen extends ConsumerWidget {
       appBar: ImshAppBar(title: const Text('Bill breakdown')),
       body: detailAsync.when(
         loading: () => const Center(child: CircularProgressIndicator()),
-        error: (error, _) => _ListError(
+        error: (error, _) => ImshErrorPanel(
           message: authFlowErrorMessage(error),
           onRetry: () => ref.invalidate(invoiceDetailProvider(id)),
         ),
-        data: (detail) => SingleChildScrollView(
-          padding: const EdgeInsets.all(AppDesignTokens.containerPadding),
-          child: BillDetailBody(detail: detail),
+        data: (detail) => ResponsiveBody(
+          expand: false,
+          builder: (context, bp) => SingleChildScrollView(
+            child: BillDetailBody(detail: detail),
+          ),
         ),
       ),
     );
@@ -120,76 +137,77 @@ class ReceiptViewerScreen extends ConsumerWidget {
       appBar: ImshAppBar(title: const Text('Receipt')),
       body: receiptAsync.when(
         loading: () => const Center(child: CircularProgressIndicator()),
-        error: (error, _) => _ListError(
+        error: (error, _) => ImshErrorPanel(
           message: authFlowErrorMessage(error),
           onRetry: () => ref.invalidate(receiptProvider(id)),
         ),
         data: (receipt) {
           final theme = Theme.of(context);
+          final cs = theme.colorScheme;
 
-          return Padding(
-            padding: const EdgeInsets.all(AppDesignTokens.containerPadding),
-            child: Column(
+          return ResponsiveBody(
+            expand: false,
+            builder: (context, bp) => Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                Text(
-                  'Invoice #${receipt.invoiceNumber}',
-                  style: theme.textTheme.titleLarge?.copyWith(
-                    fontWeight: FontWeight.w700,
+                ImshPageHeader(
+                  title: 'Invoice #${receipt.invoiceNumber}',
+                  subtitle: receipt.methodLabel.trim().isEmpty
+                      ? '—'
+                      : receipt.methodLabel,
+                  icon: Icons.receipt_long_outlined,
+                  iconColor: ImshAccentColors.amber,
+                ),
+                const Gap(12),
+                ImshSurfaceCard(
+                  padding: const EdgeInsets.all(12),
+                  child: Row(
+                    children: [
+                      const ImshSolidIcon(
+                        icon: Icons.payments_outlined,
+                        color: ImshAccentColors.green,
+                        size: 36,
+                        iconSize: 18,
+                        radius: AppDesignTokens.radiusMd,
+                      ),
+                      const Gap(10),
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              'Amount paid',
+                              style: theme.textTheme.labelSmall?.copyWith(
+                                color: cs.onSurfaceVariant,
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
+                            Text(
+                              CurrencyFormatter.formatAmount(receipt.amount),
+                              style: theme.textTheme.headlineSmall?.copyWith(
+                                fontWeight: FontWeight.w800,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
                   ),
                 ),
-                const Gap(AppDesignTokens.spacingMd),
-                Text(
-                  CurrencyFormatter.formatAmount(receipt.amount),
-                  style: theme.textTheme.headlineSmall?.copyWith(
-                    fontWeight: FontWeight.w700,
-                  ),
-                ),
-                const Gap(AppDesignTokens.spacingSm),
-                Text(
-                  receipt.methodLabel,
-                  style: theme.textTheme.bodyLarge,
-                ),
-                const Gap(AppDesignTokens.spacingSm),
-                if (receipt.url == null)
+                if (receipt.url == null) ...[
+                  const Gap(12),
                   Text(
                     'A downloadable PDF receipt will be available here soon. '
                     'Please contact billing if you need a printed copy.',
                     style: theme.textTheme.bodyMedium?.copyWith(
-                      color: theme.colorScheme.onSurfaceVariant,
+                      color: cs.onSurfaceVariant,
                     ),
                   ),
+                ],
               ],
             ),
           );
         },
-      ),
-    );
-  }
-}
-
-class _ListError extends StatelessWidget {
-  const _ListError({
-    required this.message,
-    required this.onRetry,
-  });
-
-  final String message;
-  final VoidCallback onRetry;
-
-  @override
-  Widget build(BuildContext context) {
-    return Center(
-      child: Padding(
-        padding: const EdgeInsets.all(AppDesignTokens.spacing2xl),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Text(message, textAlign: TextAlign.center),
-            const Gap(AppDesignTokens.spacingMd),
-            FilledButton(onPressed: onRetry, child: const Text('Try again')),
-          ],
-        ),
       ),
     );
   }

@@ -48,7 +48,7 @@ class CycleService {
       '/patient/cycle/periods',
       data: {
         'startDate': startDate,
-        if (endDate != null) 'endDate': endDate,
+        'endDate': ?endDate,
         if (flow != null) 'flow': flow.apiValue,
         if (notes != null && notes.isNotEmpty) 'notes': notes,
       },
@@ -69,7 +69,7 @@ class CycleService {
     final resp = await _dio.patch<Map<String, dynamic>>(
       '/patient/cycle/periods/$id',
       data: {
-        if (startDate != null) 'startDate': startDate,
+        'startDate': ?startDate,
         if (clearEndDate) 'endDate': null,
         if (!clearEndDate && endDate != null) 'endDate': endDate,
         if (clearFlow) 'flow': null,

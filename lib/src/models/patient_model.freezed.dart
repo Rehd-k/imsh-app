@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // coverage:ignore-file
-// ignore_for_file: type=lint
+// ignore_for_file: type=lint, type=warning, deprecated_member_use, deprecated_member_use_from_same_package
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
 part of 'patient_model.dart';
@@ -9,6 +9,7 @@ part of 'patient_model.dart';
 // FreezedGenerator
 // **************************************************************************
 
+// GENERATED CODE - DO NOT MODIFY BY HAND
 // dart format off
 T _$identity<T>(T value) => value;
 
@@ -28,16 +29,21 @@ $PatientCopyWith<Patient> get copyWith => _$PatientCopyWithImpl<Patient>(this as
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is Patient&&(identical(other.id, id) || other.id == id)&&(identical(other.patientId, patientId) || other.patientId == patientId)&&(identical(other.cardNo, cardNo) || other.cardNo == cardNo)&&(identical(other.title, title) || other.title == title)&&(identical(other.surname, surname) || other.surname == surname)&&(identical(other.firstName, firstName) || other.firstName == firstName)&&(identical(other.otherName, otherName) || other.otherName == otherName)&&(identical(other.dob, dob) || other.dob == dob)&&(identical(other.gender, gender) || other.gender == gender)&&(identical(other.email, email) || other.email == email)&&(identical(other.phoneNumber, phoneNumber) || other.phoneNumber == phoneNumber)&&(identical(other.addressOfResidence, addressOfResidence) || other.addressOfResidence == addressOfResidence)&&(identical(other.hmo, hmo) || other.hmo == hmo)&&(identical(other.avatarUrl, avatarUrl) || other.avatarUrl == avatarUrl));
+  final _this = this as Patient;
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is Patient&&(identical(other.id, _this.id) || other.id == _this.id)&&(identical(other.patientId, _this.patientId) || other.patientId == _this.patientId)&&(identical(other.cardNo, _this.cardNo) || other.cardNo == _this.cardNo)&&(identical(other.title, _this.title) || other.title == _this.title)&&(identical(other.surname, _this.surname) || other.surname == _this.surname)&&(identical(other.firstName, _this.firstName) || other.firstName == _this.firstName)&&(identical(other.otherName, _this.otherName) || other.otherName == _this.otherName)&&(identical(other.dob, _this.dob) || other.dob == _this.dob)&&(identical(other.gender, _this.gender) || other.gender == _this.gender)&&(identical(other.email, _this.email) || other.email == _this.email)&&(identical(other.phoneNumber, _this.phoneNumber) || other.phoneNumber == _this.phoneNumber)&&(identical(other.addressOfResidence, _this.addressOfResidence) || other.addressOfResidence == _this.addressOfResidence)&&(identical(other.hmo, _this.hmo) || other.hmo == _this.hmo)&&(identical(other.avatarUrl, _this.avatarUrl) || other.avatarUrl == _this.avatarUrl));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,patientId,cardNo,title,surname,firstName,otherName,dob,gender,email,phoneNumber,addressOfResidence,hmo,avatarUrl);
+int get hashCode {
+  final _this = this as Patient;
+  return Object.hash(runtimeType,_this.id,_this.patientId,_this.cardNo,_this.title,_this.surname,_this.firstName,_this.otherName,_this.dob,_this.gender,_this.email,_this.phoneNumber,_this.addressOfResidence,_this.hmo,_this.avatarUrl);
+}
 
 @override
 String toString() {
-  return 'Patient(id: $id, patientId: $patientId, cardNo: $cardNo, title: $title, surname: $surname, firstName: $firstName, otherName: $otherName, dob: $dob, gender: $gender, email: $email, phoneNumber: $phoneNumber, addressOfResidence: $addressOfResidence, hmo: $hmo, avatarUrl: $avatarUrl)';
+  final _this = this as Patient;
+  return 'Patient(id: ${_this.id}, patientId: ${_this.patientId}, cardNo: ${_this.cardNo}, title: ${_this.title}, surname: ${_this.surname}, firstName: ${_this.firstName}, otherName: ${_this.otherName}, dob: ${_this.dob}, gender: ${_this.gender}, email: ${_this.email}, phoneNumber: ${_this.phoneNumber}, addressOfResidence: ${_this.addressOfResidence}, hmo: ${_this.hmo}, avatarUrl: ${_this.avatarUrl})';
 }
 
 
@@ -66,7 +72,7 @@ class _$PatientCopyWithImpl<$Res>
 /// Create a copy of Patient
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? patientId = freezed,Object? cardNo = freezed,Object? title = freezed,Object? surname = freezed,Object? firstName = freezed,Object? otherName = freezed,Object? dob = freezed,Object? gender = freezed,Object? email = freezed,Object? phoneNumber = freezed,Object? addressOfResidence = freezed,Object? hmo = freezed,Object? avatarUrl = freezed,}) {
-  return _then(_self.copyWith(
+  return _then(Patient(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,patientId: freezed == patientId ? _self.patientId : patientId // ignore: cast_nullable_to_non_nullable
 as String?,cardNo: freezed == cardNo ? _self.cardNo : cardNo // ignore: cast_nullable_to_non_nullable
@@ -221,8 +227,8 @@ return $default(_that.id,_that.patientId,_that.cardNo,_that.title,_that.surname,
 /// @nodoc
 @JsonSerializable()
 
-class _Patient implements Patient {
-  const _Patient({required this.id, this.patientId, this.cardNo, this.title, this.surname, this.firstName, this.otherName, this.dob, this.gender, this.email, this.phoneNumber, this.addressOfResidence, this.hmo, this.avatarUrl});
+class _Patient extends Patient {
+  const _Patient({required this.id, this.patientId, this.cardNo, this.title, this.surname, this.firstName, this.otherName, this.dob, this.gender, this.email, this.phoneNumber, this.addressOfResidence, this.hmo, this.avatarUrl}): super._();
   factory _Patient.fromJson(Map<String, dynamic> json) => _$PatientFromJson(json);
 
 @override final  String id;
@@ -253,16 +259,18 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _Patient&&(identical(other.id, id) || other.id == id)&&(identical(other.patientId, patientId) || other.patientId == patientId)&&(identical(other.cardNo, cardNo) || other.cardNo == cardNo)&&(identical(other.title, title) || other.title == title)&&(identical(other.surname, surname) || other.surname == surname)&&(identical(other.firstName, firstName) || other.firstName == firstName)&&(identical(other.otherName, otherName) || other.otherName == otherName)&&(identical(other.dob, dob) || other.dob == dob)&&(identical(other.gender, gender) || other.gender == gender)&&(identical(other.email, email) || other.email == email)&&(identical(other.phoneNumber, phoneNumber) || other.phoneNumber == phoneNumber)&&(identical(other.addressOfResidence, addressOfResidence) || other.addressOfResidence == addressOfResidence)&&(identical(other.hmo, hmo) || other.hmo == hmo)&&(identical(other.avatarUrl, avatarUrl) || other.avatarUrl == avatarUrl));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _Patient&&(identical(other.id, id) || other.id == id)&&(identical(other.patientId, patientId) || other.patientId == patientId)&&(identical(other.cardNo, cardNo) || other.cardNo == cardNo)&&(identical(other.title, title) || other.title == title)&&(identical(other.surname, surname) || other.surname == surname)&&(identical(other.firstName, firstName) || other.firstName == firstName)&&(identical(other.otherName, otherName) || other.otherName == otherName)&&(identical(other.dob, dob) || other.dob == dob)&&(identical(other.gender, gender) || other.gender == gender)&&(identical(other.email, email) || other.email == email)&&(identical(other.phoneNumber, phoneNumber) || other.phoneNumber == phoneNumber)&&(identical(other.addressOfResidence, addressOfResidence) || other.addressOfResidence == addressOfResidence)&&(identical(other.hmo, hmo) || other.hmo == hmo)&&(identical(other.avatarUrl, avatarUrl) || other.avatarUrl == avatarUrl));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,patientId,cardNo,title,surname,firstName,otherName,dob,gender,email,phoneNumber,addressOfResidence,hmo,avatarUrl);
+int get hashCode {
+    return Object.hash(runtimeType,id,patientId,cardNo,title,surname,firstName,otherName,dob,gender,email,phoneNumber,addressOfResidence,hmo,avatarUrl);
+}
 
 @override
 String toString() {
-  return 'Patient(id: $id, patientId: $patientId, cardNo: $cardNo, title: $title, surname: $surname, firstName: $firstName, otherName: $otherName, dob: $dob, gender: $gender, email: $email, phoneNumber: $phoneNumber, addressOfResidence: $addressOfResidence, hmo: $hmo, avatarUrl: $avatarUrl)';
+    return 'Patient(id: $id, patientId: $patientId, cardNo: $cardNo, title: $title, surname: $surname, firstName: $firstName, otherName: $otherName, dob: $dob, gender: $gender, email: $email, phoneNumber: $phoneNumber, addressOfResidence: $addressOfResidence, hmo: $hmo, avatarUrl: $avatarUrl)';
 }
 
 
@@ -330,16 +338,21 @@ $PatientLoginResponseCopyWith<PatientLoginResponse> get copyWith => _$PatientLog
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is PatientLoginResponse&&(identical(other.accessToken, accessToken) || other.accessToken == accessToken)&&(identical(other.patient, patient) || other.patient == patient)&&(identical(other.device, device) || other.device == device));
+  final _this = this as PatientLoginResponse;
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is PatientLoginResponse&&(identical(other.accessToken, _this.accessToken) || other.accessToken == _this.accessToken)&&(identical(other.patient, _this.patient) || other.patient == _this.patient)&&(identical(other.device, _this.device) || other.device == _this.device));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,accessToken,patient,device);
+int get hashCode {
+  final _this = this as PatientLoginResponse;
+  return Object.hash(runtimeType,_this.accessToken,_this.patient,_this.device);
+}
 
 @override
 String toString() {
-  return 'PatientLoginResponse(accessToken: $accessToken, patient: $patient, device: $device)';
+  final _this = this as PatientLoginResponse;
+  return 'PatientLoginResponse(accessToken: ${_this.accessToken}, patient: ${_this.patient}, device: ${_this.device})';
 }
 
 
@@ -368,7 +381,7 @@ class _$PatientLoginResponseCopyWithImpl<$Res>
 /// Create a copy of PatientLoginResponse
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') @override $Res call({Object? accessToken = null,Object? patient = null,Object? device = null,}) {
-  return _then(_self.copyWith(
+  return _then(PatientLoginResponse(
 accessToken: null == accessToken ? _self.accessToken : accessToken // ignore: cast_nullable_to_non_nullable
 as String,patient: null == patient ? _self.patient : patient // ignore: cast_nullable_to_non_nullable
 as Patient,device: null == device ? _self.device : device // ignore: cast_nullable_to_non_nullable
@@ -551,16 +564,18 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _PatientLoginResponse&&(identical(other.accessToken, accessToken) || other.accessToken == accessToken)&&(identical(other.patient, patient) || other.patient == patient)&&(identical(other.device, device) || other.device == device));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _PatientLoginResponse&&(identical(other.accessToken, accessToken) || other.accessToken == accessToken)&&(identical(other.patient, patient) || other.patient == patient)&&(identical(other.device, device) || other.device == device));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,accessToken,patient,device);
+int get hashCode {
+    return Object.hash(runtimeType,accessToken,patient,device);
+}
 
 @override
 String toString() {
-  return 'PatientLoginResponse(accessToken: $accessToken, patient: $patient, device: $device)';
+    return 'PatientLoginResponse(accessToken: $accessToken, patient: $patient, device: $device)';
 }
 
 

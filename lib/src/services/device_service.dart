@@ -30,16 +30,10 @@ class DeviceService {
         .toList();
   }
 
-  Future<void> updateFcmToken({
-    required String token,
-    String? platform,
-  }) async {
+  Future<void> updateFcmToken({required String token, String? platform}) async {
     await _dio.patch<void>(
       '/patient/devices/current/fcm-token',
-      data: {
-        'token': token,
-        if (platform != null) 'platform': platform,
-      },
+      data: {'token': token, 'platform': ?platform},
     );
   }
 

@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 
-import '../../../core/theme/app_design_tokens.dart';
+import '../../../core/theme/imsh_accent_colors.dart';
 import '../../../models/medication_model.dart';
+import '../../../shared/widgets/imsh_ellipsis_chip.dart';
 import 'schedule_period_card.dart';
 
 class TodayScheduleSection extends StatelessWidget {
@@ -15,8 +16,6 @@ class TodayScheduleSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-
     if (schedule.isEmpty) {
       return const SizedBox.shrink();
     }
@@ -32,13 +31,12 @@ class TodayScheduleSection extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(
-          "Today's Schedule",
-          style: theme.textTheme.titleMedium?.copyWith(
-            fontWeight: FontWeight.w700,
-          ),
+        const ImshSectionHeader(
+          title: "Today's schedule",
+          icon: Icons.today_outlined,
+          iconColor: ImshAccentColors.teal,
         ),
-        const Gap(AppDesignTokens.spacingMd),
+        const Gap(10),
         for (final entry in sorted)
           SchedulePeriodCard(
             entry: entry,

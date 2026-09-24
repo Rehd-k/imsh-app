@@ -13,17 +13,26 @@ import 'package:record/record.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:video_player/video_player.dart';
 
+import '../../core/responsive.dart';
 import '../../core/storage/token_storage.dart';
 import '../../core/theme/app_design_tokens.dart';
 import '../../core/theme/context_extensions.dart';
+import '../../core/theme/imsh_accent_colors.dart';
 import '../../helper/date_formatter.dart';
 import '../../models/emergency_request_model.dart';
 import '../../providers/emergency_provider.dart';
 import '../../providers/service_providers.dart';
 import '../../services/api_service.dart';
 import '../../shared/widgets/imsh_app_bar.dart';
+import '../../shared/widgets/imsh_ellipsis_chip.dart';
+import '../../shared/widgets/imsh_empty_state.dart';
+import '../../shared/widgets/imsh_error_panel.dart';
+import '../../shared/widgets/imsh_page_header.dart';
 import '../../shared/widgets/imsh_semantic_badge.dart';
+import '../../shared/widgets/imsh_solid_icon.dart';
 import '../../shared/widgets/imsh_surface_card.dart';
+
+const _kSectionGap = 10.0;
 
 @RoutePage()
 class EmergencyRequestsScreen extends ConsumerWidget {
@@ -43,55 +52,62 @@ class EmergencyRequestsScreen extends ConsumerWidget {
         icon: const Icon(Icons.emergency_outlined),
         label: const Text('Request help'),
       ),
-      body: RefreshIndicator(
-        onRefresh: () async {
-          ref.invalidate(emergencyListProvider(status));
-          await ref.read(emergencyListProvider(status).future);
-        },
-        child: ListView(
-          physics: const AlwaysScrollableScrollPhysics(),
-          padding: const EdgeInsets.fromLTRB(
-            AppDesignTokens.containerPadding,
-            AppDesignTokens.containerPadding,
-            AppDesignTokens.containerPadding,
-            AppDesignTokens.spacing2xl * 2,
-          ),
-          children: [
-            Text(
-              'Request an ambulance or emergency response. Share your location and describe what is wrong with text, a voice note, or a short video.',
-              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                color: context.colorScheme.onSurfaceVariant,
+      body: ResponsiveBody(
+        expand: false,
+        bottomPadding: 88,
+        builder: (context, bp) => RefreshIndicator(
+          onRefresh: () async {
+            ref.invalidate(emergencyListProvider(status));
+            await ref.read(emergencyListProvider(status).future);
+          },
+          child: ListView(
+            physics: const AlwaysScrollableScrollPhysics(),
+            padding: EdgeInsets.zero,
+            children: [
+              const ImshPageHeader(
+                title: 'Emergency services',
+                subtitle:
+                    'Request ambulance or ED response with location and details',
+                icon: Icons.emergency_outlined,
+                iconColor: ImshAccentColors.amber,
               ),
-            ),
-            const Gap(AppDesignTokens.spacingMd),
-            _StatusFilters(status: status),
-            const Gap(AppDesignTokens.spacingMd),
-            listAsync.when(
-              loading: () => const Center(
-                child: Padding(
-                  padding: EdgeInsets.all(AppDesignTokens.spacingXl),
-                  child: CircularProgressIndicator(),
+              const Gap(_kSectionGap),
+              _StatusFilters(status: status),
+              const Gap(_kSectionGap),
+              listAsync.when(
+                loading: () => const Center(
+                  child: Padding(
+                    padding: EdgeInsets.all(AppDesignTokens.spacingXl),
+                    child: CircularProgressIndicator(),
+                  ),
                 ),
-              ),
-              error: (error, _) => _ErrorState(
-                message: emergencyErrorMessage(error),
-                onRetry: () => ref.invalidate(emergencyListProvider(status)),
-              ),
-              data: (response) {
-                if (response.data.isEmpty) {
-                  return const _EmptyState();
-                }
-                return Column(
-                  children: [
-                    for (final item in response.data) ...[
-                      _RequestCard(item: item),
-                      const Gap(AppDesignTokens.spacingMd),
+                error: (error, _) => ImshErrorPanel(
+                  message: emergencyErrorMessage(error),
+                  onRetry: () =>
+                      ref.invalidate(emergencyListProvider(status)),
+                ),
+                data: (response) {
+                  if (response.data.isEmpty) {
+                    return const ImshEmptyState(
+                      title: 'No emergency requests yet',
+                      message:
+                          'Use Request help if you need ambulance or ED response.',
+                      icon: Icons.emergency_outlined,
+                      iconColor: ImshAccentColors.amber,
+                    );
+                  }
+                  return Column(
+                    children: [
+                      for (final item in response.data) ...[
+                        _RequestCard(item: item),
+                        const Gap(_kSectionGap),
+                      ],
                     ],
-                  ],
-                );
-              },
-            ),
-          ],
+                  );
+                },
+              ),
+            ],
+          ),
         ),
       ),
     );
@@ -318,213 +334,257 @@ class _CreateEmergencyRequestScreenState
 
     return Scaffold(
       appBar: const ImshAppBar(title: Text('Request emergency help')),
-      body: ListView(
-        padding: const EdgeInsets.all(AppDesignTokens.containerPadding),
-        children: [
-          if (widget.guestMode) ...[
+      body: ResponsiveBody(
+        expand: false,
+        builder: (context, bp) => ListView(
+          padding: EdgeInsets.zero,
+          children: [
+            const ImshPageHeader(
+              title: 'Request emergency help',
+              subtitle: 'Share location and describe what is wrong',
+              icon: Icons.emergency_outlined,
+              iconColor: ImshAccentColors.amber,
+            ),
+            const Gap(_kSectionGap),
+            if (widget.guestMode) ...[
+              ImshSurfaceCard(
+                padding: const EdgeInsets.all(12),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const Row(
+                      children: [
+                        ImshSolidIcon(
+                          icon: Icons.person_outline,
+                          color: ImshAccentColors.indigo,
+                          size: 32,
+                          iconSize: 16,
+                        ),
+                        Gap(10),
+                        Expanded(
+                          child: Text(
+                            'Your contact (optional)',
+                            style: TextStyle(fontWeight: FontWeight.w700),
+                          ),
+                        ),
+                      ],
+                    ),
+                    const Gap(AppDesignTokens.spacingSm),
+                    Text(
+                      'Help hospital staff reach you if they need more information.',
+                      style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                        color: colorScheme.onSurfaceVariant,
+                      ),
+                    ),
+                    const Gap(_kSectionGap),
+                    TextField(
+                      controller: _guestNameController,
+                      textCapitalization: TextCapitalization.words,
+                      textInputAction: TextInputAction.next,
+                      autofillHints: const [AutofillHints.name],
+                      decoration: const InputDecoration(labelText: 'Your name'),
+                    ),
+                    const Gap(_kSectionGap),
+                    TextField(
+                      controller: _guestPhoneController,
+                      keyboardType: TextInputType.phone,
+                      textInputAction: TextInputAction.done,
+                      autofillHints: const [AutofillHints.telephoneNumber],
+                      decoration: const InputDecoration(
+                        labelText: 'Phone number',
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              const Gap(_kSectionGap),
+            ],
             ImshSurfaceCard(
+              padding: const EdgeInsets.all(12),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(
-                    'Your contact (optional)',
-                    style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                      fontWeight: FontWeight.w700,
-                    ),
+                  const Row(
+                    children: [
+                      ImshSolidIcon(
+                        icon: Icons.my_location,
+                        color: ImshAccentColors.teal,
+                        size: 32,
+                        iconSize: 16,
+                      ),
+                      Gap(10),
+                      Expanded(
+                        child: Text(
+                          'Your location',
+                          style: TextStyle(fontWeight: FontWeight.w700),
+                        ),
+                      ),
+                    ],
                   ),
                   const Gap(AppDesignTokens.spacingSm),
-                  Text(
-                    'Help hospital staff reach you if they need more information.',
-                    style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                      color: colorScheme.onSurfaceVariant,
+                  if (_locating)
+                    const Row(
+                      children: [
+                        SizedBox(
+                          width: 18,
+                          height: 18,
+                          child: CircularProgressIndicator(strokeWidth: 2),
+                        ),
+                        Gap(AppDesignTokens.spacingSm),
+                        Expanded(child: Text('Getting precise location…')),
+                      ],
+                    )
+                  else if (_position != null)
+                    Text('Location ready$accuracyLabel')
+                  else
+                    Text(
+                      _locationError ?? 'Location unavailable',
+                      style: TextStyle(color: colorScheme.error),
                     ),
-                  ),
-                  const Gap(AppDesignTokens.spacingMd),
-                  TextField(
-                    controller: _guestNameController,
-                    textCapitalization: TextCapitalization.words,
-                    textInputAction: TextInputAction.next,
-                    autofillHints: const [AutofillHints.name],
-                    decoration: const InputDecoration(labelText: 'Your name'),
-                  ),
-                  const Gap(AppDesignTokens.spacingMd),
-                  TextField(
-                    controller: _guestPhoneController,
-                    keyboardType: TextInputType.phone,
-                    textInputAction: TextInputAction.done,
-                    autofillHints: const [AutofillHints.telephoneNumber],
-                    decoration: const InputDecoration(
-                      labelText: 'Phone number',
-                    ),
+                  const Gap(AppDesignTokens.spacingSm),
+                  Wrap(
+                    spacing: AppDesignTokens.spacingSm,
+                    children: [
+                      TextButton.icon(
+                        onPressed: _locating ? null : _captureLocation,
+                        icon: const Icon(Icons.my_location),
+                        label: const Text('Refresh location'),
+                      ),
+                      if (needsSettings)
+                        TextButton.icon(
+                          onPressed: _openLocationSettings,
+                          icon: const Icon(Icons.settings_outlined),
+                          label: const Text('Open settings'),
+                        ),
+                    ],
                   ),
                 ],
               ),
             ),
-            const Gap(AppDesignTokens.spacingLg),
-          ],
-          ImshSurfaceCard(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  'Your location',
-                  style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                    fontWeight: FontWeight.w700,
-                  ),
-                ),
-                const Gap(AppDesignTokens.spacingSm),
-                if (_locating)
+            const Gap(12),
+            const ImshSectionHeader(
+              title: 'What is wrong? (provide at least one)',
+              icon: Icons.description_outlined,
+              iconColor: ImshAccentColors.purple,
+            ),
+            const Gap(AppDesignTokens.spacingSm),
+            TextField(
+              controller: _descriptionController,
+              maxLines: 4,
+              maxLength: 2000,
+              decoration: const InputDecoration(
+                hintText: 'Describe the emergency…',
+              ),
+            ),
+            const Gap(_kSectionGap),
+            ImshSurfaceCard(
+              padding: const EdgeInsets.all(12),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
                   const Row(
                     children: [
-                      SizedBox(
-                        width: 18,
-                        height: 18,
-                        child: CircularProgressIndicator(strokeWidth: 2),
+                      ImshSolidIcon(
+                        icon: Icons.mic_none_outlined,
+                        color: ImshAccentColors.pink,
+                        size: 32,
+                        iconSize: 16,
                       ),
-                      Gap(AppDesignTokens.spacingSm),
-                      Expanded(child: Text('Getting precise location…')),
-                    ],
-                  )
-                else if (_position != null)
-                  Text('Location ready$accuracyLabel')
-                else
-                  Text(
-                    _locationError ?? 'Location unavailable',
-                    style: TextStyle(color: colorScheme.error),
-                  ),
-                const Gap(AppDesignTokens.spacingSm),
-                Wrap(
-                  spacing: AppDesignTokens.spacingSm,
-                  children: [
-                    TextButton.icon(
-                      onPressed: _locating ? null : _captureLocation,
-                      icon: const Icon(Icons.my_location),
-                      label: const Text('Refresh location'),
-                    ),
-                    if (needsSettings)
-                      TextButton.icon(
-                        onPressed: _openLocationSettings,
-                        icon: const Icon(Icons.settings_outlined),
-                        label: const Text('Open settings'),
-                      ),
-                  ],
-                ),
-              ],
-            ),
-          ),
-          const Gap(AppDesignTokens.spacingLg),
-          Text(
-            'What is wrong? (provide at least one)',
-            style: Theme.of(
-              context,
-            ).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w700),
-          ),
-          const Gap(AppDesignTokens.spacingSm),
-          TextField(
-            controller: _descriptionController,
-            maxLines: 4,
-            maxLength: 2000,
-            decoration: const InputDecoration(
-              hintText: 'Describe the emergency…',
-            ),
-          ),
-          const Gap(AppDesignTokens.spacingMd),
-          ImshSurfaceCard(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  'Add a voice note or short video (optional)',
-                  style: Theme.of(
-                    context,
-                  ).textTheme.titleSmall?.copyWith(fontWeight: FontWeight.w600),
-                ),
-                const Gap(AppDesignTokens.spacingMd),
-                Row(
-                  children: [
-                    Expanded(
-                      child: FilledButton.tonalIcon(
-                        onPressed: _submitting ? null : _toggleRecording,
-                        icon: Icon(_recording ? Icons.stop : Icons.mic),
-                        label: Text(_recording ? 'Stop' : 'Record'),
-                      ),
-                    ),
-                    const Gap(AppDesignTokens.spacingSm),
-                    Expanded(
-                      child: FilledButton.tonalIcon(
-                        onPressed: _submitting ? null : _pickVideo,
-                        icon: const Icon(Icons.videocam_outlined),
-                        label: Text(
-                          _videoPath == null ? 'Record video' : 'Retake',
+                      Gap(10),
+                      Expanded(
+                        child: Text(
+                          'Voice note or short video (optional)',
+                          style: TextStyle(fontWeight: FontWeight.w600),
                         ),
                       ),
+                    ],
+                  ),
+                  const Gap(_kSectionGap),
+                  Row(
+                    children: [
+                      Expanded(
+                        child: FilledButton.tonalIcon(
+                          onPressed: _submitting ? null : _toggleRecording,
+                          icon: Icon(_recording ? Icons.stop : Icons.mic),
+                          label: Text(_recording ? 'Stop' : 'Record'),
+                        ),
+                      ),
+                      const Gap(AppDesignTokens.spacingSm),
+                      Expanded(
+                        child: FilledButton.tonalIcon(
+                          onPressed: _submitting ? null : _pickVideo,
+                          icon: const Icon(Icons.videocam_outlined),
+                          label: Text(
+                            _videoPath == null ? 'Record video' : 'Retake',
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                  if (_recording) ...[
+                    const Gap(AppDesignTokens.spacingSm),
+                    Text(
+                      '${_recordElapsed.inMinutes}:'
+                      '${(_recordElapsed.inSeconds % 60).toString().padLeft(2, '0')}',
                     ),
                   ],
-                ),
-                if (_recording) ...[
-                  const Gap(AppDesignTokens.spacingSm),
-                  Text(
-                    '${_recordElapsed.inMinutes}:'
-                    '${(_recordElapsed.inSeconds % 60).toString().padLeft(2, '0')}',
-                  ),
+                  if (_voicePath != null && !_recording) ...[
+                    const Gap(AppDesignTokens.spacingSm),
+                    Row(
+                      children: [
+                        const Expanded(child: Text('Voice note attached')),
+                        IconButton(
+                          tooltip: 'Remove voice note',
+                          onPressed: () => setState(() => _voicePath = null),
+                          icon: const Icon(Icons.delete_outline),
+                        ),
+                      ],
+                    ),
+                  ],
+                  if (_videoPath != null) ...[
+                    const Gap(AppDesignTokens.spacingXs),
+                    Row(
+                      children: [
+                        const Expanded(child: Text('Video attached')),
+                        IconButton(
+                          tooltip: 'Remove video',
+                          onPressed: () => setState(() => _videoPath = null),
+                          icon: const Icon(Icons.delete_outline),
+                        ),
+                      ],
+                    ),
+                  ],
                 ],
-                if (_voicePath != null && !_recording) ...[
-                  const Gap(AppDesignTokens.spacingSm),
-                  Row(
-                    children: [
-                      const Expanded(child: Text('Voice note attached')),
-                      IconButton(
-                        tooltip: 'Remove voice note',
-                        onPressed: () => setState(() => _voicePath = null),
-                        icon: const Icon(Icons.delete_outline),
-                      ),
-                    ],
-                  ),
-                ],
-                if (_videoPath != null) ...[
-                  const Gap(AppDesignTokens.spacingXs),
-                  Row(
-                    children: [
-                      const Expanded(child: Text('Video attached')),
-                      IconButton(
-                        tooltip: 'Remove video',
-                        onPressed: () => setState(() => _videoPath = null),
-                        icon: const Icon(Icons.delete_outline),
-                      ),
-                    ],
-                  ),
-                ],
-              ],
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
       bottomNavigationBar: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.fromLTRB(
-            AppDesignTokens.containerPadding,
-            AppDesignTokens.spacingSm,
-            AppDesignTokens.containerPadding,
-            AppDesignTokens.spacingMd,
-          ),
-          child: FilledButton.icon(
-            style: FilledButton.styleFrom(
-              backgroundColor: colorScheme.error,
-              foregroundColor: colorScheme.onError,
-              minimumSize: const Size.fromHeight(52),
+        child: ResponsiveBody(
+          expand: false,
+          bottomPadding: 0,
+          builder: (context, bp) => Padding(
+            padding: const EdgeInsets.only(bottom: 12),
+            child: FilledButton.icon(
+              style: FilledButton.styleFrom(
+                backgroundColor: colorScheme.error,
+                foregroundColor: colorScheme.onError,
+                minimumSize: const Size.fromHeight(52),
+              ),
+              onPressed: _submitting ? null : _submit,
+              icon: _submitting
+                  ? SizedBox(
+                      width: 18,
+                      height: 18,
+                      child: CircularProgressIndicator(
+                        strokeWidth: 2,
+                        color: colorScheme.onError,
+                      ),
+                    )
+                  : const Icon(Icons.send_outlined),
+              label: Text(_submitting ? 'Sending…' : 'Send emergency request'),
             ),
-            onPressed: _submitting ? null : _submit,
-            icon: _submitting
-                ? SizedBox(
-                    width: 18,
-                    height: 18,
-                    child: CircularProgressIndicator(
-                      strokeWidth: 2,
-                      color: colorScheme.onError,
-                    ),
-                  )
-                : const Icon(Icons.send_outlined),
-            label: Text(_submitting ? 'Sending…' : 'Send emergency request'),
           ),
         ),
       ),
@@ -545,145 +605,155 @@ class EmergencyRequestDetailScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final detailAsync = ref.watch(emergencyDetailProvider(id));
     final isCancelling =
-        ref.watch(cancelEmergencyProvider).valueOrNull?.contains(id) ?? false;
+        ref.watch(cancelEmergencyProvider).value?.contains(id) ?? false;
 
     return Scaffold(
       appBar: ImshAppBar(title: const Text('Emergency request')),
       body: detailAsync.when(
         loading: () => const Center(child: CircularProgressIndicator()),
-        error: (error, _) => _ErrorState(
+        error: (error, _) => ImshErrorPanel(
           message: emergencyErrorMessage(error),
           onRetry: () => ref.invalidate(emergencyDetailProvider(id)),
         ),
         data: (request) {
           final canCancel = request.status == EmergencyRequestStatus.submitted;
-          return SingleChildScrollView(
-            padding: const EdgeInsets.all(AppDesignTokens.containerPadding),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                Row(
-                  children: [
-                    Expanded(
-                      child: Text(
-                        'Emergency request',
-                        style: Theme.of(context).textTheme.headlineSmall
-                            ?.copyWith(fontWeight: FontWeight.w700),
+          return ResponsiveBody(
+            expand: false,
+            builder: (context, bp) => SingleChildScrollView(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  ImshPageHeader(
+                    title: 'Emergency request',
+                    subtitle: request.createdAt == null
+                        ? '—'
+                        : DateFormatter.dateTime(request.createdAt!),
+                    icon: Icons.emergency_outlined,
+                    iconColor: ImshAccentColors.amber,
+                    trailing: _StatusBadge(status: request.status),
+                  ),
+                  const Gap(12),
+                  _DetailBlock(
+                    title: 'Location',
+                    value:
+                        '${request.latitude.toStringAsFixed(5)}, '
+                        '${request.longitude.toStringAsFixed(5)}',
+                    icon: Icons.place_outlined,
+                    iconColor: ImshAccentColors.teal,
+                  ),
+                  TextButton.icon(
+                    onPressed: () =>
+                        _openMaps(request.latitude, request.longitude),
+                    icon: const Icon(Icons.map_outlined),
+                    label: const Text('Open in maps'),
+                  ),
+                  if (request.description?.isNotEmpty == true) ...[
+                    const Gap(_kSectionGap),
+                    _DetailBlock(
+                      title: 'Description',
+                      value: request.description!,
+                      icon: Icons.description_outlined,
+                      iconColor: ImshAccentColors.purple,
+                    ),
+                  ],
+                  if (request.voiceUrl != null) ...[
+                    const Gap(_kSectionGap),
+                    _AuthenticatedAudioPlayer(requestId: id),
+                  ],
+                  if (request.videoUrl != null) ...[
+                    const Gap(_kSectionGap),
+                    _AuthenticatedVideoPlayer(requestId: id),
+                  ],
+                  if (request.staffNote?.isNotEmpty == true) ...[
+                    const Gap(12),
+                    ImshSurfaceCard(
+                      padding: const EdgeInsets.all(12),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          const Row(
+                            children: [
+                              ImshSolidIcon(
+                                icon: Icons.medical_services_outlined,
+                                color: ImshAccentColors.blue,
+                                size: 32,
+                                iconSize: 16,
+                              ),
+                              Gap(10),
+                              Expanded(
+                                child: Text(
+                                  'ED update',
+                                  style: TextStyle(fontWeight: FontWeight.w700),
+                                ),
+                              ),
+                            ],
+                          ),
+                          const Gap(AppDesignTokens.spacingSm),
+                          Text(request.staffNote!),
+                          if (request.respondedBy != null) ...[
+                            const Gap(AppDesignTokens.spacingSm),
+                            Text(
+                              'By ${request.respondedBy!.displayName}',
+                              style: Theme.of(context).textTheme.bodySmall
+                                  ?.copyWith(
+                                    color: context.colorScheme.onSurfaceVariant,
+                                  ),
+                            ),
+                          ],
+                        ],
                       ),
                     ),
-                    _StatusBadge(status: request.status),
                   ],
-                ),
-                const Gap(AppDesignTokens.spacingLg),
-                _DetailBlock(
-                  title: 'Submitted',
-                  value: request.createdAt == null
-                      ? 'Unknown'
-                      : DateFormatter.dateTime(request.createdAt!),
-                ),
-                const Gap(AppDesignTokens.spacingMd),
-                _DetailBlock(
-                  title: 'Location',
-                  value:
-                      '${request.latitude.toStringAsFixed(5)}, '
-                      '${request.longitude.toStringAsFixed(5)}',
-                ),
-                TextButton.icon(
-                  onPressed: () =>
-                      _openMaps(request.latitude, request.longitude),
-                  icon: const Icon(Icons.map_outlined),
-                  label: const Text('Open in maps'),
-                ),
-                if (request.description?.isNotEmpty == true) ...[
-                  const Gap(AppDesignTokens.spacingMd),
-                  _DetailBlock(
-                    title: 'Description',
-                    value: request.description!,
-                  ),
-                ],
-                if (request.voiceUrl != null) ...[
-                  const Gap(AppDesignTokens.spacingMd),
-                  _AuthenticatedAudioPlayer(requestId: id),
-                ],
-                if (request.videoUrl != null) ...[
-                  const Gap(AppDesignTokens.spacingMd),
-                  _AuthenticatedVideoPlayer(requestId: id),
-                ],
-                if (request.staffNote?.isNotEmpty == true) ...[
-                  const Gap(AppDesignTokens.spacingLg),
-                  ImshSurfaceCard(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          'ED update',
-                          style: Theme.of(context).textTheme.titleMedium
-                              ?.copyWith(fontWeight: FontWeight.w700),
-                        ),
-                        const Gap(AppDesignTokens.spacingSm),
-                        Text(request.staffNote!),
-                        if (request.respondedBy != null) ...[
-                          const Gap(AppDesignTokens.spacingSm),
-                          Text(
-                            'By ${request.respondedBy!.displayName}',
-                            style: Theme.of(context).textTheme.bodySmall
-                                ?.copyWith(
-                                  color: context.colorScheme.onSurfaceVariant,
-                                ),
-                          ),
-                        ],
-                      ],
-                    ),
-                  ),
-                ],
-                if (canCancel) ...[
-                  const Gap(AppDesignTokens.spacing2xl),
-                  OutlinedButton.icon(
-                    onPressed: isCancelling
-                        ? null
-                        : () async {
-                            final confirmed = await showDialog<bool>(
-                              context: context,
-                              builder: (dialogContext) {
-                                final scheme = Theme.of(
-                                  dialogContext,
-                                ).colorScheme;
-                                return AlertDialog(
-                                  title: const Text('Cancel request?'),
-                                  content: const Text(
-                                    'Only cancel if you no longer need emergency help.',
-                                  ),
-                                  actions: [
-                                    TextButton(
-                                      style: TextButton.styleFrom(
-                                        foregroundColor: scheme.error,
+                  if (canCancel) ...[
+                    const Gap(24),
+                    OutlinedButton.icon(
+                      onPressed: isCancelling
+                          ? null
+                          : () async {
+                              final confirmed = await showDialog<bool>(
+                                context: context,
+                                builder: (dialogContext) {
+                                  final scheme = Theme.of(
+                                    dialogContext,
+                                  ).colorScheme;
+                                  return AlertDialog(
+                                    title: const Text('Cancel request?'),
+                                    content: const Text(
+                                      'Only cancel if you no longer need emergency help.',
+                                    ),
+                                    actions: [
+                                      TextButton(
+                                        style: TextButton.styleFrom(
+                                          foregroundColor: scheme.error,
+                                        ),
+                                        onPressed: () => Navigator.of(
+                                          dialogContext,
+                                        ).pop(true),
+                                        child: const Text('Cancel request'),
                                       ),
-                                      onPressed: () =>
-                                          Navigator.of(dialogContext).pop(true),
-                                      child: const Text('Cancel request'),
-                                    ),
-                                    FilledButton(
-                                      onPressed: () => Navigator.of(
-                                        dialogContext,
-                                      ).pop(false),
-                                      child: const Text('Keep request'),
-                                    ),
-                                  ],
-                                );
-                              },
-                            );
-                            if (confirmed != true) return;
-                            await ref
-                                .read(cancelEmergencyProvider.notifier)
-                                .cancel(id);
-                          },
-                    icon: const Icon(Icons.cancel_outlined),
-                    label: Text(
-                      isCancelling ? 'Cancelling…' : 'Cancel request',
+                                      FilledButton(
+                                        onPressed: () => Navigator.of(
+                                          dialogContext,
+                                        ).pop(false),
+                                        child: const Text('Keep request'),
+                                      ),
+                                    ],
+                                  );
+                                },
+                              );
+                              if (confirmed != true) return;
+                              await ref
+                                  .read(cancelEmergencyProvider.notifier)
+                                  .cancel(id);
+                            },
+                      icon: const Icon(Icons.cancel_outlined),
+                      label: Text(
+                        isCancelling ? 'Cancelling…' : 'Cancel request',
+                      ),
                     ),
-                  ),
+                  ],
                 ],
-              ],
+              ),
             ),
           );
         },
@@ -749,33 +819,46 @@ class _RequestCard extends StatelessWidget {
         onTap: () =>
             context.router.push(EmergencyRequestDetailRoute(id: item.id)),
         child: ImshSurfaceCard(
-          child: Column(
+          padding: const EdgeInsets.all(12),
+          child: Row(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Row(
-                children: [
-                  Expanded(
-                    child: Text(
-                      item.description?.isNotEmpty == true
-                          ? item.description!
-                          : 'Emergency request',
-                      maxLines: 2,
-                      overflow: TextOverflow.ellipsis,
-                      style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                        fontWeight: FontWeight.w600,
+              const ImshSolidIcon(
+                icon: Icons.emergency_outlined,
+                color: ImshAccentColors.amber,
+                size: 36,
+                iconSize: 18,
+                radius: 10,
+              ),
+              const Gap(10),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      children: [
+                        Expanded(
+                          child: ImshEllipsisText(
+                            text: item.description?.isNotEmpty == true
+                                ? item.description!
+                                : 'Emergency request',
+                            style: Theme.of(context).textTheme.titleMedium
+                                ?.copyWith(fontWeight: FontWeight.w600),
+                          ),
+                        ),
+                        _StatusBadge(status: item.status),
+                      ],
+                    ),
+                    const Gap(AppDesignTokens.spacingSm),
+                    Text(
+                      item.createdAt == null
+                          ? 'Unknown time'
+                          : DateFormatter.dateTime(item.createdAt!),
+                      style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                        color: context.colorScheme.onSurfaceVariant,
                       ),
                     ),
-                  ),
-                  _StatusBadge(status: item.status),
-                ],
-              ),
-              const Gap(AppDesignTokens.spacingSm),
-              Text(
-                item.createdAt == null
-                    ? 'Unknown time'
-                    : DateFormatter.dateTime(item.createdAt!),
-                style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                  color: context.colorScheme.onSurfaceVariant,
+                  ],
                 ),
               ),
             ],
@@ -805,77 +888,53 @@ class _StatusBadge extends StatelessWidget {
 }
 
 class _DetailBlock extends StatelessWidget {
-  const _DetailBlock({required this.title, required this.value});
+  const _DetailBlock({
+    required this.title,
+    required this.value,
+    this.icon,
+    this.iconColor,
+  });
 
   final String title;
   final String value;
+  final IconData? icon;
+  final Color? iconColor;
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          title,
-          style: Theme.of(context).textTheme.labelLarge?.copyWith(
-            color: context.colorScheme.onSurfaceVariant,
-          ),
-        ),
-        const Gap(AppDesignTokens.spacingXs),
-        Text(value, style: Theme.of(context).textTheme.bodyLarge),
-      ],
-    );
-  }
-}
-
-class _EmptyState extends StatelessWidget {
-  const _EmptyState();
-
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.all(AppDesignTokens.spacingXl),
+    return ImshSurfaceCard(
+      padding: const EdgeInsets.all(12),
       child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Icon(
-            Icons.emergency_outlined,
-            size: 48,
-            color: context.colorScheme.error,
-          ),
-          const Gap(AppDesignTokens.spacingMd),
-          Text(
-            'No emergency requests yet',
-            style: Theme.of(context).textTheme.titleMedium,
-          ),
-          const Gap(AppDesignTokens.spacingSm),
-          Text(
-            'Use Request help if you need ambulance or ED response.',
-            textAlign: TextAlign.center,
-            style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-              color: context.colorScheme.onSurfaceVariant,
+          if (icon != null) ...[
+            Row(
+              children: [
+                ImshSolidIcon(
+                  icon: icon!,
+                  color: iconColor ?? ImshAccentColors.indigo,
+                  size: 28,
+                  iconSize: 14,
+                  radius: 8,
+                ),
+                const Gap(8),
+                Text(
+                  title,
+                  style: Theme.of(context).textTheme.labelLarge?.copyWith(
+                    color: context.colorScheme.onSurfaceVariant,
+                  ),
+                ),
+              ],
             ),
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-class _ErrorState extends StatelessWidget {
-  const _ErrorState({required this.message, required this.onRetry});
-
-  final String message;
-  final VoidCallback onRetry;
-
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.all(AppDesignTokens.spacingXl),
-      child: Column(
-        children: [
-          Text(message, textAlign: TextAlign.center),
-          const Gap(AppDesignTokens.spacingMd),
-          FilledButton(onPressed: onRetry, child: const Text('Retry')),
+          ] else
+            Text(
+              title,
+              style: Theme.of(context).textTheme.labelLarge?.copyWith(
+                color: context.colorScheme.onSurfaceVariant,
+              ),
+            ),
+          const Gap(AppDesignTokens.spacingXs),
+          Text(value, style: Theme.of(context).textTheme.bodyLarge),
         ],
       ),
     );
@@ -1118,21 +1177,24 @@ class GuestEmergencySubmittedScreen extends StatelessWidget {
 
     return Scaffold(
       appBar: ImshAppBar(title: const Text('Emergency request sent')),
-      body: Padding(
-        padding: const EdgeInsets.all(AppDesignTokens.containerPadding),
-        child: Column(
+      body: ResponsiveBody(
+        expand: true,
+        builder: (context, bp) => Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             ImshSurfaceCard(
+              padding: const EdgeInsets.all(16),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  Icon(
-                    Icons.check_circle_outline,
-                    size: 64,
-                    color: colorScheme.primary,
+                  const ImshSolidIcon(
+                    icon: Icons.check_circle_outline,
+                    color: ImshAccentColors.green,
+                    size: 56,
+                    iconSize: 28,
+                    radius: AppDesignTokens.radiusMd,
                   ),
-                  const Gap(AppDesignTokens.spacingLg),
+                  const Gap(12),
                   Text(
                     'Request sent to the emergency department',
                     style: Theme.of(context).textTheme.headlineSmall?.copyWith(
@@ -1140,7 +1202,7 @@ class GuestEmergencySubmittedScreen extends StatelessWidget {
                     ),
                     textAlign: TextAlign.center,
                   ),
-                  const Gap(AppDesignTokens.spacingMd),
+                  const Gap(_kSectionGap),
                   Text(
                     'Hospital staff have your location and will respond as soon as they can.',
                     style: Theme.of(context).textTheme.bodyMedium?.copyWith(
@@ -1148,7 +1210,7 @@ class GuestEmergencySubmittedScreen extends StatelessWidget {
                     ),
                     textAlign: TextAlign.center,
                   ),
-                  const Gap(AppDesignTokens.spacingMd),
+                  const Gap(_kSectionGap),
                   Text(
                     'Sign in with your patient ID to track updates on this request later.',
                     style: Theme.of(context).textTheme.bodySmall?.copyWith(

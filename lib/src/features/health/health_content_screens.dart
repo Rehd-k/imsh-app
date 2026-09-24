@@ -1,16 +1,21 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:gap/gap.dart';
 import 'package:imsh/app_router.gr.dart';
 
+import '../../core/responsive.dart';
 import '../../core/theme/app_design_tokens.dart';
-import '../../core/theme/context_extensions.dart';
+import '../../core/theme/imsh_accent_colors.dart';
 import '../../core/utils/api_media_url.dart';
 import '../../helper/date_formatter.dart';
 import '../../models/health_content_model.dart';
 import '../../providers/health_content_provider.dart';
 import '../../shared/widgets/imsh_app_bar.dart';
+import '../../shared/widgets/imsh_empty_state.dart';
+import '../../shared/widgets/imsh_error_panel.dart';
+import '../../shared/widgets/imsh_page_header.dart';
+import '../../shared/widgets/imsh_solid_icon.dart';
+import '../../shared/widgets/imsh_surface_card.dart';
 
 @RoutePage()
 class HealthCampaignsScreen extends ConsumerWidget {
@@ -23,15 +28,18 @@ class HealthCampaignsScreen extends ConsumerWidget {
       appBar: const ImshAppBar(title: Text('Health campaigns')),
       body: _HealthContentListBody(
         async: async,
+        title: 'Health campaigns',
+        subtitle: 'Hospital programmes and community health initiatives.',
+        icon: Icons.campaign_outlined,
+        iconColor: ImshAccentColors.green,
         emptyLabel: 'No campaigns right now.',
         onRetry: () => ref.invalidate(healthCampaignsProvider),
         onRefresh: () async {
           ref.invalidate(healthCampaignsProvider);
           await ref.read(healthCampaignsProvider.future);
         },
-        onOpen: (item) => context.router.push(
-          HealthCampaignDetailRoute(id: item.id),
-        ),
+        onOpen: (item) =>
+            context.router.push(HealthCampaignDetailRoute(id: item.id)),
       ),
     );
   }
@@ -48,15 +56,18 @@ class HealthNewsScreen extends ConsumerWidget {
       appBar: const ImshAppBar(title: Text('Health news')),
       body: _HealthContentListBody(
         async: async,
+        title: 'Health news',
+        subtitle: 'Articles and updates from Ibom Specialist Hospital.',
+        icon: Icons.newspaper_outlined,
+        iconColor: ImshAccentColors.blue,
         emptyLabel: 'No news articles yet.',
         onRetry: () => ref.invalidate(healthNewsProvider),
         onRefresh: () async {
           ref.invalidate(healthNewsProvider);
           await ref.read(healthNewsProvider.future);
         },
-        onOpen: (item) => context.router.push(
-          HealthNewsDetailRoute(id: item.id),
-        ),
+        onOpen: (item) =>
+            context.router.push(HealthNewsDetailRoute(id: item.id)),
       ),
     );
   }
@@ -65,6 +76,10 @@ class HealthNewsScreen extends ConsumerWidget {
 class _HealthContentListBody extends StatelessWidget {
   const _HealthContentListBody({
     required this.async,
+    required this.title,
+    required this.subtitle,
+    required this.icon,
+    required this.iconColor,
     required this.emptyLabel,
     required this.onRetry,
     required this.onRefresh,
@@ -72,6 +87,10 @@ class _HealthContentListBody extends StatelessWidget {
   });
 
   final AsyncValue<HealthContentListResponse> async;
+  final String title;
+  final String subtitle;
+  final IconData icon;
+  final Color iconColor;
   final String emptyLabel;
   final VoidCallback onRetry;
   final Future<void> Function() onRefresh;
@@ -81,39 +100,58 @@ class _HealthContentListBody extends StatelessWidget {
   Widget build(BuildContext context) {
     return async.when(
       loading: () => const Center(child: CircularProgressIndicator()),
-      error: (error, _) => Center(
-        child: Padding(
-          padding: const EdgeInsets.all(AppDesignTokens.containerPadding),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Text(healthContentErrorMessage(error), textAlign: TextAlign.center),
-              const Gap(AppDesignTokens.spacingMd),
-              FilledButton(onPressed: onRetry, child: const Text('Retry')),
-            ],
-          ),
-        ),
+      error: (error, _) => ImshErrorPanel(
+        message: healthContentErrorMessage(error),
+        onRetry: onRetry,
       ),
       data: (response) {
-        if (response.data.isEmpty) {
-          return Center(
-            child: Text(
-              emptyLabel,
-              style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                    color: context.colorScheme.onSurfaceVariant,
-                  ),
-            ),
-          );
-        }
         return RefreshIndicator(
           onRefresh: onRefresh,
-          child: ListView.separated(
-            padding: const EdgeInsets.all(AppDesignTokens.containerPadding),
-            itemCount: response.data.length,
-            separatorBuilder: (_, __) => const Gap(AppDesignTokens.spacingMd),
-            itemBuilder: (context, index) {
-              final item = response.data[index];
-              return _HealthContentCard(item: item, onTap: () => onOpen(item));
+          child: ResponsiveBody(
+            expand: false,
+            builder: (context, bp) {
+              if (response.data.isEmpty) {
+                return ListView(
+                  physics: const AlwaysScrollableScrollPhysics(),
+                  children: [
+                    ImshPageHeader(
+                      title: title,
+                      subtitle: subtitle,
+                      icon: icon,
+                      iconColor: iconColor,
+                    ),
+                    const SizedBox(height: 12),
+                    ImshEmptyState(
+                      icon: icon,
+                      iconColor: iconColor,
+                      message: emptyLabel,
+                    ),
+                  ],
+                );
+              }
+
+              return ListView.separated(
+                physics: const AlwaysScrollableScrollPhysics(),
+                itemCount: response.data.length + 1,
+                separatorBuilder: (_, index) =>
+                    SizedBox(height: index == 0 ? 12 : 10),
+                itemBuilder: (context, index) {
+                  if (index == 0) {
+                    return ImshPageHeader(
+                      title: title,
+                      subtitle: subtitle,
+                      icon: icon,
+                      iconColor: iconColor,
+                    );
+                  }
+                  final item = response.data[index - 1];
+                  return _HealthContentCard(
+                    item: item,
+                    accent: iconColor,
+                    onTap: () => onOpen(item),
+                  );
+                },
+              );
             },
           ),
         );
@@ -123,63 +161,78 @@ class _HealthContentListBody extends StatelessWidget {
 }
 
 class _HealthContentCard extends StatelessWidget {
-  const _HealthContentCard({required this.item, required this.onTap});
+  const _HealthContentCard({
+    required this.item,
+    required this.accent,
+    required this.onTap,
+  });
 
   final HealthContentItem item;
+  final Color accent;
   final VoidCallback onTap;
 
   @override
   Widget build(BuildContext context) {
-    final colorScheme = context.colorScheme;
+    final theme = Theme.of(context);
+    final cs = theme.colorScheme;
     final imageUrl = resolveApiMediaUrl(item.imageUrl);
+    final title = item.title.trim().isEmpty ? '—' : item.title;
+    final excerpt = item.excerpt.trim().isEmpty ? '—' : item.excerpt;
 
-    return Material(
-      color: colorScheme.surfaceContainerLowest,
-      borderRadius: BorderRadius.circular(AppDesignTokens.radiusMd),
-      child: InkWell(
-        onTap: onTap,
-        borderRadius: BorderRadius.circular(AppDesignTokens.radiusMd),
-        child: Container(
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(AppDesignTokens.radiusMd),
-            border: Border.all(color: colorScheme.outlineVariant),
-          ),
-          clipBehavior: Clip.antiAlias,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
+    return ImshSurfaceCard(
+      padding: const EdgeInsets.all(12),
+      onTap: onTap,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          if (imageUrl != null) ...[
+            ClipRRect(
+              borderRadius: BorderRadius.circular(AppDesignTokens.radiusMd),
+              child: AspectRatio(
+                aspectRatio: 16 / 7,
+                child: Image.network(imageUrl, fit: BoxFit.cover),
+              ),
+            ),
+            const SizedBox(height: 10),
+          ],
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              if (imageUrl != null)
-                AspectRatio(
-                  aspectRatio: 16 / 7,
-                  child: Image.network(imageUrl, fit: BoxFit.cover),
-                ),
-              Padding(
-                padding: const EdgeInsets.all(AppDesignTokens.spacingMd),
+              ImshSolidIcon(
+                icon: Icons.article_outlined,
+                color: accent,
+                size: 34,
+                iconSize: 18,
+                radius: AppDesignTokens.radiusMd,
+              ),
+              const SizedBox(width: 10),
+              Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(
-                      item.title,
-                      style: Theme.of(context).textTheme.titleSmall?.copyWith(
-                            fontWeight: FontWeight.w700,
-                          ),
+                    ImshEllipsisText(
+                      text: title,
+                      style: theme.textTheme.titleSmall?.copyWith(
+                        fontWeight: FontWeight.w700,
+                      ),
+                      maxLines: 2,
                     ),
-                    const Gap(AppDesignTokens.spacingXs),
+                    const SizedBox(height: 4),
                     Text(
-                      item.excerpt,
+                      excerpt,
                       maxLines: 3,
                       overflow: TextOverflow.ellipsis,
-                      style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                            color: colorScheme.onSurfaceVariant,
-                          ),
+                      style: theme.textTheme.bodyMedium?.copyWith(
+                        color: cs.onSurfaceVariant,
+                      ),
                     ),
                     if (item.publishedAt != null) ...[
-                      const Gap(AppDesignTokens.spacingSm),
-                      Text(
-                        DateFormatter.medicalDate(item.publishedAt!),
-                        style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                              color: colorScheme.onSurfaceVariant,
-                            ),
+                      const SizedBox(height: 8),
+                      ImshEllipsisText(
+                        text: DateFormatter.medicalDate(item.publishedAt!),
+                        style: theme.textTheme.labelSmall?.copyWith(
+                          color: cs.onSurfaceVariant,
+                        ),
                       ),
                     ],
                   ],
@@ -187,7 +240,7 @@ class _HealthContentCard extends StatelessWidget {
               ),
             ],
           ),
-        ),
+        ],
       ),
     );
   }
@@ -207,6 +260,8 @@ class HealthCampaignDetailScreen extends ConsumerWidget {
     final item = ref.watch(healthCampaignDetailProvider(id));
     return _HealthContentDetailScaffold(
       title: 'Campaign',
+      icon: Icons.campaign_outlined,
+      iconColor: ImshAccentColors.green,
       item: item,
       loading: ref.watch(healthCampaignsProvider).isLoading,
       error: ref.watch(healthCampaignsProvider).hasError
@@ -219,10 +274,7 @@ class HealthCampaignDetailScreen extends ConsumerWidget {
 
 @RoutePage()
 class HealthNewsDetailScreen extends ConsumerWidget {
-  const HealthNewsDetailScreen({
-    super.key,
-    @PathParam('id') required this.id,
-  });
+  const HealthNewsDetailScreen({super.key, @PathParam('id') required this.id});
 
   final String id;
 
@@ -231,6 +283,8 @@ class HealthNewsDetailScreen extends ConsumerWidget {
     final item = ref.watch(healthNewsDetailProvider(id));
     return _HealthContentDetailScaffold(
       title: 'News',
+      icon: Icons.newspaper_outlined,
+      iconColor: ImshAccentColors.blue,
       item: item,
       loading: ref.watch(healthNewsProvider).isLoading,
       error: ref.watch(healthNewsProvider).hasError
@@ -244,6 +298,8 @@ class HealthNewsDetailScreen extends ConsumerWidget {
 class _HealthContentDetailScaffold extends StatelessWidget {
   const _HealthContentDetailScaffold({
     required this.title,
+    required this.icon,
+    required this.iconColor,
     required this.item,
     required this.loading,
     required this.error,
@@ -251,6 +307,8 @@ class _HealthContentDetailScaffold extends StatelessWidget {
   });
 
   final String title;
+  final IconData icon;
+  final Color iconColor;
   final HealthContentItem? item;
   final bool loading;
   final String? error;
@@ -266,58 +324,57 @@ class _HealthContentDetailScaffold extends StatelessWidget {
             return const Center(child: CircularProgressIndicator());
           }
           if (error != null && item == null) {
-            return Center(
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Text(error!, textAlign: TextAlign.center),
-                  const Gap(AppDesignTokens.spacingMd),
-                  FilledButton(onPressed: onRetry, child: const Text('Retry')),
-                ],
-              ),
-            );
+            return ImshErrorPanel(message: error!, onRetry: onRetry);
           }
           if (item == null) {
-            return const Center(child: Text('Content not found'));
+            return ImshEmptyState(
+              icon: icon,
+              iconColor: iconColor,
+              message: 'Content not found',
+            );
           }
 
           final imageUrl = resolveApiMediaUrl(item!.imageUrl);
-          return ListView(
-            padding: const EdgeInsets.all(AppDesignTokens.containerPadding),
-            children: [
-              if (imageUrl != null) ...[
-                ClipRRect(
-                  borderRadius: BorderRadius.circular(AppDesignTokens.radiusMd),
-                  child: AspectRatio(
-                    aspectRatio: 16 / 9,
-                    child: Image.network(imageUrl, fit: BoxFit.cover),
+          final headline = item!.title.trim().isEmpty ? '—' : item!.title;
+          final body = item!.body.trim().isEmpty ? '—' : item!.body;
+
+          return ResponsiveBody(
+            expand: false,
+            builder: (context, bp) {
+              return ListView(
+                children: [
+                  ImshPageHeader(
+                    title: headline,
+                    subtitle: item!.publishedAt != null
+                        ? DateFormatter.medicalDate(item!.publishedAt!)
+                        : '—',
+                    icon: icon,
+                    iconColor: iconColor,
                   ),
-                ),
-                const Gap(AppDesignTokens.spacingLg),
-              ],
-              Text(
-                item!.title,
-                style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                      fontWeight: FontWeight.w700,
-                    ),
-              ),
-              if (item!.publishedAt != null) ...[
-                const Gap(AppDesignTokens.spacingXs),
-                Text(
-                  DateFormatter.medicalDate(item!.publishedAt!),
-                  style: Theme.of(context).textTheme.labelMedium?.copyWith(
-                        color: context.colorScheme.onSurfaceVariant,
+                  const SizedBox(height: 12),
+                  if (imageUrl != null) ...[
+                    ClipRRect(
+                      borderRadius:
+                          BorderRadius.circular(AppDesignTokens.radiusMd),
+                      child: AspectRatio(
+                        aspectRatio: 16 / 9,
+                        child: Image.network(imageUrl, fit: BoxFit.cover),
                       ),
-                ),
-              ],
-              const Gap(AppDesignTokens.spacingLg),
-              Text(
-                item!.body,
-                style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                      height: 1.45,
                     ),
-              ),
-            ],
+                    const SizedBox(height: 12),
+                  ],
+                  ImshSurfaceCard(
+                    padding: const EdgeInsets.all(12),
+                    child: Text(
+                      body,
+                      style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                        height: 1.45,
+                      ),
+                    ),
+                  ),
+                ],
+              );
+            },
           );
         },
       ),

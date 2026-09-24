@@ -9,27 +9,41 @@ class ImshSurfaceCard extends StatelessWidget {
     required this.child,
     this.padding = const EdgeInsets.all(AppDesignTokens.spacingLg),
     this.margin,
+    this.onTap,
   });
 
   final Widget child;
   final EdgeInsetsGeometry padding;
   final EdgeInsetsGeometry? margin;
+  final VoidCallback? onTap;
 
   @override
   Widget build(BuildContext context) {
     final colorScheme = context.colorScheme;
+    final radius = BorderRadius.circular(AppDesignTokens.radiusLg);
 
-    return Container(
+    final content = Container(
       margin: margin,
       decoration: BoxDecoration(
         color: colorScheme.surfaceContainerLowest,
-        borderRadius: BorderRadius.circular(AppDesignTokens.radiusLg),
+        borderRadius: radius,
         border: Border.all(color: colorScheme.outlineVariant),
         boxShadow: context.cardShadow,
       ),
       child: Padding(
         padding: padding,
         child: child,
+      ),
+    );
+
+    if (onTap == null) return content;
+
+    return Material(
+      color: Colors.transparent,
+      child: InkWell(
+        onTap: onTap,
+        borderRadius: radius,
+        child: content,
       ),
     );
   }

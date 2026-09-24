@@ -3,15 +3,22 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gap/gap.dart';
 import 'package:imsh/app_router.gr.dart';
+import 'package:intl/intl.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 
+import '../../../core/responsive.dart';
 import '../../../core/theme/app_design_tokens.dart';
+import '../../../core/theme/imsh_accent_colors.dart';
+import '../../../helper/app_timezone.dart';
+import '../../../helper/currency_formatter.dart';
 import '../../../models/invoice_model.dart';
 import '../../../providers/auth_provider.dart';
 import '../../../providers/billing_provider.dart';
 import '../../../providers/service_providers.dart';
+import '../../../shared/widgets/imsh_error_panel.dart';
+import '../../../shared/widgets/imsh_kpi_tile.dart';
 import '../../../shared/widgets/imsh_sliver_app_bar.dart';
-import '../../../shared/widgets/imsh_page_header.dart';
+import 'billing_page_header.dart';
 import 'billing_support_card.dart';
 import 'next_due_date_card.dart';
 import 'outstanding_balance_card.dart';
@@ -26,6 +33,8 @@ class BillingBody extends ConsumerStatefulWidget {
 }
 
 class _BillingBodyState extends ConsumerState<BillingBody> {
+  static const _sectionGap = 12.0;
+
   List<PaymentHistoryItem>? _payments;
   int _paymentsPage = 1;
   int _paymentsTotal = 0;
@@ -37,9 +46,18 @@ class _BillingBodyState extends ConsumerState<BillingBody> {
 
     return dashboardAsync.when(
       loading: () => const _BillingSkeleton(),
-      error: (error, _) => _BillingError(
-        message: authFlowErrorMessage(error),
-        onRetry: () => ref.invalidate(billingDashboardProvider),
+      error: (error, _) => CustomScrollView(
+        physics: const AlwaysScrollableScrollPhysics(),
+        slivers: [
+          const ImshSliverAppBar(),
+          SliverFillRemaining(
+            hasScrollBody: false,
+            child: ImshErrorPanel(
+              message: authFlowErrorMessage(error),
+              onRetry: () => ref.invalidate(billingDashboardProvider),
+            ),
+          ),
+        ],
       ),
       data: (dashboard) {
         final payments = _payments ?? dashboard.recentPayments;
@@ -60,52 +78,66 @@ class _BillingBodyState extends ConsumerState<BillingBody> {
             physics: const AlwaysScrollableScrollPhysics(),
             slivers: [
               const ImshSliverAppBar(),
-              SliverPadding(
-                padding: const EdgeInsets.all(AppDesignTokens.containerPadding),
-                sliver: SliverToBoxAdapter(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
-                    children: [
-                      const ImshPageHeader(
-                        title: 'Billing & Receipts',
-                        subtitle:
-                            'Manage your medical expenses and download digital receipts.',
+              SliverFillRemaining(
+                hasScrollBody: true,
+                child: ResponsiveBody(
+                  expand: false,
+                  center: false,
+                  bottomPadding: 24,
+                  builder: (context, bp) {
+                    final useSnap = bp.maxWidth < 520;
+                    return SingleChildScrollView(
+                      physics: const AlwaysScrollableScrollPhysics(),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
+                        children: [
+                          const BillingPageHeader(),
+                          const Gap(_sectionGap),
+                          ImshKpiStrip(
+                            useSnapStrip: useSnap,
+                            items: _kpiItems(dashboard),
+                          ),
+                          const Gap(10),
+                          OutstandingBalanceCard(
+                            totalOutstanding:
+                                dashboard.summary.totalOutstanding,
+                            onPayNow: () => _onPayNow(context),
+                            onViewBreakdown: () => _onViewBreakdown(
+                              context,
+                              dashboard.unpaidInvoices,
+                            ),
+                          ),
+                          if (dashboard.summary.nextDueDate != null) ...[
+                            const Gap(10),
+                            NextDueDateCard(
+                              nextDueDate: dashboard.summary.nextDueDate,
+                              daysUntilDue: dashboard.summary.daysUntilDue,
+                            ),
+                          ],
+                          const Gap(_sectionGap),
+                          UnpaidInvoicesSection(
+                            invoices: dashboard.unpaidInvoices,
+                            totalCount: dashboard.unpaidTotal,
+                            onViewAll: () =>
+                                context.router.push(const BillsRoute()),
+                          ),
+                          const Gap(_sectionGap),
+                          PaymentHistorySection(
+                            payments: payments,
+                            hasMore: payments.length < paymentsTotal,
+                            isLoadingMore: _loadingMorePayments,
+                            onLoadMore: () => _loadMorePayments(
+                              payments,
+                              paymentsTotal,
+                            ),
+                          ),
+                          const Gap(_sectionGap),
+                          const BillingSupportCard(),
+                          const Gap(_sectionGap),
+                        ],
                       ),
-                      const Gap(AppDesignTokens.spacingLg),
-                      OutstandingBalanceCard(
-                        totalOutstanding: dashboard.summary.totalOutstanding,
-                        onPayNow: () => _onPayNow(context),
-                        onViewBreakdown: () => _onViewBreakdown(
-                          context,
-                          dashboard.unpaidInvoices,
-                        ),
-                      ),
-                      const Gap(AppDesignTokens.spacingMd),
-                      NextDueDateCard(
-                        nextDueDate: dashboard.summary.nextDueDate,
-                        daysUntilDue: dashboard.summary.daysUntilDue,
-                      ),
-                      const Gap(AppDesignTokens.spacingLg),
-                      UnpaidInvoicesSection(
-                        invoices: dashboard.unpaidInvoices,
-                        totalCount: dashboard.unpaidTotal,
-                        onViewAll: () => context.router.push(const BillsRoute()),
-                      ),
-                      const Gap(AppDesignTokens.spacingLg),
-                      PaymentHistorySection(
-                        payments: payments,
-                        hasMore: payments.length < paymentsTotal,
-                        isLoadingMore: _loadingMorePayments,
-                        onLoadMore: () => _loadMorePayments(
-                          payments,
-                          paymentsTotal,
-                        ),
-                      ),
-                      const Gap(AppDesignTokens.spacingLg),
-                      const BillingSupportCard(),
-                      const Gap(AppDesignTokens.spacingLg),
-                    ],
-                  ),
+                    );
+                  },
                 ),
               ),
             ],
@@ -113,6 +145,48 @@ class _BillingBodyState extends ConsumerState<BillingBody> {
         );
       },
     );
+  }
+
+  List<ImshKpiItem> _kpiItems(BillingDashboard dashboard) {
+    final summary = dashboard.summary;
+    final outstanding =
+        CurrencyFormatter.formatAmount(summary.totalOutstanding);
+    final unpaid = dashboard.unpaidTotal;
+    final nextDue = summary.nextDueDate;
+    final nextDueLabel = nextDue == null
+        ? '—'
+        : DateFormat('MMM d').format(AppTimezone.toLocal(nextDue));
+    final nextDueCaption = nextDue == null
+        ? 'No due date'
+        : summary.daysUntilDue <= 0
+            ? 'Due now'
+            : '${summary.daysUntilDue} day${summary.daysUntilDue == 1 ? '' : 's'} left';
+
+    return [
+      ImshKpiItem(
+        label: 'Outstanding',
+        value: outstanding,
+        caption: unpaid > 0
+            ? '$unpaid unpaid bill${unpaid == 1 ? '' : 's'}'
+            : 'All clear',
+        icon: Icons.account_balance_wallet_outlined,
+        accent: ImshAccentColors.amber,
+      ),
+      ImshKpiItem(
+        label: 'Next due',
+        value: nextDueLabel,
+        caption: nextDueCaption,
+        icon: Icons.event_outlined,
+        accent: ImshAccentColors.blue,
+      ),
+      ImshKpiItem(
+        label: 'Unpaid',
+        value: unpaid > 0 ? '$unpaid' : '—',
+        caption: unpaid > 0 ? 'Open invoices' : 'None open',
+        icon: Icons.receipt_long_outlined,
+        accent: ImshAccentColors.pink,
+      ),
+    ];
   }
 
   void _onPayNow(BuildContext context) {
@@ -139,7 +213,8 @@ class _BillingBodyState extends ConsumerState<BillingBody> {
     final inpatient = unpaidInvoices.where(
       (invoice) => invoice.billType == BillType.inpatient,
     );
-    final target = inpatient.isNotEmpty ? inpatient.first : unpaidInvoices.first;
+    final target =
+        inpatient.isNotEmpty ? inpatient.first : unpaidInvoices.first;
     context.router.push(BillDetailRoute(id: target.id));
   }
 
@@ -190,29 +265,27 @@ class _BillingSkeleton extends StatelessWidget {
       child: CustomScrollView(
         slivers: [
           const ImshSliverAppBar(),
-          SliverPadding(
-            padding: const EdgeInsets.all(AppDesignTokens.containerPadding),
-            sliver: SliverToBoxAdapter(
-              child: Column(
+          SliverFillRemaining(
+            hasScrollBody: true,
+            child: ResponsiveBody(
+              expand: false,
+              center: false,
+              builder: (context, bp) => Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
-                  const ImshPageHeader(
-                    title: 'Billing & Receipts',
-                    subtitle:
-                        'Manage your medical expenses and download digital receipts.',
-                  ),
-                  const Gap(AppDesignTokens.spacingLg),
+                  const BillingPageHeader(),
+                  const Gap(12),
                   Container(
-                    height: 180,
+                    height: 72,
                     decoration: BoxDecoration(
                       color: colorScheme.surfaceContainer,
                       borderRadius:
                           BorderRadius.circular(AppDesignTokens.radiusLg),
                     ),
                   ),
-                  const Gap(AppDesignTokens.spacingMd),
+                  const Gap(10),
                   Container(
-                    height: 72,
+                    height: 56,
                     decoration: BoxDecoration(
                       color: colorScheme.surfaceContainer,
                       borderRadius:
@@ -225,46 +298,6 @@ class _BillingSkeleton extends StatelessWidget {
           ),
         ],
       ),
-    );
-  }
-}
-
-class _BillingError extends StatelessWidget {
-  const _BillingError({
-    required this.message,
-    required this.onRetry,
-  });
-
-  final String message;
-  final VoidCallback onRetry;
-
-  @override
-  Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-
-    return CustomScrollView(
-      physics: const AlwaysScrollableScrollPhysics(),
-      slivers: [
-        const ImshSliverAppBar(),
-        SliverFillRemaining(
-          hasScrollBody: false,
-          child: Center(
-            child: Padding(
-              padding: const EdgeInsets.all(AppDesignTokens.spacing2xl),
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Icon(Icons.error_outline, size: 48, color: theme.colorScheme.error),
-                  const Gap(AppDesignTokens.spacingMd),
-                  Text(message, textAlign: TextAlign.center),
-                  const Gap(AppDesignTokens.spacingMd),
-                  FilledButton(onPressed: onRetry, child: const Text('Try again')),
-                ],
-              ),
-            ),
-          ),
-        ),
-      ],
     );
   }
 }

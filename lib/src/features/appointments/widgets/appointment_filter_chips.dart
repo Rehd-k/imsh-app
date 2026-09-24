@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:gap/gap.dart';
 
 import '../../../core/theme/app_design_tokens.dart';
-import '../../../core/theme/context_extensions.dart';
 import '../../../models/appointment_model.dart';
 import '../../../providers/appointments_provider.dart';
+import '../../../shared/widgets/imsh_filter_row.dart';
 
 class AppointmentFilterChips extends ConsumerWidget {
   const AppointmentFilterChips({super.key});
@@ -14,71 +13,53 @@ class AppointmentFilterChips extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final activeFilter = ref.watch(appointmentFilterProvider);
     final theme = Theme.of(context);
+    final cs = theme.colorScheme;
 
-    return SingleChildScrollView(
-      scrollDirection: Axis.horizontal,
-      child: Row(
-        children: [
-          for (var i = 0; i < AppointmentFilterTab.values.length; i++) ...[
-            if (i > 0) const Gap(AppDesignTokens.spacingSm),
-            _FilterChip(
-              label: AppointmentFilterTab.values[i].label,
-              selected: activeFilter == AppointmentFilterTab.values[i],
-              onSelected: () {
-                ref.read(appointmentFilterProvider.notifier).state =
-                    AppointmentFilterTab.values[i];
-              },
-              theme: theme,
+    return ImshFilterRow(
+      filters: [
+        Flexible(
+          child: InputDecorator(
+            decoration: InputDecoration(
+              isDense: true,
+              contentPadding: const EdgeInsets.symmetric(
+                horizontal: 12,
+                vertical: 6,
+              ),
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(AppDesignTokens.radiusMd),
+                borderSide: BorderSide(color: cs.outlineVariant),
+              ),
+              enabledBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(AppDesignTokens.radiusMd),
+                borderSide: BorderSide(color: cs.outlineVariant),
+              ),
             ),
-          ],
-        ],
-      ),
-    );
-  }
-}
-
-class _FilterChip extends StatelessWidget {
-  const _FilterChip({
-    required this.label,
-    required this.selected,
-    required this.onSelected,
-    required this.theme,
-  });
-
-  final String label;
-  final bool selected;
-  final VoidCallback onSelected;
-  final ThemeData theme;
-
-  @override
-  Widget build(BuildContext context) {
-    final colorScheme = context.colorScheme;
-
-    return FilterChip(
-      label: Text(label),
-      selected: selected,
-      onSelected: (_) => onSelected(),
-      showCheckmark: false,
-      labelStyle: theme.textTheme.labelMedium?.copyWith(
-        color: selected
-            ? colorScheme.onPrimary
-            : colorScheme.onSurfaceVariant,
-        fontWeight: FontWeight.w600,
-      ),
-      backgroundColor: colorScheme.surfaceContainerLow,
-      selectedColor: colorScheme.primary,
-      side: BorderSide(
-        color: selected
-            ? colorScheme.primary
-            : colorScheme.outlineVariant,
-      ),
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(999),
-      ),
-      padding: const EdgeInsets.symmetric(
-        horizontal: AppDesignTokens.spacingMd,
-        vertical: AppDesignTokens.spacingXs,
-      ),
+            child: DropdownButtonHideUnderline(
+              child: DropdownButton<AppointmentFilterTab>(
+                value: activeFilter,
+                isExpanded: true,
+                isDense: true,
+                icon: const Icon(Icons.keyboard_arrow_down_rounded, size: 20),
+                style: theme.textTheme.labelLarge?.copyWith(
+                  fontWeight: FontWeight.w600,
+                  color: cs.onSurface,
+                ),
+                items: [
+                  for (final tab in AppointmentFilterTab.values)
+                    DropdownMenuItem(
+                      value: tab,
+                      child: Text(tab.label),
+                    ),
+                ],
+                onChanged: (next) {
+                  if (next == null) return;
+                  ref.read(appointmentFilterProvider.notifier).state = next;
+                },
+              ),
+            ),
+          ),
+        ),
+      ],
     );
   }
 }

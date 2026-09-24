@@ -4,7 +4,7 @@ import 'package:uuid/uuid.dart';
 /// Handles secure persistence of JWT, FCM token, and stable device key.
 class TokenStorage {
   static const _storage = FlutterSecureStorage(
-    aOptions: AndroidOptions(encryptedSharedPreferences: true),
+    aOptions: AndroidOptions(),
   );
 
   static const _accessTokenKey = 'access_token';

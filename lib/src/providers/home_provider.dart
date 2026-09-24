@@ -62,7 +62,7 @@ final homeDashboardProvider =
       AppointmentFilterTab.upcoming,
       forPatientId: forPatientId,
     ),
-    medicationService.getDashboard(),
+    medicationService.getDashboard(forPatientId: forPatientId),
     medicalRecordService.getDashboard(forPatientId: forPatientId),
     billingService.getBillingSummary(),
   ]);

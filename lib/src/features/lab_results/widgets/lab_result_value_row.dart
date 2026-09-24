@@ -1,10 +1,8 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
-import 'package:gap/gap.dart';
 import 'package:imsh/app_router.gr.dart';
 
-import '../../../core/theme/app_design_tokens.dart';
-import '../../../core/theme/context_extensions.dart';
+import '../../../core/theme/imsh_accent_colors.dart';
 import '../../../models/lab_result_model.dart';
 
 class LabResultValueRow extends StatelessWidget {
@@ -15,14 +13,16 @@ class LabResultValueRow extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final colorScheme = context.colorScheme;
+    final cs = theme.colorScheme;
     final isFlagged = line.abnormalFlag != null || line.isCritical;
+    final value = line.valueWithUnit.trim().isEmpty ? '—' : line.valueWithUnit;
+    final refRange = line.referenceRange?.trim();
 
     return InkWell(
       onTap: () => context.router.push(LabTrendRoute(analyte: line.label)),
-      borderRadius: BorderRadius.circular(AppDesignTokens.radiusSm),
+      borderRadius: BorderRadius.circular(8),
       child: Padding(
-        padding: const EdgeInsets.symmetric(vertical: AppDesignTokens.spacingSm),
+        padding: const EdgeInsets.symmetric(vertical: 8),
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -32,52 +32,52 @@ class LabResultValueRow extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    line.label,
+                    line.label.trim().isEmpty ? '—' : line.label,
                     style: theme.textTheme.bodyMedium?.copyWith(
                       fontWeight: FontWeight.w600,
-                      color: isFlagged ? colorScheme.error : null,
+                      color: isFlagged ? cs.error : null,
                     ),
                   ),
-                  if (line.referenceRange?.trim().isNotEmpty == true) ...[
-                    const Gap(2),
-                    Text(
-                      'Ref: ${line.referenceRange}',
-                      style: theme.textTheme.labelSmall?.copyWith(
-                        color: colorScheme.onSurfaceVariant,
-                      ),
+                  const SizedBox(height: 2),
+                  Text(
+                    (refRange == null || refRange.isEmpty)
+                        ? 'Ref: —'
+                        : 'Ref: $refRange',
+                    style: theme.textTheme.labelSmall?.copyWith(
+                      color: cs.onSurfaceVariant,
                     ),
-                  ],
+                  ),
                 ],
               ),
             ),
-            const Gap(AppDesignTokens.spacingSm),
+            const SizedBox(width: 8),
             Expanded(
               flex: 2,
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.end,
                 children: [
                   Text(
-                    line.valueWithUnit,
+                    value,
                     style: theme.textTheme.bodyMedium?.copyWith(
                       fontWeight: FontWeight.w700,
-                      color: isFlagged ? colorScheme.error : colorScheme.primary,
+                      color: isFlagged ? cs.error : ImshAccentColors.blue,
                     ),
                   ),
                   if (line.abnormalFlag != null) ...[
-                    const Gap(2),
+                    const SizedBox(height: 2),
                     Text(
                       line.abnormalFlag!.label,
                       style: theme.textTheme.labelSmall?.copyWith(
-                        color: colorScheme.error,
+                        color: cs.error,
                         fontWeight: FontWeight.w600,
                       ),
                     ),
                   ],
-                  const Gap(2),
+                  const SizedBox(height: 2),
                   Text(
                     'View trend',
                     style: theme.textTheme.labelSmall?.copyWith(
-                      color: colorScheme.primary,
+                      color: ImshAccentColors.teal,
                     ),
                   ),
                 ],

@@ -44,6 +44,8 @@ enum PrescriptionHistoryStatus {
   cancelled,
 }
 
+enum MedicationsViewMode { calendar, byDrug }
+
 extension MedicationDoseStatusDisplay on MedicationDoseStatus {
   String get label => switch (this) {
         MedicationDoseStatus.upcoming => 'Upcoming',
@@ -109,6 +111,10 @@ abstract class ActivePrescriptionSummary with _$ActivePrescriptionSummary {
     required int refillsRemaining,
     required double supplyProgress,
     required PrescriptionSupplyStatus supplyStatus,
+    DateTime? scheduleStartAt,
+    @Default(false) bool needsScheduleStart,
+    @Default(true) bool scheduleConfirmed,
+    DateTime? endDate,
   }) = _ActivePrescriptionSummary;
 
   factory ActivePrescriptionSummary.fromJson(Map<String, dynamic> json) =>
@@ -125,6 +131,41 @@ abstract class MedicationDashboardResponse with _$MedicationDashboardResponse {
 
   factory MedicationDashboardResponse.fromJson(Map<String, dynamic> json) =>
       _$MedicationDashboardResponseFromJson(json);
+}
+
+@freezed
+abstract class MedicationCalendarResponse with _$MedicationCalendarResponse {
+  const factory MedicationCalendarResponse({
+    @Default([]) List<MedicationScheduleEntry> doses,
+  }) = _MedicationCalendarResponse;
+
+  factory MedicationCalendarResponse.fromJson(Map<String, dynamic> json) =>
+      _$MedicationCalendarResponseFromJson(json);
+}
+
+@freezed
+abstract class PrescriptionDosesResponse with _$PrescriptionDosesResponse {
+  const factory PrescriptionDosesResponse({
+    required String prescriptionId,
+    required String displayName,
+    @Default([]) List<MedicationScheduleEntry> doses,
+  }) = _PrescriptionDosesResponse;
+
+  factory PrescriptionDosesResponse.fromJson(Map<String, dynamic> json) =>
+      _$PrescriptionDosesResponseFromJson(json);
+}
+
+@freezed
+abstract class ScheduleUpdateResponse with _$ScheduleUpdateResponse {
+  const factory ScheduleUpdateResponse({
+    required String id,
+    DateTime? patientScheduleStartAt,
+    DateTime? scheduleConfirmedAt,
+    @Default(0) int dosesGenerated,
+  }) = _ScheduleUpdateResponse;
+
+  factory ScheduleUpdateResponse.fromJson(Map<String, dynamic> json) =>
+      _$ScheduleUpdateResponseFromJson(json);
 }
 
 @freezed

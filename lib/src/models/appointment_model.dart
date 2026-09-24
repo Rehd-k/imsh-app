@@ -76,11 +76,7 @@ extension AppointmentFilterTabDisplay on AppointmentFilterTab {
         AppointmentFilterTab.pending => 'Pending',
       };
 
-  String get apiValue => switch (this) {
-        AppointmentFilterTab.upcoming => 'UPCOMING',
-        AppointmentFilterTab.past => 'PAST',
-        AppointmentFilterTab.pending => 'PENDING',
-      };
+  String get apiValue => _$AppointmentFilterTabEnumMap[this]!;
 }
 
 extension ConsultationResultStatusDisplay on ConsultationResultStatus {

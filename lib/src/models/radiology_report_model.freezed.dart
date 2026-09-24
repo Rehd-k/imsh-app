@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // coverage:ignore-file
-// ignore_for_file: type=lint
+// ignore_for_file: type=lint, type=warning, deprecated_member_use, deprecated_member_use_from_same_package
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
 part of 'radiology_report_model.dart';
@@ -9,6 +9,7 @@ part of 'radiology_report_model.dart';
 // FreezedGenerator
 // **************************************************************************
 
+// GENERATED CODE - DO NOT MODIFY BY HAND
 // dart format off
 T _$identity<T>(T value) => value;
 
@@ -28,16 +29,21 @@ $RadiologyReportImageCopyWith<RadiologyReportImage> get copyWith => _$RadiologyR
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is RadiologyReportImage&&(identical(other.id, id) || other.id == id)&&(identical(other.fileName, fileName) || other.fileName == fileName)&&(identical(other.mimeType, mimeType) || other.mimeType == mimeType)&&(identical(other.fileSize, fileSize) || other.fileSize == fileSize)&&(identical(other.uploadedAt, uploadedAt) || other.uploadedAt == uploadedAt)&&(identical(other.fileUrl, fileUrl) || other.fileUrl == fileUrl));
+  final _this = this as RadiologyReportImage;
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is RadiologyReportImage&&(identical(other.id, _this.id) || other.id == _this.id)&&(identical(other.fileName, _this.fileName) || other.fileName == _this.fileName)&&(identical(other.mimeType, _this.mimeType) || other.mimeType == _this.mimeType)&&(identical(other.fileSize, _this.fileSize) || other.fileSize == _this.fileSize)&&(identical(other.uploadedAt, _this.uploadedAt) || other.uploadedAt == _this.uploadedAt)&&(identical(other.fileUrl, _this.fileUrl) || other.fileUrl == _this.fileUrl));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,fileName,mimeType,fileSize,uploadedAt,fileUrl);
+int get hashCode {
+  final _this = this as RadiologyReportImage;
+  return Object.hash(runtimeType,_this.id,_this.fileName,_this.mimeType,_this.fileSize,_this.uploadedAt,_this.fileUrl);
+}
 
 @override
 String toString() {
-  return 'RadiologyReportImage(id: $id, fileName: $fileName, mimeType: $mimeType, fileSize: $fileSize, uploadedAt: $uploadedAt, fileUrl: $fileUrl)';
+  final _this = this as RadiologyReportImage;
+  return 'RadiologyReportImage(id: ${_this.id}, fileName: ${_this.fileName}, mimeType: ${_this.mimeType}, fileSize: ${_this.fileSize}, uploadedAt: ${_this.uploadedAt}, fileUrl: ${_this.fileUrl})';
 }
 
 
@@ -66,7 +72,7 @@ class _$RadiologyReportImageCopyWithImpl<$Res>
 /// Create a copy of RadiologyReportImage
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? fileName = null,Object? mimeType = freezed,Object? fileSize = freezed,Object? uploadedAt = null,Object? fileUrl = null,}) {
-  return _then(_self.copyWith(
+  return _then(RadiologyReportImage(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,fileName: null == fileName ? _self.fileName : fileName // ignore: cast_nullable_to_non_nullable
 as String,mimeType: freezed == mimeType ? _self.mimeType : mimeType // ignore: cast_nullable_to_non_nullable
@@ -237,16 +243,18 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _RadiologyReportImage&&(identical(other.id, id) || other.id == id)&&(identical(other.fileName, fileName) || other.fileName == fileName)&&(identical(other.mimeType, mimeType) || other.mimeType == mimeType)&&(identical(other.fileSize, fileSize) || other.fileSize == fileSize)&&(identical(other.uploadedAt, uploadedAt) || other.uploadedAt == uploadedAt)&&(identical(other.fileUrl, fileUrl) || other.fileUrl == fileUrl));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _RadiologyReportImage&&(identical(other.id, id) || other.id == id)&&(identical(other.fileName, fileName) || other.fileName == fileName)&&(identical(other.mimeType, mimeType) || other.mimeType == mimeType)&&(identical(other.fileSize, fileSize) || other.fileSize == fileSize)&&(identical(other.uploadedAt, uploadedAt) || other.uploadedAt == uploadedAt)&&(identical(other.fileUrl, fileUrl) || other.fileUrl == fileUrl));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,fileName,mimeType,fileSize,uploadedAt,fileUrl);
+int get hashCode {
+    return Object.hash(runtimeType,id,fileName,mimeType,fileSize,uploadedAt,fileUrl);
+}
 
 @override
 String toString() {
-  return 'RadiologyReportImage(id: $id, fileName: $fileName, mimeType: $mimeType, fileSize: $fileSize, uploadedAt: $uploadedAt, fileUrl: $fileUrl)';
+    return 'RadiologyReportImage(id: $id, fileName: $fileName, mimeType: $mimeType, fileSize: $fileSize, uploadedAt: $uploadedAt, fileUrl: $fileUrl)';
 }
 
 
@@ -306,16 +314,21 @@ $RadiologyReportSummaryCopyWith<RadiologyReportSummary> get copyWith => _$Radiol
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is RadiologyReportSummary&&(identical(other.id, id) || other.id == id)&&(identical(other.scanType, scanType) || other.scanType == scanType)&&(identical(other.modality, modality) || other.modality == modality)&&(identical(other.performedAt, performedAt) || other.performedAt == performedAt)&&(identical(other.radiologistName, radiologistName) || other.radiologistName == radiologistName)&&(identical(other.referringDoctorName, referringDoctorName) || other.referringDoctorName == referringDoctorName)&&(identical(other.status, status) || other.status == status)&&(identical(other.pdfUrl, pdfUrl) || other.pdfUrl == pdfUrl)&&(identical(other.dicomUrl, dicomUrl) || other.dicomUrl == dicomUrl)&&(identical(other.thumbnailUrl, thumbnailUrl) || other.thumbnailUrl == thumbnailUrl));
+  final _this = this as RadiologyReportSummary;
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is RadiologyReportSummary&&(identical(other.id, _this.id) || other.id == _this.id)&&(identical(other.scanType, _this.scanType) || other.scanType == _this.scanType)&&(identical(other.modality, _this.modality) || other.modality == _this.modality)&&(identical(other.performedAt, _this.performedAt) || other.performedAt == _this.performedAt)&&(identical(other.radiologistName, _this.radiologistName) || other.radiologistName == _this.radiologistName)&&(identical(other.referringDoctorName, _this.referringDoctorName) || other.referringDoctorName == _this.referringDoctorName)&&(identical(other.status, _this.status) || other.status == _this.status)&&(identical(other.pdfUrl, _this.pdfUrl) || other.pdfUrl == _this.pdfUrl)&&(identical(other.dicomUrl, _this.dicomUrl) || other.dicomUrl == _this.dicomUrl)&&(identical(other.thumbnailUrl, _this.thumbnailUrl) || other.thumbnailUrl == _this.thumbnailUrl));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,scanType,modality,performedAt,radiologistName,referringDoctorName,status,pdfUrl,dicomUrl,thumbnailUrl);
+int get hashCode {
+  final _this = this as RadiologyReportSummary;
+  return Object.hash(runtimeType,_this.id,_this.scanType,_this.modality,_this.performedAt,_this.radiologistName,_this.referringDoctorName,_this.status,_this.pdfUrl,_this.dicomUrl,_this.thumbnailUrl);
+}
 
 @override
 String toString() {
-  return 'RadiologyReportSummary(id: $id, scanType: $scanType, modality: $modality, performedAt: $performedAt, radiologistName: $radiologistName, referringDoctorName: $referringDoctorName, status: $status, pdfUrl: $pdfUrl, dicomUrl: $dicomUrl, thumbnailUrl: $thumbnailUrl)';
+  final _this = this as RadiologyReportSummary;
+  return 'RadiologyReportSummary(id: ${_this.id}, scanType: ${_this.scanType}, modality: ${_this.modality}, performedAt: ${_this.performedAt}, radiologistName: ${_this.radiologistName}, referringDoctorName: ${_this.referringDoctorName}, status: ${_this.status}, pdfUrl: ${_this.pdfUrl}, dicomUrl: ${_this.dicomUrl}, thumbnailUrl: ${_this.thumbnailUrl})';
 }
 
 
@@ -344,7 +357,7 @@ class _$RadiologyReportSummaryCopyWithImpl<$Res>
 /// Create a copy of RadiologyReportSummary
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? scanType = null,Object? modality = null,Object? performedAt = null,Object? radiologistName = null,Object? referringDoctorName = null,Object? status = null,Object? pdfUrl = freezed,Object? dicomUrl = freezed,Object? thumbnailUrl = freezed,}) {
-  return _then(_self.copyWith(
+  return _then(RadiologyReportSummary(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,scanType: null == scanType ? _self.scanType : scanType // ignore: cast_nullable_to_non_nullable
 as String,modality: null == modality ? _self.modality : modality // ignore: cast_nullable_to_non_nullable
@@ -523,16 +536,18 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _RadiologyReportSummary&&(identical(other.id, id) || other.id == id)&&(identical(other.scanType, scanType) || other.scanType == scanType)&&(identical(other.modality, modality) || other.modality == modality)&&(identical(other.performedAt, performedAt) || other.performedAt == performedAt)&&(identical(other.radiologistName, radiologistName) || other.radiologistName == radiologistName)&&(identical(other.referringDoctorName, referringDoctorName) || other.referringDoctorName == referringDoctorName)&&(identical(other.status, status) || other.status == status)&&(identical(other.pdfUrl, pdfUrl) || other.pdfUrl == pdfUrl)&&(identical(other.dicomUrl, dicomUrl) || other.dicomUrl == dicomUrl)&&(identical(other.thumbnailUrl, thumbnailUrl) || other.thumbnailUrl == thumbnailUrl));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _RadiologyReportSummary&&(identical(other.id, id) || other.id == id)&&(identical(other.scanType, scanType) || other.scanType == scanType)&&(identical(other.modality, modality) || other.modality == modality)&&(identical(other.performedAt, performedAt) || other.performedAt == performedAt)&&(identical(other.radiologistName, radiologistName) || other.radiologistName == radiologistName)&&(identical(other.referringDoctorName, referringDoctorName) || other.referringDoctorName == referringDoctorName)&&(identical(other.status, status) || other.status == status)&&(identical(other.pdfUrl, pdfUrl) || other.pdfUrl == pdfUrl)&&(identical(other.dicomUrl, dicomUrl) || other.dicomUrl == dicomUrl)&&(identical(other.thumbnailUrl, thumbnailUrl) || other.thumbnailUrl == thumbnailUrl));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,scanType,modality,performedAt,radiologistName,referringDoctorName,status,pdfUrl,dicomUrl,thumbnailUrl);
+int get hashCode {
+    return Object.hash(runtimeType,id,scanType,modality,performedAt,radiologistName,referringDoctorName,status,pdfUrl,dicomUrl,thumbnailUrl);
+}
 
 @override
 String toString() {
-  return 'RadiologyReportSummary(id: $id, scanType: $scanType, modality: $modality, performedAt: $performedAt, radiologistName: $radiologistName, referringDoctorName: $referringDoctorName, status: $status, pdfUrl: $pdfUrl, dicomUrl: $dicomUrl, thumbnailUrl: $thumbnailUrl)';
+    return 'RadiologyReportSummary(id: $id, scanType: $scanType, modality: $modality, performedAt: $performedAt, radiologistName: $radiologistName, referringDoctorName: $referringDoctorName, status: $status, pdfUrl: $pdfUrl, dicomUrl: $dicomUrl, thumbnailUrl: $thumbnailUrl)';
 }
 
 
@@ -596,16 +611,21 @@ $RadiologyStatisticsCopyWith<RadiologyStatistics> get copyWith => _$RadiologySta
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is RadiologyStatistics&&(identical(other.totalScans, totalScans) || other.totalScans == totalScans)&&(identical(other.pendingReviews, pendingReviews) || other.pendingReviews == pendingReviews)&&(identical(other.profileCompleteness, profileCompleteness) || other.profileCompleteness == profileCompleteness));
+  final _this = this as RadiologyStatistics;
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is RadiologyStatistics&&(identical(other.totalScans, _this.totalScans) || other.totalScans == _this.totalScans)&&(identical(other.pendingReviews, _this.pendingReviews) || other.pendingReviews == _this.pendingReviews)&&(identical(other.profileCompleteness, _this.profileCompleteness) || other.profileCompleteness == _this.profileCompleteness));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,totalScans,pendingReviews,profileCompleteness);
+int get hashCode {
+  final _this = this as RadiologyStatistics;
+  return Object.hash(runtimeType,_this.totalScans,_this.pendingReviews,_this.profileCompleteness);
+}
 
 @override
 String toString() {
-  return 'RadiologyStatistics(totalScans: $totalScans, pendingReviews: $pendingReviews, profileCompleteness: $profileCompleteness)';
+  final _this = this as RadiologyStatistics;
+  return 'RadiologyStatistics(totalScans: ${_this.totalScans}, pendingReviews: ${_this.pendingReviews}, profileCompleteness: ${_this.profileCompleteness})';
 }
 
 
@@ -634,7 +654,7 @@ class _$RadiologyStatisticsCopyWithImpl<$Res>
 /// Create a copy of RadiologyStatistics
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') @override $Res call({Object? totalScans = null,Object? pendingReviews = null,Object? profileCompleteness = null,}) {
-  return _then(_self.copyWith(
+  return _then(RadiologyStatistics(
 totalScans: null == totalScans ? _self.totalScans : totalScans // ignore: cast_nullable_to_non_nullable
 as int,pendingReviews: null == pendingReviews ? _self.pendingReviews : pendingReviews // ignore: cast_nullable_to_non_nullable
 as int,profileCompleteness: null == profileCompleteness ? _self.profileCompleteness : profileCompleteness // ignore: cast_nullable_to_non_nullable
@@ -799,16 +819,18 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _RadiologyStatistics&&(identical(other.totalScans, totalScans) || other.totalScans == totalScans)&&(identical(other.pendingReviews, pendingReviews) || other.pendingReviews == pendingReviews)&&(identical(other.profileCompleteness, profileCompleteness) || other.profileCompleteness == profileCompleteness));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _RadiologyStatistics&&(identical(other.totalScans, totalScans) || other.totalScans == totalScans)&&(identical(other.pendingReviews, pendingReviews) || other.pendingReviews == pendingReviews)&&(identical(other.profileCompleteness, profileCompleteness) || other.profileCompleteness == profileCompleteness));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,totalScans,pendingReviews,profileCompleteness);
+int get hashCode {
+    return Object.hash(runtimeType,totalScans,pendingReviews,profileCompleteness);
+}
 
 @override
 String toString() {
-  return 'RadiologyStatistics(totalScans: $totalScans, pendingReviews: $pendingReviews, profileCompleteness: $profileCompleteness)';
+    return 'RadiologyStatistics(totalScans: $totalScans, pendingReviews: $pendingReviews, profileCompleteness: $profileCompleteness)';
 }
 
 
@@ -865,16 +887,21 @@ $RadiologyReportListResponseCopyWith<RadiologyReportListResponse> get copyWith =
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is RadiologyReportListResponse&&const DeepCollectionEquality().equals(other.data, data)&&(identical(other.total, total) || other.total == total)&&(identical(other.page, page) || other.page == page)&&(identical(other.limit, limit) || other.limit == limit)&&(identical(other.statistics, statistics) || other.statistics == statistics));
+  final _this = this as RadiologyReportListResponse;
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is RadiologyReportListResponse&&const DeepCollectionEquality().equals(other.data, _this.data)&&(identical(other.total, _this.total) || other.total == _this.total)&&(identical(other.page, _this.page) || other.page == _this.page)&&(identical(other.limit, _this.limit) || other.limit == _this.limit)&&(identical(other.statistics, _this.statistics) || other.statistics == _this.statistics));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,const DeepCollectionEquality().hash(data),total,page,limit,statistics);
+int get hashCode {
+  final _this = this as RadiologyReportListResponse;
+  return Object.hash(runtimeType,const DeepCollectionEquality().hash(_this.data),_this.total,_this.page,_this.limit,_this.statistics);
+}
 
 @override
 String toString() {
-  return 'RadiologyReportListResponse(data: $data, total: $total, page: $page, limit: $limit, statistics: $statistics)';
+  final _this = this as RadiologyReportListResponse;
+  return 'RadiologyReportListResponse(data: ${_this.data}, total: ${_this.total}, page: ${_this.page}, limit: ${_this.limit}, statistics: ${_this.statistics})';
 }
 
 
@@ -903,7 +930,7 @@ class _$RadiologyReportListResponseCopyWithImpl<$Res>
 /// Create a copy of RadiologyReportListResponse
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') @override $Res call({Object? data = null,Object? total = null,Object? page = null,Object? limit = null,Object? statistics = null,}) {
-  return _then(_self.copyWith(
+  return _then(RadiologyReportListResponse(
 data: null == data ? _self.data : data // ignore: cast_nullable_to_non_nullable
 as List<RadiologyReportSummary>,total: null == total ? _self.total : total // ignore: cast_nullable_to_non_nullable
 as int,page: null == page ? _self.page : page // ignore: cast_nullable_to_non_nullable
@@ -1059,7 +1086,7 @@ return $default(_that.data,_that.total,_that.page,_that.limit,_that.statistics);
 @JsonSerializable()
 
 class _RadiologyReportListResponse implements RadiologyReportListResponse {
-  const _RadiologyReportListResponse({required final  List<RadiologyReportSummary> data, required this.total, required this.page, required this.limit, required this.statistics}): _data = data;
+  const _RadiologyReportListResponse({required  List<RadiologyReportSummary> data, required this.total, required this.page, required this.limit, required this.statistics}): _data = data;
   factory _RadiologyReportListResponse.fromJson(Map<String, dynamic> json) => _$RadiologyReportListResponseFromJson(json);
 
  final  List<RadiologyReportSummary> _data;
@@ -1087,16 +1114,18 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _RadiologyReportListResponse&&const DeepCollectionEquality().equals(other._data, _data)&&(identical(other.total, total) || other.total == total)&&(identical(other.page, page) || other.page == page)&&(identical(other.limit, limit) || other.limit == limit)&&(identical(other.statistics, statistics) || other.statistics == statistics));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _RadiologyReportListResponse&&const DeepCollectionEquality().equals(other.data, _data)&&(identical(other.total, total) || other.total == total)&&(identical(other.page, page) || other.page == page)&&(identical(other.limit, limit) || other.limit == limit)&&(identical(other.statistics, statistics) || other.statistics == statistics));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,const DeepCollectionEquality().hash(_data),total,page,limit,statistics);
+int get hashCode {
+    return Object.hash(runtimeType,const DeepCollectionEquality().hash(_data),total,page,limit,statistics);
+}
 
 @override
 String toString() {
-  return 'RadiologyReportListResponse(data: $data, total: $total, page: $page, limit: $limit, statistics: $statistics)';
+    return 'RadiologyReportListResponse(data: $data, total: $total, page: $page, limit: $limit, statistics: $statistics)';
 }
 
 
@@ -1164,16 +1193,21 @@ $RadiologyReportDetailCopyWith<RadiologyReportDetail> get copyWith => _$Radiolog
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is RadiologyReportDetail&&(identical(other.id, id) || other.id == id)&&(identical(other.scanType, scanType) || other.scanType == scanType)&&(identical(other.modality, modality) || other.modality == modality)&&(identical(other.performedAt, performedAt) || other.performedAt == performedAt)&&(identical(other.verifiedAt, verifiedAt) || other.verifiedAt == verifiedAt)&&(identical(other.radiologistName, radiologistName) || other.radiologistName == radiologistName)&&(identical(other.referringDoctorName, referringDoctorName) || other.referringDoctorName == referringDoctorName)&&(identical(other.status, status) || other.status == status)&&(identical(other.pdfUrl, pdfUrl) || other.pdfUrl == pdfUrl)&&(identical(other.dicomUrl, dicomUrl) || other.dicomUrl == dicomUrl)&&(identical(other.thumbnailUrl, thumbnailUrl) || other.thumbnailUrl == thumbnailUrl)&&(identical(other.findings, findings) || other.findings == findings)&&(identical(other.impression, impression) || other.impression == impression)&&(identical(other.recommendations, recommendations) || other.recommendations == recommendations)&&(identical(other.severity, severity) || other.severity == severity)&&(identical(other.reportBody, reportBody) || other.reportBody == reportBody)&&const DeepCollectionEquality().equals(other.images, images)&&(identical(other.paymentRequired, paymentRequired) || other.paymentRequired == paymentRequired));
+  final _this = this as RadiologyReportDetail;
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is RadiologyReportDetail&&(identical(other.id, _this.id) || other.id == _this.id)&&(identical(other.scanType, _this.scanType) || other.scanType == _this.scanType)&&(identical(other.modality, _this.modality) || other.modality == _this.modality)&&(identical(other.performedAt, _this.performedAt) || other.performedAt == _this.performedAt)&&(identical(other.verifiedAt, _this.verifiedAt) || other.verifiedAt == _this.verifiedAt)&&(identical(other.radiologistName, _this.radiologistName) || other.radiologistName == _this.radiologistName)&&(identical(other.referringDoctorName, _this.referringDoctorName) || other.referringDoctorName == _this.referringDoctorName)&&(identical(other.status, _this.status) || other.status == _this.status)&&(identical(other.pdfUrl, _this.pdfUrl) || other.pdfUrl == _this.pdfUrl)&&(identical(other.dicomUrl, _this.dicomUrl) || other.dicomUrl == _this.dicomUrl)&&(identical(other.thumbnailUrl, _this.thumbnailUrl) || other.thumbnailUrl == _this.thumbnailUrl)&&(identical(other.findings, _this.findings) || other.findings == _this.findings)&&(identical(other.impression, _this.impression) || other.impression == _this.impression)&&(identical(other.recommendations, _this.recommendations) || other.recommendations == _this.recommendations)&&(identical(other.severity, _this.severity) || other.severity == _this.severity)&&(identical(other.reportBody, _this.reportBody) || other.reportBody == _this.reportBody)&&const DeepCollectionEquality().equals(other.images, _this.images)&&(identical(other.paymentRequired, _this.paymentRequired) || other.paymentRequired == _this.paymentRequired));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,scanType,modality,performedAt,verifiedAt,radiologistName,referringDoctorName,status,pdfUrl,dicomUrl,thumbnailUrl,findings,impression,recommendations,severity,reportBody,const DeepCollectionEquality().hash(images),paymentRequired);
+int get hashCode {
+  final _this = this as RadiologyReportDetail;
+  return Object.hash(runtimeType,_this.id,_this.scanType,_this.modality,_this.performedAt,_this.verifiedAt,_this.radiologistName,_this.referringDoctorName,_this.status,_this.pdfUrl,_this.dicomUrl,_this.thumbnailUrl,_this.findings,_this.impression,_this.recommendations,_this.severity,_this.reportBody,const DeepCollectionEquality().hash(_this.images),_this.paymentRequired);
+}
 
 @override
 String toString() {
-  return 'RadiologyReportDetail(id: $id, scanType: $scanType, modality: $modality, performedAt: $performedAt, verifiedAt: $verifiedAt, radiologistName: $radiologistName, referringDoctorName: $referringDoctorName, status: $status, pdfUrl: $pdfUrl, dicomUrl: $dicomUrl, thumbnailUrl: $thumbnailUrl, findings: $findings, impression: $impression, recommendations: $recommendations, severity: $severity, reportBody: $reportBody, images: $images, paymentRequired: $paymentRequired)';
+  final _this = this as RadiologyReportDetail;
+  return 'RadiologyReportDetail(id: ${_this.id}, scanType: ${_this.scanType}, modality: ${_this.modality}, performedAt: ${_this.performedAt}, verifiedAt: ${_this.verifiedAt}, radiologistName: ${_this.radiologistName}, referringDoctorName: ${_this.referringDoctorName}, status: ${_this.status}, pdfUrl: ${_this.pdfUrl}, dicomUrl: ${_this.dicomUrl}, thumbnailUrl: ${_this.thumbnailUrl}, findings: ${_this.findings}, impression: ${_this.impression}, recommendations: ${_this.recommendations}, severity: ${_this.severity}, reportBody: ${_this.reportBody}, images: ${_this.images}, paymentRequired: ${_this.paymentRequired})';
 }
 
 
@@ -1202,7 +1236,7 @@ class _$RadiologyReportDetailCopyWithImpl<$Res>
 /// Create a copy of RadiologyReportDetail
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? scanType = null,Object? modality = null,Object? performedAt = null,Object? verifiedAt = freezed,Object? radiologistName = null,Object? referringDoctorName = null,Object? status = null,Object? pdfUrl = freezed,Object? dicomUrl = freezed,Object? thumbnailUrl = freezed,Object? findings = freezed,Object? impression = freezed,Object? recommendations = freezed,Object? severity = freezed,Object? reportBody = freezed,Object? images = null,Object? paymentRequired = null,}) {
-  return _then(_self.copyWith(
+  return _then(RadiologyReportDetail(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,scanType: null == scanType ? _self.scanType : scanType // ignore: cast_nullable_to_non_nullable
 as String,modality: null == modality ? _self.modality : modality // ignore: cast_nullable_to_non_nullable
@@ -1362,7 +1396,7 @@ return $default(_that.id,_that.scanType,_that.modality,_that.performedAt,_that.v
 @JsonSerializable()
 
 class _RadiologyReportDetail implements RadiologyReportDetail {
-  const _RadiologyReportDetail({required this.id, required this.scanType, required this.modality, required this.performedAt, this.verifiedAt, required this.radiologistName, required this.referringDoctorName, required this.status, this.pdfUrl, this.dicomUrl, this.thumbnailUrl, this.findings, this.impression, this.recommendations, this.severity, this.reportBody, final  List<RadiologyReportImage> images = const [], this.paymentRequired = false}): _images = images;
+  const _RadiologyReportDetail({required this.id, required this.scanType, required this.modality, required this.performedAt, this.verifiedAt, required this.radiologistName, required this.referringDoctorName, required this.status, this.pdfUrl, this.dicomUrl, this.thumbnailUrl, this.findings, this.impression, this.recommendations, this.severity, this.reportBody,  List<RadiologyReportImage> images = const [], this.paymentRequired = false}): _images = images;
   factory _RadiologyReportDetail.fromJson(Map<String, dynamic> json) => _$RadiologyReportDetailFromJson(json);
 
 @override final  String id;
@@ -1403,16 +1437,18 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _RadiologyReportDetail&&(identical(other.id, id) || other.id == id)&&(identical(other.scanType, scanType) || other.scanType == scanType)&&(identical(other.modality, modality) || other.modality == modality)&&(identical(other.performedAt, performedAt) || other.performedAt == performedAt)&&(identical(other.verifiedAt, verifiedAt) || other.verifiedAt == verifiedAt)&&(identical(other.radiologistName, radiologistName) || other.radiologistName == radiologistName)&&(identical(other.referringDoctorName, referringDoctorName) || other.referringDoctorName == referringDoctorName)&&(identical(other.status, status) || other.status == status)&&(identical(other.pdfUrl, pdfUrl) || other.pdfUrl == pdfUrl)&&(identical(other.dicomUrl, dicomUrl) || other.dicomUrl == dicomUrl)&&(identical(other.thumbnailUrl, thumbnailUrl) || other.thumbnailUrl == thumbnailUrl)&&(identical(other.findings, findings) || other.findings == findings)&&(identical(other.impression, impression) || other.impression == impression)&&(identical(other.recommendations, recommendations) || other.recommendations == recommendations)&&(identical(other.severity, severity) || other.severity == severity)&&(identical(other.reportBody, reportBody) || other.reportBody == reportBody)&&const DeepCollectionEquality().equals(other._images, _images)&&(identical(other.paymentRequired, paymentRequired) || other.paymentRequired == paymentRequired));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _RadiologyReportDetail&&(identical(other.id, id) || other.id == id)&&(identical(other.scanType, scanType) || other.scanType == scanType)&&(identical(other.modality, modality) || other.modality == modality)&&(identical(other.performedAt, performedAt) || other.performedAt == performedAt)&&(identical(other.verifiedAt, verifiedAt) || other.verifiedAt == verifiedAt)&&(identical(other.radiologistName, radiologistName) || other.radiologistName == radiologistName)&&(identical(other.referringDoctorName, referringDoctorName) || other.referringDoctorName == referringDoctorName)&&(identical(other.status, status) || other.status == status)&&(identical(other.pdfUrl, pdfUrl) || other.pdfUrl == pdfUrl)&&(identical(other.dicomUrl, dicomUrl) || other.dicomUrl == dicomUrl)&&(identical(other.thumbnailUrl, thumbnailUrl) || other.thumbnailUrl == thumbnailUrl)&&(identical(other.findings, findings) || other.findings == findings)&&(identical(other.impression, impression) || other.impression == impression)&&(identical(other.recommendations, recommendations) || other.recommendations == recommendations)&&(identical(other.severity, severity) || other.severity == severity)&&(identical(other.reportBody, reportBody) || other.reportBody == reportBody)&&const DeepCollectionEquality().equals(other.images, _images)&&(identical(other.paymentRequired, paymentRequired) || other.paymentRequired == paymentRequired));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,scanType,modality,performedAt,verifiedAt,radiologistName,referringDoctorName,status,pdfUrl,dicomUrl,thumbnailUrl,findings,impression,recommendations,severity,reportBody,const DeepCollectionEquality().hash(_images),paymentRequired);
+int get hashCode {
+    return Object.hash(runtimeType,id,scanType,modality,performedAt,verifiedAt,radiologistName,referringDoctorName,status,pdfUrl,dicomUrl,thumbnailUrl,findings,impression,recommendations,severity,reportBody,const DeepCollectionEquality().hash(_images),paymentRequired);
+}
 
 @override
 String toString() {
-  return 'RadiologyReportDetail(id: $id, scanType: $scanType, modality: $modality, performedAt: $performedAt, verifiedAt: $verifiedAt, radiologistName: $radiologistName, referringDoctorName: $referringDoctorName, status: $status, pdfUrl: $pdfUrl, dicomUrl: $dicomUrl, thumbnailUrl: $thumbnailUrl, findings: $findings, impression: $impression, recommendations: $recommendations, severity: $severity, reportBody: $reportBody, images: $images, paymentRequired: $paymentRequired)';
+    return 'RadiologyReportDetail(id: $id, scanType: $scanType, modality: $modality, performedAt: $performedAt, verifiedAt: $verifiedAt, radiologistName: $radiologistName, referringDoctorName: $referringDoctorName, status: $status, pdfUrl: $pdfUrl, dicomUrl: $dicomUrl, thumbnailUrl: $thumbnailUrl, findings: $findings, impression: $impression, recommendations: $recommendations, severity: $severity, reportBody: $reportBody, images: $images, paymentRequired: $paymentRequired)';
 }
 
 

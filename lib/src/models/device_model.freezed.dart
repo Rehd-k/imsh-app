@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // coverage:ignore-file
-// ignore_for_file: type=lint
+// ignore_for_file: type=lint, type=warning, deprecated_member_use, deprecated_member_use_from_same_package
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
 part of 'device_model.dart';
@@ -9,6 +9,7 @@ part of 'device_model.dart';
 // FreezedGenerator
 // **************************************************************************
 
+// GENERATED CODE - DO NOT MODIFY BY HAND
 // dart format off
 T _$identity<T>(T value) => value;
 
@@ -28,16 +29,21 @@ $PatientDeviceCopyWith<PatientDevice> get copyWith => _$PatientDeviceCopyWithImp
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is PatientDevice&&(identical(other.id, id) || other.id == id)&&(identical(other.status, status) || other.status == status)&&(identical(other.platform, platform) || other.platform == platform)&&(identical(other.deviceLabel, deviceLabel) || other.deviceLabel == deviceLabel)&&(identical(other.isCurrent, isCurrent) || other.isCurrent == isCurrent)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.approvedAt, approvedAt) || other.approvedAt == approvedAt));
+  final _this = this as PatientDevice;
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is PatientDevice&&(identical(other.id, _this.id) || other.id == _this.id)&&(identical(other.status, _this.status) || other.status == _this.status)&&(identical(other.platform, _this.platform) || other.platform == _this.platform)&&(identical(other.deviceLabel, _this.deviceLabel) || other.deviceLabel == _this.deviceLabel)&&(identical(other.isCurrent, _this.isCurrent) || other.isCurrent == _this.isCurrent)&&(identical(other.createdAt, _this.createdAt) || other.createdAt == _this.createdAt)&&(identical(other.approvedAt, _this.approvedAt) || other.approvedAt == _this.approvedAt));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,status,platform,deviceLabel,isCurrent,createdAt,approvedAt);
+int get hashCode {
+  final _this = this as PatientDevice;
+  return Object.hash(runtimeType,_this.id,_this.status,_this.platform,_this.deviceLabel,_this.isCurrent,_this.createdAt,_this.approvedAt);
+}
 
 @override
 String toString() {
-  return 'PatientDevice(id: $id, status: $status, platform: $platform, deviceLabel: $deviceLabel, isCurrent: $isCurrent, createdAt: $createdAt, approvedAt: $approvedAt)';
+  final _this = this as PatientDevice;
+  return 'PatientDevice(id: ${_this.id}, status: ${_this.status}, platform: ${_this.platform}, deviceLabel: ${_this.deviceLabel}, isCurrent: ${_this.isCurrent}, createdAt: ${_this.createdAt}, approvedAt: ${_this.approvedAt})';
 }
 
 
@@ -66,7 +72,7 @@ class _$PatientDeviceCopyWithImpl<$Res>
 /// Create a copy of PatientDevice
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? status = null,Object? platform = freezed,Object? deviceLabel = freezed,Object? isCurrent = freezed,Object? createdAt = freezed,Object? approvedAt = freezed,}) {
-  return _then(_self.copyWith(
+  return _then(PatientDevice(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,status: null == status ? _self.status : status // ignore: cast_nullable_to_non_nullable
 as PatientDeviceStatus,platform: freezed == platform ? _self.platform : platform // ignore: cast_nullable_to_non_nullable
@@ -239,16 +245,18 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _PatientDevice&&(identical(other.id, id) || other.id == id)&&(identical(other.status, status) || other.status == status)&&(identical(other.platform, platform) || other.platform == platform)&&(identical(other.deviceLabel, deviceLabel) || other.deviceLabel == deviceLabel)&&(identical(other.isCurrent, isCurrent) || other.isCurrent == isCurrent)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.approvedAt, approvedAt) || other.approvedAt == approvedAt));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _PatientDevice&&(identical(other.id, id) || other.id == id)&&(identical(other.status, status) || other.status == status)&&(identical(other.platform, platform) || other.platform == platform)&&(identical(other.deviceLabel, deviceLabel) || other.deviceLabel == deviceLabel)&&(identical(other.isCurrent, isCurrent) || other.isCurrent == isCurrent)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.approvedAt, approvedAt) || other.approvedAt == approvedAt));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,status,platform,deviceLabel,isCurrent,createdAt,approvedAt);
+int get hashCode {
+    return Object.hash(runtimeType,id,status,platform,deviceLabel,isCurrent,createdAt,approvedAt);
+}
 
 @override
 String toString() {
-  return 'PatientDevice(id: $id, status: $status, platform: $platform, deviceLabel: $deviceLabel, isCurrent: $isCurrent, createdAt: $createdAt, approvedAt: $approvedAt)';
+    return 'PatientDevice(id: $id, status: $status, platform: $platform, deviceLabel: $deviceLabel, isCurrent: $isCurrent, createdAt: $createdAt, approvedAt: $approvedAt)';
 }
 
 
@@ -309,16 +317,21 @@ $DeviceStatusResponseCopyWith<DeviceStatusResponse> get copyWith => _$DeviceStat
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is DeviceStatusResponse&&(identical(other.device, device) || other.device == device));
+  final _this = this as DeviceStatusResponse;
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is DeviceStatusResponse&&(identical(other.device, _this.device) || other.device == _this.device));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,device);
+int get hashCode {
+  final _this = this as DeviceStatusResponse;
+  return Object.hash(runtimeType,_this.device);
+}
 
 @override
 String toString() {
-  return 'DeviceStatusResponse(device: $device)';
+  final _this = this as DeviceStatusResponse;
+  return 'DeviceStatusResponse(device: ${_this.device})';
 }
 
 
@@ -347,7 +360,7 @@ class _$DeviceStatusResponseCopyWithImpl<$Res>
 /// Create a copy of DeviceStatusResponse
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') @override $Res call({Object? device = null,}) {
-  return _then(_self.copyWith(
+  return _then(DeviceStatusResponse(
 device: null == device ? _self.device : device // ignore: cast_nullable_to_non_nullable
 as PatientDevice,
   ));
@@ -517,16 +530,18 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _DeviceStatusResponse&&(identical(other.device, device) || other.device == device));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _DeviceStatusResponse&&(identical(other.device, device) || other.device == device));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,device);
+int get hashCode {
+    return Object.hash(runtimeType,device);
+}
 
 @override
 String toString() {
-  return 'DeviceStatusResponse(device: $device)';
+    return 'DeviceStatusResponse(device: $device)';
 }
 
 

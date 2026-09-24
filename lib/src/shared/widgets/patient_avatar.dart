@@ -6,11 +6,7 @@ import '../../core/utils/api_media_url.dart';
 import '../../models/patient_model.dart';
 
 class PatientAvatar extends StatefulWidget {
-  const PatientAvatar({
-    super.key,
-    required this.patient,
-    this.radius = 22,
-  });
+  const PatientAvatar({super.key, required this.patient, this.radius = 22});
 
   final Patient? patient;
   final double radius;
@@ -59,13 +55,13 @@ class _PatientAvatarState extends State<PatientAvatar> {
             width: radius * 2,
             height: radius * 2,
             fit: BoxFit.cover,
-            placeholder: (_, __) => _InitialsAvatar(
+            placeholder: (_, _) => _InitialsAvatar(
               patient: patient,
               radius: radius,
               colorScheme: colorScheme,
               theme: theme,
             ),
-            errorWidget: (_, __, ___) => _InitialsAvatar(
+            errorWidget: (_, _, _) => _InitialsAvatar(
               patient: patient,
               radius: radius,
               colorScheme: colorScheme,
@@ -103,8 +99,8 @@ class _InitialsAvatar extends StatelessWidget {
     final textStyle = radius >= 40
         ? theme.textTheme.headlineMedium
         : radius >= 20
-            ? theme.textTheme.titleSmall
-            : theme.textTheme.labelLarge;
+        ? theme.textTheme.titleSmall
+        : theme.textTheme.labelLarge;
 
     return CircleAvatar(
       radius: radius,

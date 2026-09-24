@@ -8,14 +8,10 @@ class TheatreService {
 
   final Dio _dio;
 
-  Future<TheatreSchedulesResponse> listSchedules({
-    String? forPatientId,
-  }) async {
+  Future<TheatreSchedulesResponse> listSchedules({String? forPatientId}) async {
     final resp = await _dio.get<Map<String, dynamic>>(
       '/patient/theatre/schedules',
-      queryParameters: {
-        if (forPatientId != null) 'forPatientId': forPatientId,
-      },
+      queryParameters: {'forPatientId': ?forPatientId},
     );
     return TheatreSchedulesResponse.fromJson(resp.data ?? {});
   }

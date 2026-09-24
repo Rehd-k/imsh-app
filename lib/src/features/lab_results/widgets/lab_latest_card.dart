@@ -1,13 +1,16 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
-import 'package:gap/gap.dart';
 import 'package:imsh/app_router.gr.dart';
 
 import '../../../core/theme/app_design_tokens.dart';
-import '../../../core/theme/context_extensions.dart';
+import '../../../core/theme/imsh_accent_colors.dart';
 import '../../../helper/date_formatter.dart';
 import '../../../models/lab_result_model.dart';
 import '../../../providers/lab_results_provider.dart';
+import '../../../shared/widgets/imsh_ellipsis_chip.dart';
+import '../../../shared/widgets/imsh_semantic_badge.dart';
+import '../../../shared/widgets/imsh_solid_icon.dart';
+import '../../../shared/widgets/imsh_surface_card.dart';
 import 'lab_result_status_badge.dart';
 
 class LabLatestCard extends StatelessWidget {
@@ -21,88 +24,82 @@ class LabLatestCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final colorScheme = context.colorScheme;
+    final cs = theme.colorScheme;
     final pending = isLabOrderPending(result);
 
-    return Material(
-      color: colorScheme.primaryContainer,
-      borderRadius: BorderRadius.circular(AppDesignTokens.radiusLg),
-      clipBehavior: Clip.antiAlias,
-      child: InkWell(
-        onTap: () => context.router.push(LabResultDetailRoute(id: result.id)),
-        child: Padding(
-          padding: const EdgeInsets.all(AppDesignTokens.spacingMd),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
+    return ImshSurfaceCard(
+      padding: const EdgeInsets.all(12),
+      onTap: () => context.router.push(LabResultDetailRoute(id: result.id)),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
             children: [
-              Row(
-                children: [
-                  Text(
-                    'LATEST RESULT',
-                    style: theme.textTheme.labelSmall?.copyWith(
-                      color: colorScheme.onPrimaryContainer
-                          .withValues(alpha: 0.75),
-                      fontWeight: FontWeight.w700,
-                      letterSpacing: 0.6,
+              ImshSolidIcon(
+                icon: pending
+                    ? Icons.hourglass_empty_outlined
+                    : Icons.science_outlined,
+                color: pending ? ImshAccentColors.amber : ImshAccentColors.teal,
+                size: 34,
+                iconSize: 18,
+                radius: AppDesignTokens.radiusMd,
+              ),
+              const SizedBox(width: 10),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const ImshEllipsisChip(
+                      label: 'Latest result',
+                      tone: ImshSemanticTone.info,
+                      maxWidth: 120,
                     ),
-                  ),
-                  const Spacer(),
-                  LabResultStatusBadge(
-                    status: result.summaryStatus,
-                    orderStatus: result.status,
-                    onPrimary: true,
-                  ),
-                ],
-              ),
-              const Gap(AppDesignTokens.spacingMd),
-              Text(
-                result.displayTitle,
-                style: theme.textTheme.titleLarge?.copyWith(
-                  fontWeight: FontWeight.w700,
-                  color: colorScheme.onPrimaryContainer,
-                ),
-              ),
-              const Gap(AppDesignTokens.spacingSm),
-              Text(
-                'Requested: ${DateFormatter.medicalDate(result.orderedAt)}',
-                style: theme.textTheme.bodySmall?.copyWith(
-                  color: colorScheme.onPrimaryContainer.withValues(alpha: 0.8),
-                ),
-              ),
-              const Gap(AppDesignTokens.spacingSm),
-              Text(
-                'Summary: ${result.summaryMessage}',
-                style: theme.textTheme.bodyMedium?.copyWith(
-                  fontWeight: FontWeight.w600,
-                  color: colorScheme.onPrimaryContainer,
-                ),
-              ),
-              const Gap(AppDesignTokens.spacingMd),
-              Align(
-                alignment: Alignment.centerRight,
-                child: Material(
-                  color: colorScheme.onPrimaryContainer.withValues(alpha: 0.15),
-                  borderRadius: BorderRadius.circular(AppDesignTokens.radiusSm),
-                  child: InkWell(
-                    onTap: () => context.router.push(
-                      LabResultDetailRoute(id: result.id),
-                    ),
-                    borderRadius:
-                        BorderRadius.circular(AppDesignTokens.radiusSm),
-                    child: Padding(
-                      padding: const EdgeInsets.all(AppDesignTokens.spacingSm),
-                      child: Icon(
-                        pending ? Icons.hourglass_empty : Icons.arrow_forward,
-                        color: colorScheme.onPrimaryContainer,
-                        size: 20,
+                    const SizedBox(height: 4),
+                    ImshEllipsisText(
+                      text: result.displayTitle,
+                      style: theme.textTheme.titleSmall?.copyWith(
+                        fontWeight: FontWeight.w700,
                       ),
                     ),
-                  ),
+                  ],
                 ),
+              ),
+              LabResultStatusBadge(
+                status: result.summaryStatus,
+                orderStatus: result.status,
               ),
             ],
           ),
-        ),
+          const SizedBox(height: 10),
+          ImshEllipsisText(
+            text: 'Requested: ${DateFormatter.medicalDate(result.orderedAt)}',
+            style: theme.textTheme.bodySmall?.copyWith(
+              color: cs.onSurfaceVariant,
+            ),
+          ),
+          const SizedBox(height: 4),
+          ImshEllipsisText(
+            text: 'Summary: ${result.summaryMessage}',
+            style: theme.textTheme.bodyMedium?.copyWith(
+              fontWeight: FontWeight.w600,
+            ),
+            maxLines: 2,
+          ),
+          const SizedBox(height: 8),
+          Align(
+            alignment: Alignment.centerRight,
+            child: TextButton(
+              onPressed: () =>
+                  context.router.push(LabResultDetailRoute(id: result.id)),
+              style: TextButton.styleFrom(
+                visualDensity: VisualDensity.compact,
+                padding: EdgeInsets.zero,
+                tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+              ),
+              child: Text(pending ? 'View status' : 'View details'),
+            ),
+          ),
+        ],
       ),
     );
   }

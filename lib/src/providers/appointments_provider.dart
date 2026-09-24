@@ -1,4 +1,5 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_riverpod/legacy.dart';
 
 import '../models/appointment_model.dart';
 import 'auth_provider.dart';
@@ -38,12 +39,12 @@ final cancelAppointmentProvider =
   CancelAppointmentNotifier.new,
 );
 
-class CancelAppointmentNotifier extends AutoDisposeAsyncNotifier<Set<String>> {
+class CancelAppointmentNotifier extends AsyncNotifier<Set<String>> {
   @override
   Future<Set<String>> build() async => {};
 
   Future<void> cancel(String appointmentId) async {
-    final inFlight = {...?state.valueOrNull};
+    final inFlight = {...?state.value};
     if (inFlight.contains(appointmentId)) return;
 
     inFlight.add(appointmentId);
@@ -56,13 +57,13 @@ class CancelAppointmentNotifier extends AutoDisposeAsyncNotifier<Set<String>> {
         ref.invalidate(appointmentsDashboardProvider(filter));
       }
     } finally {
-      final updated = {...?state.valueOrNull}..remove(appointmentId);
+      final updated = {...?state.value}..remove(appointmentId);
       state = AsyncData(updated);
     }
   }
 
   bool isCancelling(String appointmentId) =>
-      state.valueOrNull?.contains(appointmentId) ?? false;
+      state.value?.contains(appointmentId) ?? false;
 }
 
 final bookAppointmentProvider =
@@ -70,7 +71,7 @@ final bookAppointmentProvider =
   BookAppointmentNotifier.new,
 );
 
-class BookAppointmentNotifier extends AutoDisposeAsyncNotifier<bool> {
+class BookAppointmentNotifier extends AsyncNotifier<bool> {
   @override
   Future<bool> build() async => false;
 
@@ -153,7 +154,7 @@ class BookingWizardState {
   }
 }
 
-class BookingWizardNotifier extends AutoDisposeNotifier<BookingWizardState> {
+class BookingWizardNotifier extends Notifier<BookingWizardState> {
   @override
   BookingWizardState build() => const BookingWizardState();
 

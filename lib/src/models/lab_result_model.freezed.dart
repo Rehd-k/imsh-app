@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // coverage:ignore-file
-// ignore_for_file: type=lint
+// ignore_for_file: type=lint, type=warning, deprecated_member_use, deprecated_member_use_from_same_package
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
 part of 'lab_result_model.dart';
@@ -9,6 +9,7 @@ part of 'lab_result_model.dart';
 // FreezedGenerator
 // **************************************************************************
 
+// GENERATED CODE - DO NOT MODIFY BY HAND
 // dart format off
 T _$identity<T>(T value) => value;
 
@@ -28,16 +29,21 @@ $LabResultSummaryCopyWith<LabResultSummary> get copyWith => _$LabResultSummaryCo
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is LabResultSummary&&(identical(other.id, id) || other.id == id)&&(identical(other.status, status) || other.status == status)&&(identical(other.orderedAt, orderedAt) || other.orderedAt == orderedAt)&&(identical(other.completedAt, completedAt) || other.completedAt == completedAt)&&(identical(other.doctorName, doctorName) || other.doctorName == doctorName)&&const DeepCollectionEquality().equals(other.testNames, testNames)&&(identical(other.summaryStatus, summaryStatus) || other.summaryStatus == summaryStatus));
+  final _this = this as LabResultSummary;
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is LabResultSummary&&(identical(other.id, _this.id) || other.id == _this.id)&&(identical(other.status, _this.status) || other.status == _this.status)&&(identical(other.orderedAt, _this.orderedAt) || other.orderedAt == _this.orderedAt)&&(identical(other.completedAt, _this.completedAt) || other.completedAt == _this.completedAt)&&(identical(other.doctorName, _this.doctorName) || other.doctorName == _this.doctorName)&&const DeepCollectionEquality().equals(other.testNames, _this.testNames)&&(identical(other.summaryStatus, _this.summaryStatus) || other.summaryStatus == _this.summaryStatus));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,status,orderedAt,completedAt,doctorName,const DeepCollectionEquality().hash(testNames),summaryStatus);
+int get hashCode {
+  final _this = this as LabResultSummary;
+  return Object.hash(runtimeType,_this.id,_this.status,_this.orderedAt,_this.completedAt,_this.doctorName,const DeepCollectionEquality().hash(_this.testNames),_this.summaryStatus);
+}
 
 @override
 String toString() {
-  return 'LabResultSummary(id: $id, status: $status, orderedAt: $orderedAt, completedAt: $completedAt, doctorName: $doctorName, testNames: $testNames, summaryStatus: $summaryStatus)';
+  final _this = this as LabResultSummary;
+  return 'LabResultSummary(id: ${_this.id}, status: ${_this.status}, orderedAt: ${_this.orderedAt}, completedAt: ${_this.completedAt}, doctorName: ${_this.doctorName}, testNames: ${_this.testNames}, summaryStatus: ${_this.summaryStatus})';
 }
 
 
@@ -66,7 +72,7 @@ class _$LabResultSummaryCopyWithImpl<$Res>
 /// Create a copy of LabResultSummary
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? status = null,Object? orderedAt = null,Object? completedAt = freezed,Object? doctorName = null,Object? testNames = null,Object? summaryStatus = null,}) {
-  return _then(_self.copyWith(
+  return _then(LabResultSummary(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,status: null == status ? _self.status : status // ignore: cast_nullable_to_non_nullable
 as LabOrderStatus,orderedAt: null == orderedAt ? _self.orderedAt : orderedAt // ignore: cast_nullable_to_non_nullable
@@ -215,7 +221,7 @@ return $default(_that.id,_that.status,_that.orderedAt,_that.completedAt,_that.do
 @JsonSerializable()
 
 class _LabResultSummary implements LabResultSummary {
-  const _LabResultSummary({required this.id, required this.status, required this.orderedAt, this.completedAt, required this.doctorName, final  List<String> testNames = const [], required this.summaryStatus}): _testNames = testNames;
+  const _LabResultSummary({required this.id, required this.status, required this.orderedAt, this.completedAt, required this.doctorName,  List<String> testNames = const [], required this.summaryStatus}): _testNames = testNames;
   factory _LabResultSummary.fromJson(Map<String, dynamic> json) => _$LabResultSummaryFromJson(json);
 
 @override final  String id;
@@ -245,16 +251,18 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _LabResultSummary&&(identical(other.id, id) || other.id == id)&&(identical(other.status, status) || other.status == status)&&(identical(other.orderedAt, orderedAt) || other.orderedAt == orderedAt)&&(identical(other.completedAt, completedAt) || other.completedAt == completedAt)&&(identical(other.doctorName, doctorName) || other.doctorName == doctorName)&&const DeepCollectionEquality().equals(other._testNames, _testNames)&&(identical(other.summaryStatus, summaryStatus) || other.summaryStatus == summaryStatus));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _LabResultSummary&&(identical(other.id, id) || other.id == id)&&(identical(other.status, status) || other.status == status)&&(identical(other.orderedAt, orderedAt) || other.orderedAt == orderedAt)&&(identical(other.completedAt, completedAt) || other.completedAt == completedAt)&&(identical(other.doctorName, doctorName) || other.doctorName == doctorName)&&const DeepCollectionEquality().equals(other.testNames, _testNames)&&(identical(other.summaryStatus, summaryStatus) || other.summaryStatus == summaryStatus));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,status,orderedAt,completedAt,doctorName,const DeepCollectionEquality().hash(_testNames),summaryStatus);
+int get hashCode {
+    return Object.hash(runtimeType,id,status,orderedAt,completedAt,doctorName,const DeepCollectionEquality().hash(_testNames),summaryStatus);
+}
 
 @override
 String toString() {
-  return 'LabResultSummary(id: $id, status: $status, orderedAt: $orderedAt, completedAt: $completedAt, doctorName: $doctorName, testNames: $testNames, summaryStatus: $summaryStatus)';
+    return 'LabResultSummary(id: $id, status: $status, orderedAt: $orderedAt, completedAt: $completedAt, doctorName: $doctorName, testNames: $testNames, summaryStatus: $summaryStatus)';
 }
 
 
@@ -315,16 +323,21 @@ $LabResultListResponseCopyWith<LabResultListResponse> get copyWith => _$LabResul
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is LabResultListResponse&&const DeepCollectionEquality().equals(other.data, data)&&(identical(other.total, total) || other.total == total)&&(identical(other.page, page) || other.page == page)&&(identical(other.limit, limit) || other.limit == limit));
+  final _this = this as LabResultListResponse;
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is LabResultListResponse&&const DeepCollectionEquality().equals(other.data, _this.data)&&(identical(other.total, _this.total) || other.total == _this.total)&&(identical(other.page, _this.page) || other.page == _this.page)&&(identical(other.limit, _this.limit) || other.limit == _this.limit));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,const DeepCollectionEquality().hash(data),total,page,limit);
+int get hashCode {
+  final _this = this as LabResultListResponse;
+  return Object.hash(runtimeType,const DeepCollectionEquality().hash(_this.data),_this.total,_this.page,_this.limit);
+}
 
 @override
 String toString() {
-  return 'LabResultListResponse(data: $data, total: $total, page: $page, limit: $limit)';
+  final _this = this as LabResultListResponse;
+  return 'LabResultListResponse(data: ${_this.data}, total: ${_this.total}, page: ${_this.page}, limit: ${_this.limit})';
 }
 
 
@@ -353,7 +366,7 @@ class _$LabResultListResponseCopyWithImpl<$Res>
 /// Create a copy of LabResultListResponse
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') @override $Res call({Object? data = null,Object? total = null,Object? page = null,Object? limit = null,}) {
-  return _then(_self.copyWith(
+  return _then(LabResultListResponse(
 data: null == data ? _self.data : data // ignore: cast_nullable_to_non_nullable
 as List<LabResultSummary>,total: null == total ? _self.total : total // ignore: cast_nullable_to_non_nullable
 as int,page: null == page ? _self.page : page // ignore: cast_nullable_to_non_nullable
@@ -499,7 +512,7 @@ return $default(_that.data,_that.total,_that.page,_that.limit);case _:
 @JsonSerializable()
 
 class _LabResultListResponse implements LabResultListResponse {
-  const _LabResultListResponse({required final  List<LabResultSummary> data, required this.total, required this.page, required this.limit}): _data = data;
+  const _LabResultListResponse({required  List<LabResultSummary> data, required this.total, required this.page, required this.limit}): _data = data;
   factory _LabResultListResponse.fromJson(Map<String, dynamic> json) => _$LabResultListResponseFromJson(json);
 
  final  List<LabResultSummary> _data;
@@ -526,16 +539,18 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _LabResultListResponse&&const DeepCollectionEquality().equals(other._data, _data)&&(identical(other.total, total) || other.total == total)&&(identical(other.page, page) || other.page == page)&&(identical(other.limit, limit) || other.limit == limit));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _LabResultListResponse&&const DeepCollectionEquality().equals(other.data, _data)&&(identical(other.total, total) || other.total == total)&&(identical(other.page, page) || other.page == page)&&(identical(other.limit, limit) || other.limit == limit));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,const DeepCollectionEquality().hash(_data),total,page,limit);
+int get hashCode {
+    return Object.hash(runtimeType,const DeepCollectionEquality().hash(_data),total,page,limit);
+}
 
 @override
 String toString() {
-  return 'LabResultListResponse(data: $data, total: $total, page: $page, limit: $limit)';
+    return 'LabResultListResponse(data: $data, total: $total, page: $page, limit: $limit)';
 }
 
 
@@ -593,16 +608,21 @@ $LabResultLineCopyWith<LabResultLine> get copyWith => _$LabResultLineCopyWithImp
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is LabResultLine&&(identical(other.label, label) || other.label == label)&&(identical(other.value, value) || other.value == value)&&(identical(other.unit, unit) || other.unit == unit)&&(identical(other.referenceRange, referenceRange) || other.referenceRange == referenceRange)&&(identical(other.abnormalFlag, abnormalFlag) || other.abnormalFlag == abnormalFlag)&&(identical(other.isCritical, isCritical) || other.isCritical == isCritical));
+  final _this = this as LabResultLine;
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is LabResultLine&&(identical(other.label, _this.label) || other.label == _this.label)&&(identical(other.value, _this.value) || other.value == _this.value)&&(identical(other.unit, _this.unit) || other.unit == _this.unit)&&(identical(other.referenceRange, _this.referenceRange) || other.referenceRange == _this.referenceRange)&&(identical(other.abnormalFlag, _this.abnormalFlag) || other.abnormalFlag == _this.abnormalFlag)&&(identical(other.isCritical, _this.isCritical) || other.isCritical == _this.isCritical));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,label,value,unit,referenceRange,abnormalFlag,isCritical);
+int get hashCode {
+  final _this = this as LabResultLine;
+  return Object.hash(runtimeType,_this.label,_this.value,_this.unit,_this.referenceRange,_this.abnormalFlag,_this.isCritical);
+}
 
 @override
 String toString() {
-  return 'LabResultLine(label: $label, value: $value, unit: $unit, referenceRange: $referenceRange, abnormalFlag: $abnormalFlag, isCritical: $isCritical)';
+  final _this = this as LabResultLine;
+  return 'LabResultLine(label: ${_this.label}, value: ${_this.value}, unit: ${_this.unit}, referenceRange: ${_this.referenceRange}, abnormalFlag: ${_this.abnormalFlag}, isCritical: ${_this.isCritical})';
 }
 
 
@@ -631,7 +651,7 @@ class _$LabResultLineCopyWithImpl<$Res>
 /// Create a copy of LabResultLine
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') @override $Res call({Object? label = null,Object? value = null,Object? unit = freezed,Object? referenceRange = freezed,Object? abnormalFlag = freezed,Object? isCritical = null,}) {
-  return _then(_self.copyWith(
+  return _then(LabResultLine(
 label: null == label ? _self.label : label // ignore: cast_nullable_to_non_nullable
 as String,value: null == value ? _self.value : value // ignore: cast_nullable_to_non_nullable
 as String,unit: freezed == unit ? _self.unit : unit // ignore: cast_nullable_to_non_nullable
@@ -802,16 +822,18 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _LabResultLine&&(identical(other.label, label) || other.label == label)&&(identical(other.value, value) || other.value == value)&&(identical(other.unit, unit) || other.unit == unit)&&(identical(other.referenceRange, referenceRange) || other.referenceRange == referenceRange)&&(identical(other.abnormalFlag, abnormalFlag) || other.abnormalFlag == abnormalFlag)&&(identical(other.isCritical, isCritical) || other.isCritical == isCritical));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _LabResultLine&&(identical(other.label, label) || other.label == label)&&(identical(other.value, value) || other.value == value)&&(identical(other.unit, unit) || other.unit == unit)&&(identical(other.referenceRange, referenceRange) || other.referenceRange == referenceRange)&&(identical(other.abnormalFlag, abnormalFlag) || other.abnormalFlag == abnormalFlag)&&(identical(other.isCritical, isCritical) || other.isCritical == isCritical));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,label,value,unit,referenceRange,abnormalFlag,isCritical);
+int get hashCode {
+    return Object.hash(runtimeType,label,value,unit,referenceRange,abnormalFlag,isCritical);
+}
 
 @override
 String toString() {
-  return 'LabResultLine(label: $label, value: $value, unit: $unit, referenceRange: $referenceRange, abnormalFlag: $abnormalFlag, isCritical: $isCritical)';
+    return 'LabResultLine(label: $label, value: $value, unit: $unit, referenceRange: $referenceRange, abnormalFlag: $abnormalFlag, isCritical: $isCritical)';
 }
 
 
@@ -871,16 +893,21 @@ $LabResultPanelCopyWith<LabResultPanel> get copyWith => _$LabResultPanelCopyWith
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is LabResultPanel&&(identical(other.testName, testName) || other.testName == testName)&&(identical(other.status, status) || other.status == status)&&const DeepCollectionEquality().equals(other.results, results));
+  final _this = this as LabResultPanel;
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is LabResultPanel&&(identical(other.testName, _this.testName) || other.testName == _this.testName)&&(identical(other.status, _this.status) || other.status == _this.status)&&const DeepCollectionEquality().equals(other.results, _this.results));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,testName,status,const DeepCollectionEquality().hash(results));
+int get hashCode {
+  final _this = this as LabResultPanel;
+  return Object.hash(runtimeType,_this.testName,_this.status,const DeepCollectionEquality().hash(_this.results));
+}
 
 @override
 String toString() {
-  return 'LabResultPanel(testName: $testName, status: $status, results: $results)';
+  final _this = this as LabResultPanel;
+  return 'LabResultPanel(testName: ${_this.testName}, status: ${_this.status}, results: ${_this.results})';
 }
 
 
@@ -909,7 +936,7 @@ class _$LabResultPanelCopyWithImpl<$Res>
 /// Create a copy of LabResultPanel
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') @override $Res call({Object? testName = null,Object? status = null,Object? results = null,}) {
-  return _then(_self.copyWith(
+  return _then(LabResultPanel(
 testName: null == testName ? _self.testName : testName // ignore: cast_nullable_to_non_nullable
 as String,status: null == status ? _self.status : status // ignore: cast_nullable_to_non_nullable
 as String,results: null == results ? _self.results : results // ignore: cast_nullable_to_non_nullable
@@ -1054,7 +1081,7 @@ return $default(_that.testName,_that.status,_that.results);case _:
 @JsonSerializable()
 
 class _LabResultPanel implements LabResultPanel {
-  const _LabResultPanel({required this.testName, required this.status, final  List<LabResultLine> results = const []}): _results = results;
+  const _LabResultPanel({required this.testName, required this.status,  List<LabResultLine> results = const []}): _results = results;
   factory _LabResultPanel.fromJson(Map<String, dynamic> json) => _$LabResultPanelFromJson(json);
 
 @override final  String testName;
@@ -1080,16 +1107,18 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _LabResultPanel&&(identical(other.testName, testName) || other.testName == testName)&&(identical(other.status, status) || other.status == status)&&const DeepCollectionEquality().equals(other._results, _results));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _LabResultPanel&&(identical(other.testName, testName) || other.testName == testName)&&(identical(other.status, status) || other.status == status)&&const DeepCollectionEquality().equals(other.results, _results));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,testName,status,const DeepCollectionEquality().hash(_results));
+int get hashCode {
+    return Object.hash(runtimeType,testName,status,const DeepCollectionEquality().hash(_results));
+}
 
 @override
 String toString() {
-  return 'LabResultPanel(testName: $testName, status: $status, results: $results)';
+    return 'LabResultPanel(testName: $testName, status: $status, results: $results)';
 }
 
 
@@ -1146,16 +1175,21 @@ $LabResultDetailCopyWith<LabResultDetail> get copyWith => _$LabResultDetailCopyW
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is LabResultDetail&&(identical(other.id, id) || other.id == id)&&(identical(other.status, status) || other.status == status)&&(identical(other.orderedAt, orderedAt) || other.orderedAt == orderedAt)&&(identical(other.completedAt, completedAt) || other.completedAt == completedAt)&&(identical(other.verifiedAt, verifiedAt) || other.verifiedAt == verifiedAt)&&(identical(other.doctorName, doctorName) || other.doctorName == doctorName)&&(identical(other.pdfUrl, pdfUrl) || other.pdfUrl == pdfUrl)&&const DeepCollectionEquality().equals(other.panels, panels));
+  final _this = this as LabResultDetail;
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is LabResultDetail&&(identical(other.id, _this.id) || other.id == _this.id)&&(identical(other.status, _this.status) || other.status == _this.status)&&(identical(other.orderedAt, _this.orderedAt) || other.orderedAt == _this.orderedAt)&&(identical(other.completedAt, _this.completedAt) || other.completedAt == _this.completedAt)&&(identical(other.verifiedAt, _this.verifiedAt) || other.verifiedAt == _this.verifiedAt)&&(identical(other.doctorName, _this.doctorName) || other.doctorName == _this.doctorName)&&(identical(other.pdfUrl, _this.pdfUrl) || other.pdfUrl == _this.pdfUrl)&&const DeepCollectionEquality().equals(other.panels, _this.panels));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,status,orderedAt,completedAt,verifiedAt,doctorName,pdfUrl,const DeepCollectionEquality().hash(panels));
+int get hashCode {
+  final _this = this as LabResultDetail;
+  return Object.hash(runtimeType,_this.id,_this.status,_this.orderedAt,_this.completedAt,_this.verifiedAt,_this.doctorName,_this.pdfUrl,const DeepCollectionEquality().hash(_this.panels));
+}
 
 @override
 String toString() {
-  return 'LabResultDetail(id: $id, status: $status, orderedAt: $orderedAt, completedAt: $completedAt, verifiedAt: $verifiedAt, doctorName: $doctorName, pdfUrl: $pdfUrl, panels: $panels)';
+  final _this = this as LabResultDetail;
+  return 'LabResultDetail(id: ${_this.id}, status: ${_this.status}, orderedAt: ${_this.orderedAt}, completedAt: ${_this.completedAt}, verifiedAt: ${_this.verifiedAt}, doctorName: ${_this.doctorName}, pdfUrl: ${_this.pdfUrl}, panels: ${_this.panels})';
 }
 
 
@@ -1184,7 +1218,7 @@ class _$LabResultDetailCopyWithImpl<$Res>
 /// Create a copy of LabResultDetail
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? status = null,Object? orderedAt = null,Object? completedAt = freezed,Object? verifiedAt = freezed,Object? doctorName = null,Object? pdfUrl = freezed,Object? panels = null,}) {
-  return _then(_self.copyWith(
+  return _then(LabResultDetail(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,status: null == status ? _self.status : status // ignore: cast_nullable_to_non_nullable
 as LabOrderStatus,orderedAt: null == orderedAt ? _self.orderedAt : orderedAt // ignore: cast_nullable_to_non_nullable
@@ -1334,7 +1368,7 @@ return $default(_that.id,_that.status,_that.orderedAt,_that.completedAt,_that.ve
 @JsonSerializable()
 
 class _LabResultDetail implements LabResultDetail {
-  const _LabResultDetail({required this.id, required this.status, required this.orderedAt, this.completedAt, this.verifiedAt, required this.doctorName, this.pdfUrl, final  List<LabResultPanel> panels = const []}): _panels = panels;
+  const _LabResultDetail({required this.id, required this.status, required this.orderedAt, this.completedAt, this.verifiedAt, required this.doctorName, this.pdfUrl,  List<LabResultPanel> panels = const []}): _panels = panels;
   factory _LabResultDetail.fromJson(Map<String, dynamic> json) => _$LabResultDetailFromJson(json);
 
 @override final  String id;
@@ -1365,16 +1399,18 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _LabResultDetail&&(identical(other.id, id) || other.id == id)&&(identical(other.status, status) || other.status == status)&&(identical(other.orderedAt, orderedAt) || other.orderedAt == orderedAt)&&(identical(other.completedAt, completedAt) || other.completedAt == completedAt)&&(identical(other.verifiedAt, verifiedAt) || other.verifiedAt == verifiedAt)&&(identical(other.doctorName, doctorName) || other.doctorName == doctorName)&&(identical(other.pdfUrl, pdfUrl) || other.pdfUrl == pdfUrl)&&const DeepCollectionEquality().equals(other._panels, _panels));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _LabResultDetail&&(identical(other.id, id) || other.id == id)&&(identical(other.status, status) || other.status == status)&&(identical(other.orderedAt, orderedAt) || other.orderedAt == orderedAt)&&(identical(other.completedAt, completedAt) || other.completedAt == completedAt)&&(identical(other.verifiedAt, verifiedAt) || other.verifiedAt == verifiedAt)&&(identical(other.doctorName, doctorName) || other.doctorName == doctorName)&&(identical(other.pdfUrl, pdfUrl) || other.pdfUrl == pdfUrl)&&const DeepCollectionEquality().equals(other.panels, _panels));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,status,orderedAt,completedAt,verifiedAt,doctorName,pdfUrl,const DeepCollectionEquality().hash(_panels));
+int get hashCode {
+    return Object.hash(runtimeType,id,status,orderedAt,completedAt,verifiedAt,doctorName,pdfUrl,const DeepCollectionEquality().hash(_panels));
+}
 
 @override
 String toString() {
-  return 'LabResultDetail(id: $id, status: $status, orderedAt: $orderedAt, completedAt: $completedAt, verifiedAt: $verifiedAt, doctorName: $doctorName, pdfUrl: $pdfUrl, panels: $panels)';
+    return 'LabResultDetail(id: $id, status: $status, orderedAt: $orderedAt, completedAt: $completedAt, verifiedAt: $verifiedAt, doctorName: $doctorName, pdfUrl: $pdfUrl, panels: $panels)';
 }
 
 

@@ -27,6 +27,11 @@ typedef FamilyAppointmentCallback = void Function({
   String? subjectName,
 });
 
+typedef FamilySubjectCallback = void Function({
+  required String forPatientId,
+  String? subjectName,
+});
+
 class FcmPushService {
   FcmPushService({DeviceService? deviceService})
     : _deviceService = deviceService ?? DeviceService();
@@ -44,6 +49,9 @@ class FcmPushService {
 
   /// Invoked when an appointment push targets a family child.
   FamilyAppointmentCallback? onFamilyAppointment;
+
+  /// Invoked when a medication push targets a family child (not self).
+  FamilySubjectCallback? onFamilyMedication;
 
   static const _androidInit = AndroidInitializationSettings(
     '@mipmap/ic_launcher',
@@ -74,7 +82,7 @@ class FcmPushService {
       const AndroidNotificationChannel(
         kFcmAndroidChannelId,
         'IMSH Alerts',
-        description: 'Appointment reminders and hospital announcements',
+        description: 'Medication reminders, appointments, and hospital alerts',
         importance: Importance.high,
       ),
     );
@@ -168,7 +176,7 @@ class FcmPushService {
           kFcmAndroidChannelId,
           'IMSH Alerts',
           channelDescription:
-              'Appointment reminders and hospital announcements',
+              'Medication reminders, appointments, and hospital alerts',
           importance: Importance.high,
           priority: Priority.high,
           icon: '@mipmap/ic_launcher',
@@ -223,6 +231,18 @@ class FcmPushService {
           return;
         }
         NavigationService.router.push(const EmergencyRequestsRoute());
+        return;
+      }
+
+      if (type == 'MEDICATION' || type == 'MEDICATION_MISSED') {
+        final forPatientId = data['patientId']?.toString();
+        if (forPatientId != null && forPatientId.isNotEmpty) {
+          onFamilyMedication?.call(
+            forPatientId: forPatientId,
+            subjectName: data['subjectName']?.toString(),
+          );
+        }
+        NavigationService.router.push(const MedicationsRoute());
         return;
       }
 

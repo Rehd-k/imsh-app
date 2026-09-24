@@ -1,11 +1,13 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
-import 'package:gap/gap.dart';
 import 'package:imsh/app_router.gr.dart';
 
 import '../../../core/theme/app_design_tokens.dart';
-import '../../../core/theme/context_extensions.dart';
+import '../../../core/theme/imsh_accent_colors.dart';
 import '../../../models/medical_records_dashboard_model.dart';
+import '../../../shared/widgets/imsh_semantic_badge.dart';
+import '../../../shared/widgets/imsh_solid_icon.dart';
+import '../../../shared/widgets/imsh_surface_card.dart';
 
 class HomeLabResultsSnippet extends StatelessWidget {
   const HomeLabResultsSnippet({
@@ -19,132 +21,100 @@ class HomeLabResultsSnippet extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    if (results.isEmpty) {
-      return const SizedBox.shrink();
-    }
+    if (results.isEmpty) return const SizedBox.shrink();
 
     final theme = Theme.of(context);
-    final colorScheme = context.colorScheme;
+    final cs = theme.colorScheme;
 
-    return Padding(
-      padding: const EdgeInsets.symmetric(
-        horizontal: AppDesignTokens.containerPadding,
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          Row(
-            children: [
-              Text(
-                'Recent Lab Results',
-                style: theme.textTheme.titleMedium?.copyWith(
-                  fontWeight: FontWeight.w700,
-                ),
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        Row(
+          children: [
+            const ImshSolidIcon(
+              icon: Icons.science_outlined,
+              color: ImshAccentColors.blue,
+              size: 26,
+              iconSize: 14,
+              radius: 7,
+            ),
+            const SizedBox(width: 8),
+            Text(
+              'Recent lab results',
+              style: theme.textTheme.titleSmall?.copyWith(
+                fontWeight: FontWeight.w800,
               ),
-              const Spacer(),
-              if (onViewTrends != null)
-                TextButton(
-                  onPressed: onViewTrends,
-                  child: const Text('Trends'),
-                ),
-            ],
-          ),
-          const Gap(AppDesignTokens.spacingMd),
-          for (final result in results) ...[
-            Material(
-              color: colorScheme.surfaceContainerLow,
-              borderRadius: BorderRadius.circular(AppDesignTokens.radiusMd),
-              child: InkWell(
-                borderRadius: BorderRadius.circular(AppDesignTokens.radiusMd),
-                onTap: () {
-                  if (result.testName.trim().isNotEmpty) {
-                    context.router.push(
-                      LabTrendRoute(analyte: result.testName),
-                    );
-                  } else {
-                    onViewTrends?.call();
-                  }
-                },
-                child: Container(
-                  padding: const EdgeInsets.all(AppDesignTokens.spacingMd),
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(
-                      AppDesignTokens.radiusMd,
-                    ),
-                    border: Border.all(color: colorScheme.outlineVariant),
-                  ),
-                  child: Row(
-                    children: [
-                      Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              result.testName,
-                              style: theme.textTheme.bodyMedium?.copyWith(
-                                fontWeight: FontWeight.w600,
+            ),
+            const Spacer(),
+            if (onViewTrends != null)
+              TextButton(
+                onPressed: onViewTrends,
+                child: const Text('Trends'),
+              ),
+          ],
+        ),
+        const SizedBox(height: 8),
+        for (var i = 0; i < results.length; i++) ...[
+          if (i > 0) const SizedBox(height: 6),
+          Material(
+            color: Colors.transparent,
+            child: InkWell(
+              borderRadius: BorderRadius.circular(AppDesignTokens.radiusLg),
+              onTap: () {
+                final name = results[i].testName.trim();
+                if (name.isNotEmpty) {
+                  context.router.push(LabTrendRoute(analyte: name));
+                } else {
+                  onViewTrends?.call();
+                }
+              },
+              child: ImshSurfaceCard(
+                padding: const EdgeInsets.all(10),
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          ImshEllipsisText(
+                            text: results[i].testName,
+                            style: theme.textTheme.bodyMedium?.copyWith(
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                          if (results[i].result != null) ...[
+                            const SizedBox(height: 2),
+                            ImshEllipsisText(
+                              text: results[i].result!,
+                              style: theme.textTheme.bodySmall?.copyWith(
+                                color: cs.onSurfaceVariant,
                               ),
                             ),
-                            if (result.result != null) ...[
-                              const Gap(2),
-                              Text(
-                                result.result!,
-                                style: theme.textTheme.bodySmall?.copyWith(
-                                  color: colorScheme.onSurfaceVariant,
-                                ),
-                              ),
-                            ],
                           ],
-                        ),
+                        ],
                       ),
-                      if (result.status != null && result.status!.isNotEmpty)
-                        Builder(
-                          builder: (context) {
-                            final key = result.status!.toLowerCase();
-                            final high = key == 'high' || key == 'critical';
-                            final low = key == 'low';
-                            final bg = high
-                                ? colorScheme.errorContainer
-                                : low
-                                ? context.imshTheme.warningContainer
-                                : context.imshTheme.successContainer;
-                            final fg = high
-                                ? colorScheme.onErrorContainer
-                                : low
-                                ? context.imshTheme.onWarningContainer
-                                : context.imshTheme.onSuccessContainer;
-                            final label =
-                                '${result.status![0].toUpperCase()}${result.status!.substring(1).toLowerCase()}';
-                            return Container(
-                              padding: const EdgeInsets.symmetric(
-                                horizontal: AppDesignTokens.spacingSm,
-                                vertical: 2,
-                              ),
-                              decoration: BoxDecoration(
-                                color: bg,
-                                borderRadius: BorderRadius.circular(
-                                  AppDesignTokens.radiusSm,
-                                ),
-                              ),
-                              child: Text(
-                                label,
-                                style: theme.textTheme.labelSmall?.copyWith(
-                                  color: fg,
-                                  fontWeight: FontWeight.w600,
-                                ),
-                              ),
-                            );
-                          },
-                        ),
-                    ],
-                  ),
+                    ),
+                    if ((results[i].status?.trim().isNotEmpty) ?? false)
+                      _statusBadge(results[i].status!),
+                  ],
                 ),
               ),
             ),
-            if (result != results.last) const Gap(AppDesignTokens.spacingSm),
-          ],
+          ),
         ],
-      ),
+      ],
     );
+  }
+
+  Widget _statusBadge(String status) {
+    final key = status.toLowerCase();
+    final tone = key == 'high' || key == 'critical'
+        ? ImshSemanticTone.error
+        : key == 'low'
+            ? ImshSemanticTone.warning
+            : ImshSemanticTone.success;
+    final label =
+        '${status[0].toUpperCase()}${status.substring(1).toLowerCase()}';
+    return ImshSemanticBadge(label: label, tone: tone);
   }
 }
