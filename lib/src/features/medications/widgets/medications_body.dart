@@ -9,11 +9,14 @@ import '../../../core/responsive.dart';
 import '../../../core/theme/imsh_accent_colors.dart';
 import '../../../models/medication_model.dart';
 import '../../../providers/auth_provider.dart';
+import '../../../providers/dose_streak_provider.dart';
 import '../../../providers/medications_provider.dart';
+import '../../../providers/pending_dose_mark_provider.dart';
 import '../../../shared/widgets/imsh_error_panel.dart';
 import '../../../shared/widgets/imsh_kpi_tile.dart';
 import 'active_prescriptions_section.dart';
 import 'dose_actions.dart';
+import 'dose_streak_header.dart';
 import 'medications_by_drug_view.dart';
 import 'medications_calendar_view.dart';
 import 'medications_page_header.dart';
@@ -29,6 +32,17 @@ class MedicationsBody extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final dashboardAsync = ref.watch(medicationsDashboardProvider);
     final viewMode = ref.watch(medicationsViewModeProvider);
+    final pending = ref.watch(pendingDoseMarkProvider);
+    final streak = ref.watch(doseStreakProvider);
+    final dayCompletedTick = ref.watch(doseDayCompletedTickProvider);
+
+    ref.listen<String?>(doseMarkCommitErrorProvider, (prev, next) {
+      if (next == null || next == prev) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(next)),
+      );
+      ref.read(doseMarkCommitErrorProvider.notifier).clear();
+    });
 
     return dashboardAsync.when(
       loading: () => const _MedicationsSkeleton(),
@@ -46,11 +60,14 @@ class MedicationsBody extends ConsumerWidget {
           expand: false,
           builder: (context, bp) {
             final useSnap = bp.maxWidth < 520;
-            final dueToday = _dueTodayCount(dashboard.todaySchedule);
-            final takenToday = dashboard.todaySchedule
-                .where((e) => e.status == MedicationDoseStatus.taken)
-                .length;
+            final progress = todayDoseProgress(
+              schedule: dashboard.todaySchedule,
+              pendingIds: pending,
+            );
+            final dueToday = _dueTodayCount(dashboard.todaySchedule, pending);
+            final takenToday = progress.taken;
             final activeCount = dashboard.activePrescriptions.length;
+            final streakDays = streak.currentStreak;
 
             return SingleChildScrollView(
               physics: const AlwaysScrollableScrollPhysics(),
@@ -63,6 +80,12 @@ class MedicationsBody extends ConsumerWidget {
                           .push(const MedicationsHistoryRoute()),
                       child: const Text('History'),
                     ),
+                  ),
+                  const Gap(8),
+                  DoseStreakHeader(
+                    streakDays: streakDays,
+                    progressFraction: progress.fraction,
+                    celebrateTick: dayCompletedTick,
                   ),
                   const Gap(_sectionGap),
                   ImshKpiStrip(
@@ -151,12 +174,16 @@ class MedicationsBody extends ConsumerWidget {
     );
   }
 
-  int _dueTodayCount(List<MedicationScheduleEntry> schedule) {
+  int _dueTodayCount(
+    List<MedicationScheduleEntry> schedule,
+    Set<String> pending,
+  ) {
     return schedule
         .where(
           (e) =>
-              e.status == MedicationDoseStatus.upcoming ||
-              e.status == MedicationDoseStatus.missed,
+              !pending.contains(e.id) &&
+              (e.status == MedicationDoseStatus.upcoming ||
+                  e.status == MedicationDoseStatus.missed),
         )
         .length;
   }

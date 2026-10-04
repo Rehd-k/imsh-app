@@ -8,18 +8,21 @@ import '../../../helper/app_timezone.dart';
 import '../../../models/medication_model.dart';
 import '../../../shared/widgets/imsh_solid_icon.dart';
 import '../../../shared/widgets/imsh_surface_card.dart';
+import 'duolingo_dose_button.dart';
 
 class NextDoseCard extends StatelessWidget {
   const NextDoseCard({
     super.key,
     required this.dose,
     required this.onMarkTaken,
-    required this.isMarking,
+    required this.isTaken,
+    this.enabled = true,
   });
 
   final MedicationDoseSummary dose;
   final VoidCallback onMarkTaken;
-  final bool isMarking;
+  final bool isTaken;
+  final bool enabled;
 
   String _formatTime(DateTime date) {
     return DateFormat('h:mm a').format(AppTimezone.toLocal(date));
@@ -64,6 +67,8 @@ class NextDoseCard extends StatelessWidget {
               text: displayName,
               style: theme.textTheme.titleLarge?.copyWith(
                 fontWeight: FontWeight.w800,
+                decoration: isTaken ? TextDecoration.lineThrough : null,
+                color: isTaken ? cs.onSurfaceVariant : null,
               ),
             ),
             if (dose.instructions?.isNotEmpty == true) ...[
@@ -78,26 +83,10 @@ class NextDoseCard extends StatelessWidget {
               ),
             ],
             const Gap(12),
-            SizedBox(
-              width: double.infinity,
-              child: FilledButton.icon(
-                onPressed: isMarking ? null : onMarkTaken,
-                style: FilledButton.styleFrom(
-                  padding: const EdgeInsets.symmetric(vertical: 12),
-                  shape: RoundedRectangleBorder(
-                    borderRadius:
-                        BorderRadius.circular(AppDesignTokens.radiusMd),
-                  ),
-                ),
-                icon: isMarking
-                    ? const SizedBox(
-                        width: 18,
-                        height: 18,
-                        child: CircularProgressIndicator(strokeWidth: 2),
-                      )
-                    : const Icon(Icons.check_circle_outline, size: 20),
-                label: Text(isMarking ? 'Saving…' : 'Mark as Taken'),
-              ),
+            DuolingoMarkTakenCta(
+              isTaken: isTaken,
+              enabled: enabled && !isTaken,
+              onTaken: onMarkTaken,
             ),
           ],
         ),

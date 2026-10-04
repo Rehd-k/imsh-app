@@ -8,9 +8,11 @@ import '../../../helper/app_timezone.dart';
 import '../../../models/medication_model.dart';
 import '../../../providers/auth_provider.dart';
 import '../../../providers/medications_provider.dart';
+import '../../../providers/pending_dose_mark_provider.dart';
 import '../../../shared/widgets/adaptive_date_picker.dart';
 import '../../../shared/widgets/imsh_solid_icon.dart';
 import '../../../shared/widgets/imsh_surface_card.dart';
+import 'duolingo_dose_button.dart';
 
 class ScheduleStartBanner extends ConsumerWidget {
   const ScheduleStartBanner({
@@ -155,6 +157,18 @@ class DoseTakenButton extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final pending = ref.watch(pendingDoseMarkProvider);
+    final isPending = pending.contains(doseId);
+
+    // Optimistic taken while undo window is open.
+    if (isPending) {
+      return DuolingoDoseCheckControl(
+        isTaken: true,
+        enabled: false,
+        onTaken: () {},
+      );
+    }
+
     if (status != MedicationDoseStatus.upcoming &&
         status != MedicationDoseStatus.missed) {
       return const SizedBox.shrink();
@@ -167,42 +181,17 @@ class DoseTakenButton extends ConsumerWidget {
       return const SizedBox.shrink();
     }
 
-    final isMarking = ref.watch(markDoseTakenProvider).maybeWhen(
-          data: (inFlight) => inFlight.contains(doseId),
-          orElse: () => false,
-        );
-    final notifier = ref.read(markDoseTakenProvider.notifier);
-
-    return IconButton(
-      tooltip: isMarking ? 'Saving…' : 'Mark taken',
-      onPressed: isMarking
-          ? null
-          : () async {
-              try {
-                await notifier.markTaken(doseId);
-              } catch (error) {
-                if (!context.mounted) return;
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(content: Text(authFlowErrorMessage(error))),
-                );
-              }
-            },
-      icon: isMarking
-          ? const SizedBox(
-              width: 28,
-              height: 28,
-              child: Padding(
-                padding: EdgeInsets.all(6),
-                child: CircularProgressIndicator(strokeWidth: 2),
-              ),
-            )
-          : const ImshSolidIcon(
-              icon: Icons.check_circle_outline,
-              color: ImshAccentColors.green,
-              size: 32,
-              iconSize: 16,
-              radius: 8,
-            ),
+    return Tooltip(
+      message: 'Mark taken',
+      child: DuolingoDoseCheckControl(
+        onTaken: () {
+          scheduleDoseTakenWithUndo(
+            context: context,
+            ref: ref,
+            doseId: doseId,
+          );
+        },
+      ),
     );
   }
 }

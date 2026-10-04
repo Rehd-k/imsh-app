@@ -4,8 +4,7 @@ import 'package:gap/gap.dart';
 
 import '../../../core/theme/app_design_tokens.dart';
 import '../../../models/medication_model.dart';
-import '../../../providers/auth_provider.dart';
-import '../../../providers/medications_provider.dart';
+import '../../../providers/pending_dose_mark_provider.dart';
 import 'next_dose_card.dart';
 
 class NextDoseCarousel extends ConsumerStatefulWidget {
@@ -43,7 +42,7 @@ class _NextDoseCarouselState extends ConsumerState<NextDoseCarousel> {
     }
 
     final colorScheme = Theme.of(context).colorScheme;
-    final markNotifier = ref.watch(markDoseTakenProvider.notifier);
+    final pending = ref.watch(pendingDoseMarkProvider);
 
     return Column(
       children: [
@@ -55,25 +54,18 @@ class _NextDoseCarouselState extends ConsumerState<NextDoseCarousel> {
             onPageChanged: (index) => setState(() => _currentPage = index),
             itemBuilder: (context, index) {
               final dose = widget.doses[index];
-              final isMarking = ref.watch(markDoseTakenProvider).maybeWhen(
-                    data: (inFlight) => inFlight.contains(dose.id),
-                    orElse: () => false,
-                  );
+              final isTaken = pending.contains(dose.id) ||
+                  dose.status == MedicationDoseStatus.taken;
 
               return NextDoseCard(
                 dose: dose,
-                isMarking: isMarking,
-                onMarkTaken: () async {
-                  try {
-                    await markNotifier.markTaken(dose.id);
-                  } catch (error) {
-                    if (!context.mounted) return;
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(
-                        content: Text(authFlowErrorMessage(error)),
-                      ),
-                    );
-                  }
+                isTaken: isTaken,
+                onMarkTaken: () {
+                  scheduleDoseTakenWithUndo(
+                    context: context,
+                    ref: ref,
+                    doseId: dose.id,
+                  );
                 },
               );
             },

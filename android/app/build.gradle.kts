@@ -32,6 +32,10 @@ android {
         jvmTarget = JavaVersion.VERSION_11.toString()
     }
 
+    androidResources {
+        noCompress += listOf("mov", "MOV", "mp4", "MP4")
+    }
+
     defaultConfig {
         applicationId = "com.vesselstudio.imsh_patient"
         minSdk = flutter.minSdkVersion

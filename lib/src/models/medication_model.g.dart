@@ -112,6 +112,24 @@ const _$PrescriptionSupplyStatusEnumMap = {
   PrescriptionSupplyStatus.expired: 'EXPIRED',
 };
 
+_MedicationStreak _$MedicationStreakFromJson(Map<String, dynamic> json) =>
+    _MedicationStreak(
+      currentStreak: (json['currentStreak'] as num?)?.toInt() ?? 0,
+      longestStreak: (json['longestStreak'] as num?)?.toInt() ?? 0,
+      lastPerfectDate: json['lastPerfectDate'] as String?,
+      shieldsRemaining: (json['shieldsRemaining'] as num?)?.toInt() ?? 1,
+      todayCompleted: json['todayCompleted'] as bool? ?? false,
+    );
+
+Map<String, dynamic> _$MedicationStreakToJson(_MedicationStreak instance) =>
+    <String, dynamic>{
+      'currentStreak': instance.currentStreak,
+      'longestStreak': instance.longestStreak,
+      'lastPerfectDate': instance.lastPerfectDate,
+      'shieldsRemaining': instance.shieldsRemaining,
+      'todayCompleted': instance.todayCompleted,
+    };
+
 _MedicationDashboardResponse _$MedicationDashboardResponseFromJson(
   Map<String, dynamic> json,
 ) => _MedicationDashboardResponse(
@@ -137,6 +155,9 @@ _MedicationDashboardResponse _$MedicationDashboardResponseFromJson(
           )
           .toList() ??
       const [],
+  streak: json['streak'] == null
+      ? null
+      : MedicationStreak.fromJson(json['streak'] as Map<String, dynamic>),
 );
 
 Map<String, dynamic> _$MedicationDashboardResponseToJson(
@@ -145,6 +166,7 @@ Map<String, dynamic> _$MedicationDashboardResponseToJson(
   'nextDoses': instance.nextDoses,
   'todaySchedule': instance.todaySchedule,
   'activePrescriptions': instance.activePrescriptions,
+  'streak': instance.streak,
 };
 
 _MedicationCalendarResponse _$MedicationCalendarResponseFromJson(
@@ -213,6 +235,10 @@ _MarkDoseTakenResponse _$MarkDoseTakenResponseFromJson(
   id: json['id'] as String,
   status: $enumDecode(_$MedicationDoseStatusEnumMap, json['status']),
   takenAt: DateTime.parse(json['takenAt'] as String),
+  streak: json['streak'] == null
+      ? null
+      : MedicationStreak.fromJson(json['streak'] as Map<String, dynamic>),
+  dayCompleted: json['dayCompleted'] as bool? ?? false,
 );
 
 Map<String, dynamic> _$MarkDoseTakenResponseToJson(
@@ -221,6 +247,26 @@ Map<String, dynamic> _$MarkDoseTakenResponseToJson(
   'id': instance.id,
   'status': _$MedicationDoseStatusEnumMap[instance.status]!,
   'takenAt': instance.takenAt.toIso8601String(),
+  'streak': instance.streak,
+  'dayCompleted': instance.dayCompleted,
+};
+
+_UnmarkDoseTakenResponse _$UnmarkDoseTakenResponseFromJson(
+  Map<String, dynamic> json,
+) => _UnmarkDoseTakenResponse(
+  id: json['id'] as String,
+  status: $enumDecode(_$MedicationDoseStatusEnumMap, json['status']),
+  streak: json['streak'] == null
+      ? null
+      : MedicationStreak.fromJson(json['streak'] as Map<String, dynamic>),
+);
+
+Map<String, dynamic> _$UnmarkDoseTakenResponseToJson(
+  _UnmarkDoseTakenResponse instance,
+) => <String, dynamic>{
+  'id': instance.id,
+  'status': _$MedicationDoseStatusEnumMap[instance.status]!,
+  'streak': instance.streak,
 };
 
 _PrescriptionHistorySummary _$PrescriptionHistorySummaryFromJson(

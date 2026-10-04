@@ -51,6 +51,7 @@ dependencies:
   path_provider: ^2.1.5
   just_audio: ^0.10.4
   video_player: ^2.10.0
+  video_player_win: ^3.2.2
   # Config
   envied: ^1.1.1
   firebase_core: ^4.12.1
@@ -74,6 +75,7 @@ flutter:
   assets:
     - assets/imsh.png
     - assets/vessellogo.png
+    - assets/login.mp4
 
 flutter_launcher_icons:
   android: true

@@ -7,7 +7,7 @@ List<String> get kApiCandidateBaseUrls {
   final fromEnv = Env.apiBaseUrl.trim();
   final candidates = <String>[
     if (fromEnv.isNotEmpty) fromEnv,
-    'http://api.imsh.ng',
+    'https://api.imsh.ng',
     'http://192.168.2.120:3000',
     'http://192.168.1.180:3000',
     'http://192.168.2.121:3000',

@@ -122,11 +122,26 @@ abstract class ActivePrescriptionSummary with _$ActivePrescriptionSummary {
 }
 
 @freezed
+abstract class MedicationStreak with _$MedicationStreak {
+  const factory MedicationStreak({
+    @Default(0) int currentStreak,
+    @Default(0) int longestStreak,
+    String? lastPerfectDate,
+    @Default(1) int shieldsRemaining,
+    @Default(false) bool todayCompleted,
+  }) = _MedicationStreak;
+
+  factory MedicationStreak.fromJson(Map<String, dynamic> json) =>
+      _$MedicationStreakFromJson(json);
+}
+
+@freezed
 abstract class MedicationDashboardResponse with _$MedicationDashboardResponse {
   const factory MedicationDashboardResponse({
     @Default([]) List<MedicationDoseSummary> nextDoses,
     @Default([]) List<MedicationScheduleEntry> todaySchedule,
     @Default([]) List<ActivePrescriptionSummary> activePrescriptions,
+    MedicationStreak? streak,
   }) = _MedicationDashboardResponse;
 
   factory MedicationDashboardResponse.fromJson(Map<String, dynamic> json) =>
@@ -174,10 +189,24 @@ abstract class MarkDoseTakenResponse with _$MarkDoseTakenResponse {
     required String id,
     required MedicationDoseStatus status,
     required DateTime takenAt,
+    MedicationStreak? streak,
+    @Default(false) bool dayCompleted,
   }) = _MarkDoseTakenResponse;
 
   factory MarkDoseTakenResponse.fromJson(Map<String, dynamic> json) =>
       _$MarkDoseTakenResponseFromJson(json);
+}
+
+@freezed
+abstract class UnmarkDoseTakenResponse with _$UnmarkDoseTakenResponse {
+  const factory UnmarkDoseTakenResponse({
+    required String id,
+    required MedicationDoseStatus status,
+    MedicationStreak? streak,
+  }) = _UnmarkDoseTakenResponse;
+
+  factory UnmarkDoseTakenResponse.fromJson(Map<String, dynamic> json) =>
+      _$UnmarkDoseTakenResponseFromJson(json);
 }
 
 @freezed

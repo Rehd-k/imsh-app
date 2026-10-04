@@ -890,9 +890,291 @@ as DateTime?,
 
 
 /// @nodoc
+mixin _$MedicationStreak {
+
+ int get currentStreak; int get longestStreak; String? get lastPerfectDate; int get shieldsRemaining; bool get todayCompleted;
+/// Create a copy of MedicationStreak
+/// with the given fields replaced by the non-null parameter values.
+@JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+$MedicationStreakCopyWith<MedicationStreak> get copyWith => _$MedicationStreakCopyWithImpl<MedicationStreak>(this as MedicationStreak, _$identity);
+
+  /// Serializes this MedicationStreak to a JSON map.
+  Map<String, dynamic> toJson();
+
+
+@override
+bool operator ==(Object other) {
+  final _this = this as MedicationStreak;
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is MedicationStreak&&(identical(other.currentStreak, _this.currentStreak) || other.currentStreak == _this.currentStreak)&&(identical(other.longestStreak, _this.longestStreak) || other.longestStreak == _this.longestStreak)&&(identical(other.lastPerfectDate, _this.lastPerfectDate) || other.lastPerfectDate == _this.lastPerfectDate)&&(identical(other.shieldsRemaining, _this.shieldsRemaining) || other.shieldsRemaining == _this.shieldsRemaining)&&(identical(other.todayCompleted, _this.todayCompleted) || other.todayCompleted == _this.todayCompleted));
+}
+
+@JsonKey(includeFromJson: false, includeToJson: false)
+@override
+int get hashCode {
+  final _this = this as MedicationStreak;
+  return Object.hash(runtimeType,_this.currentStreak,_this.longestStreak,_this.lastPerfectDate,_this.shieldsRemaining,_this.todayCompleted);
+}
+
+@override
+String toString() {
+  final _this = this as MedicationStreak;
+  return 'MedicationStreak(currentStreak: ${_this.currentStreak}, longestStreak: ${_this.longestStreak}, lastPerfectDate: ${_this.lastPerfectDate}, shieldsRemaining: ${_this.shieldsRemaining}, todayCompleted: ${_this.todayCompleted})';
+}
+
+
+}
+
+/// @nodoc
+abstract mixin class $MedicationStreakCopyWith<$Res>  {
+  factory $MedicationStreakCopyWith(MedicationStreak value, $Res Function(MedicationStreak) _then) = _$MedicationStreakCopyWithImpl;
+@useResult
+$Res call({
+ int currentStreak, int longestStreak, String? lastPerfectDate, int shieldsRemaining, bool todayCompleted
+});
+
+
+
+
+}
+/// @nodoc
+class _$MedicationStreakCopyWithImpl<$Res>
+    implements $MedicationStreakCopyWith<$Res> {
+  _$MedicationStreakCopyWithImpl(this._self, this._then);
+
+  final MedicationStreak _self;
+  final $Res Function(MedicationStreak) _then;
+
+/// Create a copy of MedicationStreak
+/// with the given fields replaced by the non-null parameter values.
+@pragma('vm:prefer-inline') @override $Res call({Object? currentStreak = null,Object? longestStreak = null,Object? lastPerfectDate = freezed,Object? shieldsRemaining = null,Object? todayCompleted = null,}) {
+  return _then(MedicationStreak(
+currentStreak: null == currentStreak ? _self.currentStreak : currentStreak // ignore: cast_nullable_to_non_nullable
+as int,longestStreak: null == longestStreak ? _self.longestStreak : longestStreak // ignore: cast_nullable_to_non_nullable
+as int,lastPerfectDate: freezed == lastPerfectDate ? _self.lastPerfectDate : lastPerfectDate // ignore: cast_nullable_to_non_nullable
+as String?,shieldsRemaining: null == shieldsRemaining ? _self.shieldsRemaining : shieldsRemaining // ignore: cast_nullable_to_non_nullable
+as int,todayCompleted: null == todayCompleted ? _self.todayCompleted : todayCompleted // ignore: cast_nullable_to_non_nullable
+as bool,
+  ));
+}
+
+}
+
+
+/// Adds pattern-matching-related methods to [MedicationStreak].
+extension MedicationStreakPatterns on MedicationStreak {
+/// A variant of `map` that fallback to returning `orElse`.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case _:
+///     return orElse();
+/// }
+/// ```
+
+@optionalTypeArgs TResult maybeMap<TResult extends Object?>(TResult Function( _MedicationStreak value)?  $default,{required TResult orElse(),}){
+final _that = this;
+switch (_that) {
+case _MedicationStreak() when $default != null:
+return $default(_that);case _:
+  return orElse();
+
+}
+}
+/// A `switch`-like method, using callbacks.
+///
+/// Callbacks receives the raw object, upcasted.
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case final Subclass2 value:
+///     return ...;
+/// }
+/// ```
+
+@optionalTypeArgs TResult map<TResult extends Object?>(TResult Function( _MedicationStreak value)  $default,){
+final _that = this;
+switch (_that) {
+case _MedicationStreak():
+return $default(_that);case _:
+  throw StateError('Unexpected subclass');
+
+}
+}
+/// A variant of `map` that fallback to returning `null`.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case _:
+///     return null;
+/// }
+/// ```
+
+@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>(TResult? Function( _MedicationStreak value)?  $default,){
+final _that = this;
+switch (_that) {
+case _MedicationStreak() when $default != null:
+return $default(_that);case _:
+  return null;
+
+}
+}
+/// A variant of `when` that fallback to an `orElse` callback.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case _:
+///     return orElse();
+/// }
+/// ```
+
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( int currentStreak,  int longestStreak,  String? lastPerfectDate,  int shieldsRemaining,  bool todayCompleted)?  $default,{required TResult orElse(),}) {final _that = this;
+switch (_that) {
+case _MedicationStreak() when $default != null:
+return $default(_that.currentStreak,_that.longestStreak,_that.lastPerfectDate,_that.shieldsRemaining,_that.todayCompleted);case _:
+  return orElse();
+
+}
+}
+/// A `switch`-like method, using callbacks.
+///
+/// As opposed to `map`, this offers destructuring.
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case Subclass2(:final field2):
+///     return ...;
+/// }
+/// ```
+
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( int currentStreak,  int longestStreak,  String? lastPerfectDate,  int shieldsRemaining,  bool todayCompleted)  $default,) {final _that = this;
+switch (_that) {
+case _MedicationStreak():
+return $default(_that.currentStreak,_that.longestStreak,_that.lastPerfectDate,_that.shieldsRemaining,_that.todayCompleted);case _:
+  throw StateError('Unexpected subclass');
+
+}
+}
+/// A variant of `when` that fallback to returning `null`
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case _:
+///     return null;
+/// }
+/// ```
+
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( int currentStreak,  int longestStreak,  String? lastPerfectDate,  int shieldsRemaining,  bool todayCompleted)?  $default,) {final _that = this;
+switch (_that) {
+case _MedicationStreak() when $default != null:
+return $default(_that.currentStreak,_that.longestStreak,_that.lastPerfectDate,_that.shieldsRemaining,_that.todayCompleted);case _:
+  return null;
+
+}
+}
+
+}
+
+/// @nodoc
+@JsonSerializable()
+
+class _MedicationStreak implements MedicationStreak {
+  const _MedicationStreak({this.currentStreak = 0, this.longestStreak = 0, this.lastPerfectDate, this.shieldsRemaining = 1, this.todayCompleted = false});
+  factory _MedicationStreak.fromJson(Map<String, dynamic> json) => _$MedicationStreakFromJson(json);
+
+@override@JsonKey() final  int currentStreak;
+@override@JsonKey() final  int longestStreak;
+@override final  String? lastPerfectDate;
+@override@JsonKey() final  int shieldsRemaining;
+@override@JsonKey() final  bool todayCompleted;
+
+/// Create a copy of MedicationStreak
+/// with the given fields replaced by the non-null parameter values.
+@override @JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+_$MedicationStreakCopyWith<_MedicationStreak> get copyWith => __$MedicationStreakCopyWithImpl<_MedicationStreak>(this, _$identity);
+
+@override
+Map<String, dynamic> toJson() {
+  return _$MedicationStreakToJson(this, );
+}
+
+@override
+bool operator ==(Object other) {
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _MedicationStreak&&(identical(other.currentStreak, currentStreak) || other.currentStreak == currentStreak)&&(identical(other.longestStreak, longestStreak) || other.longestStreak == longestStreak)&&(identical(other.lastPerfectDate, lastPerfectDate) || other.lastPerfectDate == lastPerfectDate)&&(identical(other.shieldsRemaining, shieldsRemaining) || other.shieldsRemaining == shieldsRemaining)&&(identical(other.todayCompleted, todayCompleted) || other.todayCompleted == todayCompleted));
+}
+
+@JsonKey(includeFromJson: false, includeToJson: false)
+@override
+int get hashCode {
+    return Object.hash(runtimeType,currentStreak,longestStreak,lastPerfectDate,shieldsRemaining,todayCompleted);
+}
+
+@override
+String toString() {
+    return 'MedicationStreak(currentStreak: $currentStreak, longestStreak: $longestStreak, lastPerfectDate: $lastPerfectDate, shieldsRemaining: $shieldsRemaining, todayCompleted: $todayCompleted)';
+}
+
+
+}
+
+/// @nodoc
+abstract mixin class _$MedicationStreakCopyWith<$Res> implements $MedicationStreakCopyWith<$Res> {
+  factory _$MedicationStreakCopyWith(_MedicationStreak value, $Res Function(_MedicationStreak) _then) = __$MedicationStreakCopyWithImpl;
+@override @useResult
+$Res call({
+ int currentStreak, int longestStreak, String? lastPerfectDate, int shieldsRemaining, bool todayCompleted
+});
+
+
+
+
+}
+/// @nodoc
+class __$MedicationStreakCopyWithImpl<$Res>
+    implements _$MedicationStreakCopyWith<$Res> {
+  __$MedicationStreakCopyWithImpl(this._self, this._then);
+
+  final _MedicationStreak _self;
+  final $Res Function(_MedicationStreak) _then;
+
+/// Create a copy of MedicationStreak
+/// with the given fields replaced by the non-null parameter values.
+@override @pragma('vm:prefer-inline') $Res call({Object? currentStreak = null,Object? longestStreak = null,Object? lastPerfectDate = freezed,Object? shieldsRemaining = null,Object? todayCompleted = null,}) {
+  return _then(_MedicationStreak(
+currentStreak: null == currentStreak ? _self.currentStreak : currentStreak // ignore: cast_nullable_to_non_nullable
+as int,longestStreak: null == longestStreak ? _self.longestStreak : longestStreak // ignore: cast_nullable_to_non_nullable
+as int,lastPerfectDate: freezed == lastPerfectDate ? _self.lastPerfectDate : lastPerfectDate // ignore: cast_nullable_to_non_nullable
+as String?,shieldsRemaining: null == shieldsRemaining ? _self.shieldsRemaining : shieldsRemaining // ignore: cast_nullable_to_non_nullable
+as int,todayCompleted: null == todayCompleted ? _self.todayCompleted : todayCompleted // ignore: cast_nullable_to_non_nullable
+as bool,
+  ));
+}
+
+
+}
+
+
+/// @nodoc
 mixin _$MedicationDashboardResponse {
 
- List<MedicationDoseSummary> get nextDoses; List<MedicationScheduleEntry> get todaySchedule; List<ActivePrescriptionSummary> get activePrescriptions;
+ List<MedicationDoseSummary> get nextDoses; List<MedicationScheduleEntry> get todaySchedule; List<ActivePrescriptionSummary> get activePrescriptions; MedicationStreak? get streak;
 /// Create a copy of MedicationDashboardResponse
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -906,20 +1188,20 @@ $MedicationDashboardResponseCopyWith<MedicationDashboardResponse> get copyWith =
 @override
 bool operator ==(Object other) {
   final _this = this as MedicationDashboardResponse;
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is MedicationDashboardResponse&&const DeepCollectionEquality().equals(other.nextDoses, _this.nextDoses)&&const DeepCollectionEquality().equals(other.todaySchedule, _this.todaySchedule)&&const DeepCollectionEquality().equals(other.activePrescriptions, _this.activePrescriptions));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is MedicationDashboardResponse&&const DeepCollectionEquality().equals(other.nextDoses, _this.nextDoses)&&const DeepCollectionEquality().equals(other.todaySchedule, _this.todaySchedule)&&const DeepCollectionEquality().equals(other.activePrescriptions, _this.activePrescriptions)&&(identical(other.streak, _this.streak) || other.streak == _this.streak));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
 int get hashCode {
   final _this = this as MedicationDashboardResponse;
-  return Object.hash(runtimeType,const DeepCollectionEquality().hash(_this.nextDoses),const DeepCollectionEquality().hash(_this.todaySchedule),const DeepCollectionEquality().hash(_this.activePrescriptions));
+  return Object.hash(runtimeType,const DeepCollectionEquality().hash(_this.nextDoses),const DeepCollectionEquality().hash(_this.todaySchedule),const DeepCollectionEquality().hash(_this.activePrescriptions),_this.streak);
 }
 
 @override
 String toString() {
   final _this = this as MedicationDashboardResponse;
-  return 'MedicationDashboardResponse(nextDoses: ${_this.nextDoses}, todaySchedule: ${_this.todaySchedule}, activePrescriptions: ${_this.activePrescriptions})';
+  return 'MedicationDashboardResponse(nextDoses: ${_this.nextDoses}, todaySchedule: ${_this.todaySchedule}, activePrescriptions: ${_this.activePrescriptions}, streak: ${_this.streak})';
 }
 
 
@@ -930,11 +1212,11 @@ abstract mixin class $MedicationDashboardResponseCopyWith<$Res>  {
   factory $MedicationDashboardResponseCopyWith(MedicationDashboardResponse value, $Res Function(MedicationDashboardResponse) _then) = _$MedicationDashboardResponseCopyWithImpl;
 @useResult
 $Res call({
- List<MedicationDoseSummary> nextDoses, List<MedicationScheduleEntry> todaySchedule, List<ActivePrescriptionSummary> activePrescriptions
+ List<MedicationDoseSummary> nextDoses, List<MedicationScheduleEntry> todaySchedule, List<ActivePrescriptionSummary> activePrescriptions, MedicationStreak? streak
 });
 
 
-
+$MedicationStreakCopyWith<$Res>? get streak;
 
 }
 /// @nodoc
@@ -947,15 +1229,28 @@ class _$MedicationDashboardResponseCopyWithImpl<$Res>
 
 /// Create a copy of MedicationDashboardResponse
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? nextDoses = null,Object? todaySchedule = null,Object? activePrescriptions = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? nextDoses = null,Object? todaySchedule = null,Object? activePrescriptions = null,Object? streak = freezed,}) {
   return _then(MedicationDashboardResponse(
 nextDoses: null == nextDoses ? _self.nextDoses : nextDoses // ignore: cast_nullable_to_non_nullable
 as List<MedicationDoseSummary>,todaySchedule: null == todaySchedule ? _self.todaySchedule : todaySchedule // ignore: cast_nullable_to_non_nullable
 as List<MedicationScheduleEntry>,activePrescriptions: null == activePrescriptions ? _self.activePrescriptions : activePrescriptions // ignore: cast_nullable_to_non_nullable
-as List<ActivePrescriptionSummary>,
+as List<ActivePrescriptionSummary>,streak: freezed == streak ? _self.streak : streak // ignore: cast_nullable_to_non_nullable
+as MedicationStreak?,
   ));
 }
+/// Create a copy of MedicationDashboardResponse
+/// with the given fields replaced by the non-null parameter values.
+@override
+@pragma('vm:prefer-inline')
+$MedicationStreakCopyWith<$Res>? get streak {
+    if (_self.streak == null) {
+    return null;
+  }
 
+  return $MedicationStreakCopyWith<$Res>(_self.streak!, (value) {
+    return _then(_self.copyWith(streak: value));
+  });
+}
 }
 
 
@@ -1037,10 +1332,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( List<MedicationDoseSummary> nextDoses,  List<MedicationScheduleEntry> todaySchedule,  List<ActivePrescriptionSummary> activePrescriptions)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( List<MedicationDoseSummary> nextDoses,  List<MedicationScheduleEntry> todaySchedule,  List<ActivePrescriptionSummary> activePrescriptions,  MedicationStreak? streak)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _MedicationDashboardResponse() when $default != null:
-return $default(_that.nextDoses,_that.todaySchedule,_that.activePrescriptions);case _:
+return $default(_that.nextDoses,_that.todaySchedule,_that.activePrescriptions,_that.streak);case _:
   return orElse();
 
 }
@@ -1058,10 +1353,10 @@ return $default(_that.nextDoses,_that.todaySchedule,_that.activePrescriptions);c
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( List<MedicationDoseSummary> nextDoses,  List<MedicationScheduleEntry> todaySchedule,  List<ActivePrescriptionSummary> activePrescriptions)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( List<MedicationDoseSummary> nextDoses,  List<MedicationScheduleEntry> todaySchedule,  List<ActivePrescriptionSummary> activePrescriptions,  MedicationStreak? streak)  $default,) {final _that = this;
 switch (_that) {
 case _MedicationDashboardResponse():
-return $default(_that.nextDoses,_that.todaySchedule,_that.activePrescriptions);case _:
+return $default(_that.nextDoses,_that.todaySchedule,_that.activePrescriptions,_that.streak);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -1078,10 +1373,10 @@ return $default(_that.nextDoses,_that.todaySchedule,_that.activePrescriptions);c
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( List<MedicationDoseSummary> nextDoses,  List<MedicationScheduleEntry> todaySchedule,  List<ActivePrescriptionSummary> activePrescriptions)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( List<MedicationDoseSummary> nextDoses,  List<MedicationScheduleEntry> todaySchedule,  List<ActivePrescriptionSummary> activePrescriptions,  MedicationStreak? streak)?  $default,) {final _that = this;
 switch (_that) {
 case _MedicationDashboardResponse() when $default != null:
-return $default(_that.nextDoses,_that.todaySchedule,_that.activePrescriptions);case _:
+return $default(_that.nextDoses,_that.todaySchedule,_that.activePrescriptions,_that.streak);case _:
   return null;
 
 }
@@ -1093,7 +1388,7 @@ return $default(_that.nextDoses,_that.todaySchedule,_that.activePrescriptions);c
 @JsonSerializable()
 
 class _MedicationDashboardResponse implements MedicationDashboardResponse {
-  const _MedicationDashboardResponse({ List<MedicationDoseSummary> nextDoses = const [],  List<MedicationScheduleEntry> todaySchedule = const [],  List<ActivePrescriptionSummary> activePrescriptions = const []}): _nextDoses = nextDoses,_todaySchedule = todaySchedule,_activePrescriptions = activePrescriptions;
+  const _MedicationDashboardResponse({ List<MedicationDoseSummary> nextDoses = const [],  List<MedicationScheduleEntry> todaySchedule = const [],  List<ActivePrescriptionSummary> activePrescriptions = const [], this.streak}): _nextDoses = nextDoses,_todaySchedule = todaySchedule,_activePrescriptions = activePrescriptions;
   factory _MedicationDashboardResponse.fromJson(Map<String, dynamic> json) => _$MedicationDashboardResponseFromJson(json);
 
  final  List<MedicationDoseSummary> _nextDoses;
@@ -1117,6 +1412,7 @@ class _MedicationDashboardResponse implements MedicationDashboardResponse {
   return EqualUnmodifiableListView(_activePrescriptions);
 }
 
+@override final  MedicationStreak? streak;
 
 /// Create a copy of MedicationDashboardResponse
 /// with the given fields replaced by the non-null parameter values.
@@ -1131,18 +1427,18 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-    return identical(this, other) || (other.runtimeType == runtimeType&&other is _MedicationDashboardResponse&&const DeepCollectionEquality().equals(other.nextDoses, _nextDoses)&&const DeepCollectionEquality().equals(other.todaySchedule, _todaySchedule)&&const DeepCollectionEquality().equals(other.activePrescriptions, _activePrescriptions));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _MedicationDashboardResponse&&const DeepCollectionEquality().equals(other.nextDoses, _nextDoses)&&const DeepCollectionEquality().equals(other.todaySchedule, _todaySchedule)&&const DeepCollectionEquality().equals(other.activePrescriptions, _activePrescriptions)&&(identical(other.streak, streak) || other.streak == streak));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
 int get hashCode {
-    return Object.hash(runtimeType,const DeepCollectionEquality().hash(_nextDoses),const DeepCollectionEquality().hash(_todaySchedule),const DeepCollectionEquality().hash(_activePrescriptions));
+    return Object.hash(runtimeType,const DeepCollectionEquality().hash(_nextDoses),const DeepCollectionEquality().hash(_todaySchedule),const DeepCollectionEquality().hash(_activePrescriptions),streak);
 }
 
 @override
 String toString() {
-    return 'MedicationDashboardResponse(nextDoses: $nextDoses, todaySchedule: $todaySchedule, activePrescriptions: $activePrescriptions)';
+    return 'MedicationDashboardResponse(nextDoses: $nextDoses, todaySchedule: $todaySchedule, activePrescriptions: $activePrescriptions, streak: $streak)';
 }
 
 
@@ -1153,11 +1449,11 @@ abstract mixin class _$MedicationDashboardResponseCopyWith<$Res> implements $Med
   factory _$MedicationDashboardResponseCopyWith(_MedicationDashboardResponse value, $Res Function(_MedicationDashboardResponse) _then) = __$MedicationDashboardResponseCopyWithImpl;
 @override @useResult
 $Res call({
- List<MedicationDoseSummary> nextDoses, List<MedicationScheduleEntry> todaySchedule, List<ActivePrescriptionSummary> activePrescriptions
+ List<MedicationDoseSummary> nextDoses, List<MedicationScheduleEntry> todaySchedule, List<ActivePrescriptionSummary> activePrescriptions, MedicationStreak? streak
 });
 
 
-
+@override $MedicationStreakCopyWith<$Res>? get streak;
 
 }
 /// @nodoc
@@ -1170,16 +1466,29 @@ class __$MedicationDashboardResponseCopyWithImpl<$Res>
 
 /// Create a copy of MedicationDashboardResponse
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? nextDoses = null,Object? todaySchedule = null,Object? activePrescriptions = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? nextDoses = null,Object? todaySchedule = null,Object? activePrescriptions = null,Object? streak = freezed,}) {
   return _then(_MedicationDashboardResponse(
 nextDoses: null == nextDoses ? _self._nextDoses : nextDoses // ignore: cast_nullable_to_non_nullable
 as List<MedicationDoseSummary>,todaySchedule: null == todaySchedule ? _self._todaySchedule : todaySchedule // ignore: cast_nullable_to_non_nullable
 as List<MedicationScheduleEntry>,activePrescriptions: null == activePrescriptions ? _self._activePrescriptions : activePrescriptions // ignore: cast_nullable_to_non_nullable
-as List<ActivePrescriptionSummary>,
+as List<ActivePrescriptionSummary>,streak: freezed == streak ? _self.streak : streak // ignore: cast_nullable_to_non_nullable
+as MedicationStreak?,
   ));
 }
 
+/// Create a copy of MedicationDashboardResponse
+/// with the given fields replaced by the non-null parameter values.
+@override
+@pragma('vm:prefer-inline')
+$MedicationStreakCopyWith<$Res>? get streak {
+    if (_self.streak == null) {
+    return null;
+  }
 
+  return $MedicationStreakCopyWith<$Res>(_self.streak!, (value) {
+    return _then(_self.copyWith(streak: value));
+  });
+}
 }
 
 
@@ -2023,7 +2332,7 @@ as int,
 /// @nodoc
 mixin _$MarkDoseTakenResponse {
 
- String get id; MedicationDoseStatus get status; DateTime get takenAt;
+ String get id; MedicationDoseStatus get status; DateTime get takenAt; MedicationStreak? get streak; bool get dayCompleted;
 /// Create a copy of MarkDoseTakenResponse
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -2037,20 +2346,20 @@ $MarkDoseTakenResponseCopyWith<MarkDoseTakenResponse> get copyWith => _$MarkDose
 @override
 bool operator ==(Object other) {
   final _this = this as MarkDoseTakenResponse;
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is MarkDoseTakenResponse&&(identical(other.id, _this.id) || other.id == _this.id)&&(identical(other.status, _this.status) || other.status == _this.status)&&(identical(other.takenAt, _this.takenAt) || other.takenAt == _this.takenAt));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is MarkDoseTakenResponse&&(identical(other.id, _this.id) || other.id == _this.id)&&(identical(other.status, _this.status) || other.status == _this.status)&&(identical(other.takenAt, _this.takenAt) || other.takenAt == _this.takenAt)&&(identical(other.streak, _this.streak) || other.streak == _this.streak)&&(identical(other.dayCompleted, _this.dayCompleted) || other.dayCompleted == _this.dayCompleted));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
 int get hashCode {
   final _this = this as MarkDoseTakenResponse;
-  return Object.hash(runtimeType,_this.id,_this.status,_this.takenAt);
+  return Object.hash(runtimeType,_this.id,_this.status,_this.takenAt,_this.streak,_this.dayCompleted);
 }
 
 @override
 String toString() {
   final _this = this as MarkDoseTakenResponse;
-  return 'MarkDoseTakenResponse(id: ${_this.id}, status: ${_this.status}, takenAt: ${_this.takenAt})';
+  return 'MarkDoseTakenResponse(id: ${_this.id}, status: ${_this.status}, takenAt: ${_this.takenAt}, streak: ${_this.streak}, dayCompleted: ${_this.dayCompleted})';
 }
 
 
@@ -2061,11 +2370,11 @@ abstract mixin class $MarkDoseTakenResponseCopyWith<$Res>  {
   factory $MarkDoseTakenResponseCopyWith(MarkDoseTakenResponse value, $Res Function(MarkDoseTakenResponse) _then) = _$MarkDoseTakenResponseCopyWithImpl;
 @useResult
 $Res call({
- String id, MedicationDoseStatus status, DateTime takenAt
+ String id, MedicationDoseStatus status, DateTime takenAt, MedicationStreak? streak, bool dayCompleted
 });
 
 
-
+$MedicationStreakCopyWith<$Res>? get streak;
 
 }
 /// @nodoc
@@ -2078,15 +2387,29 @@ class _$MarkDoseTakenResponseCopyWithImpl<$Res>
 
 /// Create a copy of MarkDoseTakenResponse
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? status = null,Object? takenAt = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? status = null,Object? takenAt = null,Object? streak = freezed,Object? dayCompleted = null,}) {
   return _then(MarkDoseTakenResponse(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,status: null == status ? _self.status : status // ignore: cast_nullable_to_non_nullable
 as MedicationDoseStatus,takenAt: null == takenAt ? _self.takenAt : takenAt // ignore: cast_nullable_to_non_nullable
-as DateTime,
+as DateTime,streak: freezed == streak ? _self.streak : streak // ignore: cast_nullable_to_non_nullable
+as MedicationStreak?,dayCompleted: null == dayCompleted ? _self.dayCompleted : dayCompleted // ignore: cast_nullable_to_non_nullable
+as bool,
   ));
 }
+/// Create a copy of MarkDoseTakenResponse
+/// with the given fields replaced by the non-null parameter values.
+@override
+@pragma('vm:prefer-inline')
+$MedicationStreakCopyWith<$Res>? get streak {
+    if (_self.streak == null) {
+    return null;
+  }
 
+  return $MedicationStreakCopyWith<$Res>(_self.streak!, (value) {
+    return _then(_self.copyWith(streak: value));
+  });
+}
 }
 
 
@@ -2168,10 +2491,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String id,  MedicationDoseStatus status,  DateTime takenAt)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String id,  MedicationDoseStatus status,  DateTime takenAt,  MedicationStreak? streak,  bool dayCompleted)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _MarkDoseTakenResponse() when $default != null:
-return $default(_that.id,_that.status,_that.takenAt);case _:
+return $default(_that.id,_that.status,_that.takenAt,_that.streak,_that.dayCompleted);case _:
   return orElse();
 
 }
@@ -2189,10 +2512,10 @@ return $default(_that.id,_that.status,_that.takenAt);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String id,  MedicationDoseStatus status,  DateTime takenAt)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String id,  MedicationDoseStatus status,  DateTime takenAt,  MedicationStreak? streak,  bool dayCompleted)  $default,) {final _that = this;
 switch (_that) {
 case _MarkDoseTakenResponse():
-return $default(_that.id,_that.status,_that.takenAt);case _:
+return $default(_that.id,_that.status,_that.takenAt,_that.streak,_that.dayCompleted);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -2209,10 +2532,10 @@ return $default(_that.id,_that.status,_that.takenAt);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String id,  MedicationDoseStatus status,  DateTime takenAt)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String id,  MedicationDoseStatus status,  DateTime takenAt,  MedicationStreak? streak,  bool dayCompleted)?  $default,) {final _that = this;
 switch (_that) {
 case _MarkDoseTakenResponse() when $default != null:
-return $default(_that.id,_that.status,_that.takenAt);case _:
+return $default(_that.id,_that.status,_that.takenAt,_that.streak,_that.dayCompleted);case _:
   return null;
 
 }
@@ -2224,12 +2547,14 @@ return $default(_that.id,_that.status,_that.takenAt);case _:
 @JsonSerializable()
 
 class _MarkDoseTakenResponse implements MarkDoseTakenResponse {
-  const _MarkDoseTakenResponse({required this.id, required this.status, required this.takenAt});
+  const _MarkDoseTakenResponse({required this.id, required this.status, required this.takenAt, this.streak, this.dayCompleted = false});
   factory _MarkDoseTakenResponse.fromJson(Map<String, dynamic> json) => _$MarkDoseTakenResponseFromJson(json);
 
 @override final  String id;
 @override final  MedicationDoseStatus status;
 @override final  DateTime takenAt;
+@override final  MedicationStreak? streak;
+@override@JsonKey() final  bool dayCompleted;
 
 /// Create a copy of MarkDoseTakenResponse
 /// with the given fields replaced by the non-null parameter values.
@@ -2244,18 +2569,18 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-    return identical(this, other) || (other.runtimeType == runtimeType&&other is _MarkDoseTakenResponse&&(identical(other.id, id) || other.id == id)&&(identical(other.status, status) || other.status == status)&&(identical(other.takenAt, takenAt) || other.takenAt == takenAt));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _MarkDoseTakenResponse&&(identical(other.id, id) || other.id == id)&&(identical(other.status, status) || other.status == status)&&(identical(other.takenAt, takenAt) || other.takenAt == takenAt)&&(identical(other.streak, streak) || other.streak == streak)&&(identical(other.dayCompleted, dayCompleted) || other.dayCompleted == dayCompleted));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
 int get hashCode {
-    return Object.hash(runtimeType,id,status,takenAt);
+    return Object.hash(runtimeType,id,status,takenAt,streak,dayCompleted);
 }
 
 @override
 String toString() {
-    return 'MarkDoseTakenResponse(id: $id, status: $status, takenAt: $takenAt)';
+    return 'MarkDoseTakenResponse(id: $id, status: $status, takenAt: $takenAt, streak: $streak, dayCompleted: $dayCompleted)';
 }
 
 
@@ -2266,11 +2591,11 @@ abstract mixin class _$MarkDoseTakenResponseCopyWith<$Res> implements $MarkDoseT
   factory _$MarkDoseTakenResponseCopyWith(_MarkDoseTakenResponse value, $Res Function(_MarkDoseTakenResponse) _then) = __$MarkDoseTakenResponseCopyWithImpl;
 @override @useResult
 $Res call({
- String id, MedicationDoseStatus status, DateTime takenAt
+ String id, MedicationDoseStatus status, DateTime takenAt, MedicationStreak? streak, bool dayCompleted
 });
 
 
-
+@override $MedicationStreakCopyWith<$Res>? get streak;
 
 }
 /// @nodoc
@@ -2283,16 +2608,330 @@ class __$MarkDoseTakenResponseCopyWithImpl<$Res>
 
 /// Create a copy of MarkDoseTakenResponse
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? status = null,Object? takenAt = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? status = null,Object? takenAt = null,Object? streak = freezed,Object? dayCompleted = null,}) {
   return _then(_MarkDoseTakenResponse(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,status: null == status ? _self.status : status // ignore: cast_nullable_to_non_nullable
 as MedicationDoseStatus,takenAt: null == takenAt ? _self.takenAt : takenAt // ignore: cast_nullable_to_non_nullable
-as DateTime,
+as DateTime,streak: freezed == streak ? _self.streak : streak // ignore: cast_nullable_to_non_nullable
+as MedicationStreak?,dayCompleted: null == dayCompleted ? _self.dayCompleted : dayCompleted // ignore: cast_nullable_to_non_nullable
+as bool,
   ));
 }
 
+/// Create a copy of MarkDoseTakenResponse
+/// with the given fields replaced by the non-null parameter values.
+@override
+@pragma('vm:prefer-inline')
+$MedicationStreakCopyWith<$Res>? get streak {
+    if (_self.streak == null) {
+    return null;
+  }
 
+  return $MedicationStreakCopyWith<$Res>(_self.streak!, (value) {
+    return _then(_self.copyWith(streak: value));
+  });
+}
+}
+
+
+/// @nodoc
+mixin _$UnmarkDoseTakenResponse {
+
+ String get id; MedicationDoseStatus get status; MedicationStreak? get streak;
+/// Create a copy of UnmarkDoseTakenResponse
+/// with the given fields replaced by the non-null parameter values.
+@JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+$UnmarkDoseTakenResponseCopyWith<UnmarkDoseTakenResponse> get copyWith => _$UnmarkDoseTakenResponseCopyWithImpl<UnmarkDoseTakenResponse>(this as UnmarkDoseTakenResponse, _$identity);
+
+  /// Serializes this UnmarkDoseTakenResponse to a JSON map.
+  Map<String, dynamic> toJson();
+
+
+@override
+bool operator ==(Object other) {
+  final _this = this as UnmarkDoseTakenResponse;
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is UnmarkDoseTakenResponse&&(identical(other.id, _this.id) || other.id == _this.id)&&(identical(other.status, _this.status) || other.status == _this.status)&&(identical(other.streak, _this.streak) || other.streak == _this.streak));
+}
+
+@JsonKey(includeFromJson: false, includeToJson: false)
+@override
+int get hashCode {
+  final _this = this as UnmarkDoseTakenResponse;
+  return Object.hash(runtimeType,_this.id,_this.status,_this.streak);
+}
+
+@override
+String toString() {
+  final _this = this as UnmarkDoseTakenResponse;
+  return 'UnmarkDoseTakenResponse(id: ${_this.id}, status: ${_this.status}, streak: ${_this.streak})';
+}
+
+
+}
+
+/// @nodoc
+abstract mixin class $UnmarkDoseTakenResponseCopyWith<$Res>  {
+  factory $UnmarkDoseTakenResponseCopyWith(UnmarkDoseTakenResponse value, $Res Function(UnmarkDoseTakenResponse) _then) = _$UnmarkDoseTakenResponseCopyWithImpl;
+@useResult
+$Res call({
+ String id, MedicationDoseStatus status, MedicationStreak? streak
+});
+
+
+$MedicationStreakCopyWith<$Res>? get streak;
+
+}
+/// @nodoc
+class _$UnmarkDoseTakenResponseCopyWithImpl<$Res>
+    implements $UnmarkDoseTakenResponseCopyWith<$Res> {
+  _$UnmarkDoseTakenResponseCopyWithImpl(this._self, this._then);
+
+  final UnmarkDoseTakenResponse _self;
+  final $Res Function(UnmarkDoseTakenResponse) _then;
+
+/// Create a copy of UnmarkDoseTakenResponse
+/// with the given fields replaced by the non-null parameter values.
+@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? status = null,Object? streak = freezed,}) {
+  return _then(UnmarkDoseTakenResponse(
+id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
+as String,status: null == status ? _self.status : status // ignore: cast_nullable_to_non_nullable
+as MedicationDoseStatus,streak: freezed == streak ? _self.streak : streak // ignore: cast_nullable_to_non_nullable
+as MedicationStreak?,
+  ));
+}
+/// Create a copy of UnmarkDoseTakenResponse
+/// with the given fields replaced by the non-null parameter values.
+@override
+@pragma('vm:prefer-inline')
+$MedicationStreakCopyWith<$Res>? get streak {
+    if (_self.streak == null) {
+    return null;
+  }
+
+  return $MedicationStreakCopyWith<$Res>(_self.streak!, (value) {
+    return _then(_self.copyWith(streak: value));
+  });
+}
+}
+
+
+/// Adds pattern-matching-related methods to [UnmarkDoseTakenResponse].
+extension UnmarkDoseTakenResponsePatterns on UnmarkDoseTakenResponse {
+/// A variant of `map` that fallback to returning `orElse`.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case _:
+///     return orElse();
+/// }
+/// ```
+
+@optionalTypeArgs TResult maybeMap<TResult extends Object?>(TResult Function( _UnmarkDoseTakenResponse value)?  $default,{required TResult orElse(),}){
+final _that = this;
+switch (_that) {
+case _UnmarkDoseTakenResponse() when $default != null:
+return $default(_that);case _:
+  return orElse();
+
+}
+}
+/// A `switch`-like method, using callbacks.
+///
+/// Callbacks receives the raw object, upcasted.
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case final Subclass2 value:
+///     return ...;
+/// }
+/// ```
+
+@optionalTypeArgs TResult map<TResult extends Object?>(TResult Function( _UnmarkDoseTakenResponse value)  $default,){
+final _that = this;
+switch (_that) {
+case _UnmarkDoseTakenResponse():
+return $default(_that);case _:
+  throw StateError('Unexpected subclass');
+
+}
+}
+/// A variant of `map` that fallback to returning `null`.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case _:
+///     return null;
+/// }
+/// ```
+
+@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>(TResult? Function( _UnmarkDoseTakenResponse value)?  $default,){
+final _that = this;
+switch (_that) {
+case _UnmarkDoseTakenResponse() when $default != null:
+return $default(_that);case _:
+  return null;
+
+}
+}
+/// A variant of `when` that fallback to an `orElse` callback.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case _:
+///     return orElse();
+/// }
+/// ```
+
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String id,  MedicationDoseStatus status,  MedicationStreak? streak)?  $default,{required TResult orElse(),}) {final _that = this;
+switch (_that) {
+case _UnmarkDoseTakenResponse() when $default != null:
+return $default(_that.id,_that.status,_that.streak);case _:
+  return orElse();
+
+}
+}
+/// A `switch`-like method, using callbacks.
+///
+/// As opposed to `map`, this offers destructuring.
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case Subclass2(:final field2):
+///     return ...;
+/// }
+/// ```
+
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String id,  MedicationDoseStatus status,  MedicationStreak? streak)  $default,) {final _that = this;
+switch (_that) {
+case _UnmarkDoseTakenResponse():
+return $default(_that.id,_that.status,_that.streak);case _:
+  throw StateError('Unexpected subclass');
+
+}
+}
+/// A variant of `when` that fallback to returning `null`
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case _:
+///     return null;
+/// }
+/// ```
+
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String id,  MedicationDoseStatus status,  MedicationStreak? streak)?  $default,) {final _that = this;
+switch (_that) {
+case _UnmarkDoseTakenResponse() when $default != null:
+return $default(_that.id,_that.status,_that.streak);case _:
+  return null;
+
+}
+}
+
+}
+
+/// @nodoc
+@JsonSerializable()
+
+class _UnmarkDoseTakenResponse implements UnmarkDoseTakenResponse {
+  const _UnmarkDoseTakenResponse({required this.id, required this.status, this.streak});
+  factory _UnmarkDoseTakenResponse.fromJson(Map<String, dynamic> json) => _$UnmarkDoseTakenResponseFromJson(json);
+
+@override final  String id;
+@override final  MedicationDoseStatus status;
+@override final  MedicationStreak? streak;
+
+/// Create a copy of UnmarkDoseTakenResponse
+/// with the given fields replaced by the non-null parameter values.
+@override @JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+_$UnmarkDoseTakenResponseCopyWith<_UnmarkDoseTakenResponse> get copyWith => __$UnmarkDoseTakenResponseCopyWithImpl<_UnmarkDoseTakenResponse>(this, _$identity);
+
+@override
+Map<String, dynamic> toJson() {
+  return _$UnmarkDoseTakenResponseToJson(this, );
+}
+
+@override
+bool operator ==(Object other) {
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _UnmarkDoseTakenResponse&&(identical(other.id, id) || other.id == id)&&(identical(other.status, status) || other.status == status)&&(identical(other.streak, streak) || other.streak == streak));
+}
+
+@JsonKey(includeFromJson: false, includeToJson: false)
+@override
+int get hashCode {
+    return Object.hash(runtimeType,id,status,streak);
+}
+
+@override
+String toString() {
+    return 'UnmarkDoseTakenResponse(id: $id, status: $status, streak: $streak)';
+}
+
+
+}
+
+/// @nodoc
+abstract mixin class _$UnmarkDoseTakenResponseCopyWith<$Res> implements $UnmarkDoseTakenResponseCopyWith<$Res> {
+  factory _$UnmarkDoseTakenResponseCopyWith(_UnmarkDoseTakenResponse value, $Res Function(_UnmarkDoseTakenResponse) _then) = __$UnmarkDoseTakenResponseCopyWithImpl;
+@override @useResult
+$Res call({
+ String id, MedicationDoseStatus status, MedicationStreak? streak
+});
+
+
+@override $MedicationStreakCopyWith<$Res>? get streak;
+
+}
+/// @nodoc
+class __$UnmarkDoseTakenResponseCopyWithImpl<$Res>
+    implements _$UnmarkDoseTakenResponseCopyWith<$Res> {
+  __$UnmarkDoseTakenResponseCopyWithImpl(this._self, this._then);
+
+  final _UnmarkDoseTakenResponse _self;
+  final $Res Function(_UnmarkDoseTakenResponse) _then;
+
+/// Create a copy of UnmarkDoseTakenResponse
+/// with the given fields replaced by the non-null parameter values.
+@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? status = null,Object? streak = freezed,}) {
+  return _then(_UnmarkDoseTakenResponse(
+id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
+as String,status: null == status ? _self.status : status // ignore: cast_nullable_to_non_nullable
+as MedicationDoseStatus,streak: freezed == streak ? _self.streak : streak // ignore: cast_nullable_to_non_nullable
+as MedicationStreak?,
+  ));
+}
+
+/// Create a copy of UnmarkDoseTakenResponse
+/// with the given fields replaced by the non-null parameter values.
+@override
+@pragma('vm:prefer-inline')
+$MedicationStreakCopyWith<$Res>? get streak {
+    if (_self.streak == null) {
+    return null;
+  }
+
+  return $MedicationStreakCopyWith<$Res>(_self.streak!, (value) {
+    return _then(_self.copyWith(streak: value));
+  });
+}
 }
 
 

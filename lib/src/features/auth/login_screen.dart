@@ -1,28 +1,28 @@
-import 'dart:async';
-import 'dart:math' as math;
+import 'dart:ui';
 
 import 'package:auto_route/auto_route.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/scheduler.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:imsh/app_router.gr.dart';
-import 'package:intl/intl.dart';
+import 'package:video_player/video_player.dart';
 
 import '../../core/responsive.dart';
-import '../../core/theme/app_design_tokens.dart';
-import '../../core/theme/imsh_accent_colors.dart';
-import '../../helper/app_timezone.dart';
 import '../../helper/date_formatter.dart';
 import '../../providers/auth_provider.dart';
-import '../../shared/widgets/adaptive_date_picker.dart';
+import '../../providers/login_clock_provider.dart';
+import '../../providers/theme_mode_provider.dart';
 import '../../shared/widgets/feature_placeholder_screen.dart';
-import '../../shared/widgets/imsh_solid_icon.dart';
-import '../../shared/widgets/imsh_surface_card.dart';
-import '../../shared/widgets/theme_mode_menu_button.dart';
+import 'login_video_source.dart';
 
 const _kLogoAsset = 'assets/imsh.png';
-const _kFormMaxWidth = 440.0;
+const _kLoginVideoAsset = 'assets/login.mp4';
+const _kFormMaxWidth = 420.0;
+const _kSystemBlue = Color(0xFF007AFF);
+const _kSystemRed = Color(0xFFFF453A);
+const _kFieldFill = Color(0x1AFFFFFF);
+const _kFieldBorder = Color(0x29FFFFFF);
 
 @RoutePage()
 class LoginScreen extends ConsumerStatefulWidget {
@@ -32,51 +32,96 @@ class LoginScreen extends ConsumerStatefulWidget {
   ConsumerState<LoginScreen> createState() => _LoginScreenState();
 }
 
-class _LoginScreenState extends ConsumerState<LoginScreen> {
-  final _formKey = GlobalKey<FormState>();
+class _LoginScreenState extends ConsumerState<LoginScreen>
+    with TickerProviderStateMixin {
   final _patientIdController = TextEditingController();
+  final _patientIdFocus = FocusNode();
+  final _dobFocus = FocusNode();
 
-  DateTime? _dob;
-  bool _showDobError = false;
-  bool _redirecting = false;
+  late final AnimationController _enter;
+  late final AnimationController _shake;
+  late final Animation<double> _shakeX;
+
+  var _redirecting = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _enter = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 560),
+    )..forward();
+    _shake = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 420),
+    );
+    _shakeX = TweenSequence<double>([
+      TweenSequenceItem(tween: Tween(begin: 0, end: -12), weight: 1),
+      TweenSequenceItem(tween: Tween(begin: -12, end: 10), weight: 2),
+      TweenSequenceItem(tween: Tween(begin: 10, end: -7), weight: 2),
+      TweenSequenceItem(tween: Tween(begin: -7, end: 4), weight: 2),
+      TweenSequenceItem(tween: Tween(begin: 4, end: 0), weight: 1),
+    ]).animate(_shake);
+  }
 
   @override
   void dispose() {
+    _enter.dispose();
+    _shake.dispose();
     _patientIdController.dispose();
+    _patientIdFocus.dispose();
+    _dobFocus.dispose();
     super.dispose();
   }
 
   Future<void> _pickDob() async {
     final now = DateTime.now();
-    final picked = await showAdaptiveDatePicker(
-      context: context,
-      initialDate: _dob ?? DateTime(now.year - 30),
-      firstDate: DateTime(now.year - 120),
-      lastDate: now,
-      helpText: 'Select date of birth',
+    final first = DateTime(now.year - 120, now.month, now.day);
+    final last = DateTime(now.year, now.month, now.day, 23, 59, 59);
+    final current = ref.read(loginDraftProvider).dob;
+    final initial = _clampDate(
+      current ?? DateTime(now.year - 30, now.month, now.day),
+      first,
+      last,
     );
-    if (picked != null) {
-      setState(() {
-        _dob = picked;
-        _showDobError = false;
-      });
-      ref.read(patientAuthProvider.notifier).clearError();
-    }
+
+    _dobFocus.requestFocus();
+    final picked = await showCupertinoModalPopup<DateTime>(
+      context: context,
+      builder: (sheetContext) {
+        return _DobPickerSheet(
+          initialDate: initial,
+          firstDate: first,
+          lastDate: last,
+        );
+      },
+    );
+    if (!mounted) return;
+    _dobFocus.unfocus();
+    if (picked == null) return;
+
+    ref
+        .read(loginDraftProvider.notifier)
+        .setDob(DateTime(picked.year, picked.month, picked.day));
+    ref.read(patientAuthProvider.notifier).clearError();
   }
 
   Future<void> _submit() async {
     FocusScope.of(context).unfocus();
     ref.read(patientAuthProvider.notifier).clearError();
 
-    final isValid = _formKey.currentState?.validate() ?? false;
-    if (_dob == null) {
-      setState(() => _showDobError = true);
+    final valid = ref
+        .read(loginDraftProvider.notifier)
+        .validate(patientId: _patientIdController.text);
+    if (!valid) {
+      await _shake.forward(from: 0);
+      return;
     }
-    if (!isValid || _dob == null) return;
 
+    final dob = ref.read(loginDraftProvider).dob!;
     final success = await ref
         .read(patientAuthProvider.notifier)
-        .login(patientId: _patientIdController.text, dob: _dob!);
+        .login(patientId: _patientIdController.text, dob: dob);
 
     if (!mounted || !success) return;
     final auth = ref.read(patientAuthProvider);
@@ -99,495 +144,1149 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
     });
   }
 
-  Widget _brandLogo({
-    required double maxWidth,
-    required double maxHeight,
-    EdgeInsetsGeometry padding = EdgeInsets.zero,
-    BorderRadius borderRadius = const BorderRadius.all(Radius.circular(20)),
-  }) {
-    return Semantics(
-      label: 'Ibom Specialist Hospital logo',
-      child: Material(
-        color: Colors.transparent,
-        clipBehavior: Clip.antiAlias,
-        borderRadius: borderRadius,
-        child: Padding(
-          padding: padding,
-          child: Image.asset(
-            _kLogoAsset,
-            fit: BoxFit.contain,
-            width: maxWidth,
-            height: maxHeight,
-            filterQuality: FilterQuality.high,
-            errorBuilder: (context, error, stackTrace) => Icon(
-              Icons.local_hospital_rounded,
-              size: math.min(maxWidth, maxHeight) * 0.42,
-              color: Colors.white,
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
     final auth = ref.watch(patientAuthProvider);
+    final draft = ref.watch(loginDraftProvider);
     _maybeRedirectIfAuthenticated(auth);
 
     final theme = Theme.of(context);
-    final colors = theme.colorScheme;
+    final bottomInset = MediaQuery.viewInsetsOf(context).bottom;
 
     return Scaffold(
-      body: LayoutBuilder(
-        builder: (context, constraints) {
-          final bp = AppBreakpoints.fromWidth(constraints.maxWidth);
-          final form = _loginFormCard(
-            theme: theme,
-            colors: colors,
-            auth: auth,
-            compact: bp.isMobile,
-            showHeroLogo: !bp.isDesktop,
-          );
-          final formColumn = ConstrainedBox(
-            constraints: const BoxConstraints(maxWidth: _kFormMaxWidth),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                form,
-                const SizedBox(height: 14),
-                _emergencyButton(auth: auth, onDark: !bp.isDesktop),
-              ],
-            ),
-          );
+      backgroundColor: const Color(0xFF0F172A),
+      resizeToAvoidBottomInset: false,
+      body: Stack(
+        fit: StackFit.expand,
+        children: [
+          const _LoginVideoBackground(),
+          SafeArea(
+            bottom: false,
+            child: LayoutBuilder(
+              builder: (context, constraints) {
+                final bp = AppBreakpoints.fromWidth(constraints.maxWidth);
+                final padTop = bp.isMobile ? 12.0 : 20.0;
+                final padBottom =
+                    bp.paddingV +
+                    bottomInset +
+                    MediaQuery.viewPaddingOf(context).bottom;
+                final minHeight = (constraints.maxHeight - padTop - padBottom)
+                    .clamp(0.0, double.infinity);
+                final fadeLift = (constraints.maxHeight * 0.46).clamp(
+                  180.0,
+                  460.0,
+                );
 
-          if (bp.isDesktop) {
-            return Row(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                Expanded(flex: 5, child: _brandingHero(theme)),
-                Expanded(
-                  flex: 6,
-                  child: ColoredBox(
-                    color: colors.surface,
-                    child: Stack(
-                      children: [
-                        Center(
-                          child: SingleChildScrollView(
-                            padding: EdgeInsets.symmetric(
-                              horizontal: bp.paddingH,
-                              vertical: bp.paddingV,
-                            ),
-                            child: formColumn,
-                          ),
-                        ),
-                        const Positioned(
-                          top: 8,
-                          right: 8,
-                          child: ThemeModeMenuButton(),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-              ],
-            );
-          }
-
-          return Stack(
-            fit: StackFit.expand,
-            children: [
-              const DecoratedBox(
-                decoration: BoxDecoration(
-                  gradient: LinearGradient(
-                    begin: Alignment.topLeft,
-                    end: Alignment.bottomRight,
-                    colors: [
-                      Color(0xFF0F172A),
-                      Color(0xFF312E81),
-                      Color(0xFF0F766E),
-                    ],
-                  ),
-                ),
-              ),
-              const _ColorBlobs(),
-              SafeArea(
-                child: Stack(
+                return Stack(
                   children: [
-                    Center(
-                      child: SingleChildScrollView(
-                        padding: EdgeInsets.symmetric(
-                          horizontal: bp.paddingH,
-                          vertical: bp.paddingV,
-                        ),
-                        child: Column(
-                          children: [
-                            if (bp.isTablet) ...[
-                              _compactHeroStrip(theme),
-                              const SizedBox(height: 12),
+                    SingleChildScrollView(
+                      reverse: true,
+                      keyboardDismissBehavior:
+                          ScrollViewKeyboardDismissBehavior.onDrag,
+                      padding: EdgeInsets.fromLTRB(
+                        bp.paddingH,
+                        padTop,
+                        bp.paddingH,
+                        padBottom,
+                      ),
+                      child: ConstrainedBox(
+                        constraints: BoxConstraints(minHeight: minHeight),
+                        child: AnimatedBuilder(
+                          animation: _enter,
+                          builder: (context, child) {
+                            final t = Curves.easeOutCubic.transform(
+                              _enter.value,
+                            );
+                            return Opacity(
+                              opacity: t,
+                              child: Transform.translate(
+                                offset: Offset(0, 16 * (1 - t)),
+                                child: child,
+                              ),
+                            );
+                          },
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Align(
+                                alignment: Alignment.topCenter,
+                                child: ConstrainedBox(
+                                  constraints: const BoxConstraints(
+                                    maxWidth: _kFormMaxWidth,
+                                  ),
+                                  child: _brandHeader(theme),
+                                ),
+                              ),
+                              Align(
+                                alignment: Alignment.bottomCenter,
+                                child: ConstrainedBox(
+                                  constraints: const BoxConstraints(
+                                    maxWidth: _kFormMaxWidth,
+                                  ),
+                                  child: Stack(
+                                    clipBehavior: Clip.none,
+                                    children: [
+                                      Positioned(
+                                        top: -fadeLift,
+                                        left: -bp.paddingH,
+                                        right: -bp.paddingH,
+                                        bottom: -padBottom,
+                                        child: const _WelcomeFade(),
+                                      ),
+                                      Column(
+                                        children: [
+                                          _loginCard(
+                                            theme: theme,
+                                            auth: auth,
+                                            draft: draft,
+                                          ),
+                                          const SizedBox(height: 14),
+                                          _EmergencyButton(
+                                            loading: auth.isLoading,
+                                          ),
+                                        ],
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ),
                             ],
-                            formColumn,
-                          ],
+                          ),
                         ),
                       ),
                     ),
                     const Positioned(
-                      top: 0,
-                      right: 8,
-                      child: IconTheme(
-                        data: IconThemeData(color: Colors.white),
-                        child: ThemeModeMenuButton(),
-                      ),
+                      top: 4,
+                      right: 12,
+                      child: _FrostedThemeButton(),
                     ),
                   ],
-                ),
-              ),
-            ],
-          );
-        },
+                );
+              },
+            ),
+          ),
+        ],
       ),
     );
   }
 
-  Widget _brandingHero(ThemeData theme) {
-    return Stack(
-      fit: StackFit.expand,
-      children: [
-        const DecoratedBox(
-          decoration: BoxDecoration(
-            gradient: LinearGradient(
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
-              colors: [Color(0xFF0F172A), Color(0xFF1E1B4B), Color(0xFF134E4A)],
-            ),
-          ),
-        ),
-        const _ColorBlobs(),
-        Center(
-          child: SingleChildScrollView(
-            padding: const EdgeInsets.fromLTRB(28, 28, 28, 32),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                _brandLogo(
-                  maxWidth: 220,
-                  maxHeight: 96,
-                  padding: const EdgeInsets.all(10),
-                ),
-                const SizedBox(height: 16),
-                Text(
-                  'Ibom Specialist Hospital',
-                  textAlign: TextAlign.center,
-                  style: theme.textTheme.headlineSmall?.copyWith(
-                    color: Colors.white,
-                    fontWeight: FontWeight.w800,
-                  ),
-                ),
-                const SizedBox(height: 8),
-                Text(
-                  'Patient Portal',
-                  textAlign: TextAlign.center,
-                  style: theme.textTheme.titleMedium?.copyWith(
-                    color: Colors.white.withValues(alpha: 0.88),
-                    fontWeight: FontWeight.w600,
-                  ),
-                ),
-                const SizedBox(height: 8),
-                Text(
-                  'Secure access to appointments, records, labs, and care at home.',
-                  textAlign: TextAlign.center,
-                  style: theme.textTheme.bodyMedium?.copyWith(
-                    color: Colors.white.withValues(alpha: 0.72),
-                    height: 1.45,
-                  ),
-                ),
-                const SizedBox(height: 16),
-                const _LoginClock(onDark: true),
-                const SizedBox(height: 16),
-                const _ModuleTiles(compact: false),
-              ],
-            ),
-          ),
-        ),
-      ],
-    );
-  }
-
-  Widget _compactHeroStrip(ThemeData theme) {
+  Widget _brandHeader(ThemeData theme) {
     return Column(
       children: [
-        Text(
-          'Ibom Specialist Hospital',
-          style: theme.textTheme.titleLarge?.copyWith(
-            color: Colors.white,
-            fontWeight: FontWeight.w800,
+        Semantics(
+          label: 'Ibom Specialist Hospital logo',
+          child: Container(
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(28),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.white.withValues(alpha: 0.16),
+                  blurRadius: 36,
+                  spreadRadius: -6,
+                ),
+              ],
+            ),
+            child: Image.asset(
+              _kLogoAsset,
+              width: 200,
+              height: 84,
+              fit: BoxFit.contain,
+              filterQuality: FilterQuality.high,
+              errorBuilder: (context, error, stackTrace) => const SizedBox(
+                width: 72,
+                height: 72,
+                child: Icon(
+                  CupertinoIcons.heart_circle,
+                  color: Colors.white,
+                  size: 56,
+                ),
+              ),
+            ),
           ),
         ),
-        const SizedBox(height: 8),
-        const _LoginClock(onDark: true),
         const SizedBox(height: 12),
-        const _ModuleTiles(compact: true),
+        Text(
+          'Ibom Specialist Hospital',
+          textAlign: TextAlign.center,
+          style: theme.textTheme.headlineSmall?.copyWith(
+            color: Colors.white,
+            fontSize: 24,
+            fontWeight: FontWeight.w600,
+            letterSpacing: -0.4,
+            height: 1.15,
+          ),
+        ),
+        const SizedBox(height: 4),
+        Text(
+          'Patient Portal',
+          textAlign: TextAlign.center,
+          style: theme.textTheme.titleMedium?.copyWith(
+            color: Colors.white.withValues(alpha: 0.60),
+            fontWeight: FontWeight.w500,
+            fontSize: 16,
+            letterSpacing: -0.2,
+          ),
+        ),
       ],
     );
   }
 
-  InputDecoration _fieldDecoration(
-    ColorScheme colors, {
-    required String label,
-    String? hint,
-    required Widget prefixIcon,
-    Widget? suffixIcon,
-    String? errorText,
-  }) {
-    return InputDecoration(
-      labelText: label,
-      hintText: hint,
-      prefixIcon: Padding(padding: const EdgeInsets.all(8), child: prefixIcon),
-      prefixIconConstraints: const BoxConstraints(minWidth: 44, minHeight: 44),
-      suffixIcon: suffixIcon,
-      filled: true,
-      fillColor: colors.surface,
-      errorText: errorText,
-      border: OutlineInputBorder(
-        borderRadius: BorderRadius.circular(AppDesignTokens.radiusSm),
-      ),
-      enabledBorder: OutlineInputBorder(
-        borderRadius: BorderRadius.circular(AppDesignTokens.radiusSm),
-        borderSide: BorderSide(color: colors.outline.withValues(alpha: 0.28)),
-      ),
-      focusedBorder: OutlineInputBorder(
-        borderRadius: BorderRadius.circular(AppDesignTokens.radiusSm),
-        borderSide: const BorderSide(color: ImshAccentColors.indigo, width: 1.6),
-      ),
-      contentPadding: const EdgeInsets.symmetric(horizontal: 10, vertical: 12),
-      labelStyle: const TextStyle(fontSize: 13),
-    );
-  }
-
-  Widget _loginFormCard({
+  Widget _loginCard({
     required ThemeData theme,
-    required ColorScheme colors,
     required PatientAuthState auth,
-    required bool compact,
-    required bool showHeroLogo,
+    required LoginDraftState draft,
   }) {
-    return ImshSurfaceCard(
-      padding: EdgeInsets.fromLTRB(16, compact ? 16 : 20, 16, 18),
-      child: Form(
-        key: _formKey,
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            if (showHeroLogo) ...[
-              Center(
-                child: _brandLogo(
-                  maxWidth: 180,
-                  maxHeight: 80,
-                  padding: const EdgeInsets.symmetric(
-                    vertical: 4,
-                    horizontal: 8,
-                  ),
-                ),
+    final loading = auth.isLoading;
+    final hintStyle = theme.textTheme.bodyLarge?.copyWith(
+      color: Colors.white.withValues(alpha: 0.45),
+      fontWeight: FontWeight.w400,
+      fontSize: 16,
+      letterSpacing: 0.2,
+    );
+    final valueStyle = theme.textTheme.bodyLarge?.copyWith(
+      color: Colors.white,
+      fontWeight: FontWeight.w500,
+      fontSize: 16,
+      letterSpacing: 0.4,
+    );
+
+    return AnimatedBuilder(
+      animation: _shakeX,
+      builder: (context, child) {
+        return Transform.translate(
+          offset: Offset(_shakeX.value, 0),
+          child: child,
+        );
+      },
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          Row(
+            children: [
+              Icon(
+                CupertinoIcons.plus_circle,
+                size: 30,
+                color: Colors.white.withValues(alpha: 0.9),
               ),
-              const SizedBox(height: 12),
-            ],
-            Row(
-              children: [
-                const ImshSolidIcon(
-                  icon: Icons.login_rounded,
-                  color: ImshAccentColors.purple,
-                  size: 34,
-                  iconSize: 18,
-                  radius: AppDesignTokens.radiusMd,
-                ),
-                const SizedBox(width: 10),
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      ImshEllipsisText(
-                        text: 'Welcome back',
-                        style: theme.textTheme.titleLarge?.copyWith(
-                          fontWeight: FontWeight.w800,
-                          color: colors.onSurface,
-                        ),
-                      ),
-                      ImshEllipsisText(
-                        text:
-                            'Sign in with your patient ID and date of birth',
-                        style: theme.textTheme.bodySmall?.copyWith(
-                          color: colors.onSurfaceVariant,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ],
-            ),
-            const SizedBox(height: 14),
-            TextFormField(
-              controller: _patientIdController,
-              decoration: _fieldDecoration(
-                colors,
-                label: 'Patient ID',
-                hint: 'ISH-2024-XXXX',
-                prefixIcon: const ImshSolidIcon(
-                  icon: Icons.badge_outlined,
-                  color: ImshAccentColors.blue,
-                  size: 28,
-                  iconSize: 16,
-                  radius: 8,
-                ),
-              ),
-              autofillHints: const [AutofillHints.username],
-              textInputAction: TextInputAction.next,
-              textCapitalization: TextCapitalization.characters,
-              inputFormatters: [
-                FilteringTextInputFormatter.allow(
-                  RegExp(r'[a-zA-Z0-9\-_/]'),
-                ),
-              ],
-              enabled: !auth.isLoading,
-              validator: (value) {
-                if (value == null || value.trim().isEmpty) {
-                  return 'Patient ID is required';
-                }
-                return null;
-              },
-              onChanged: (_) =>
-                  ref.read(patientAuthProvider.notifier).clearError(),
-            ),
-            const SizedBox(height: 12),
-            Semantics(
-              button: true,
-              label: _dob == null
-                  ? 'Date of birth, not selected'
-                  : 'Date of birth, ${DateFormatter.shortDate(_dob!)}',
-              child: InkWell(
-                onTap: auth.isLoading ? null : _pickDob,
-                borderRadius: BorderRadius.circular(
-                  AppDesignTokens.radiusSm,
-                ),
-                child: InputDecorator(
-                  decoration: _fieldDecoration(
-                    colors,
-                    label: 'Date of birth',
-                    hint: 'Select your date of birth',
-                    prefixIcon: const ImshSolidIcon(
-                      icon: Icons.calendar_today_outlined,
-                      color: ImshAccentColors.teal,
-                      size: 28,
-                      iconSize: 16,
-                      radius: 8,
-                    ),
-                    suffixIcon: const Padding(
-                      padding: EdgeInsets.only(right: 8),
-                      child: ImshSolidIcon(
-                        icon: Icons.edit_calendar_outlined,
-                        color: ImshAccentColors.indigo,
-                        size: 28,
-                        iconSize: 16,
-                        radius: 8,
-                      ),
-                    ),
-                    errorText: _showDobError && _dob == null
-                        ? 'Date of birth is required'
-                        : null,
-                  ),
-                  child: Text(
-                    _dob == null
-                        ? 'Select your date of birth'
-                        : DateFormatter.shortDate(_dob!),
-                    style: theme.textTheme.bodyLarge?.copyWith(
-                      color: _dob == null
-                          ? colors.onSurfaceVariant
-                          : colors.onSurface,
-                    ),
-                  ),
-                ),
-              ),
-            ),
-            if (auth.error != null) ...[
-              const SizedBox(height: 12),
-              Container(
-                padding: const EdgeInsets.all(10),
-                decoration: BoxDecoration(
-                  color: colors.errorContainer,
-                  borderRadius: BorderRadius.circular(
-                    AppDesignTokens.radiusSm,
-                  ),
-                  border: Border.all(
-                    color: colors.error.withValues(alpha: 0.35),
-                  ),
-                ),
-                child: Row(
+              const SizedBox(width: 12),
+              Expanded(
+                child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const ImshSolidIcon(
-                      icon: Icons.error_outline,
-                      color: ImshAccentColors.pink,
-                      size: 22,
-                      iconSize: 12,
-                      radius: 6,
+                    Text(
+                      'Welcome back',
+                      style: theme.textTheme.titleLarge?.copyWith(
+                        fontSize: 20,
+                        fontWeight: FontWeight.w500,
+                        letterSpacing: -0.3,
+                        color: Colors.white,
+                      ),
                     ),
-                    const SizedBox(width: 8),
-                    Expanded(
-                      child: Text(
-                        auth.error!,
-                        style: theme.textTheme.bodyMedium?.copyWith(
-                          color: colors.onErrorContainer,
-                        ),
+                    const SizedBox(height: 2),
+                    Text(
+                      'Sign in with your patient ID and date of birth',
+                      style: theme.textTheme.bodyMedium?.copyWith(
+                        fontSize: 14,
+                        height: 1.3,
+                        color: Colors.white.withValues(alpha: 0.64),
                       ),
                     ),
                   ],
                 ),
               ),
             ],
-            const SizedBox(height: 8),
-            FilledButton(
-              onPressed: auth.isLoading ? null : _submit,
-              style: FilledButton.styleFrom(
-                backgroundColor: ImshAccentColors.indigo,
-                foregroundColor: Colors.white,
-                padding: const EdgeInsets.symmetric(vertical: 14),
-                shape: const StadiumBorder(),
-              ),
-              child: auth.isLoading
-                  ? const SizedBox(
-                      height: 22,
-                      width: 22,
-                      child: CircularProgressIndicator(
-                        strokeWidth: 2.5,
-                        color: Colors.white,
+          ),
+          const SizedBox(height: 18),
+          AnimatedOpacity(
+            duration: const Duration(milliseconds: 200),
+            opacity: loading ? 0.45 : 1,
+            child: IgnorePointer(
+              ignoring: loading,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  const _FieldLabel(text: 'Patient ID'),
+                  const SizedBox(height: 6),
+                  _SoftField(
+                    focusNode: _patientIdFocus,
+                    fillColor: _kFieldFill,
+                    idleBorderColor: _kFieldBorder,
+                    child: ConstrainedBox(
+                      constraints: const BoxConstraints(minHeight: 48),
+                      child: Row(
+                        children: [
+                          const SizedBox(width: 10),
+                          const _IdBadge(),
+                          const SizedBox(width: 8),
+                          Expanded(
+                            child: TextField(
+                              controller: _patientIdController,
+                              focusNode: _patientIdFocus,
+                              textCapitalization: TextCapitalization.characters,
+                              autocorrect: false,
+                              enableSuggestions: false,
+                              smartDashesType: SmartDashesType.disabled,
+                              smartQuotesType: SmartQuotesType.disabled,
+                              autofillHints: const [AutofillHints.username],
+                              textInputAction: TextInputAction.next,
+                              cursorColor: _kSystemBlue,
+                              scrollPadding: const EdgeInsets.only(bottom: 24),
+                              style: valueStyle,
+                              inputFormatters: [
+                                FilteringTextInputFormatter.allow(
+                                  RegExp(r'[a-zA-Z0-9\-_/]'),
+                                ),
+                                TextInputFormatter.withFunction((
+                                  oldValue,
+                                  newValue,
+                                ) {
+                                  return newValue.copyWith(
+                                    text: newValue.text.toUpperCase(),
+                                    selection: newValue.selection,
+                                  );
+                                }),
+                              ],
+                              decoration: InputDecoration(
+                                isDense: true,
+                                filled: false,
+                                hintText: 'ISH-2024-XXXX',
+                                hintStyle: hintStyle,
+                                border: InputBorder.none,
+                                enabledBorder: InputBorder.none,
+                                focusedBorder: InputBorder.none,
+                                errorBorder: InputBorder.none,
+                                focusedErrorBorder: InputBorder.none,
+                                disabledBorder: InputBorder.none,
+                                contentPadding: const EdgeInsets.fromLTRB(
+                                  0,
+                                  14,
+                                  14,
+                                  14,
+                                ),
+                              ),
+                              onChanged: (_) {
+                                ref
+                                    .read(loginDraftProvider.notifier)
+                                    .clearPatientIdError();
+                                ref
+                                    .read(patientAuthProvider.notifier)
+                                    .clearError();
+                              },
+                              onSubmitted: (_) => _pickDob(),
+                            ),
+                          ),
+                        ],
                       ),
-                    )
-                  : Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        const ImshSolidIcon(
-                          icon: Icons.arrow_forward_rounded,
-                          color: ImshAccentColors.pink,
-                          size: 22,
-                          iconSize: 14,
-                          radius: 6,
-                        ),
-                        const SizedBox(width: 8),
-                        Text(
-                          'Sign in',
-                          style: theme.textTheme.titleMedium?.copyWith(
-                            fontWeight: FontWeight.w800,
-                            color: Colors.white,
+                    ),
+                  ),
+                  _InlineError(message: draft.patientIdError),
+                  const SizedBox(height: 12),
+                  const _FieldLabel(text: 'Date of birth'),
+                  const SizedBox(height: 6),
+                  _SoftField(
+                    focusNode: _dobFocus,
+                    fillColor: _kFieldFill,
+                    idleBorderColor: _kFieldBorder,
+                    child: Semantics(
+                      button: true,
+                      label: draft.dob == null
+                          ? 'Date of birth, not selected'
+                          : 'Date of birth, ${DateFormatter.shortDate(draft.dob!)}',
+                      excludeSemantics: true,
+                      onTap: _pickDob,
+                      child: Focus(
+                        focusNode: _dobFocus,
+                        child: Material(
+                          color: Colors.transparent,
+                          borderRadius: BorderRadius.circular(12),
+                          clipBehavior: Clip.antiAlias,
+                          child: InkWell(
+                            onTap: _pickDob,
+                            borderRadius: BorderRadius.circular(12),
+                            child: ConstrainedBox(
+                              constraints: const BoxConstraints(minHeight: 48),
+                              child: Padding(
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 10,
+                                  vertical: 12,
+                                ),
+                                child: Row(
+                                  children: [
+                                    const _CalendarBadge(),
+                                    const SizedBox(width: 8),
+                                    Expanded(
+                                      child: Text(
+                                        draft.dob == null
+                                            ? 'Select your date of birth'
+                                            : DateFormatter.shortDate(
+                                                draft.dob!,
+                                              ),
+                                        style: draft.dob == null
+                                            ? hintStyle
+                                            : valueStyle,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
                           ),
                         ),
-                      ],
+                      ),
                     ),
+                  ),
+                  _InlineError(message: draft.dobError),
+                ],
+              ),
             ),
-            const SizedBox(height: 10),
-            Text(
-              'New phone? Front desk will approve this device.',
-              textAlign: TextAlign.center,
-              style: theme.textTheme.bodySmall?.copyWith(
-                color: colors.onSurfaceVariant,
+          ),
+          _InlineError(message: auth.error),
+          const SizedBox(height: 16),
+          _SignInButton(loading: loading, onPressed: _submit),
+          const SizedBox(height: 12),
+          Text(
+            'New phone? Front desk will approve this device.',
+            textAlign: TextAlign.center,
+            style: theme.textTheme.bodySmall?.copyWith(
+              fontSize: 12,
+              height: 1.35,
+              color: Colors.white.withValues(alpha: 0.55),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _FieldLabel extends StatelessWidget {
+  const _FieldLabel({required this.text});
+
+  final String text;
+
+  @override
+  Widget build(BuildContext context) {
+    return Text(
+      text,
+      style: Theme.of(context).textTheme.labelLarge?.copyWith(
+        fontSize: 13,
+        fontWeight: FontWeight.w500,
+        color: Colors.white.withValues(alpha: 0.72),
+      ),
+    );
+  }
+}
+
+class _InlineError extends StatelessWidget {
+  const _InlineError({required this.message});
+
+  final String? message;
+
+  @override
+  Widget build(BuildContext context) {
+    return AnimatedSize(
+      duration: const Duration(milliseconds: 220),
+      curve: Curves.easeOutCubic,
+      alignment: Alignment.centerLeft,
+      child: message == null
+          ? const SizedBox(width: double.infinity)
+          : Padding(
+              padding: const EdgeInsets.only(top: 6, left: 4),
+              child: Semantics(
+                liveRegion: true,
+                child: Text(
+                  message!,
+                  style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                    color: _kSystemRed,
+                    fontSize: 13,
+                    fontWeight: FontWeight.w500,
+                    height: 1.3,
+                  ),
+                ),
+              ),
+            ),
+    );
+  }
+}
+
+class _SoftField extends StatefulWidget {
+  const _SoftField({
+    required this.focusNode,
+    required this.fillColor,
+    required this.idleBorderColor,
+    required this.child,
+  });
+
+  final FocusNode focusNode;
+  final Color fillColor;
+  final Color idleBorderColor;
+  final Widget child;
+
+  @override
+  State<_SoftField> createState() => _SoftFieldState();
+}
+
+class _SoftFieldState extends State<_SoftField> {
+  @override
+  void initState() {
+    super.initState();
+    widget.focusNode.addListener(_onFocus);
+  }
+
+  @override
+  void didUpdateWidget(covariant _SoftField oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.focusNode != widget.focusNode) {
+      oldWidget.focusNode.removeListener(_onFocus);
+      widget.focusNode.addListener(_onFocus);
+    }
+  }
+
+  @override
+  void dispose() {
+    widget.focusNode.removeListener(_onFocus);
+    super.dispose();
+  }
+
+  void _onFocus() {
+    if (mounted) setState(() {});
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final focused = widget.focusNode.hasFocus;
+    return AnimatedContainer(
+      duration: const Duration(milliseconds: 180),
+      curve: Curves.easeOut,
+      decoration: BoxDecoration(
+        color: widget.fillColor,
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(
+          color: focused ? _kSystemBlue : widget.idleBorderColor,
+        ),
+      ),
+      child: widget.child,
+    );
+  }
+}
+
+class _IdBadge extends StatelessWidget {
+  const _IdBadge();
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: 28,
+      height: 28,
+      alignment: Alignment.center,
+      decoration: BoxDecoration(
+        color: _kSystemBlue.withValues(alpha: 0.16),
+        borderRadius: BorderRadius.circular(8),
+      ),
+      child: const Icon(
+        CupertinoIcons.person_crop_rectangle,
+        size: 15,
+        color: _kSystemBlue,
+      ),
+    );
+  }
+}
+
+class _CalendarBadge extends StatelessWidget {
+  const _CalendarBadge();
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: 28,
+      height: 28,
+      alignment: Alignment.center,
+      decoration: BoxDecoration(
+        color: const Color(0xFF0D9488).withValues(alpha: 0.14),
+        borderRadius: BorderRadius.circular(8),
+      ),
+      child: const Icon(
+        CupertinoIcons.calendar,
+        size: 15,
+        color: Color(0xFF0D9488),
+      ),
+    );
+  }
+}
+
+class _SignInButton extends StatelessWidget {
+  const _SignInButton({required this.loading, required this.onPressed});
+
+  final bool loading;
+  final VoidCallback onPressed;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    return Semantics(
+      button: true,
+      enabled: !loading,
+      label: loading ? 'Signing in' : 'Sign in',
+      excludeSemantics: true,
+      onTap: loading ? null : onPressed,
+      child: _SpringTap(
+        enabled: !loading,
+        onTap: onPressed,
+        child: DecoratedBox(
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(999),
+            gradient: const LinearGradient(
+              colors: [Color(0xFF4F46E5), _kSystemBlue],
+            ),
+            boxShadow: [
+              BoxShadow(
+                color: const Color(0xFF4F46E5).withValues(alpha: 0.32),
+                blurRadius: 16,
+                offset: const Offset(0, 8),
+              ),
+            ],
+          ),
+          child: SizedBox(
+            height: 52,
+            child: Center(
+              child: AnimatedSwitcher(
+                duration: const Duration(milliseconds: 220),
+                switchInCurve: Curves.easeOut,
+                switchOutCurve: Curves.easeIn,
+                child: loading
+                    ? const CupertinoActivityIndicator(
+                        key: ValueKey('busy'),
+                        color: Colors.white,
+                      )
+                    : Text(
+                        'Sign in',
+                        key: const ValueKey('label'),
+                        style: theme.textTheme.titleMedium?.copyWith(
+                          color: Colors.white,
+                          fontSize: 17,
+                          fontWeight: FontWeight.w600,
+                          letterSpacing: -0.2,
+                        ),
+                      ),
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class _EmergencyButton extends StatelessWidget {
+  const _EmergencyButton({required this.loading});
+
+  final bool loading;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    return Semantics(
+      button: true,
+      enabled: !loading,
+      label: 'Request emergency help',
+      excludeSemantics: true,
+      onTap: loading
+          ? null
+          : () => context.router.push(const GuestCreateEmergencyRequestRoute()),
+      child: _SpringTap(
+        enabled: !loading,
+        onTap: () =>
+            context.router.push(const GuestCreateEmergencyRequestRoute()),
+        child: ClipRRect(
+          borderRadius: BorderRadius.circular(999),
+          child: BackdropFilter(
+            filter: ImageFilter.blur(sigmaX: 20, sigmaY: 20),
+            child: DecoratedBox(
+              decoration: BoxDecoration(
+                color: const Color(
+                  0xFFFF3B30,
+                ).withValues(alpha: loading ? 0.12 : 0.22),
+                borderRadius: BorderRadius.circular(999),
+                border: Border.all(
+                  color: const Color(0xFFFF3B30).withValues(alpha: 0.42),
+                ),
+              ),
+              child: SizedBox(
+                height: 52,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Icon(
+                      CupertinoIcons.phone_circle_fill,
+                      color: Colors.white.withValues(alpha: loading ? 0.5 : 1),
+                      size: 20,
+                    ),
+                    const SizedBox(width: 8),
+                    Text(
+                      'Request emergency help',
+                      style: theme.textTheme.titleSmall?.copyWith(
+                        color: Colors.white.withValues(
+                          alpha: loading ? 0.5 : 1,
+                        ),
+                        fontSize: 16,
+                        fontWeight: FontWeight.w600,
+                        letterSpacing: -0.2,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class _SpringTap extends StatefulWidget {
+  const _SpringTap({
+    required this.child,
+    required this.onTap,
+    required this.enabled,
+  });
+
+  final Widget child;
+  final VoidCallback onTap;
+  final bool enabled;
+
+  @override
+  State<_SpringTap> createState() => _SpringTapState();
+}
+
+class _SpringTapState extends State<_SpringTap>
+    with SingleTickerProviderStateMixin {
+  late final AnimationController _scale;
+
+  @override
+  void initState() {
+    super.initState();
+    _scale = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 90),
+      reverseDuration: const Duration(milliseconds: 420),
+      value: 0,
+    );
+  }
+
+  @override
+  void dispose() {
+    _scale.dispose();
+    super.dispose();
+  }
+
+  void _down() {
+    _scale.animateTo(1, curve: Curves.easeOut);
+  }
+
+  void _up() {
+    _scale.animateTo(
+      0,
+      duration: const Duration(milliseconds: 420),
+      curve: Curves.elasticOut,
+    );
+    widget.onTap();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      behavior: HitTestBehavior.opaque,
+      onTapDown: widget.enabled ? (_) => _down() : null,
+      onTapUp: widget.enabled ? (_) => _up() : null,
+      onTapCancel: widget.enabled ? () => _scale.animateTo(0) : null,
+      child: AnimatedBuilder(
+        animation: _scale,
+        builder: (context, child) {
+          return Transform.scale(
+            scale: 1 - (0.035 * _scale.value),
+            child: child,
+          );
+        },
+        child: widget.child,
+      ),
+    );
+  }
+}
+
+class _FrostedThemeButton extends ConsumerWidget {
+  const _FrostedThemeButton();
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final mode = ref.watch(themeModeProvider);
+    final platform = MediaQuery.platformBrightnessOf(context);
+    final dark = switch (mode) {
+      ThemeMode.dark => true,
+      ThemeMode.light => false,
+      ThemeMode.system => platform == Brightness.dark,
+    };
+
+    return Semantics(
+      button: true,
+      label: 'Appearance',
+      excludeSemantics: true,
+      onTap: () => _chooseTheme(context, ref),
+      child: Tooltip(
+        message: 'Appearance',
+        child: Container(
+          width: 44,
+          height: 44,
+          decoration: BoxDecoration(
+            shape: BoxShape.circle,
+            border: Border.all(color: Colors.white.withValues(alpha: 0.22)),
+          ),
+          child: ClipOval(
+            child: BackdropFilter(
+              filter: ImageFilter.blur(sigmaX: 18, sigmaY: 18),
+              child: Material(
+                color: Colors.white.withValues(alpha: 0.10),
+                child: InkWell(
+                  onTap: () => _chooseTheme(context, ref),
+                  customBorder: const CircleBorder(),
+                  child: Icon(
+                    dark
+                        ? CupertinoIcons.moon_fill
+                        : CupertinoIcons.sun_max_fill,
+                    color: Colors.white,
+                    size: 18,
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Future<void> _chooseTheme(BuildContext context, WidgetRef ref) async {
+    final current = ref.read(themeModeProvider);
+    final selected = await showCupertinoModalPopup<ThemeMode>(
+      context: context,
+      builder: (sheetContext) {
+        return CupertinoActionSheet(
+          title: const Text('Appearance'),
+          actions: [
+            _themeAction(
+              sheetContext,
+              label: 'Light',
+              mode: ThemeMode.light,
+              selected: current,
+            ),
+            _themeAction(
+              sheetContext,
+              label: 'Dark',
+              mode: ThemeMode.dark,
+              selected: current,
+            ),
+            _themeAction(
+              sheetContext,
+              label: 'System',
+              mode: ThemeMode.system,
+              selected: current,
+            ),
+          ],
+          cancelButton: CupertinoActionSheetAction(
+            onPressed: () => Navigator.of(sheetContext).pop(),
+            child: const Text('Cancel'),
+          ),
+        );
+      },
+    );
+    if (selected == null || !context.mounted) return;
+    await ref.read(themeModeProvider.notifier).setThemeMode(selected);
+  }
+
+  CupertinoActionSheetAction _themeAction(
+    BuildContext sheetContext, {
+    required String label,
+    required ThemeMode mode,
+    required ThemeMode selected,
+  }) {
+    return CupertinoActionSheetAction(
+      isDefaultAction: mode == selected,
+      onPressed: () => Navigator.of(sheetContext).pop(mode),
+      child: Text(label),
+    );
+  }
+}
+
+class _WelcomeFade extends StatelessWidget {
+  const _WelcomeFade();
+
+  @override
+  Widget build(BuildContext context) {
+    return IgnorePointer(
+      child: Stack(
+        fit: StackFit.expand,
+        children: [
+          ShaderMask(
+            blendMode: BlendMode.dstIn,
+            shaderCallback: (rect) {
+              return const LinearGradient(
+                begin: Alignment.topCenter,
+                end: Alignment.bottomCenter,
+                colors: [Color(0x00000000), Color(0xFF000000)],
+                stops: [0, 0.42],
+              ).createShader(rect);
+            },
+            child: BackdropFilter(
+              filter: ImageFilter.blur(sigmaX: 24, sigmaY: 24),
+              child: const SizedBox.expand(),
+            ),
+          ),
+          const DecoratedBox(
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+                begin: Alignment.topCenter,
+                end: Alignment.bottomCenter,
+                colors: [
+                  Color(0x000F172A),
+                  Color(0x730F172A),
+                  Color(0xE60F172A),
+                  Color(0xFF0F172A),
+                ],
+                stops: [0, 0.18, 0.46, 0.72],
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _LoginVideoBackground extends StatefulWidget {
+  const _LoginVideoBackground();
+
+  @override
+  State<_LoginVideoBackground> createState() => _LoginVideoBackgroundState();
+}
+
+class _LoginVideoBackgroundState extends State<_LoginVideoBackground>
+    with SingleTickerProviderStateMixin {
+  VideoPlayerController? _controller;
+  late final AnimationController _gradient;
+  var _ready = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _gradient = AnimationController(
+      vsync: this,
+      duration: const Duration(seconds: 8),
+    )..repeat(reverse: true);
+    _start();
+  }
+
+  Future<void> _start() async {
+    VideoPlayerController? controller;
+    var handedOff = false;
+    try {
+      controller = await openLoginVideo(_kLoginVideoAsset);
+      await controller.initialize();
+      if (!mounted ||
+          controller.value.hasError ||
+          !controller.value.isInitialized) {
+        debugPrint(
+          'Login video did not start: ${controller.value.errorDescription}',
+        );
+        return;
+      }
+      await controller.setLooping(true);
+      await controller.setVolume(0);
+      await controller.play();
+      if (!mounted || controller.value.hasError) {
+        debugPrint(
+          'Login video playback failed: ${controller.value.errorDescription}',
+        );
+        return;
+      }
+      controller.addListener(_onVideoUpdate);
+      handedOff = true;
+      _gradient.stop();
+      setState(() {
+        _controller = controller;
+        _ready = true;
+      });
+    } catch (error) {
+      debugPrint('Login video did not start: $error');
+    } finally {
+      if (!handedOff) {
+        await controller?.dispose();
+      }
+    }
+  }
+
+  void _onVideoUpdate() {
+    final controller = _controller;
+    if (!mounted || controller == null) return;
+    final value = controller.value;
+    if (value.hasError) {
+      debugPrint('Login video error: ${value.errorDescription}');
+      if (!_gradient.isAnimating) {
+        _gradient.repeat(reverse: true);
+      }
+      if (_ready) setState(() => _ready = false);
+      return;
+    }
+    if (value.isInitialized && !_ready) {
+      _gradient.stop();
+      setState(() => _ready = true);
+    }
+  }
+
+  @override
+  void dispose() {
+    _gradient.dispose();
+    final controller = _controller;
+    controller?.removeListener(_onVideoUpdate);
+    controller?.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final controller = _controller;
+    final size = controller?.value.size ?? Size.zero;
+    final videoWidth = size.width > 0 ? size.width : 1920.0;
+    final videoHeight = size.height > 0 ? size.height : 1080.0;
+    final showVideo =
+        _ready &&
+        controller != null &&
+        controller.value.isInitialized &&
+        !controller.value.hasError;
+
+    return IgnorePointer(
+      child: Stack(
+        fit: StackFit.expand,
+        children: [
+          AnimatedBuilder(
+            animation: _gradient,
+            builder: (context, _) {
+              final t = _gradient.value;
+              return Stack(
+                fit: StackFit.expand,
+                children: [
+                  DecoratedBox(
+                    decoration: BoxDecoration(
+                      gradient: LinearGradient(
+                        begin: Alignment(-0.8 + t, -1),
+                        end: Alignment(1, 0.6 + (0.4 * t)),
+                        colors: const [
+                          Color(0xFF0F172A),
+                          Color(0xFF1E1B4B),
+                          Color(0xFF0F766E),
+                        ],
+                        stops: [0, 0.48, 1],
+                      ),
+                    ),
+                  ),
+                  DecoratedBox(
+                    decoration: BoxDecoration(
+                      gradient: RadialGradient(
+                        center: Alignment(0.35 - t, -0.25),
+                        radius: 1.15,
+                        colors: [
+                          const Color(0xFF312E81).withValues(alpha: 0.55),
+                          const Color(0x000F172A),
+                        ],
+                      ),
+                    ),
+                  ),
+                ],
+              );
+            },
+          ),
+          if (showVideo)
+            FittedBox(
+              fit: BoxFit.cover,
+              child: SizedBox(
+                width: videoWidth,
+                height: videoHeight,
+                child: VideoPlayer(controller),
+              ),
+            ),
+        ],
+      ),
+    );
+  }
+}
+
+class _DobPickerSheet extends StatefulWidget {
+  const _DobPickerSheet({
+    required this.initialDate,
+    required this.firstDate,
+    required this.lastDate,
+  });
+
+  final DateTime initialDate;
+  final DateTime firstDate;
+  final DateTime lastDate;
+
+  @override
+  State<_DobPickerSheet> createState() => _DobPickerSheetState();
+}
+
+class _DobPickerSheetState extends State<_DobPickerSheet> {
+  late DateTime _selected = widget.initialDate;
+
+  @override
+  Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final background = isDark ? const Color(0xFF1C1C1E) : Colors.white;
+    final label = isDark ? Colors.white : const Color(0xFF0F172A);
+
+    return CupertinoTheme(
+      data: CupertinoThemeData(
+        brightness: isDark ? Brightness.dark : Brightness.light,
+        primaryColor: _kSystemBlue,
+      ),
+      child: Container(
+        height: 320,
+        decoration: BoxDecoration(
+          color: background,
+          borderRadius: const BorderRadius.vertical(top: Radius.circular(16)),
+        ),
+        child: Column(
+          children: [
+            SizedBox(
+              height: 48,
+              child: Row(
+                children: [
+                  CupertinoButton(
+                    padding: const EdgeInsets.symmetric(horizontal: 16),
+                    onPressed: () => Navigator.of(context).pop(),
+                    child: Text('Cancel', style: TextStyle(color: label)),
+                  ),
+                  const Spacer(),
+                  CupertinoButton(
+                    padding: const EdgeInsets.symmetric(horizontal: 16),
+                    onPressed: () => Navigator.of(context).pop(_selected),
+                    child: const Text(
+                      'Done',
+                      style: TextStyle(
+                        color: _kSystemBlue,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            Expanded(
+              child: CupertinoDatePicker(
+                mode: CupertinoDatePickerMode.date,
+                initialDateTime: widget.initialDate,
+                minimumDate: widget.firstDate,
+                maximumDate: widget.lastDate,
+                onDateTimeChanged: (value) => _selected = value,
               ),
             ),
           ],
@@ -595,414 +1294,12 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
       ),
     );
   }
-
-  Widget _emergencyButton({
-    required PatientAuthState auth,
-    required bool onDark,
-  }) {
-    return FilledButton.icon(
-      onPressed: auth.isLoading
-          ? null
-          : () => context.router.push(const GuestCreateEmergencyRequestRoute()),
-      style: FilledButton.styleFrom(
-        backgroundColor: ImshAccentColors.pink,
-        foregroundColor: Colors.white,
-        padding: const EdgeInsets.symmetric(vertical: 14),
-        shape: const StadiumBorder(),
-      ),
-      icon: ImshSolidIcon(
-        icon: Icons.emergency_outlined,
-        color: onDark ? ImshAccentColors.amber : const Color(0xFFBE185D),
-        size: 22,
-        iconSize: 14,
-        radius: 6,
-      ),
-      label: const Text('Request emergency help'),
-    );
-  }
 }
 
-class _MovingBlob {
-  _MovingBlob({
-    required this.x,
-    required this.y,
-    required this.vx,
-    required this.vy,
-    required this.radius,
-    required this.color,
-  });
-
-  double x;
-  double y;
-  double vx;
-  double vy;
-  final double radius;
-  final Color color;
-}
-
-class _ColorBlobs extends StatefulWidget {
-  const _ColorBlobs();
-
-  @override
-  State<_ColorBlobs> createState() => _ColorBlobsState();
-}
-
-class _ColorBlobsState extends State<_ColorBlobs>
-    with SingleTickerProviderStateMixin {
-  static const _specs = <(Color, double)>[
-    (ImshAccentColors.purple, 110),
-    (ImshAccentColors.pink, 90),
-    (ImshAccentColors.teal, 100),
-    (ImshAccentColors.amber, 80),
-    (ImshAccentColors.blue, 70),
-  ];
-
-  static const _minSpeed = 42.0;
-  static const _maxSpeed = 130.0;
-
-  late final Ticker _ticker;
-  final math.Random _rng = math.Random(7);
-  final List<_MovingBlob> _blobs = [];
-  Size _size = Size.zero;
-  Duration? _lastElapsed;
-
-  @override
-  void initState() {
-    super.initState();
-    _ticker = createTicker(_onTick)..start();
-  }
-
-  @override
-  void dispose() {
-    _ticker.dispose();
-    super.dispose();
-  }
-
-  void _spawn(Size size) {
-    _blobs
-      ..clear()
-      ..addAll([
-        for (final spec in _specs)
-          _MovingBlob(
-            x: spec.$2 +
-                _rng.nextDouble() * math.max(1, size.width - spec.$2 * 2),
-            y: spec.$2 +
-                _rng.nextDouble() * math.max(1, size.height - spec.$2 * 2),
-            vx: (_rng.nextBool() ? 1 : -1) * (48 + _rng.nextDouble() * 56),
-            vy: (_rng.nextBool() ? 1 : -1) * (48 + _rng.nextDouble() * 56),
-            radius: spec.$2,
-            color: spec.$1,
-          ),
-      ]);
-  }
-
-  void _ensureBlobs(Size size) {
-    if (size.width <= 0 || size.height <= 0) return;
-    if (_blobs.isEmpty) {
-      _spawn(size);
-      _size = size;
-      setState(() {});
-      return;
-    }
-    if (size == _size) return;
-    for (final blob in _blobs) {
-      blob.x = blob.x.clamp(
-        blob.radius,
-        math.max(blob.radius, size.width - blob.radius),
-      );
-      blob.y = blob.y.clamp(
-        blob.radius,
-        math.max(blob.radius, size.height - blob.radius),
-      );
-    }
-    _size = size;
-  }
-
-  void _bounceWalls(_MovingBlob blob) {
-    final maxX = math.max(blob.radius, _size.width - blob.radius);
-    final maxY = math.max(blob.radius, _size.height - blob.radius);
-    if (blob.x < blob.radius) {
-      blob.x = blob.radius;
-      blob.vx = blob.vx.abs();
-    } else if (blob.x > maxX) {
-      blob.x = maxX;
-      blob.vx = -blob.vx.abs();
-    }
-    if (blob.y < blob.radius) {
-      blob.y = blob.radius;
-      blob.vy = blob.vy.abs();
-    } else if (blob.y > maxY) {
-      blob.y = maxY;
-      blob.vy = -blob.vy.abs();
-    }
-  }
-
-  void _collide(_MovingBlob a, _MovingBlob b) {
-    final dx = b.x - a.x;
-    final dy = b.y - a.y;
-    final distSq = dx * dx + dy * dy;
-    final minDist = a.radius + b.radius;
-    if (distSq >= minDist * minDist) return;
-
-    final dist = distSq <= 0.0001 ? 0.0001 : math.sqrt(distSq);
-    final nx = dx / dist;
-    final ny = dy / dist;
-
-    final overlap = minDist - dist;
-    final massA = a.radius * a.radius;
-    final massB = b.radius * b.radius;
-    final massSum = massA + massB;
-    a.x -= nx * overlap * (massB / massSum);
-    a.y -= ny * overlap * (massB / massSum);
-    b.x += nx * overlap * (massA / massSum);
-    b.y += ny * overlap * (massA / massSum);
-
-    final relVx = b.vx - a.vx;
-    final relVy = b.vy - a.vy;
-    final velAlongNormal = relVx * nx + relVy * ny;
-    if (velAlongNormal > 0) return;
-
-    const restitution = 1.0;
-    final impulse = -(1 + restitution) * velAlongNormal / massSum;
-    a.vx -= impulse * massB * nx;
-    a.vy -= impulse * massB * ny;
-    b.vx += impulse * massA * nx;
-    b.vy += impulse * massA * ny;
-  }
-
-  void _clampSpeed(_MovingBlob blob) {
-    final speed = math.sqrt(blob.vx * blob.vx + blob.vy * blob.vy);
-    if (speed < 1) {
-      blob.vx = _minSpeed * (_rng.nextBool() ? 1 : -1);
-      blob.vy = _minSpeed * (_rng.nextBool() ? 1 : -1);
-      return;
-    }
-    if (speed < _minSpeed) {
-      final scale = _minSpeed / speed;
-      blob.vx *= scale;
-      blob.vy *= scale;
-    } else if (speed > _maxSpeed) {
-      final scale = _maxSpeed / speed;
-      blob.vx *= scale;
-      blob.vy *= scale;
-    }
-  }
-
-  void _onTick(Duration elapsed) {
-    if (!mounted || _size == Size.zero || _blobs.isEmpty) {
-      _lastElapsed = elapsed;
-      return;
-    }
-
-    final last = _lastElapsed ?? elapsed;
-    _lastElapsed = elapsed;
-    var dt = (elapsed - last).inMicroseconds / 1e6;
-    if (dt <= 0) return;
-    if (dt > 0.05) dt = 0.05;
-
-    for (final blob in _blobs) {
-      blob.x += blob.vx * dt;
-      blob.y += blob.vy * dt;
-      _bounceWalls(blob);
-    }
-
-    for (var i = 0; i < _blobs.length; i++) {
-      for (var j = i + 1; j < _blobs.length; j++) {
-        _collide(_blobs[i], _blobs[j]);
-      }
-    }
-
-    for (final blob in _blobs) {
-      _bounceWalls(blob);
-      _clampSpeed(blob);
-    }
-
-    setState(() {});
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return IgnorePointer(
-      child: LayoutBuilder(
-        builder: (context, constraints) {
-          final size = Size(constraints.maxWidth, constraints.maxHeight);
-          if (size.width > 0 && size.height > 0 && size != _size) {
-            WidgetsBinding.instance.addPostFrameCallback((_) {
-              if (!mounted) return;
-              _ensureBlobs(size);
-            });
-          }
-          return Stack(
-            children: [
-              for (final blob in _blobs)
-                Positioned(
-                  left: blob.x - blob.radius,
-                  top: blob.y - blob.radius,
-                  width: blob.radius * 2,
-                  height: blob.radius * 2,
-                  child: DecoratedBox(
-                    decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      color: blob.color.withValues(alpha: 0.28),
-                    ),
-                  ),
-                ),
-            ],
-          );
-        },
-      ),
-    );
-  }
-}
-
-class _ModuleTiles extends StatelessWidget {
-  const _ModuleTiles({required this.compact});
-
-  final bool compact;
-
-  static const _tiles = <(IconData, String, Color)>[
-    (Icons.event_available_outlined, 'Appointments', ImshAccentColors.purple),
-    (Icons.folder_shared_outlined, 'Records', ImshAccentColors.teal),
-    (Icons.biotech_outlined, 'Lab results', ImshAccentColors.indigo),
-    (Icons.medication_outlined, 'Medications', ImshAccentColors.amber),
-    (Icons.payments_outlined, 'Billing', ImshAccentColors.pink),
-    (Icons.emergency_outlined, 'Emergency', ImshAccentColors.green),
-  ];
-
-  @override
-  Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    final tiles = compact ? _tiles.take(4).toList() : _tiles;
-    return Wrap(
-      spacing: 8,
-      runSpacing: 8,
-      alignment: WrapAlignment.center,
-      children: [
-        for (final tile in tiles)
-          Container(
-            width: compact ? 150 : 168,
-            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
-            decoration: BoxDecoration(
-              color: Colors.white.withValues(alpha: 0.12),
-              borderRadius: BorderRadius.circular(AppDesignTokens.radiusMd),
-              border: Border.all(color: Colors.white.withValues(alpha: 0.18)),
-            ),
-            child: Row(
-              children: [
-                ImshSolidIcon(
-                  icon: tile.$1,
-                  color: tile.$3,
-                  size: 26,
-                  iconSize: 14,
-                  radius: 7,
-                ),
-                const SizedBox(width: 8),
-                Expanded(
-                  child: Text(
-                    tile.$2,
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                    style: theme.textTheme.labelLarge?.copyWith(
-                      color: Colors.white,
-                      fontWeight: FontWeight.w700,
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ),
-      ],
-    );
-  }
-}
-
-class _LoginClock extends StatefulWidget {
-  const _LoginClock({required this.onDark});
-
-  final bool onDark;
-
-  @override
-  State<_LoginClock> createState() => _LoginClockState();
-}
-
-class _LoginClockState extends State<_LoginClock> {
-  late DateTime _now;
-  Timer? _timer;
-
-  @override
-  void initState() {
-    super.initState();
-    _now = AppTimezone.now();
-    _timer = Timer.periodic(const Duration(seconds: 1), (_) {
-      if (!mounted) return;
-      setState(() => _now = AppTimezone.now());
-    });
-  }
-
-  @override
-  void dispose() {
-    _timer?.cancel();
-    super.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    final time = DateFormat('hh:mm a').format(_now);
-    final date = DateFormat('EEE, MMM d, yyyy').format(_now);
-    final onDark = widget.onDark;
-
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
-      decoration: BoxDecoration(
-        color: onDark
-            ? Colors.white.withValues(alpha: 0.12)
-            : theme.colorScheme.surface,
-        borderRadius: BorderRadius.circular(20),
-        border: Border.all(
-          color: onDark
-              ? Colors.white.withValues(alpha: 0.22)
-              : theme.colorScheme.outlineVariant.withValues(alpha: 0.7),
-        ),
-      ),
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Container(
-            width: 8,
-            height: 8,
-            decoration: const BoxDecoration(
-              color: ImshAccentColors.green,
-              shape: BoxShape.circle,
-            ),
-          ),
-          const SizedBox(width: 8),
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Text(
-                time,
-                style: theme.textTheme.labelLarge?.copyWith(
-                  fontWeight: FontWeight.w800,
-                  color: onDark ? Colors.white : null,
-                ),
-              ),
-              Text(
-                date,
-                style: theme.textTheme.bodySmall?.copyWith(
-                  color: onDark
-                      ? Colors.white.withValues(alpha: 0.7)
-                      : theme.colorScheme.onSurfaceVariant,
-                  fontSize: 10,
-                ),
-              ),
-            ],
-          ),
-        ],
-      ),
-    );
-  }
+DateTime _clampDate(DateTime value, DateTime first, DateTime last) {
+  if (value.isBefore(first)) return first;
+  if (value.isAfter(last)) return last;
+  return value;
 }
 
 @RoutePage()

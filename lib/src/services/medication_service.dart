@@ -65,6 +65,17 @@ class MedicationService {
     return MarkDoseTakenResponse.fromJson(resp.data ?? {});
   }
 
+  Future<UnmarkDoseTakenResponse> unmarkDoseTaken(
+    String doseId, {
+    String? forPatientId,
+  }) async {
+    final resp = await _dio.delete<Map<String, dynamic>>(
+      '/patient/medications/doses/$doseId/taken',
+      queryParameters: _subjectParams(forPatientId),
+    );
+    return UnmarkDoseTakenResponse.fromJson(resp.data ?? {});
+  }
+
   Future<ScheduleUpdateResponse> setScheduleStart(
     String prescriptionId, {
     required DateTime startAt,

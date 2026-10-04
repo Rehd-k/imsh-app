@@ -2,6 +2,8 @@
 
 Flutter patient app for the IMSH hospital management system. Targets **Android**, **iOS**, and **Web**.
 
+**Full guide:** [docs/CODEBASE.md](docs/CODEBASE.md) — startup, routing, auth, every feature, and the API catalog.
+
 ## Stack
 
 - **State:** Riverpod
@@ -46,31 +48,19 @@ lib/
   src/
     config/                # env + API candidates
     core/                  # errors, guards, interceptors, theme, storage
-    features/              # MVP feature modules (stub screens)
+    features/              # one folder per patient feature
     models/                # shared DTOs
     providers/             # Riverpod providers
     services/              # API service layer
     shared/widgets/        # reusable UI
-    widgets/               # app-level widgets (clock sync, notifications)
+    widgets/               # app-level widgets (clock sync, offline, Android update)
 ```
 
-## MVP features (prepared, not yet built)
+Feature behavior, routes, and endpoints are documented in [docs/CODEBASE.md](docs/CODEBASE.md). The in-app notifications screen is still a placeholder; push notifications already deep-link into medications, appointments, and emergency.
 
-| Feature | Route module |
-|---------|----------------|
-| Login & profile | `auth`, `profile` |
-| Appointments | `appointments` |
-| Lab results | `lab_results` |
-| Radiology reports | `radiology` |
-| Medical records | `medical_records` |
-| Billing & receipts | `billing` |
-| Notifications | `notifications` |
-| Family accounts | `family` |
-| QR health card | `health_card` |
+## Backend API contract
 
-## Backend API contract (required)
-
-The NestJS backend (`../backend`) is currently **staff-only**. Build a **patient portal** module with JWT `accountType: PATIENT` before feature development.
+The client calls the patient portal described below. The **routes this app actually uses** (including medications, cycle, emergency, devices, and theatre) are listed in [docs/CODEBASE.md](docs/CODEBASE.md). Family in the app is list-and-view (`GET /patient/family`); this client does not link or unlink dependents.
 
 ### Authentication
 
