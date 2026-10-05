@@ -83,8 +83,7 @@ class EmergencyRequestsScreen extends ConsumerWidget {
                 ),
                 error: (error, _) => ImshErrorPanel(
                   message: emergencyErrorMessage(error),
-                  onRetry: () =>
-                      ref.invalidate(emergencyListProvider(status)),
+                  onRetry: () => ref.invalidate(emergencyListProvider(status)),
                 ),
                 data: (response) {
                   if (response.data.isEmpty) {
@@ -334,259 +333,284 @@ class _CreateEmergencyRequestScreenState
 
     return Scaffold(
       appBar: const ImshAppBar(title: Text('Request emergency help')),
-      body: ResponsiveBody(
-        expand: false,
-        builder: (context, bp) => ListView(
-          padding: EdgeInsets.zero,
-          children: [
-            const ImshPageHeader(
-              title: 'Request emergency help',
-              subtitle: 'Share location and describe what is wrong',
-              icon: Icons.emergency_outlined,
-              iconColor: ImshAccentColors.amber,
-            ),
-            const Gap(_kSectionGap),
-            if (widget.guestMode) ...[
-              ImshSurfaceCard(
-                padding: const EdgeInsets.all(12),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    const Row(
-                      children: [
-                        ImshSolidIcon(
-                          icon: Icons.person_outline,
-                          color: ImshAccentColors.indigo,
-                          size: 32,
-                          iconSize: 16,
-                        ),
-                        Gap(10),
-                        Expanded(
-                          child: Text(
-                            'Your contact (optional)',
-                            style: TextStyle(fontWeight: FontWeight.w700),
-                          ),
-                        ),
-                      ],
-                    ),
-                    const Gap(AppDesignTokens.spacingSm),
-                    Text(
-                      'Help hospital staff reach you if they need more information.',
-                      style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                        color: colorScheme.onSurfaceVariant,
-                      ),
-                    ),
-                    const Gap(_kSectionGap),
-                    TextField(
-                      controller: _guestNameController,
-                      textCapitalization: TextCapitalization.words,
-                      textInputAction: TextInputAction.next,
-                      autofillHints: const [AutofillHints.name],
-                      decoration: const InputDecoration(labelText: 'Your name'),
-                    ),
-                    const Gap(_kSectionGap),
-                    TextField(
-                      controller: _guestPhoneController,
-                      keyboardType: TextInputType.phone,
-                      textInputAction: TextInputAction.done,
-                      autofillHints: const [AutofillHints.telephoneNumber],
-                      decoration: const InputDecoration(
-                        labelText: 'Phone number',
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              const Gap(_kSectionGap),
-            ],
-            ImshSurfaceCard(
-              padding: const EdgeInsets.all(12),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
+      body: Column(
+        children: [
+          Expanded(
+            child: ResponsiveBody(
+              builder: (context, bp) => ListView(
+                padding: EdgeInsets.zero,
+                keyboardDismissBehavior:
+                    ScrollViewKeyboardDismissBehavior.onDrag,
                 children: [
-                  const Row(
-                    children: [
-                      ImshSolidIcon(
-                        icon: Icons.my_location,
-                        color: ImshAccentColors.teal,
-                        size: 32,
-                        iconSize: 16,
-                      ),
-                      Gap(10),
-                      Expanded(
-                        child: Text(
-                          'Your location',
-                          style: TextStyle(fontWeight: FontWeight.w700),
-                        ),
-                      ),
-                    ],
-                  ),
-                  const Gap(AppDesignTokens.spacingSm),
-                  if (_locating)
-                    const Row(
-                      children: [
-                        SizedBox(
-                          width: 18,
-                          height: 18,
-                          child: CircularProgressIndicator(strokeWidth: 2),
-                        ),
-                        Gap(AppDesignTokens.spacingSm),
-                        Expanded(child: Text('Getting precise location…')),
-                      ],
-                    )
-                  else if (_position != null)
-                    Text('Location ready$accuracyLabel')
-                  else
-                    Text(
-                      _locationError ?? 'Location unavailable',
-                      style: TextStyle(color: colorScheme.error),
-                    ),
-                  const Gap(AppDesignTokens.spacingSm),
-                  Wrap(
-                    spacing: AppDesignTokens.spacingSm,
-                    children: [
-                      TextButton.icon(
-                        onPressed: _locating ? null : _captureLocation,
-                        icon: const Icon(Icons.my_location),
-                        label: const Text('Refresh location'),
-                      ),
-                      if (needsSettings)
-                        TextButton.icon(
-                          onPressed: _openLocationSettings,
-                          icon: const Icon(Icons.settings_outlined),
-                          label: const Text('Open settings'),
-                        ),
-                    ],
-                  ),
-                ],
-              ),
-            ),
-            const Gap(12),
-            const ImshSectionHeader(
-              title: 'What is wrong? (provide at least one)',
-              icon: Icons.description_outlined,
-              iconColor: ImshAccentColors.purple,
-            ),
-            const Gap(AppDesignTokens.spacingSm),
-            TextField(
-              controller: _descriptionController,
-              maxLines: 4,
-              maxLength: 2000,
-              decoration: const InputDecoration(
-                hintText: 'Describe the emergency…',
-              ),
-            ),
-            const Gap(_kSectionGap),
-            ImshSurfaceCard(
-              padding: const EdgeInsets.all(12),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  const Row(
-                    children: [
-                      ImshSolidIcon(
-                        icon: Icons.mic_none_outlined,
-                        color: ImshAccentColors.pink,
-                        size: 32,
-                        iconSize: 16,
-                      ),
-                      Gap(10),
-                      Expanded(
-                        child: Text(
-                          'Voice note or short video (optional)',
-                          style: TextStyle(fontWeight: FontWeight.w600),
-                        ),
-                      ),
-                    ],
+                  const ImshPageHeader(
+                    title: 'Request emergency help',
+                    subtitle: 'Share location and describe what is wrong',
+                    icon: Icons.emergency_outlined,
+                    iconColor: ImshAccentColors.amber,
                   ),
                   const Gap(_kSectionGap),
-                  Row(
-                    children: [
-                      Expanded(
-                        child: FilledButton.tonalIcon(
-                          onPressed: _submitting ? null : _toggleRecording,
-                          icon: Icon(_recording ? Icons.stop : Icons.mic),
-                          label: Text(_recording ? 'Stop' : 'Record'),
-                        ),
-                      ),
-                      const Gap(AppDesignTokens.spacingSm),
-                      Expanded(
-                        child: FilledButton.tonalIcon(
-                          onPressed: _submitting ? null : _pickVideo,
-                          icon: const Icon(Icons.videocam_outlined),
-                          label: Text(
-                            _videoPath == null ? 'Record video' : 'Retake',
+                  if (widget.guestMode) ...[
+                    ImshSurfaceCard(
+                      padding: const EdgeInsets.all(12),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          const Row(
+                            children: [
+                              ImshSolidIcon(
+                                icon: Icons.person_outline,
+                                color: ImshAccentColors.indigo,
+                                size: 32,
+                                iconSize: 16,
+                              ),
+                              Gap(10),
+                              Expanded(
+                                child: Text(
+                                  'Your contact (optional)',
+                                  style: TextStyle(fontWeight: FontWeight.w700),
+                                ),
+                              ),
+                            ],
                           ),
-                        ),
+                          const Gap(AppDesignTokens.spacingSm),
+                          Text(
+                            'Help hospital staff reach you if they need more information.',
+                            style: Theme.of(context).textTheme.bodySmall
+                                ?.copyWith(color: colorScheme.onSurfaceVariant),
+                          ),
+                          const Gap(_kSectionGap),
+                          TextField(
+                            controller: _guestNameController,
+                            textCapitalization: TextCapitalization.words,
+                            textInputAction: TextInputAction.next,
+                            autofillHints: const [AutofillHints.name],
+                            decoration: const InputDecoration(
+                              labelText: 'Your name',
+                            ),
+                          ),
+                          const Gap(_kSectionGap),
+                          TextField(
+                            controller: _guestPhoneController,
+                            keyboardType: TextInputType.phone,
+                            textInputAction: TextInputAction.done,
+                            autofillHints: const [
+                              AutofillHints.telephoneNumber,
+                            ],
+                            decoration: const InputDecoration(
+                              labelText: 'Phone number',
+                            ),
+                          ),
+                        ],
                       ),
-                    ],
+                    ),
+                    const Gap(_kSectionGap),
+                  ],
+                  ImshSurfaceCard(
+                    padding: const EdgeInsets.all(12),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const Row(
+                          children: [
+                            ImshSolidIcon(
+                              icon: Icons.my_location,
+                              color: ImshAccentColors.teal,
+                              size: 32,
+                              iconSize: 16,
+                            ),
+                            Gap(10),
+                            Expanded(
+                              child: Text(
+                                'Your location',
+                                style: TextStyle(fontWeight: FontWeight.w700),
+                              ),
+                            ),
+                          ],
+                        ),
+                        const Gap(AppDesignTokens.spacingSm),
+                        if (_locating)
+                          const Row(
+                            children: [
+                              SizedBox(
+                                width: 18,
+                                height: 18,
+                                child: CircularProgressIndicator(
+                                  strokeWidth: 2,
+                                ),
+                              ),
+                              Gap(AppDesignTokens.spacingSm),
+                              Expanded(
+                                child: Text('Getting precise location…'),
+                              ),
+                            ],
+                          )
+                        else if (_position != null)
+                          Text('Location ready$accuracyLabel')
+                        else
+                          Text(
+                            _locationError ?? 'Location unavailable',
+                            style: TextStyle(color: colorScheme.error),
+                          ),
+                        const Gap(AppDesignTokens.spacingSm),
+                        Wrap(
+                          spacing: AppDesignTokens.spacingSm,
+                          children: [
+                            TextButton.icon(
+                              onPressed: _locating ? null : _captureLocation,
+                              icon: const Icon(Icons.my_location),
+                              label: const Text('Refresh location'),
+                            ),
+                            if (needsSettings)
+                              TextButton.icon(
+                                onPressed: _openLocationSettings,
+                                icon: const Icon(Icons.settings_outlined),
+                                label: const Text('Open settings'),
+                              ),
+                          ],
+                        ),
+                      ],
+                    ),
                   ),
-                  if (_recording) ...[
-                    const Gap(AppDesignTokens.spacingSm),
-                    Text(
-                      '${_recordElapsed.inMinutes}:'
-                      '${(_recordElapsed.inSeconds % 60).toString().padLeft(2, '0')}',
+                  const Gap(12),
+                  const ImshSectionHeader(
+                    title: 'What is wrong? (provide at least one)',
+                    icon: Icons.description_outlined,
+                    iconColor: ImshAccentColors.purple,
+                  ),
+                  const Gap(AppDesignTokens.spacingSm),
+                  TextField(
+                    controller: _descriptionController,
+                    maxLines: 4,
+                    maxLength: 2000,
+                    decoration: const InputDecoration(
+                      hintText: 'Describe the emergency…',
                     ),
-                  ],
-                  if (_voicePath != null && !_recording) ...[
-                    const Gap(AppDesignTokens.spacingSm),
-                    Row(
+                  ),
+                  const Gap(_kSectionGap),
+                  ImshSurfaceCard(
+                    padding: const EdgeInsets.all(12),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        const Expanded(child: Text('Voice note attached')),
-                        IconButton(
-                          tooltip: 'Remove voice note',
-                          onPressed: () => setState(() => _voicePath = null),
-                          icon: const Icon(Icons.delete_outline),
+                        const Row(
+                          children: [
+                            ImshSolidIcon(
+                              icon: Icons.mic_none_outlined,
+                              color: ImshAccentColors.pink,
+                              size: 32,
+                              iconSize: 16,
+                            ),
+                            Gap(10),
+                            Expanded(
+                              child: Text(
+                                'Voice note or short video (optional)',
+                                style: TextStyle(fontWeight: FontWeight.w600),
+                              ),
+                            ),
+                          ],
                         ),
+                        const Gap(_kSectionGap),
+                        Row(
+                          children: [
+                            Expanded(
+                              child: FilledButton.tonalIcon(
+                                onPressed: _submitting
+                                    ? null
+                                    : _toggleRecording,
+                                icon: Icon(_recording ? Icons.stop : Icons.mic),
+                                label: Text(_recording ? 'Stop' : 'Record'),
+                              ),
+                            ),
+                            const Gap(AppDesignTokens.spacingSm),
+                            Expanded(
+                              child: FilledButton.tonalIcon(
+                                onPressed: _submitting ? null : _pickVideo,
+                                icon: const Icon(Icons.videocam_outlined),
+                                label: Text(
+                                  _videoPath == null
+                                      ? 'Record video'
+                                      : 'Retake',
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                        if (_recording) ...[
+                          const Gap(AppDesignTokens.spacingSm),
+                          Text(
+                            '${_recordElapsed.inMinutes}:'
+                            '${(_recordElapsed.inSeconds % 60).toString().padLeft(2, '0')}',
+                          ),
+                        ],
+                        if (_voicePath != null && !_recording) ...[
+                          const Gap(AppDesignTokens.spacingSm),
+                          Row(
+                            children: [
+                              const Expanded(
+                                child: Text('Voice note attached'),
+                              ),
+                              IconButton(
+                                tooltip: 'Remove voice note',
+                                onPressed: () =>
+                                    setState(() => _voicePath = null),
+                                icon: const Icon(Icons.delete_outline),
+                              ),
+                            ],
+                          ),
+                        ],
+                        if (_videoPath != null) ...[
+                          const Gap(AppDesignTokens.spacingXs),
+                          Row(
+                            children: [
+                              const Expanded(child: Text('Video attached')),
+                              IconButton(
+                                tooltip: 'Remove video',
+                                onPressed: () =>
+                                    setState(() => _videoPath = null),
+                                icon: const Icon(Icons.delete_outline),
+                              ),
+                            ],
+                          ),
+                        ],
                       ],
                     ),
-                  ],
-                  if (_videoPath != null) ...[
-                    const Gap(AppDesignTokens.spacingXs),
-                    Row(
-                      children: [
-                        const Expanded(child: Text('Video attached')),
-                        IconButton(
-                          tooltip: 'Remove video',
-                          onPressed: () => setState(() => _videoPath = null),
-                          icon: const Icon(Icons.delete_outline),
-                        ),
-                      ],
-                    ),
-                  ],
+                  ),
                 ],
               ),
             ),
-          ],
-        ),
-      ),
-      bottomNavigationBar: SafeArea(
-        child: ResponsiveBody(
-          expand: false,
-          bottomPadding: 0,
-          builder: (context, bp) => Padding(
-            padding: const EdgeInsets.only(bottom: 12),
-            child: FilledButton.icon(
-              style: FilledButton.styleFrom(
-                backgroundColor: colorScheme.error,
-                foregroundColor: colorScheme.onError,
-                minimumSize: const Size.fromHeight(52),
+          ),
+          ResponsiveBody(
+            expand: false,
+            bottomPadding: 0,
+            builder: (context, bp) => SafeArea(
+              top: false,
+              child: Padding(
+                padding: const EdgeInsets.only(bottom: 12),
+                child: FilledButton.icon(
+                  style: FilledButton.styleFrom(
+                    backgroundColor: colorScheme.error,
+                    foregroundColor: colorScheme.onError,
+                    minimumSize: const Size.fromHeight(52),
+                  ),
+                  onPressed: _submitting ? null : _submit,
+                  icon: _submitting
+                      ? SizedBox(
+                          width: 18,
+                          height: 18,
+                          child: CircularProgressIndicator(
+                            strokeWidth: 2,
+                            color: colorScheme.onError,
+                          ),
+                        )
+                      : const Icon(Icons.send_outlined),
+                  label: Text(
+                    _submitting ? 'Sending…' : 'Send emergency request',
+                  ),
+                ),
               ),
-              onPressed: _submitting ? null : _submit,
-              icon: _submitting
-                  ? SizedBox(
-                      width: 18,
-                      height: 18,
-                      child: CircularProgressIndicator(
-                        strokeWidth: 2,
-                        color: colorScheme.onError,
-                      ),
-                    )
-                  : const Icon(Icons.send_outlined),
-              label: Text(_submitting ? 'Sending…' : 'Send emergency request'),
             ),
           ),
-        ),
+        ],
       ),
     );
   }
