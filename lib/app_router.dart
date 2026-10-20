@@ -1,6 +1,7 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:imsh/app_router.gr.dart';
 import 'package:imsh/src/core/guards/auth_guard.dart';
+import 'package:imsh/src/core/navigation/zoom_from_source.dart';
 
 @AutoRouterConfig(replaceInRouteName: 'Screen|Page,Route')
 class AppRouter extends RootStackRouter {
@@ -33,7 +34,7 @@ class AppRouter extends RootStackRouter {
 
     AutoRoute(page: AppointmentsRoute.page, path: '/appointments'),
     AutoRoute(page: AppointmentDetailRoute.page, path: '/appointments/:id'),
-    AutoRoute(page: BookAppointmentRoute.page, path: '/appointments/book'),
+    _tileRoute(page: BookAppointmentRoute.page, path: '/appointments/book'),
 
     AutoRoute(page: TheatreSchedulesRoute.page, path: '/theatre'),
     AutoRoute(page: TheatreScheduleDetailRoute.page, path: '/theatre/:id'),
@@ -49,28 +50,28 @@ class AppRouter extends RootStackRouter {
     AutoRoute(page: VitalsTrendRoute.page, path: '/trends/vitals'),
     AutoRoute(page: LabTrendRoute.page, path: '/trends/lab'),
 
-    AutoRoute(page: LabResultsRoute.page, path: '/lab-results'),
+    _tileRoute(page: LabResultsRoute.page, path: '/lab-results'),
     AutoRoute(page: LabResultDetailRoute.page, path: '/lab-results/:id'),
 
-    AutoRoute(page: RadiologyReportsRoute.page, path: '/radiology'),
+    _tileRoute(page: RadiologyReportsRoute.page, path: '/radiology'),
     AutoRoute(page: RadiologyDetailRoute.page, path: '/radiology/:id'),
 
     AutoRoute(page: MedicalRecordsRoute.page, path: '/medical-records'),
     AutoRoute(page: EncounterDetailRoute.page, path: '/medical-records/:id'),
 
-    AutoRoute(page: MedicationsRoute.page, path: '/medications'),
+    _tileRoute(page: MedicationsRoute.page, path: '/medications'),
     AutoRoute(page: MedicationsHistoryRoute.page, path: '/medications/history'),
 
     AutoRoute(page: BillsRoute.page, path: '/bills'),
     AutoRoute(page: BillDetailRoute.page, path: '/bills/:id'),
     AutoRoute(page: ReceiptViewerRoute.page, path: '/receipts/:id'),
 
-    AutoRoute(page: PatientFeedbackRoute.page, path: '/feedback'),
+    _tileRoute(page: PatientFeedbackRoute.page, path: '/feedback'),
     AutoRoute(page: CreateFeedbackRoute.page, path: '/feedback/new'),
     AutoRoute(page: FeedbackDetailRoute.page, path: '/feedback/:id'),
     AutoRoute(page: EditFeedbackRoute.page, path: '/feedback/:id/edit'),
 
-    AutoRoute(page: EmergencyRequestsRoute.page, path: '/emergency'),
+    _tileRoute(page: EmergencyRequestsRoute.page, path: '/emergency'),
     AutoRoute(page: CreateEmergencyRequestRoute.page, path: '/emergency/new'),
     AutoRoute(
       page: GuestCreateEmergencyRequestRoute.page,
@@ -82,14 +83,26 @@ class AppRouter extends RootStackRouter {
     ),
     AutoRoute(page: EmergencyRequestDetailRoute.page, path: '/emergency/:id'),
 
-    AutoRoute(page: NotificationsRoute.page, path: '/notifications'),
-    AutoRoute(page: FamilyAccountsRoute.page, path: '/family'),
+    _tileRoute(page: NotificationsRoute.page, path: '/notifications'),
+    _tileRoute(page: FamilyAccountsRoute.page, path: '/family'),
 
     AutoRoute(page: DevicesRoute.page, path: '/devices'),
 
-    AutoRoute(page: HealthCardRoute.page, path: '/health-card'),
-    AutoRoute(page: CycleTrackerRoute.page, path: '/cycle'),
+    _tileRoute(page: HealthCardRoute.page, path: '/health-card'),
+    _tileRoute(page: CycleTrackerRoute.page, path: '/cycle'),
     AutoRoute(page: ProfileRoute.page, path: '/profile'),
     AutoRoute(page: EditProfileRoute.page, path: '/profile/edit'),
   ];
+}
+
+CustomRoute<void> _tileRoute({required PageInfo page, required String path}) {
+  return CustomRoute(
+    page: page,
+    path: path,
+    opaque: false,
+    barrierDismissible: false,
+    duration: ZoomSource.duration,
+    reverseDuration: ZoomSource.reverseDuration,
+    transitionsBuilder: zoomFromSourceTransition,
+  );
 }

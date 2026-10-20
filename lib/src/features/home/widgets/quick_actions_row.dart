@@ -1,6 +1,7 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:imsh/app_router.gr.dart';
+import 'package:imsh/src/core/navigation/zoom_from_source.dart';
 
 import '../../../core/theme/app_design_tokens.dart';
 import '../../../core/theme/imsh_accent_colors.dart';
@@ -12,13 +13,15 @@ class _QuickAction {
     required this.icon,
     required this.label,
     required this.accent,
-    required this.onTap,
+    this.route,
+    this.onTap,
   });
 
   final IconData icon;
   final String label;
   final Color accent;
-  final VoidCallback onTap;
+  final PageRouteInfo<dynamic>? route;
+  final VoidCallback? onTap;
 }
 
 /// Quick actions — list rail on desktop, compact wrap on smaller viewports.
@@ -36,13 +39,13 @@ class HomeQuickActions extends StatelessWidget {
   final bool fillHeight;
   final bool asRail;
 
-  List<_QuickAction> _actions(BuildContext context) {
+  List<_QuickAction> _actions() {
     return [
       _QuickAction(
         icon: Icons.emergency_outlined,
         label: 'Emergency',
         accent: const Color(0xFFDC2626),
-        onTap: () => context.router.push(const EmergencyRequestsRoute()),
+        route: const EmergencyRequestsRoute(),
       ),
       _QuickAction(
         icon: Icons.login_outlined,
@@ -54,31 +57,31 @@ class HomeQuickActions extends StatelessWidget {
         icon: Icons.calendar_month_outlined,
         label: 'Request visit',
         accent: ImshAccentColors.teal,
-        onTap: () => context.router.push(BookAppointmentRoute()),
+        route: BookAppointmentRoute(),
       ),
       _QuickAction(
         icon: Icons.badge_outlined,
         label: 'Health card',
         accent: ImshAccentColors.purple,
-        onTap: () => context.router.push(const HealthCardRoute()),
+        route: const HealthCardRoute(),
       ),
       _QuickAction(
         icon: Icons.medication_outlined,
         label: 'Medications',
         accent: ImshAccentColors.indigo,
-        onTap: () => context.router.push(const MedicationsRoute()),
+        route: const MedicationsRoute(),
       ),
       _QuickAction(
         icon: Icons.science_outlined,
         label: 'Lab results',
         accent: ImshAccentColors.blue,
-        onTap: () => context.router.push(const LabResultsRoute()),
+        route: const LabResultsRoute(),
       ),
       _QuickAction(
         icon: Icons.photo_outlined,
         label: 'Radiology',
         accent: ImshAccentColors.teal,
-        onTap: () => context.router.push(const RadiologyReportsRoute()),
+        route: const RadiologyReportsRoute(),
       ),
       _QuickAction(
         icon: Icons.payments_outlined,
@@ -90,25 +93,25 @@ class HomeQuickActions extends StatelessWidget {
         icon: Icons.water_drop_outlined,
         label: 'Cycle',
         accent: ImshAccentColors.pink,
-        onTap: () => context.router.push(const CycleTrackerRoute()),
+        route: const CycleTrackerRoute(),
       ),
       _QuickAction(
         icon: Icons.family_restroom_outlined,
         label: 'Family',
         accent: ImshAccentColors.purple,
-        onTap: () => context.router.push(const FamilyAccountsRoute()),
+        route: const FamilyAccountsRoute(),
       ),
       _QuickAction(
         icon: Icons.notifications_outlined,
         label: 'Notifications',
         accent: ImshAccentColors.indigo,
-        onTap: () => context.router.push(const NotificationsRoute()),
+        route: const NotificationsRoute(),
       ),
       _QuickAction(
         icon: Icons.forum_outlined,
         label: 'Feedback',
         accent: ImshAccentColors.green,
-        onTap: () => context.router.push(const PatientFeedbackRoute()),
+        route: const PatientFeedbackRoute(),
       ),
     ];
   }
@@ -116,7 +119,7 @@ class HomeQuickActions extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final actions = _actions(context);
+    final actions = _actions();
 
     final header = Row(
       children: [
@@ -206,13 +209,13 @@ class _RailActionTile extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final cs = theme.colorScheme;
+    final radius = BorderRadius.circular(AppDesignTokens.radiusMd);
 
-    return Material(
-      color: cs.surfaceContainerLow,
-      borderRadius: BorderRadius.circular(AppDesignTokens.radiusMd),
-      child: InkWell(
-        onTap: action.onTap,
-        borderRadius: BorderRadius.circular(AppDesignTokens.radiusMd),
+    return _TilePress(
+      onTap: () => _openQuickAction(context, action),
+      child: Material(
+        color: cs.surfaceContainerLow,
+        borderRadius: radius,
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
           child: Row(
@@ -255,9 +258,8 @@ class _CompactActionTile extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
 
-    return InkWell(
-      onTap: action.onTap,
-      borderRadius: BorderRadius.circular(AppDesignTokens.radiusMd),
+    return _TilePress(
+      onTap: () => _openQuickAction(context, action),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
@@ -279,6 +281,49 @@ class _CompactActionTile extends StatelessWidget {
             ),
           ),
         ],
+      ),
+    );
+  }
+}
+
+void _openQuickAction(BuildContext context, _QuickAction action) {
+  final route = action.route;
+  if (route != null) {
+    ZoomSource.capture(context);
+    context.router.push(route);
+    return;
+  }
+  action.onTap?.call();
+}
+
+class _TilePress extends StatefulWidget {
+  const _TilePress({required this.onTap, required this.child});
+
+  final VoidCallback onTap;
+  final Widget child;
+
+  @override
+  State<_TilePress> createState() => _TilePressState();
+}
+
+class _TilePressState extends State<_TilePress> {
+  bool _pressed = false;
+
+  @override
+  Widget build(BuildContext context) {
+    return AnimatedScale(
+      scale: _pressed ? 0.96 : 1,
+      duration: const Duration(milliseconds: 120),
+      curve: Curves.easeOutCubic,
+      child: GestureDetector(
+        behavior: HitTestBehavior.opaque,
+        onTapDown: (_) => setState(() => _pressed = true),
+        onTapCancel: () => setState(() => _pressed = false),
+        onTap: () {
+          setState(() => _pressed = false);
+          widget.onTap();
+        },
+        child: widget.child,
       ),
     );
   }

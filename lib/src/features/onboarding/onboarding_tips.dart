@@ -213,14 +213,17 @@ class OnboardingTipsNotifier extends Notifier<OnboardingTipsState> {
   /// The anchored widget left the screen while its tip was up.
   ///
   /// Hides the overlay without marking the tip seen, so it can show next launch.
+  /// Deferred because the anchor calls this from [State.dispose].
   void anchorUnmounted(OnboardingTip tip) {
-    if (state.pending != tip) return;
-    state = state.copyWith(
-      pending: null,
-      shownThisSession: true,
-      replay: false,
-      forceHide: state.forceHide + 1,
-    );
+    Future<void>(() {
+      if (!ref.mounted || state.pending != tip) return;
+      state = state.copyWith(
+        pending: null,
+        shownThisSession: true,
+        replay: false,
+        forceHide: state.forceHide + 1,
+      );
+    });
   }
 
   /// A push opened a task. Do not teach over it this launch.
