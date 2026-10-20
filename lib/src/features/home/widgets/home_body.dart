@@ -19,6 +19,8 @@ import '../../../shared/widgets/imsh_error_panel.dart';
 import '../../../shared/widgets/imsh_sliver_app_bar.dart';
 import '../../../shared/widgets/imsh_solid_icon.dart';
 import '../../../shared/widgets/imsh_surface_card.dart';
+import '../../onboarding/onboarding_anchor.dart';
+import '../../onboarding/onboarding_tips.dart';
 import 'home_billing_snippet.dart';
 import 'home_cycle_snippet.dart';
 import 'home_header.dart';
@@ -31,7 +33,7 @@ import 'quick_actions_row.dart';
 class HomeBody extends ConsumerWidget {
   const HomeBody({super.key});
 
-  static const bookingTabIndex = 2;
+  static const bookingTabIndex = 1;
   static const billingTabIndex = 3;
   static const sectionGap = 12.0;
 
@@ -72,7 +74,9 @@ class HomeBody extends ConsumerWidget {
             physics: const AlwaysScrollableScrollPhysics(),
             slivers: [
               const ImshSliverAppBar(),
-              const SliverToBoxAdapter(child: FamilySubjectBanner()),
+              const SliverToBoxAdapter(
+                child: FamilySubjectBanner(anchorOnboarding: true),
+              ),
               SliverFillRemaining(
                 hasScrollBody: true,
                 child: ResponsiveBody(
@@ -175,6 +179,12 @@ class _HomeMainColumn extends StatelessWidget {
     final next = dashboard.homeAppointments.isNotEmpty
         ? dashboard.homeAppointments.first
         : null;
+    final visitCard = HomeNextVisitCard(
+      appointment: next,
+      onOpenBooking: onOpenBooking,
+      onRequest: onRequest,
+      onReschedule: onReschedule,
+    );
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -191,12 +201,14 @@ class _HomeMainColumn extends StatelessWidget {
           onBillingTap: onPayBill,
         ),
         const SizedBox(height: HomeBody.sectionGap),
-        HomeNextVisitCard(
-          appointment: next,
-          onOpenBooking: onOpenBooking,
-          onRequest: onRequest,
-          onReschedule: onReschedule,
-        ),
+        if (next != null && appointmentIsTodayInPerson(next))
+          OnboardingAnchor(
+            tip: OnboardingTip.checkIn,
+            deferWhileViewingFamily: true,
+            child: visitCard,
+          )
+        else
+          visitCard,
         if (dashboard.homeAppointments.length > 1) ...[
           const SizedBox(height: HomeBody.sectionGap),
           HomeUpcomingSection(
@@ -207,14 +219,12 @@ class _HomeMainColumn extends StatelessWidget {
         ],
         if (showInlineQuickActions) ...[
           const SizedBox(height: HomeBody.sectionGap),
-          HomeQuickActions(
-            onPayBill: onPayBill,
-            onCheckIn: onCheckIn,
-          ),
+          HomeQuickActions(onPayBill: onPayBill, onCheckIn: onCheckIn),
         ],
         const HomeCycleSnippet(),
         _Spaced(
-          show: dashboard.medications.nextDoses.isNotEmpty ||
+          show:
+              dashboard.medications.nextDoses.isNotEmpty ||
               dashboard.medications.todaySchedule.isNotEmpty,
           child: HomeMedicationsSection(
             nextDoses: dashboard.medications.nextDoses,
@@ -242,11 +252,9 @@ class _HomeMainColumn extends StatelessWidget {
             icon: Icons.campaign_outlined,
             accent: ImshAccentColors.purple,
             items: campaigns,
-            onViewAll: () =>
-                context.router.push(const HealthCampaignsRoute()),
-            onOpen: (item) => context.router.push(
-              HealthCampaignDetailRoute(id: item.id),
-            ),
+            onViewAll: () => context.router.push(const HealthCampaignsRoute()),
+            onOpen: (item) =>
+                context.router.push(HealthCampaignDetailRoute(id: item.id)),
           ),
         ),
         _Spaced(

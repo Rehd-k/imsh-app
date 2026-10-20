@@ -14,6 +14,8 @@ import 'firebase_options.dart';
 import 'app_router.gr.dart';
 import 'src/core/interceptors/error_interceptor.dart';
 import 'src/core/theme/app_theme.dart';
+import 'src/features/onboarding/onboarding_tips.dart';
+import 'src/features/onboarding/patient_onboarding_host.dart';
 import 'src/helper/app_timezone.dart';
 import 'src/models/device_model.dart';
 import 'src/providers/auth_provider.dart';
@@ -72,6 +74,9 @@ class _ImshAppState extends ConsumerState<ImshApp> {
   @override
   void initState() {
     super.initState();
+    ref.read(fcmPushServiceProvider).onOpenedFromNotification = () {
+      ref.read(onboardingTipsProvider.notifier).suppressThisLaunch();
+    };
     Future.microtask(() async {
       await ref.read(patientAuthProvider.notifier).restoreSession();
       _wireAuthSessionHooks();
@@ -143,10 +148,12 @@ class _ImshAppState extends ConsumerState<ImshApp> {
       debugShowCheckedModeBanner: false,
       routerConfig: NavigationService.router.config(),
       builder: (context, child) {
-        return AppNotificationHost(
-          child: OfflineBanner(
-            child: ImshAndroidUpdateLayer(
-              child: child ?? const SizedBox.shrink(),
+        return PatientOnboardingHost(
+          child: AppNotificationHost(
+            child: OfflineBanner(
+              child: ImshAndroidUpdateLayer(
+                child: child ?? const SizedBox.shrink(),
+              ),
             ),
           ),
         );

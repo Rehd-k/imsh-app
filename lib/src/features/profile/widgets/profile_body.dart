@@ -23,6 +23,7 @@ import '../../../shared/widgets/imsh_sliver_app_bar.dart';
 import '../../../shared/widgets/imsh_solid_icon.dart';
 import '../../../shared/widgets/imsh_surface_card.dart';
 import '../../../shared/widgets/logout_button.dart';
+import '../../onboarding/patient_onboarding_host.dart';
 import 'profile_avatar_section.dart';
 
 extension PatientProfileDisplay on Patient {
@@ -212,6 +213,7 @@ class _ProfileContent extends StatelessWidget {
             children: [_AppearanceOptions()],
           ),
           const Gap(_sectionGap),
+          const _ShowAppTipsTile(),
           const ImshSectionHeader(
             title: 'Hospital links',
             icon: Icons.grid_view_rounded,
@@ -290,11 +292,7 @@ class _ProfileSection extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          ImshSectionHeader(
-            title: title,
-            icon: icon,
-            iconColor: iconColor,
-          ),
+          ImshSectionHeader(title: title, icon: icon, iconColor: iconColor),
           const Gap(10),
           ...children,
         ],
@@ -406,6 +404,21 @@ class _AppearanceOptions extends ConsumerWidget {
   }
 }
 
+class _ShowAppTipsTile extends ConsumerWidget {
+  const _ShowAppTipsTile();
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    return _HubTile(
+      icon: Icons.tips_and_updates_outlined,
+      accent: ImshAccentColors.indigo,
+      title: 'Show app tips',
+      subtitle: 'Replay the short tips for Home, visits, doses, and family.',
+      onTap: () => replayPatientOnboarding(context, ref),
+    );
+  }
+}
+
 class _HubTile extends StatelessWidget {
   const _HubTile({
     required this.icon,
@@ -476,9 +489,6 @@ class _InfoChip extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ImshEllipsisChip(
-      label: '$label: $value',
-      maxWidth: 160,
-    );
+    return ImshEllipsisChip(label: '$label: $value', maxWidth: 160);
   }
 }

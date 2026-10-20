@@ -58,6 +58,8 @@ dependencies:
   firebase_messaging: ^16.4.3
   fl_chart: ^1.2.0
   uuid: ^4.6.0
+  curved_navigation_bar: ^1.0.6
+  onboarding_overlay: ^3.2.3
 
 dev_dependencies:
   flutter_test:

@@ -5,13 +5,12 @@ import 'package:gap/gap.dart';
 import '../../../core/theme/app_design_tokens.dart';
 import '../../../models/medication_model.dart';
 import '../../../providers/pending_dose_mark_provider.dart';
+import '../../onboarding/onboarding_anchor.dart';
+import '../../onboarding/onboarding_tips.dart';
 import 'next_dose_card.dart';
 
 class NextDoseCarousel extends ConsumerStatefulWidget {
-  const NextDoseCarousel({
-    super.key,
-    required this.doses,
-  });
+  const NextDoseCarousel({super.key, required this.doses});
 
   final List<MedicationDoseSummary> doses;
 
@@ -54,10 +53,10 @@ class _NextDoseCarouselState extends ConsumerState<NextDoseCarousel> {
             onPageChanged: (index) => setState(() => _currentPage = index),
             itemBuilder: (context, index) {
               final dose = widget.doses[index];
-              final isTaken = pending.contains(dose.id) ||
+              final isTaken =
+                  pending.contains(dose.id) ||
                   dose.status == MedicationDoseStatus.taken;
-
-              return NextDoseCard(
+              final card = NextDoseCard(
                 dose: dose,
                 isTaken: isTaken,
                 onMarkTaken: () {
@@ -68,6 +67,15 @@ class _NextDoseCarouselState extends ConsumerState<NextDoseCarousel> {
                   );
                 },
               );
+              final showDoseTip =
+                  index == _currentPage &&
+                  doseQualifiesForOnboarding(
+                    status: dose.status,
+                    scheduledAt: dose.scheduledAt,
+                    pendingMark: pending.contains(dose.id),
+                  );
+              if (!showDoseTip) return card;
+              return OnboardingAnchor(tip: OnboardingTip.dose, child: card);
             },
           ),
         ),

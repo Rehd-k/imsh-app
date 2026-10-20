@@ -23,9 +23,9 @@ class AppRouter extends RootStackRouter {
       path: '/',
       guards: const [AuthGuard()],
       children: [
-        AutoRoute(page: HomeTabRoute.page, initial: true),
         AutoRoute(page: RecordsTabRoute.page),
         AutoRoute(page: BookingTabRoute.page),
+        AutoRoute(page: HomeTabRoute.page, initial: true),
         AutoRoute(page: BillsTabRoute.page),
         AutoRoute(page: AccountTabRoute.page),
       ],

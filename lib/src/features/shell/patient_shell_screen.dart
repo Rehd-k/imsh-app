@@ -1,4 +1,5 @@
 import 'package:auto_route/auto_route.dart';
+import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:imsh/app_router.gr.dart';
 
@@ -7,6 +8,8 @@ import '../appointments/widgets/appointments_body.dart';
 import '../billing/widgets/billing_body.dart';
 import '../home/widgets/home_body.dart';
 import '../medical_records/widgets/medical_records_body.dart';
+import '../onboarding/onboarding_anchor.dart';
+import '../onboarding/onboarding_tips.dart';
 import '../profile/widgets/profile_body.dart';
 
 @RoutePage()
@@ -18,59 +21,110 @@ class PatientShellScreen extends StatelessWidget {
     final cs = Theme.of(context).colorScheme;
 
     return AutoTabsScaffold(
+      backgroundColor: cs.surface,
+      homeIndex: 2,
       routes: const [
-        HomeTabRoute(),
         RecordsTabRoute(),
         BookingTabRoute(),
+        HomeTabRoute(),
         BillsTabRoute(),
         AccountTabRoute(),
       ],
       bottomNavigationBuilder: (_, tabsRouter) {
-        return NavigationBar(
-          selectedIndex: tabsRouter.activeIndex,
-          onDestinationSelected: tabsRouter.setActiveIndex,
-          indicatorColor: cs.primary.withValues(alpha: 0.12),
-          destinations: const [
-            NavigationDestination(
-              icon: Icon(Icons.home_outlined, color: ImshAccentColors.indigo),
-              selectedIcon: Icon(Icons.home, color: ImshAccentColors.indigo),
-              label: 'Home',
+        final index = tabsRouter.activeIndex;
+        return ColoredBox(
+          color: cs.surfaceContainerLowest,
+          child: SafeArea(
+            top: false,
+            child: CurvedNavigationBar(
+              index: index,
+              color: cs.surfaceContainerLowest,
+              buttonBackgroundColor: cs.primary,
+              backgroundColor: cs.surface,
+              animationCurve: Curves.easeOutCubic,
+              animationDuration: const Duration(milliseconds: 320),
+              onTap: tabsRouter.setActiveIndex,
+              items: [
+                _ShellNavIcon(
+                  icon: Icons.folder_outlined,
+                  selectedIcon: Icons.folder,
+                  accent: ImshAccentColors.blue,
+                  selected: index == 0,
+                  selectedColor: cs.onPrimary,
+                  label: 'Records',
+                ),
+                _ShellNavIcon(
+                  icon: Icons.calendar_month_outlined,
+                  selectedIcon: Icons.calendar_month,
+                  accent: ImshAccentColors.teal,
+                  selected: index == 1,
+                  selectedColor: cs.onPrimary,
+                  label: 'Booking',
+                ),
+                OnboardingAnchor(
+                  tip: OnboardingTip.home,
+                  deferWhileViewingFamily: true,
+                  child: _ShellNavIcon(
+                    icon: Icons.home_outlined,
+                    selectedIcon: Icons.home,
+                    accent: ImshAccentColors.indigo,
+                    selected: index == 2,
+                    selectedColor: cs.onPrimary,
+                    label: 'Home',
+                  ),
+                ),
+                _ShellNavIcon(
+                  icon: Icons.receipt_long_outlined,
+                  selectedIcon: Icons.receipt_long,
+                  accent: ImshAccentColors.amber,
+                  selected: index == 3,
+                  selectedColor: cs.onPrimary,
+                  label: 'Billing',
+                ),
+                _ShellNavIcon(
+                  icon: Icons.person_outline,
+                  selectedIcon: Icons.person,
+                  accent: ImshAccentColors.purple,
+                  selected: index == 4,
+                  selectedColor: cs.onPrimary,
+                  label: 'Account',
+                ),
+              ],
             ),
-            NavigationDestination(
-              icon: Icon(Icons.folder_outlined, color: ImshAccentColors.blue),
-              selectedIcon: Icon(Icons.folder, color: ImshAccentColors.blue),
-              label: 'Records',
-            ),
-            NavigationDestination(
-              icon: Icon(
-                Icons.calendar_month_outlined,
-                color: ImshAccentColors.teal,
-              ),
-              selectedIcon: Icon(
-                Icons.calendar_month,
-                color: ImshAccentColors.teal,
-              ),
-              label: 'Booking',
-            ),
-            NavigationDestination(
-              icon: Icon(
-                Icons.receipt_long_outlined,
-                color: ImshAccentColors.amber,
-              ),
-              selectedIcon: Icon(
-                Icons.receipt_long,
-                color: ImshAccentColors.amber,
-              ),
-              label: 'Billing',
-            ),
-            NavigationDestination(
-              icon: Icon(Icons.person_outline, color: ImshAccentColors.purple),
-              selectedIcon: Icon(Icons.person, color: ImshAccentColors.purple),
-              label: 'Account',
-            ),
-          ],
+          ),
         );
       },
+    );
+  }
+}
+
+class _ShellNavIcon extends StatelessWidget {
+  const _ShellNavIcon({
+    required this.icon,
+    required this.selectedIcon,
+    required this.accent,
+    required this.selected,
+    required this.selectedColor,
+    required this.label,
+  });
+
+  final IconData icon;
+  final IconData selectedIcon;
+  final Color accent;
+  final bool selected;
+  final Color selectedColor;
+  final String label;
+
+  @override
+  Widget build(BuildContext context) {
+    return Tooltip(
+      message: label,
+      child: Icon(
+        selected ? selectedIcon : icon,
+        size: 26,
+        color: selected ? selectedColor : accent,
+        semanticLabel: label,
+      ),
     );
   }
 }
@@ -81,9 +135,7 @@ class HomeTabScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Scaffold(
-      body: HomeBody(),
-    );
+    return const Scaffold(body: HomeBody());
   }
 }
 
@@ -93,9 +145,7 @@ class RecordsTabScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Scaffold(
-      body: MedicalRecordsBody(),
-    );
+    return const Scaffold(body: MedicalRecordsBody());
   }
 }
 
@@ -105,9 +155,7 @@ class BookingTabScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Scaffold(
-      body: AppointmentsBody(),
-    );
+    return const Scaffold(body: AppointmentsBody());
   }
 }
 
@@ -117,9 +165,7 @@ class BillsTabScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Scaffold(
-      body: BillingBody(),
-    );
+    return const Scaffold(body: BillingBody());
   }
 }
 
@@ -129,8 +175,6 @@ class AccountTabScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Scaffold(
-      body: ProfileBody(includeSliverAppBar: true),
-    );
+    return const Scaffold(body: ProfileBody(includeSliverAppBar: true));
   }
 }

@@ -3,11 +3,16 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../core/theme/app_design_tokens.dart';
 import '../../core/theme/context_extensions.dart';
+import '../../features/onboarding/onboarding_anchor.dart';
+import '../../features/onboarding/onboarding_tips.dart';
 import '../../providers/family_provider.dart';
 
 /// Banner shown when viewing a linked child's records.
 class FamilySubjectBanner extends ConsumerWidget {
-  const FamilySubjectBanner({super.key});
+  const FamilySubjectBanner({super.key, this.anchorOnboarding = false});
+
+  /// Home anchors the one-time family tip. Other screens only show the banner.
+  final bool anchorOnboarding;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -17,7 +22,7 @@ class FamilySubjectBanner extends ConsumerWidget {
 
     final colorScheme = context.colorScheme;
 
-    return Material(
+    final banner = Material(
       color: colorScheme.secondaryContainer,
       child: Padding(
         padding: const EdgeInsets.symmetric(
@@ -48,5 +53,7 @@ class FamilySubjectBanner extends ConsumerWidget {
         ),
       ),
     );
+    if (!anchorOnboarding) return banner;
+    return OnboardingAnchor(tip: OnboardingTip.family, child: banner);
   }
 }

@@ -21,16 +21,15 @@ Future<void> firebaseMessagingBackgroundHandler(RemoteMessage message) async {
 }
 
 typedef DeviceApprovedCallback = Future<void> Function();
-typedef FamilyAppointmentCallback = void Function({
-  required String appointmentId,
-  required String forPatientId,
-  String? subjectName,
-});
+typedef FamilyAppointmentCallback =
+    void Function({
+      required String appointmentId,
+      required String forPatientId,
+      String? subjectName,
+    });
 
-typedef FamilySubjectCallback = void Function({
-  required String forPatientId,
-  String? subjectName,
-});
+typedef FamilySubjectCallback =
+    void Function({required String forPatientId, String? subjectName});
 
 class FcmPushService {
   FcmPushService({DeviceService? deviceService})
@@ -52,6 +51,9 @@ class FcmPushService {
 
   /// Invoked when a medication push targets a family child (not self).
   FamilySubjectCallback? onFamilyMedication;
+
+  /// Invoked when a push opens a screen the patient already came to use.
+  VoidCallback? onOpenedFromNotification;
 
   static const _androidInit = AndroidInitializationSettings(
     '@mipmap/ic_launcher',
@@ -99,6 +101,10 @@ class FcmPushService {
 
     final initial = await _messaging.getInitialMessage();
     if (initial != null) {
+      final type = initial.data['type']?.toString();
+      if (type != 'DEVICE_APPROVED') {
+        onOpenedFromNotification?.call();
+      }
       Future<void>.delayed(const Duration(milliseconds: 800), () {
         _handleMessageOpened(initial);
       });
@@ -210,6 +216,9 @@ class FcmPushService {
 
   void _navigateFromData(Map<String, dynamic> data) {
     final type = data['type']?.toString();
+    if (type != 'DEVICE_APPROVED') {
+      onOpenedFromNotification?.call();
+    }
 
     try {
       if (type == 'DEVICE_APPROVED') {
@@ -254,7 +263,8 @@ class FcmPushService {
         }
 
         final forPatientId = data['forPatientId']?.toString();
-        final isFamily = data['isFamily']?.toString() == 'true' ||
+        final isFamily =
+            data['isFamily']?.toString() == 'true' ||
             (forPatientId != null && forPatientId.isNotEmpty);
 
         if (isFamily && forPatientId != null && forPatientId.isNotEmpty) {
