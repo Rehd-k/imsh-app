@@ -103,9 +103,8 @@ extension LabResultSummaryDisplay on LabResultSummary {
   String get summaryMessage => switch (summaryStatus) {
         LabSummaryStatus.normal => 'All levels within normal range.',
         LabSummaryStatus.pending => 'Results are being processed.',
-        LabSummaryStatus.abnormal =>
+        LabSummaryStatus.abnormal || LabSummaryStatus.critical =>
           'Some values are outside the normal range.',
-        LabSummaryStatus.critical => 'Urgent attention required.',
       };
 }
 

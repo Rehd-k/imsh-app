@@ -9,16 +9,11 @@ ImshSemanticTone labSummaryTone(
   LabSummaryStatus status, {
   LabOrderStatus? orderStatus,
 }) {
-  final pending = orderStatus != null
-      ? isLabStatusPending(status, orderStatus)
-      : status == LabSummaryStatus.pending;
-  if (pending) return ImshSemanticTone.info;
-
-  return switch (status) {
-    LabSummaryStatus.normal => ImshSemanticTone.success,
-    LabSummaryStatus.abnormal => ImshSemanticTone.warning,
-    LabSummaryStatus.critical => ImshSemanticTone.error,
-    LabSummaryStatus.pending => ImshSemanticTone.info,
+  final label = labPatientStatusLabel(status, orderStatus: orderStatus);
+  return switch (label) {
+    'Pending' => ImshSemanticTone.info,
+    'Abnormal' => ImshSemanticTone.warning,
+    _ => ImshSemanticTone.success,
   };
 }
 
@@ -34,28 +29,10 @@ class LabResultStatusBadge extends StatelessWidget {
   final LabOrderStatus? orderStatus;
   final bool onPrimary;
 
-  String get _label {
-    if (orderStatus != null && isLabStatusPending(status, orderStatus!)) {
-      return 'Pending';
-    }
-    if (status == LabSummaryStatus.pending) {
-      return 'Pending';
-    }
-    if (status == LabSummaryStatus.normal && _isOrderComplete) {
-      return 'Ready';
-    }
-    return status.label;
-  }
-
-  bool get _isOrderComplete =>
-      orderStatus == null ||
-      orderStatus == LabOrderStatus.completed ||
-      orderStatus == LabOrderStatus.verified;
-
   @override
   Widget build(BuildContext context) {
     return ImshEllipsisChip(
-      label: _label,
+      label: labPatientStatusLabel(status, orderStatus: orderStatus),
       tone: labSummaryTone(status, orderStatus: orderStatus),
     );
   }

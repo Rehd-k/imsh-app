@@ -57,7 +57,7 @@ class HealthNewsScreen extends ConsumerWidget {
       body: _HealthContentListBody(
         async: async,
         title: 'Health news',
-        subtitle: 'Articles and updates from Ibom Specialist Hospital.',
+        subtitle: 'Articles and updates from Ibom Multi-Specialty Hospital.',
         icon: Icons.newspaper_outlined,
         iconColor: ImshAccentColors.blue,
         emptyLabel: 'No news articles yet.',

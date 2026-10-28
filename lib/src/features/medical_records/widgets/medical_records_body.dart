@@ -791,13 +791,19 @@ class _LabRowTile extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final cs = theme.colorScheme;
-    final status = row.status?.trim().isNotEmpty == true
-        ? _titleCaseStatus(row.status!)
-        : 'Normal';
-    final statusKey = status.toLowerCase();
-    final tone = statusKey == 'high' || statusKey == 'critical'
+    final rawStatus = row.status?.trim() ?? '';
+    final statusKey = rawStatus.toLowerCase();
+    final status = rawStatus.isEmpty
+        ? 'Normal'
+        : statusKey == 'critical'
+            ? 'Abnormal'
+            : _titleCaseStatus(rawStatus);
+    final tone = statusKey == 'high'
         ? ImshSemanticTone.error
-        : statusKey == 'low' || statusKey == 'pending'
+        : statusKey == 'low' ||
+                statusKey == 'pending' ||
+                statusKey == 'critical' ||
+                statusKey == 'abnormal'
             ? ImshSemanticTone.warning
             : ImshSemanticTone.success;
 

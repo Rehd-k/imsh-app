@@ -62,7 +62,7 @@ Future<Uint8List> buildDiagnosesPdf({
                 crossAxisAlignment: pw.CrossAxisAlignment.start,
                 children: [
                   pw.Text(
-                    'Ibom Multispecialty Hospital',
+                    'Ibom Multi-Specialty Hospital',
                     style: pw.TextStyle(
                       fontSize: 16,
                       fontWeight: pw.FontWeight.bold,

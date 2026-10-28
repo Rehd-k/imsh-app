@@ -3,7 +3,6 @@ import 'package:gap/gap.dart';
 
 import '../../../core/theme/app_design_tokens.dart';
 import '../../../core/theme/context_extensions.dart';
-import '../../../helper/date_formatter.dart';
 import '../../../models/lab_result_model.dart';
 import 'lab_result_status_badge.dart';
 
@@ -68,13 +67,6 @@ class LabResultCard extends StatelessWidget {
                               ),
                             ),
                           ],
-                          const Gap(AppDesignTokens.spacingXs),
-                          Text(
-                            DateFormatter.medicalDate(result.orderedAt),
-                            style: theme.textTheme.bodySmall?.copyWith(
-                              color: colorScheme.onSurfaceVariant,
-                            ),
-                          ),
                         ],
                       ),
                     ),
@@ -91,17 +83,6 @@ class LabResultCard extends StatelessWidget {
                     fontWeight: FontWeight.w500,
                   ),
                 ),
-                if (result.status != LabOrderStatus.pending &&
-                    result.status != LabOrderStatus.sampleCollected &&
-                    result.status != LabOrderStatus.processing) ...[
-                  const Gap(AppDesignTokens.spacingXs),
-                  Text(
-                    result.status.label,
-                    style: theme.textTheme.bodySmall?.copyWith(
-                      color: colorScheme.onSurfaceVariant,
-                    ),
-                  ),
-                ],
               ],
             ),
           ),

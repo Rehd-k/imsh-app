@@ -36,8 +36,9 @@ class ErrorInterceptor extends Interceptor {
 
   void _handleSessionCodes(AppException appEx, {String? path}) {
     if (appEx is UnauthorizedException) {
-      // Login credential failures are also 401 — do not treat as session expiry.
-      if (path != null && path.contains('/patient-auth/login')) {
+      // Credential and refresh failures are 401 — do not treat them as a dead session
+      // while the app is still deciding how to sign in.
+      if (path != null && _isCredentialPath(path)) {
         return;
       }
       if (_handlingUnauthorized) return;
@@ -66,6 +67,13 @@ class ErrorInterceptor extends Interceptor {
         }
       });
     }
+  }
+
+  bool _isCredentialPath(String path) {
+    return path.contains('/patient-auth/login') ||
+        path.contains('/patient-auth/refresh') ||
+        path.contains('/patient-auth/activate') ||
+        path.contains('/patient-auth/forgot-password');
   }
 
   AppException _mapError(DioException err) {

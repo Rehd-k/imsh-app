@@ -26,7 +26,7 @@ class AppointmentsScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     return Scaffold(
       appBar: ImshAppBar(
-        title: const Text('Ibom Specialist'),
+        title: const Text('Ibom Multi-Specialty Hospital'),
         actions: [
           IconButton(
             onPressed: () => context.router.push(const NotificationsRoute()),

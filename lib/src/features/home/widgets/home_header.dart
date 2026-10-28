@@ -40,7 +40,7 @@ class HomePageHeader extends ConsumerWidget {
                 ),
               ),
               ImshEllipsisText(
-                text: 'Your daily health summary from Ibom Specialist.',
+                text: 'Your daily health summary from Ibom Multi-Specialty Hospital.',
                 style: theme.textTheme.bodySmall?.copyWith(
                   color: cs.onSurfaceVariant,
                 ),

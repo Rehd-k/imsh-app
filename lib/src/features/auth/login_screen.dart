@@ -3,13 +3,12 @@ import 'dart:ui';
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:imsh/app_router.gr.dart';
 import 'package:video_player/video_player.dart';
 
+import '../../core/auth/remembered_phone.dart';
 import '../../core/responsive.dart';
-import '../../helper/date_formatter.dart';
 import '../../providers/auth_provider.dart';
 import '../../providers/login_clock_provider.dart';
 import '../../providers/theme_mode_provider.dart';
@@ -34,9 +33,12 @@ class LoginScreen extends ConsumerStatefulWidget {
 
 class _LoginScreenState extends ConsumerState<LoginScreen>
     with TickerProviderStateMixin {
-  final _patientIdController = TextEditingController();
-  final _patientIdFocus = FocusNode();
-  final _dobFocus = FocusNode();
+  final _phoneController = TextEditingController();
+  final _passwordController = TextEditingController();
+  final _phoneFocus = FocusNode();
+  final _passwordFocus = FocusNode();
+  var _rememberMe = false;
+  var _obscurePassword = true;
 
   late final AnimationController _enter;
   late final AnimationController _shake;
@@ -62,85 +64,62 @@ class _LoginScreenState extends ConsumerState<LoginScreen>
       TweenSequenceItem(tween: Tween(begin: -7, end: 4), weight: 2),
       TweenSequenceItem(tween: Tween(begin: 4, end: 0), weight: 1),
     ]).animate(_shake);
+    Future<void>.microtask(_loadRememberedPhone);
   }
 
   @override
   void dispose() {
     _enter.dispose();
     _shake.dispose();
-    _patientIdController.dispose();
-    _patientIdFocus.dispose();
-    _dobFocus.dispose();
+    _phoneController.dispose();
+    _passwordController.dispose();
+    _phoneFocus.dispose();
+    _passwordFocus.dispose();
     super.dispose();
   }
 
-  Future<void> _pickDob() async {
-    final now = DateTime.now();
-    final first = DateTime(now.year - 120, now.month, now.day);
-    final last = DateTime(now.year, now.month, now.day, 23, 59, 59);
-    final current = ref.read(loginDraftProvider).dob;
-    final initial = _clampDate(
-      current ?? DateTime(now.year - 30, now.month, now.day),
-      first,
-      last,
-    );
-
-    _dobFocus.requestFocus();
-    final picked = await showCupertinoModalPopup<DateTime>(
-      context: context,
-      builder: (sheetContext) {
-        return _DobPickerSheet(
-          initialDate: initial,
-          firstDate: first,
-          lastDate: last,
-        );
-      },
-    );
-    if (!mounted) return;
-    _dobFocus.unfocus();
-    if (picked == null) return;
-
-    ref
-        .read(loginDraftProvider.notifier)
-        .setDob(DateTime(picked.year, picked.month, picked.day));
-    ref.read(patientAuthProvider.notifier).clearError();
+  Future<void> _loadRememberedPhone() async {
+    final phone = await RememberedPhone.read();
+    if (!mounted || phone == null) return;
+    _phoneController.text = phone;
+    setState(() => _rememberMe = true);
   }
 
   Future<void> _submit() async {
     FocusScope.of(context).unfocus();
     ref.read(patientAuthProvider.notifier).clearError();
 
-    final valid = ref
-        .read(loginDraftProvider.notifier)
-        .validate(patientId: _patientIdController.text);
+    final valid = ref.read(loginDraftProvider.notifier).validate(
+      phone: _phoneController.text,
+      password: _passwordController.text,
+    );
     if (!valid) {
       await _shake.forward(from: 0);
       return;
     }
 
-    final dob = ref.read(loginDraftProvider).dob!;
-    final success = await ref
-        .read(patientAuthProvider.notifier)
-        .login(patientId: _patientIdController.text, dob: dob);
+    final phone = _phoneController.text.trim();
+    final success = await ref.read(patientAuthProvider.notifier).login(
+      phoneNumber: phone,
+      password: _passwordController.text,
+    );
 
     if (!mounted || !success) return;
-    final auth = ref.read(patientAuthProvider);
-    if (auth.isDevicePending) {
-      await context.router.replace(const DevicePendingRoute());
+    if (_rememberMe) {
+      await RememberedPhone.save(phone);
     } else {
-      await context.router.replace(const PatientShellRoute());
+      await RememberedPhone.clear();
     }
+    if (!mounted) return;
+    await context.router.replace(const PatientShellRoute());
   }
 
   void _maybeRedirectIfAuthenticated(PatientAuthState auth) {
-    if (_redirecting || !auth.isAuthenticated || auth.isLoading) return;
+    if (_redirecting || !auth.canAccessApp || auth.isLoading) return;
     _redirecting = true;
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       if (!mounted) return;
-      final destination = auth.isDeviceApproved
-          ? const PatientShellRoute()
-          : const DevicePendingRoute();
-      await context.router.replace(destination);
+      await context.router.replace(const PatientShellRoute());
     });
   }
 
@@ -274,7 +253,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen>
     return Column(
       children: [
         Semantics(
-          label: 'Ibom Specialist Hospital logo',
+          label: 'Ibom Multi-Specialty Hospital logo',
           child: Container(
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(28),
@@ -306,7 +285,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen>
         ),
         const SizedBox(height: 12),
         Text(
-          'Ibom Specialist Hospital',
+          'Ibom Multi-Specialty Hospital',
           textAlign: TextAlign.center,
           style: theme.textTheme.headlineSmall?.copyWith(
             color: Colors.white,
@@ -384,7 +363,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen>
                     ),
                     const SizedBox(height: 2),
                     Text(
-                      'Sign in with your patient ID and date of birth',
+                      'Sign in with your phone number and password',
                       style: theme.textTheme.bodyMedium?.copyWith(
                         fontSize: 14,
                         height: 1.3,
@@ -405,10 +384,10 @@ class _LoginScreenState extends ConsumerState<LoginScreen>
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
-                  const _FieldLabel(text: 'Patient ID'),
+                  const _FieldLabel(text: 'Phone number'),
                   const SizedBox(height: 6),
                   _SoftField(
-                    focusNode: _patientIdFocus,
+                    focusNode: _phoneFocus,
                     fillColor: _kFieldFill,
                     idleBorderColor: _kFieldBorder,
                     child: ConstrainedBox(
@@ -416,40 +395,24 @@ class _LoginScreenState extends ConsumerState<LoginScreen>
                       child: Row(
                         children: [
                           const SizedBox(width: 10),
-                          const _IdBadge(),
+                          const _PhoneBadge(),
                           const SizedBox(width: 8),
                           Expanded(
                             child: TextField(
-                              controller: _patientIdController,
-                              focusNode: _patientIdFocus,
-                              textCapitalization: TextCapitalization.characters,
+                              controller: _phoneController,
+                              focusNode: _phoneFocus,
+                              keyboardType: TextInputType.phone,
                               autocorrect: false,
                               enableSuggestions: false,
-                              smartDashesType: SmartDashesType.disabled,
-                              smartQuotesType: SmartQuotesType.disabled,
-                              autofillHints: const [AutofillHints.username],
+                              autofillHints: const [AutofillHints.telephoneNumber],
                               textInputAction: TextInputAction.next,
                               cursorColor: _kSystemBlue,
                               scrollPadding: const EdgeInsets.only(bottom: 24),
                               style: valueStyle,
-                              inputFormatters: [
-                                FilteringTextInputFormatter.allow(
-                                  RegExp(r'[a-zA-Z0-9\-_/]'),
-                                ),
-                                TextInputFormatter.withFunction((
-                                  oldValue,
-                                  newValue,
-                                ) {
-                                  return newValue.copyWith(
-                                    text: newValue.text.toUpperCase(),
-                                    selection: newValue.selection,
-                                  );
-                                }),
-                              ],
                               decoration: InputDecoration(
                                 isDense: true,
                                 filled: false,
-                                hintText: 'ISH-2024-XXXX',
+                                hintText: '0803 000 0000',
                                 hintStyle: hintStyle,
                                 border: InputBorder.none,
                                 enabledBorder: InputBorder.none,
@@ -467,75 +430,122 @@ class _LoginScreenState extends ConsumerState<LoginScreen>
                               onChanged: (_) {
                                 ref
                                     .read(loginDraftProvider.notifier)
-                                    .clearPatientIdError();
+                                    .clearPhoneError();
                                 ref
                                     .read(patientAuthProvider.notifier)
                                     .clearError();
                               },
-                              onSubmitted: (_) => _pickDob(),
+                              onSubmitted: (_) => _passwordFocus.requestFocus(),
                             ),
                           ),
                         ],
                       ),
                     ),
                   ),
-                  _InlineError(message: draft.patientIdError),
+                  _InlineError(message: draft.phoneError),
                   const SizedBox(height: 12),
-                  const _FieldLabel(text: 'Date of birth'),
+                  const _FieldLabel(text: 'Password'),
                   const SizedBox(height: 6),
                   _SoftField(
-                    focusNode: _dobFocus,
+                    focusNode: _passwordFocus,
                     fillColor: _kFieldFill,
                     idleBorderColor: _kFieldBorder,
-                    child: Semantics(
-                      button: true,
-                      label: draft.dob == null
-                          ? 'Date of birth, not selected'
-                          : 'Date of birth, ${DateFormatter.shortDate(draft.dob!)}',
-                      excludeSemantics: true,
-                      onTap: _pickDob,
-                      child: Focus(
-                        focusNode: _dobFocus,
-                        child: Material(
-                          color: Colors.transparent,
-                          borderRadius: BorderRadius.circular(12),
-                          clipBehavior: Clip.antiAlias,
-                          child: InkWell(
-                            onTap: _pickDob,
-                            borderRadius: BorderRadius.circular(12),
-                            child: ConstrainedBox(
-                              constraints: const BoxConstraints(minHeight: 48),
-                              child: Padding(
-                                padding: const EdgeInsets.symmetric(
-                                  horizontal: 10,
-                                  vertical: 12,
-                                ),
-                                child: Row(
-                                  children: [
-                                    const _CalendarBadge(),
-                                    const SizedBox(width: 8),
-                                    Expanded(
-                                      child: Text(
-                                        draft.dob == null
-                                            ? 'Select your date of birth'
-                                            : DateFormatter.shortDate(
-                                                draft.dob!,
-                                              ),
-                                        style: draft.dob == null
-                                            ? hintStyle
-                                            : valueStyle,
-                                      ),
-                                    ),
-                                  ],
+                    child: ConstrainedBox(
+                      constraints: const BoxConstraints(minHeight: 48),
+                      child: Row(
+                        children: [
+                          const SizedBox(width: 10),
+                          const _PasswordBadge(),
+                          const SizedBox(width: 8),
+                          Expanded(
+                            child: TextField(
+                              controller: _passwordController,
+                              focusNode: _passwordFocus,
+                              obscureText: _obscurePassword,
+                              autocorrect: false,
+                              enableSuggestions: false,
+                              autofillHints: const [AutofillHints.password],
+                              textInputAction: TextInputAction.done,
+                              cursorColor: _kSystemBlue,
+                              scrollPadding: const EdgeInsets.only(bottom: 24),
+                              style: valueStyle,
+                              decoration: InputDecoration(
+                                isDense: true,
+                                filled: false,
+                                hintText: 'Your password',
+                                hintStyle: hintStyle,
+                                border: InputBorder.none,
+                                enabledBorder: InputBorder.none,
+                                focusedBorder: InputBorder.none,
+                                errorBorder: InputBorder.none,
+                                focusedErrorBorder: InputBorder.none,
+                                disabledBorder: InputBorder.none,
+                                contentPadding: const EdgeInsets.fromLTRB(
+                                  0,
+                                  14,
+                                  0,
+                                  14,
                                 ),
                               ),
+                              onChanged: (_) {
+                                ref
+                                    .read(loginDraftProvider.notifier)
+                                    .clearPasswordError();
+                                ref
+                                    .read(patientAuthProvider.notifier)
+                                    .clearError();
+                              },
+                              onSubmitted: (_) => _submit(),
                             ),
                           ),
+                          IconButton(
+                            onPressed: () => setState(
+                              () => _obscurePassword = !_obscurePassword,
+                            ),
+                            icon: Icon(
+                              _obscurePassword
+                                  ? CupertinoIcons.eye
+                                  : CupertinoIcons.eye_slash,
+                              size: 18,
+                              color: Colors.white.withValues(alpha: 0.7),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                  _InlineError(message: draft.passwordError),
+                  const SizedBox(height: 4),
+                  Align(
+                    alignment: Alignment.centerLeft,
+                    child: InkWell(
+                      onTap: () => setState(() => _rememberMe = !_rememberMe),
+                      borderRadius: BorderRadius.circular(8),
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 6),
+                        child: Row(
+                          children: [
+                            Icon(
+                              _rememberMe
+                                  ? CupertinoIcons.checkmark_square_fill
+                                  : CupertinoIcons.square,
+                              size: 20,
+                              color: _rememberMe
+                                  ? _kSystemBlue
+                                  : Colors.white.withValues(alpha: 0.7),
+                            ),
+                            const SizedBox(width: 8),
+                            Text(
+                              'Remember me',
+                              style: theme.textTheme.bodyMedium?.copyWith(
+                                color: Colors.white.withValues(alpha: 0.84),
+                              ),
+                            ),
+                          ],
                         ),
                       ),
                     ),
                   ),
-                  _InlineError(message: draft.dobError),
                 ],
               ),
             ),
@@ -543,14 +553,28 @@ class _LoginScreenState extends ConsumerState<LoginScreen>
           _InlineError(message: auth.error),
           const SizedBox(height: 16),
           _SignInButton(loading: loading, onPressed: _submit),
-          const SizedBox(height: 12),
-          Text(
-            'New phone? Front desk will approve this device.',
-            textAlign: TextAlign.center,
-            style: theme.textTheme.bodySmall?.copyWith(
-              fontSize: 12,
-              height: 1.35,
-              color: Colors.white.withValues(alpha: 0.55),
+          const SizedBox(height: 8),
+          TextButton(
+            onPressed: loading
+                ? null
+                : () => context.router.push(PortalSetupRoute()),
+            child: Text(
+              'First time? Activate your account',
+              style: theme.textTheme.bodyMedium?.copyWith(
+                color: Colors.white,
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+          ),
+          TextButton(
+            onPressed: loading
+                ? null
+                : () => context.router.push(PortalSetupRoute(reset: true)),
+            child: Text(
+              'Forgot password?',
+              style: theme.textTheme.bodySmall?.copyWith(
+                color: Colors.white.withValues(alpha: 0.72),
+              ),
             ),
           ),
         ],
@@ -670,8 +694,8 @@ class _SoftFieldState extends State<_SoftField> {
   }
 }
 
-class _IdBadge extends StatelessWidget {
-  const _IdBadge();
+class _PhoneBadge extends StatelessWidget {
+  const _PhoneBadge();
 
   @override
   Widget build(BuildContext context) {
@@ -684,7 +708,7 @@ class _IdBadge extends StatelessWidget {
         borderRadius: BorderRadius.circular(8),
       ),
       child: const Icon(
-        CupertinoIcons.person_crop_rectangle,
+        CupertinoIcons.phone,
         size: 15,
         color: _kSystemBlue,
       ),
@@ -692,8 +716,8 @@ class _IdBadge extends StatelessWidget {
   }
 }
 
-class _CalendarBadge extends StatelessWidget {
-  const _CalendarBadge();
+class _PasswordBadge extends StatelessWidget {
+  const _PasswordBadge();
 
   @override
   Widget build(BuildContext context) {
@@ -702,13 +726,13 @@ class _CalendarBadge extends StatelessWidget {
       height: 28,
       alignment: Alignment.center,
       decoration: BoxDecoration(
-        color: const Color(0xFF0D9488).withValues(alpha: 0.14),
+        color: _kSystemBlue.withValues(alpha: 0.16),
         borderRadius: BorderRadius.circular(8),
       ),
       child: const Icon(
-        CupertinoIcons.calendar,
+        CupertinoIcons.lock,
         size: 15,
-        color: Color(0xFF0D9488),
+        color: _kSystemBlue,
       ),
     );
   }
@@ -1217,89 +1241,6 @@ class _LoginVideoBackgroundState extends State<_LoginVideoBackground>
       ),
     );
   }
-}
-
-class _DobPickerSheet extends StatefulWidget {
-  const _DobPickerSheet({
-    required this.initialDate,
-    required this.firstDate,
-    required this.lastDate,
-  });
-
-  final DateTime initialDate;
-  final DateTime firstDate;
-  final DateTime lastDate;
-
-  @override
-  State<_DobPickerSheet> createState() => _DobPickerSheetState();
-}
-
-class _DobPickerSheetState extends State<_DobPickerSheet> {
-  late DateTime _selected = widget.initialDate;
-
-  @override
-  Widget build(BuildContext context) {
-    final isDark = Theme.of(context).brightness == Brightness.dark;
-    final background = isDark ? const Color(0xFF1C1C1E) : Colors.white;
-    final label = isDark ? Colors.white : const Color(0xFF0F172A);
-
-    return CupertinoTheme(
-      data: CupertinoThemeData(
-        brightness: isDark ? Brightness.dark : Brightness.light,
-        primaryColor: _kSystemBlue,
-      ),
-      child: Container(
-        height: 320,
-        decoration: BoxDecoration(
-          color: background,
-          borderRadius: const BorderRadius.vertical(top: Radius.circular(16)),
-        ),
-        child: Column(
-          children: [
-            SizedBox(
-              height: 48,
-              child: Row(
-                children: [
-                  CupertinoButton(
-                    padding: const EdgeInsets.symmetric(horizontal: 16),
-                    onPressed: () => Navigator.of(context).pop(),
-                    child: Text('Cancel', style: TextStyle(color: label)),
-                  ),
-                  const Spacer(),
-                  CupertinoButton(
-                    padding: const EdgeInsets.symmetric(horizontal: 16),
-                    onPressed: () => Navigator.of(context).pop(_selected),
-                    child: const Text(
-                      'Done',
-                      style: TextStyle(
-                        color: _kSystemBlue,
-                        fontWeight: FontWeight.w600,
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            Expanded(
-              child: CupertinoDatePicker(
-                mode: CupertinoDatePickerMode.date,
-                initialDateTime: widget.initialDate,
-                minimumDate: widget.firstDate,
-                maximumDate: widget.lastDate,
-                onDateTimeChanged: (value) => _selected = value,
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-DateTime _clampDate(DateTime value, DateTime first, DateTime last) {
-  if (value.isBefore(first)) return first;
-  if (value.isAfter(last)) return last;
-  return value;
 }
 
 @RoutePage()

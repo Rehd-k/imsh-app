@@ -39,7 +39,7 @@ Future<Uint8List> buildRadiologyReportPdf(RadiologyReportDetail detail) async {
                 crossAxisAlignment: pw.CrossAxisAlignment.start,
                 children: [
                   pw.Text(
-                    'Ibom Multispecialty Hospital',
+                    'Ibom Multi-Specialty Hospital',
                     style: pw.TextStyle(
                       fontSize: 16,
                       fontWeight: pw.FontWeight.bold,
@@ -93,11 +93,7 @@ Future<Uint8List> buildRadiologyReportPdf(RadiologyReportDetail detail) async {
             pw.Expanded(
               child: _card('STUDY', [
                 _line('Modality', detail.modality.label),
-                _line(
-                  'Performed',
-                  DateFormatter.medicalDate(detail.performedAt),
-                ),
-                _line('Status', detail.status.label),
+                _line('Status', detail.status.patientLabel),
               ]),
             ),
             pw.SizedBox(width: 12),
@@ -105,11 +101,6 @@ Future<Uint8List> buildRadiologyReportPdf(RadiologyReportDetail detail) async {
               child: _card('CLINICIANS', [
                 _line('Radiologist', detail.radiologistName),
                 _line('Referring doctor', detail.referringDoctorName),
-                if (detail.verifiedAt != null)
-                  _line(
-                    'Verified',
-                    DateFormatter.medicalDate(detail.verifiedAt!),
-                  ),
               ]),
             ),
           ],

@@ -8,6 +8,8 @@ class TokenStorage {
   );
 
   static const _accessTokenKey = 'access_token';
+  static const _refreshTokenKey = 'refresh_token';
+  static const _biometricKey = 'biometric_login';
   static const _fcmTokenKey = 'fcm_device_token';
   static const _deviceKeyKey = 'device_key';
 
@@ -21,6 +23,25 @@ class TokenStorage {
 
   static Future<void> deleteAccessToken() =>
       _storage.delete(key: _accessTokenKey);
+
+  static Future<void> saveRefreshToken(String token) =>
+      _storage.write(key: _refreshTokenKey, value: token);
+
+  static Future<String?> getRefreshToken() =>
+      _storage.read(key: _refreshTokenKey);
+
+  static Future<void> deleteRefreshToken() =>
+      _storage.delete(key: _refreshTokenKey);
+
+  static Future<void> setBiometricEnabled(bool enabled) {
+    if (!enabled) return _storage.delete(key: _biometricKey);
+    return _storage.write(key: _biometricKey, value: '1');
+  }
+
+  static Future<bool> isBiometricEnabled() async {
+    final value = await _storage.read(key: _biometricKey);
+    return value == '1';
+  }
 
   static Future<bool> hasToken() async {
     final token = await getAccessToken();
@@ -43,6 +64,9 @@ class TokenStorage {
     return key;
   }
 
-  /// Clears JWT only. Keeps [deviceKey] and FCM token unless callers delete them.
-  static Future<void> clearAll() => deleteAccessToken();
+  /// Clears the session tokens. Keeps the device key, FCM token, and biometric choice.
+  static Future<void> clearAll() async {
+    await deleteAccessToken();
+    await deleteRefreshToken();
+  }
 }

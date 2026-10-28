@@ -6,7 +6,6 @@ import 'package:url_launcher/url_launcher.dart';
 
 import '../../../core/theme/app_design_tokens.dart';
 import '../../../core/theme/imsh_accent_colors.dart';
-import '../../../helper/date_formatter.dart';
 import '../../../models/radiology_report_model.dart';
 import '../../../providers/service_providers.dart';
 import '../../../shared/widgets/imsh_solid_icon.dart';
@@ -75,13 +74,6 @@ class RadiologyHistoryCard extends ConsumerWidget {
                     text: report.displayTitle,
                     style: theme.textTheme.titleSmall?.copyWith(
                       fontWeight: FontWeight.w700,
-                    ),
-                  ),
-                  const SizedBox(height: 2),
-                  ImshEllipsisText(
-                    text: DateFormatter.medicalDate(report.performedAt),
-                    style: theme.textTheme.bodySmall?.copyWith(
-                      color: cs.onSurfaceVariant,
                     ),
                   ),
                   const SizedBox(height: 2),

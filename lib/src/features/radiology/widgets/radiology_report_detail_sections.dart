@@ -4,7 +4,6 @@ import 'package:url_launcher/url_launcher.dart';
 
 import '../../../core/theme/app_design_tokens.dart';
 import '../../../core/theme/imsh_accent_colors.dart';
-import '../../../helper/date_formatter.dart';
 import '../../../models/radiology_report_model.dart';
 import '../../../providers/service_providers.dart';
 import '../../../shared/widgets/imsh_ellipsis_chip.dart';
@@ -40,7 +39,6 @@ class RadiologyReportDetailSections extends ConsumerWidget {
       children: [
         ImshPageHeader(
           title: detail.displayTitle,
-          subtitle: DateFormatter.fullDate(detail.performedAt),
           icon: detail.modality.icon,
           iconColor: ImshAccentColors.indigo,
           trailing: RadiologyStatusBadge(status: detail.status),
@@ -247,9 +245,7 @@ class _HeaderCard extends StatelessWidget {
                     : detail.referringDoctorName,
               ),
               ('Modality', detail.modality.label),
-              ('Status', detail.status.label),
-              if (detail.verifiedAt != null)
-                ('Verified', DateFormatter.dateTime(detail.verifiedAt!)),
+              ('Status', detail.status.patientLabel),
             ],
           ),
         ],

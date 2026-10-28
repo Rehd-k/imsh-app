@@ -3,25 +3,36 @@ import 'package:imsh/app_router.gr.dart';
 import 'package:imsh/src/core/guards/auth_guard.dart';
 import 'package:imsh/src/core/navigation/zoom_from_source.dart';
 
+enum AppStartRoute { login, devicePending, shell }
+
 @AutoRouterConfig(replaceInRouteName: 'Screen|Page,Route')
 class AppRouter extends RootStackRouter {
-  AppRouter({this.initialSplash = false});
+  AppRouter({this.start = AppStartRoute.login});
 
-  final bool initialSplash;
+  final AppStartRoute start;
 
   @override
   RouteType get defaultRouteType => RouteType.material();
 
   @override
   List<AutoRoute> get routes => [
-    AutoRoute(page: SplashRoute.page, path: '/splash', initial: initialSplash),
-    AutoRoute(page: LoginRoute.page, path: '/login', initial: !initialSplash),
+    AutoRoute(
+      page: LoginRoute.page,
+      path: '/login',
+      initial: start == AppStartRoute.login,
+    ),
+    AutoRoute(page: PortalSetupRoute.page, path: '/activate'),
     AutoRoute(page: SessionExpiredRoute.page, path: '/session-expired'),
-    AutoRoute(page: DevicePendingRoute.page, path: '/device-pending'),
+    AutoRoute(
+      page: DevicePendingRoute.page,
+      path: '/device-pending',
+      initial: start == AppStartRoute.devicePending,
+    ),
 
     AutoRoute(
       page: PatientShellRoute.page,
       path: '/',
+      initial: start == AppStartRoute.shell,
       guards: const [AuthGuard()],
       children: [
         AutoRoute(page: RecordsTabRoute.page),

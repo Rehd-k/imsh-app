@@ -75,14 +75,14 @@ class LabResultsBody extends ConsumerWidget {
                             ImshKpiItem(
                               label: 'Ready',
                               value: readyCount > 0 ? '$readyCount' : '—',
-                              caption: 'Complete',
+                              caption: 'Available',
                               icon: Icons.check_circle_outline,
                               accent: ImshAccentColors.green,
                             ),
                             ImshKpiItem(
                               label: 'Pending',
                               value: pendingCount > 0 ? '$pendingCount' : '—',
-                              caption: 'In process',
+                              caption: 'Waiting',
                               icon: Icons.hourglass_empty_outlined,
                               accent: ImshAccentColors.amber,
                             ),

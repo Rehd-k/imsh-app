@@ -5,12 +5,9 @@ import '../../../shared/widgets/imsh_ellipsis_chip.dart';
 import '../../../shared/widgets/imsh_semantic_badge.dart';
 
 ImshSemanticTone radiologyStatusTone(RadiologyReportStatus status) {
-  return switch (status) {
-    RadiologyReportStatus.pending => ImshSemanticTone.neutral,
-    RadiologyReportStatus.inProgress => ImshSemanticTone.info,
-    RadiologyReportStatus.finalized => ImshSemanticTone.warning,
-    RadiologyReportStatus.verified => ImshSemanticTone.success,
-  };
+  return status.isComplete
+      ? ImshSemanticTone.success
+      : ImshSemanticTone.info;
 }
 
 class RadiologyStatusBadge extends StatelessWidget {
@@ -21,7 +18,7 @@ class RadiologyStatusBadge extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ImshEllipsisChip(
-      label: status.label,
+      label: status.patientLabel,
       tone: radiologyStatusTone(status),
     );
   }

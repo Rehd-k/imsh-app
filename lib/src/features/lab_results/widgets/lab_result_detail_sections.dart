@@ -3,8 +3,8 @@ import 'package:url_launcher/url_launcher.dart';
 
 import '../../../core/theme/app_design_tokens.dart';
 import '../../../core/theme/imsh_accent_colors.dart';
-import '../../../helper/date_formatter.dart';
 import '../../../models/lab_result_model.dart';
+import '../../../providers/lab_results_provider.dart';
 import '../../../shared/widgets/imsh_ellipsis_chip.dart';
 import '../../../shared/widgets/imsh_page_header.dart';
 import '../../../shared/widgets/imsh_solid_icon.dart';
@@ -20,8 +20,9 @@ class LabResultDetailSections extends StatelessWidget {
   LabSummaryStatus get _summaryStatus {
     for (final panel in detail.panels) {
       for (final line in panel.results) {
-        if (line.isCritical) return LabSummaryStatus.critical;
-        if (line.abnormalFlag != null) return LabSummaryStatus.abnormal;
+        if (line.isCritical || line.abnormalFlag != null) {
+          return LabSummaryStatus.abnormal;
+        }
       }
     }
     if (detail.status == LabOrderStatus.pending ||
@@ -43,7 +44,6 @@ class LabResultDetailSections extends StatelessWidget {
       children: [
         ImshPageHeader(
           title: title,
-          subtitle: DateFormatter.fullDate(detail.orderedAt),
           icon: Icons.science_outlined,
           iconColor: ImshAccentColors.teal,
           trailing: LabResultStatusBadge(
@@ -52,7 +52,7 @@ class LabResultDetailSections extends StatelessWidget {
           ),
         ),
         const SizedBox(height: 12),
-        _HeaderCard(detail: detail),
+        _HeaderCard(detail: detail, summaryStatus: _summaryStatus),
         if (detail.pdfUrl?.isNotEmpty == true) ...[
           const SizedBox(height: 10),
           _PdfActionButton(pdfUrl: detail.pdfUrl!),
@@ -71,9 +71,10 @@ class LabResultDetailSections extends StatelessWidget {
 }
 
 class _HeaderCard extends StatelessWidget {
-  const _HeaderCard({required this.detail});
+  const _HeaderCard({required this.detail, required this.summaryStatus});
 
   final LabResultDetail detail;
+  final LabSummaryStatus summaryStatus;
 
   @override
   Widget build(BuildContext context) {
@@ -100,11 +101,13 @@ class _HeaderCard extends StatelessWidget {
           const SizedBox(height: 10),
           _LabelValueList(
             rows: [
-              ('Order status', detail.status.label),
-              if (detail.completedAt != null)
-                ('Completed', DateFormatter.dateTime(detail.completedAt!)),
-              if (detail.verifiedAt != null)
-                ('Verified', DateFormatter.dateTime(detail.verifiedAt!)),
+              (
+                'Order status',
+                labPatientStatusLabel(
+                  summaryStatus,
+                  orderStatus: detail.status,
+                ),
+              ),
             ],
           ),
         ],

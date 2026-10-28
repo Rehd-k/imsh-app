@@ -53,6 +53,8 @@ extension RadiologyReportStatusDisplay on RadiologyReportStatus {
   bool get isComplete =>
       this == RadiologyReportStatus.finalized ||
       this == RadiologyReportStatus.verified;
+
+  String get patientLabel => isComplete ? 'Ready' : 'Pending';
 }
 
 extension RadiologyModalityDisplay on RadiologyModality {

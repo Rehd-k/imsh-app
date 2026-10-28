@@ -34,7 +34,7 @@ class ImshSliverAppBar extends ConsumerWidget {
         icon: PatientAvatar(patient: patient, radius: 18),
       ),
       title: Text(
-        'Ibom Specialist',
+        'Ibom Multi-Specialty Hospital',
         maxLines: 1,
         overflow: TextOverflow.ellipsis,
         style: theme.textTheme.titleLarge?.copyWith(

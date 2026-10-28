@@ -93,7 +93,7 @@ class SplashBranding extends StatelessWidget {
                                     child: Image.asset(
                                       'assets/imsh.png',
                                       height: 88,
-                                      semanticLabel: 'Ibom Specialist Hospital',
+                                      semanticLabel: 'Ibom Multi-Specialty Hospital',
                                     ),
                                   ),
                                 ),

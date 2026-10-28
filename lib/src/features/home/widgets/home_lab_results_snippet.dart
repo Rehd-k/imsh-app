@@ -108,13 +108,14 @@ class HomeLabResultsSnippet extends StatelessWidget {
 
   Widget _statusBadge(String status) {
     final key = status.toLowerCase();
-    final tone = key == 'high' || key == 'critical'
+    final tone = key == 'high'
         ? ImshSemanticTone.error
-        : key == 'low'
+        : key == 'low' || key == 'critical' || key == 'abnormal'
             ? ImshSemanticTone.warning
             : ImshSemanticTone.success;
-    final label =
-        '${status[0].toUpperCase()}${status.substring(1).toLowerCase()}';
+    final label = key == 'critical'
+        ? 'Abnormal'
+        : '${status[0].toUpperCase()}${status.substring(1).toLowerCase()}';
     return ImshSemanticBadge(label: label, tone: tone);
   }
 }

@@ -18,7 +18,7 @@ class MedicalRecordsScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     return const Scaffold(
       appBar: ImshAppBar(
-        title: Text('Ibom Specialist'),
+        title: Text('Ibom Multi-Specialty Hospital'),
         actions: [
           Padding(
             padding: EdgeInsets.only(right: 8),

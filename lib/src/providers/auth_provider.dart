@@ -1,6 +1,7 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_riverpod/legacy.dart';
 
+import '../core/auth/biometric_auth.dart';
 import '../core/constants/test_accounts.dart';
 import '../core/storage/token_storage.dart';
 import '../core/utils/user_error_message.dart';
@@ -74,25 +75,20 @@ class PatientAuthNotifier extends StateNotifier<PatientAuthState> {
   final PatientAuthService _authService;
   final DeviceService _deviceService;
   final FcmPushService _fcmPushService;
+  var _biometricAttempted = false;
 
   Future<bool> login({
-    required String patientId,
-    required DateTime dob,
+    required String phoneNumber,
+    required String password,
   }) async {
     state = state.copyWith(isLoading: true, clearError: true);
     try {
-      final fcmToken = await TokenStorage.getFcmToken();
       final response = await _authService.login(
-        patientId: patientId,
-        dob: dob,
-        fcmToken: fcmToken,
+        phoneNumber: phoneNumber,
+        password: password,
+        fcmToken: await TokenStorage.getFcmToken(),
       );
-      state = state.copyWith(
-        patient: response.patient,
-        device: response.device,
-        isLoading: false,
-      );
-      await _fcmPushService.registerAfterAuth();
+      await _adopt(response);
       return true;
     } catch (e) {
       state = state.copyWith(
@@ -103,17 +99,52 @@ class PatientAuthNotifier extends StateNotifier<PatientAuthState> {
     }
   }
 
+  Future<void> adoptSession(PatientLoginResponse response) => _adopt(response);
+
+  Future<void> _adopt(PatientLoginResponse response) async {
+    state = state.copyWith(
+      patient: response.patient,
+      device: response.device,
+      isLoading: false,
+      clearError: true,
+    );
+    await _fcmPushService.registerAfterAuth();
+  }
+
   Future<void> restoreSession() async {
-    final hasToken = await _authService.isAuthenticated();
-    if (!hasToken) return;
+    if (state.canAccessApp) return;
+
+    final refresh = await TokenStorage.getRefreshToken();
+    final biometric = await TokenStorage.isBiometricEnabled();
+    if (biometric && refresh != null && refresh.isNotEmpty) {
+      if (_biometricAttempted && state.patient == null) return;
+      _biometricAttempted = true;
+      final unlocked = await BiometricAuth.authenticate();
+      if (!unlocked) return;
+    }
+
+    if (await _authService.isAuthenticated()) {
+      try {
+        final patient = await _authService.getMe();
+        final device = await _deviceService.getStatus();
+        state = state.copyWith(patient: patient, device: device);
+        await _fcmPushService.registerAfterAuth();
+        return;
+      } catch (_) {
+        // Access token may have expired. Try the refresh token next.
+      }
+    }
+
+    if (refresh == null || refresh.isEmpty) return;
     try {
+      await _authService.refresh();
       final patient = await _authService.getMe();
       final device = await _deviceService.getStatus();
       state = state.copyWith(patient: patient, device: device);
       await _fcmPushService.registerAfterAuth();
     } catch (_) {
       await _fcmPushService.unregisterOnLogout();
-      await _authService.logout();
+      await _authService.clearLocalSession();
       state = const PatientAuthState();
     }
   }

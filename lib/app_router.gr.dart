@@ -17,6 +17,7 @@ import 'package:imsh/src/features/appointments/book_appointment_screen.dart'
     as _i4;
 import 'package:imsh/src/features/auth/device_pending_screen.dart' as _i8;
 import 'package:imsh/src/features/auth/login_screen.dart' as _i17;
+import 'package:imsh/src/features/auth/portal_setup_screen.dart' as _i21;
 import 'package:imsh/src/features/billing/billing_screen.dart' as _i3;
 import 'package:imsh/src/features/cycle/cycle_tracker_screen.dart' as _i7;
 import 'package:imsh/src/features/devices/devices_screen.dart' as _i9;
@@ -34,9 +35,8 @@ import 'package:imsh/src/features/medications/medications_screen.dart' as _i19;
 import 'package:imsh/src/features/notifications/notifications_screen.dart'
     as _i20;
 import 'package:imsh/src/features/profile/profile_screen.dart' as _i10;
-import 'package:imsh/src/features/radiology/radiology_screen.dart' as _i21;
+import 'package:imsh/src/features/radiology/radiology_screen.dart' as _i22;
 import 'package:imsh/src/features/shell/patient_shell_screen.dart' as _i1;
-import 'package:imsh/src/features/splash/splash_screen.dart' as _i22;
 import 'package:imsh/src/features/theatre/theatre_schedules_screen.dart'
     as _i23;
 import 'package:imsh/src/features/trends/trend_screens.dart' as _i16;
@@ -1088,6 +1088,55 @@ class PatientShellRoute extends _i24.PageRouteInfo<void> {
 }
 
 /// generated route for
+/// [_i21.PortalSetupScreen]
+class PortalSetupRoute extends _i24.PageRouteInfo<PortalSetupRouteArgs> {
+  PortalSetupRoute({
+    _i25.Key? key,
+    bool reset = false,
+    List<_i24.PageRouteInfo>? children,
+  }) : super(
+         PortalSetupRoute.name,
+         args: PortalSetupRouteArgs(key: key, reset: reset),
+         initialChildren: children,
+       );
+
+  static const String name = 'PortalSetupRoute';
+
+  static _i24.PageInfo page = _i24.PageInfo(
+    name,
+    builder: (data) {
+      final args = data.argsAs<PortalSetupRouteArgs>(
+        orElse: () => const PortalSetupRouteArgs(),
+      );
+      return _i21.PortalSetupScreen(key: args.key, reset: args.reset);
+    },
+  );
+}
+
+class PortalSetupRouteArgs {
+  const PortalSetupRouteArgs({this.key, this.reset = false});
+
+  final _i25.Key? key;
+
+  final bool reset;
+
+  @override
+  String toString() {
+    return 'PortalSetupRouteArgs{key: $key, reset: $reset}';
+  }
+
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) return true;
+    if (other is! PortalSetupRouteArgs) return false;
+    return key == other.key && reset == other.reset;
+  }
+
+  @override
+  int get hashCode => key.hashCode ^ reset.hashCode;
+}
+
+/// generated route for
 /// [_i10.ProfileScreen]
 class ProfileRoute extends _i24.PageRouteInfo<void> {
   const ProfileRoute({List<_i24.PageRouteInfo>? children})
@@ -1104,7 +1153,7 @@ class ProfileRoute extends _i24.PageRouteInfo<void> {
 }
 
 /// generated route for
-/// [_i21.RadiologyDetailScreen]
+/// [_i22.RadiologyDetailScreen]
 class RadiologyDetailRoute
     extends _i24.PageRouteInfo<RadiologyDetailRouteArgs> {
   RadiologyDetailRoute({
@@ -1127,7 +1176,7 @@ class RadiologyDetailRoute
       final args = data.argsAs<RadiologyDetailRouteArgs>(
         orElse: () => RadiologyDetailRouteArgs(id: pathParams.getString('id')),
       );
-      return _i21.RadiologyDetailScreen(key: args.key, id: args.id);
+      return _i22.RadiologyDetailScreen(key: args.key, id: args.id);
     },
   );
 }
@@ -1156,7 +1205,7 @@ class RadiologyDetailRouteArgs {
 }
 
 /// generated route for
-/// [_i21.RadiologyReportsScreen]
+/// [_i22.RadiologyReportsScreen]
 class RadiologyReportsRoute extends _i24.PageRouteInfo<void> {
   const RadiologyReportsRoute({List<_i24.PageRouteInfo>? children})
     : super(RadiologyReportsRoute.name, initialChildren: children);
@@ -1166,7 +1215,7 @@ class RadiologyReportsRoute extends _i24.PageRouteInfo<void> {
   static _i24.PageInfo page = _i24.PageInfo(
     name,
     builder: (data) {
-      return const _i21.RadiologyReportsScreen();
+      return const _i22.RadiologyReportsScreen();
     },
   );
 }
@@ -1250,22 +1299,6 @@ class SessionExpiredRoute extends _i24.PageRouteInfo<void> {
     name,
     builder: (data) {
       return const _i17.SessionExpiredScreen();
-    },
-  );
-}
-
-/// generated route for
-/// [_i22.SplashScreen]
-class SplashRoute extends _i24.PageRouteInfo<void> {
-  const SplashRoute({List<_i24.PageRouteInfo>? children})
-    : super(SplashRoute.name, initialChildren: children);
-
-  static const String name = 'SplashRoute';
-
-  static _i24.PageInfo page = _i24.PageInfo(
-    name,
-    builder: (data) {
-      return const _i22.SplashScreen();
     },
   );
 }

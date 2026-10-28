@@ -5,7 +5,6 @@ import 'package:imsh/app_router.gr.dart';
 
 import '../../../core/theme/app_design_tokens.dart';
 import '../../../core/theme/imsh_accent_colors.dart';
-import '../../../helper/date_formatter.dart';
 import '../../../models/radiology_report_model.dart';
 import '../../../providers/service_providers.dart';
 import '../../../shared/widgets/imsh_ellipsis_chip.dart';
@@ -38,21 +37,10 @@ class RadiologyLatestCard extends ConsumerWidget {
             ),
           ),
           const SizedBox(height: 10),
-          Row(
-            children: [
-              const ImshEllipsisChip(
-                label: 'Latest result',
-                tone: ImshSemanticTone.info,
-                maxWidth: 120,
-              ),
-              const Spacer(),
-              ImshEllipsisText(
-                text: DateFormatter.medicalDate(report.performedAt),
-                style: theme.textTheme.bodySmall?.copyWith(
-                  color: cs.onSurfaceVariant,
-                ),
-              ),
-            ],
+          const ImshEllipsisChip(
+            label: 'Latest result',
+            tone: ImshSemanticTone.info,
+            maxWidth: 120,
           ),
           const SizedBox(height: 8),
           ImshEllipsisText(
@@ -88,7 +76,7 @@ class RadiologyLatestCard extends ConsumerWidget {
             children: [
               Expanded(
                 child: ImshEllipsisText(
-                  text: 'Status: ${report.status.label}',
+                  text: 'Status: ${report.status.patientLabel}',
                   style: theme.textTheme.bodyMedium,
                 ),
               ),

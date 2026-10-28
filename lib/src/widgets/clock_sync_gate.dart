@@ -1,5 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../config/api_config.dart';
 import '../core/theme/app_theme.dart';
@@ -8,21 +9,23 @@ import '../features/splash/widgets/splash_branding.dart';
 import '../helper/app_timezone.dart';
 import '../helper/date_formatter.dart';
 import '../models/server_time_model.dart';
+import '../providers/auth_provider.dart';
 import '../services/api_endpoint_selector.dart';
 import '../services/api_service.dart';
+import '../services/navigation_service.dart';
 import '../services/server_time_service.dart';
 import '../shared/widgets/imsh_error_panel.dart';
 
-class ClockSyncGate extends StatefulWidget {
+class ClockSyncGate extends ConsumerStatefulWidget {
   const ClockSyncGate({super.key, required this.child});
 
   final Widget child;
 
   @override
-  State<ClockSyncGate> createState() => _ClockSyncGateState();
+  ConsumerState<ClockSyncGate> createState() => _ClockSyncGateState();
 }
 
-class _ClockSyncGateState extends State<ClockSyncGate> {
+class _ClockSyncGateState extends ConsumerState<ClockSyncGate> {
   _GatePhase _phase = _GatePhase.loading;
   String? _message;
   Object? _error;
@@ -66,6 +69,11 @@ class _ClockSyncGateState extends State<ClockSyncGate> {
               'Correct your device clock in Settings, then try again.';
         });
         return;
+      }
+      if (!kIsWeb) {
+        await ref.read(patientAuthProvider.notifier).restoreSession();
+        if (!mounted) return;
+        NavigationService.configure(ref.read(patientAuthProvider));
       }
       setState(() => _phase = _GatePhase.ok);
     } catch (e) {

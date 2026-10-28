@@ -129,7 +129,7 @@ class _HealthPassCard extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     ImshEllipsisText(
-                      text: 'Ibom Specialist Hospital',
+                      text: 'Ibom Multi-Specialty Hospital',
                       style: theme.textTheme.titleSmall?.copyWith(
                         fontWeight: FontWeight.w700,
                       ),

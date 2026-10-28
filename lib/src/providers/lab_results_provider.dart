@@ -56,6 +56,21 @@ bool isLabStatusPending(
       orderStatus == LabOrderStatus.processing;
 }
 
+String labPatientStatusLabel(
+  LabSummaryStatus summaryStatus, {
+  LabOrderStatus? orderStatus,
+}) {
+  final pending = orderStatus != null
+      ? isLabStatusPending(summaryStatus, orderStatus)
+      : summaryStatus == LabSummaryStatus.pending;
+  if (pending) return 'Pending';
+  if (summaryStatus == LabSummaryStatus.abnormal ||
+      summaryStatus == LabSummaryStatus.critical) {
+    return 'Abnormal';
+  }
+  return 'Ready';
+}
+
 bool isBloodWorkTest(LabResultSummary result) {
   final names = result.testNames.map((n) => n.toLowerCase()).join(' ');
   return _bloodWorkKeywords.any(names.contains);

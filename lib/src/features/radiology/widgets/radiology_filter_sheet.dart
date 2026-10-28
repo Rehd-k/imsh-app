@@ -3,7 +3,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gap/gap.dart';
 
 import '../../../core/theme/app_design_tokens.dart';
-import '../../../models/radiology_report_model.dart';
 import '../../../providers/radiology_reports_provider.dart';
 import '../../../shared/widgets/adaptive_date_picker.dart';
 
@@ -29,7 +28,7 @@ class _RadiologyFilterSheet extends ConsumerStatefulWidget {
 }
 
 class _RadiologyFilterSheetState extends ConsumerState<_RadiologyFilterSheet> {
-  RadiologyReportStatus? _status;
+  RadiologyAvailabilityFilter? _status;
   DateTime? _dateFrom;
   DateTime? _dateTo;
 
@@ -111,7 +110,7 @@ class _RadiologyFilterSheetState extends ConsumerState<_RadiologyFilterSheet> {
                 selected: _status == null,
                 onSelected: (_) => setState(() => _status = null),
               ),
-              for (final status in RadiologyReportStatus.values)
+              for (final status in RadiologyAvailabilityFilter.values)
                 FilterChip(
                   label: Text(status.label),
                   selected: _status == status,

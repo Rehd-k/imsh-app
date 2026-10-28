@@ -4,7 +4,6 @@ import 'package:imsh/app_router.gr.dart';
 
 import '../../../core/theme/app_design_tokens.dart';
 import '../../../core/theme/imsh_accent_colors.dart';
-import '../../../helper/date_formatter.dart';
 import '../../../models/lab_result_model.dart';
 import '../../../providers/lab_results_provider.dart';
 import '../../../shared/widgets/imsh_solid_icon.dart';
@@ -96,8 +95,7 @@ class LabHistoryCard extends StatelessWidget {
                   ],
                   const SizedBox(height: 2),
                   ImshEllipsisText(
-                    text:
-                        '${DateFormatter.medicalDate(result.orderedAt)} · Ref: ${result.referenceDisplay}',
+                    text: 'Ref: ${result.referenceDisplay}',
                     style: theme.textTheme.bodySmall?.copyWith(
                       color: cs.onSurfaceVariant,
                     ),

@@ -54,6 +54,8 @@
 	<true/>
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>IMSH needs access to your photo library so you can choose a profile photo or emergency video.</string>
+	<key>NSFaceIDUsageDescription</key>
+	<string>IMSH uses Face ID so you can sign in without typing your password.</string>
 	<key>NSCameraUsageDescription</key>
 	<string>IMSH needs access to your camera for profile photos and emergency video notes.</string>
 	<key>NSMicrophoneUsageDescription</key>

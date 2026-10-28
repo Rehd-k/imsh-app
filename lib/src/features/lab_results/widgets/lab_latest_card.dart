@@ -4,7 +4,6 @@ import 'package:imsh/app_router.gr.dart';
 
 import '../../../core/theme/app_design_tokens.dart';
 import '../../../core/theme/imsh_accent_colors.dart';
-import '../../../helper/date_formatter.dart';
 import '../../../models/lab_result_model.dart';
 import '../../../providers/lab_results_provider.dart';
 import '../../../shared/widgets/imsh_ellipsis_chip.dart';
@@ -24,7 +23,6 @@ class LabLatestCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final cs = theme.colorScheme;
     final pending = isLabOrderPending(result);
 
     return ImshSurfaceCard(
@@ -71,13 +69,6 @@ class LabLatestCard extends StatelessWidget {
             ],
           ),
           const SizedBox(height: 10),
-          ImshEllipsisText(
-            text: 'Requested: ${DateFormatter.medicalDate(result.orderedAt)}',
-            style: theme.textTheme.bodySmall?.copyWith(
-              color: cs.onSurfaceVariant,
-            ),
-          ),
-          const SizedBox(height: 4),
           ImshEllipsisText(
             text: 'Summary: ${result.summaryMessage}',
             style: theme.textTheme.bodyMedium?.copyWith(

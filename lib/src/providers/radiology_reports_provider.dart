@@ -8,6 +8,15 @@ import 'service_providers.dart';
 
 const radiologyReportsPageSize = 20;
 
+enum RadiologyAvailabilityFilter { pending, ready }
+
+extension RadiologyAvailabilityFilterDisplay on RadiologyAvailabilityFilter {
+  String get label => switch (this) {
+        RadiologyAvailabilityFilter.pending => 'Pending',
+        RadiologyAvailabilityFilter.ready => 'Ready',
+      };
+}
+
 class RadiologyReportFilter {
   const RadiologyReportFilter({
     this.status,
@@ -15,7 +24,7 @@ class RadiologyReportFilter {
     this.dateTo,
   });
 
-  final RadiologyReportStatus? status;
+  final RadiologyAvailabilityFilter? status;
   final DateTime? dateFrom;
   final DateTime? dateTo;
 
@@ -23,7 +32,7 @@ class RadiologyReportFilter {
       status != null || dateFrom != null || dateTo != null;
 
   RadiologyReportFilter copyWith({
-    RadiologyReportStatus? status,
+    RadiologyAvailabilityFilter? status,
     DateTime? dateFrom,
     DateTime? dateTo,
     bool clearStatus = false,
@@ -42,8 +51,13 @@ bool matchesRadiologyFilter(
   RadiologyReportSummary report,
   RadiologyReportFilter filter,
 ) {
-  if (filter.status != null && report.status != filter.status) {
-    return false;
+  if (filter.status != null) {
+    final ready = report.status.isComplete;
+    final matches = switch (filter.status!) {
+      RadiologyAvailabilityFilter.pending => !ready,
+      RadiologyAvailabilityFilter.ready => ready,
+    };
+    if (!matches) return false;
   }
   if (filter.dateFrom != null) {
     final from = DateTime(
