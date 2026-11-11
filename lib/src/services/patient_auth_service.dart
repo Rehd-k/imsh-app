@@ -10,10 +10,12 @@ class OtpRequestResult {
   const OtpRequestResult({
     required this.delivery,
     required this.expiresInSeconds,
+    this.hasPassword = false,
   });
 
   final String delivery;
   final int expiresInSeconds;
+  final bool hasPassword;
 
   String get instructions {
     switch (delivery) {
@@ -27,6 +29,25 @@ class OtpRequestResult {
   }
 }
 
+class DeviceVerifyResult {
+  const DeviceVerifyResult({
+    required this.hasPassword,
+    this.setupToken,
+    this.deviceProof,
+  });
+
+  final bool hasPassword;
+  final String? setupToken;
+  final String? deviceProof;
+}
+
+class DeviceBindingResult {
+  const DeviceBindingResult({required this.verified, this.phoneNumber});
+
+  final bool verified;
+  final String? phoneNumber;
+}
+
 class PatientAuthService {
   PatientAuthService([Dio? dio]) : _dio = dio ?? ApiService().dio;
 
@@ -36,22 +57,53 @@ class PatientAuthService {
   static const mePath = '/patient-auth/me';
   static const logoutPath = '/patient-auth/logout';
   static const refreshPath = '/patient-auth/refresh';
+  static const deviceLookupPath = '/patient-auth/device-lookup';
+  static const releaseDevicePath = '/patient-auth/release-device';
   static const activateRequestPath = '/patient-auth/activate/request';
   static const activateVerifyPath = '/patient-auth/activate/verify';
   static const activatePasswordPath = '/patient-auth/activate/password';
   static const forgotRequestPath = '/patient-auth/forgot-password/request';
   static const forgotResetPath = '/patient-auth/forgot-password/reset';
 
+  Future<DeviceBindingResult> lookupDevice() async {
+    final deviceKey = await TokenStorage.getOrCreateDeviceKey();
+    final resp = await _dio.post<Map<String, dynamic>>(
+      deviceLookupPath,
+      data: {'deviceKey': deviceKey},
+    );
+    final data = resp.data;
+    if (data == null) {
+      return const DeviceBindingResult(verified: false);
+    }
+    final phone = data['phoneNumber']?.toString().trim();
+    final verified = data['verified'] == true && phone != null && phone.isNotEmpty;
+    return DeviceBindingResult(
+      verified: verified,
+      phoneNumber: verified ? phone : null,
+    );
+  }
+
+  Future<void> releaseDevice() async {
+    final deviceKey = await TokenStorage.getOrCreateDeviceKey();
+    await _dio.post<void>(
+      releaseDevicePath,
+      data: {'deviceKey': deviceKey},
+    );
+  }
+
   Future<PatientLoginResponse> login({
     required String phoneNumber,
     required String password,
     String? fcmToken,
+    String? deviceProof,
   }) async {
+    final proof = deviceProof?.trim();
     final resp = await _dio.post<Map<String, dynamic>>(
       loginPath,
       data: {
         'phoneNumber': phoneNumber.trim(),
         'password': password,
+        if (proof != null && proof.isNotEmpty) 'deviceProof': proof,
         ...await _deviceFields(fcmToken),
       },
     );
@@ -69,22 +121,37 @@ class PatientAuthService {
     );
   }
 
-  Future<String> verifyActivation({
+  Future<DeviceVerifyResult> verifyActivation({
     required String phoneNumber,
     required String code,
+    String? fcmToken,
   }) async {
     final resp = await _dio.post<Map<String, dynamic>>(
       activateVerifyPath,
       data: {
         'phoneNumber': phoneNumber.trim(),
         'code': code.trim(),
+        ...await _deviceFields(fcmToken),
       },
     );
-    final token = resp.data?['setupToken'];
-    if (token is! String || token.isEmpty) {
+    final data = resp.data;
+    if (data == null) {
       throw const UnknownException('Activation response was empty.');
     }
-    return token;
+    final hasPassword = data['hasPassword'] == true;
+    final token = data['setupToken'];
+    final proof = data['deviceProof'];
+    if (!hasPassword && (token is! String || token.isEmpty)) {
+      throw const UnknownException('Activation response was empty.');
+    }
+    if (hasPassword && (proof is! String || proof.isEmpty)) {
+      throw const UnknownException('Activation response was empty.');
+    }
+    return DeviceVerifyResult(
+      hasPassword: hasPassword,
+      setupToken: token is String ? token : null,
+      deviceProof: proof is String ? proof : null,
+    );
   }
 
   Future<PatientLoginResponse> completeActivation({
@@ -190,6 +257,7 @@ class PatientAuthService {
     return OtpRequestResult(
       delivery: data['delivery'] as String? ?? 'staff',
       expiresInSeconds: (data['expiresInSeconds'] as num?)?.toInt() ?? 600,
+      hasPassword: data['hasPassword'] == true,
     );
   }
 

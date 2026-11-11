@@ -96,7 +96,7 @@ class ProfileBody extends ConsumerWidget {
             child: ResponsiveBody(
               expand: false,
               center: false,
-              bottomPadding: 24,
+              bottomPadding: 88,
               builder: (context, bp) => SingleChildScrollView(
                 physics: const AlwaysScrollableScrollPhysics(),
                 child: content,

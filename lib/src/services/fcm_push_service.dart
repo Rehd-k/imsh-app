@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:imsh/app_router.gr.dart';
 
@@ -11,13 +12,70 @@ import '../core/storage/token_storage.dart';
 import '../core/utils/device_platform.dart';
 import 'device_service.dart';
 import 'navigation_service.dart';
+import 'notification_inbox_store.dart';
 
 /// Android notification channel used for FCM + local foreground display.
 const kFcmAndroidChannelId = 'imsh_high_importance';
 
 @pragma('vm:entry-point')
 Future<void> firebaseMessagingBackgroundHandler(RemoteMessage message) async {
+  WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+  await rememberPush(message);
+}
+
+Future<void> rememberPush(RemoteMessage message) {
+  final data = <String, String>{
+    for (final entry in message.data.entries) entry.key: entry.value.toString(),
+  };
+  final hasContent =
+      (message.notification?.title?.trim().isNotEmpty ?? false) ||
+      (message.notification?.body?.trim().isNotEmpty ?? false) ||
+      (data['title']?.trim().isNotEmpty ?? false) ||
+      (data['body']?.trim().isNotEmpty ?? false) ||
+      (data['type']?.trim().isNotEmpty ?? false);
+  if (!hasContent) return Future.value();
+  final title =
+      message.notification?.title ?? data['title'] ?? _fallbackTitle(data['type']);
+  final body = message.notification?.body ?? data['body'] ?? '';
+  return NotificationInboxStore.instance.record(
+    id: _inboxId(message, title: title, body: body),
+    title: title,
+    body: body,
+    type: data['type'],
+    data: data,
+    receivedAt: message.sentTime,
+  );
+}
+
+String _inboxId(RemoteMessage message, {required String title, required String body}) {
+  final messageId = message.messageId?.trim();
+  if (messageId != null && messageId.isNotEmpty) return messageId;
+  final sent = message.sentTime?.millisecondsSinceEpoch;
+  return [
+    message.data['type'],
+    title,
+    body,
+    message.data['appointmentId'],
+    message.data['emergencyRequestId'],
+    sent,
+  ].where((part) => part != null && part.toString().trim().isNotEmpty).join('|');
+}
+
+String _fallbackTitle(String? type) {
+  switch (type) {
+    case 'APPOINTMENT':
+      return 'Appointment';
+    case 'MEDICATION':
+    case 'MEDICATION_MISSED':
+      return 'Medication';
+    case 'EMERGENCY_REQUEST':
+      return 'Emergency';
+    case 'DEVICE_APPROVED':
+      return 'Phone verified';
+    default:
+      return 'IMSH';
+  }
 }
 
 typedef DeviceApprovedCallback = Future<void> Function();
@@ -166,10 +224,11 @@ class FcmPushService {
   }
 
   Future<void> _showForegroundNotification(RemoteMessage message) async {
+    await rememberPush(message);
     final notification = message.notification;
-    final title = notification?.title ?? 'IMSH';
-    final body = notification?.body ?? '';
-    if (body.isEmpty && notification == null) return;
+    final title = notification?.title ?? message.data['title']?.toString() ?? 'IMSH';
+    final body = notification?.body ?? message.data['body']?.toString() ?? '';
+    if (body.isEmpty && notification == null && title == 'IMSH') return;
 
     final payload = jsonEncode(message.data);
 
@@ -211,7 +270,12 @@ class FcmPushService {
   }
 
   void _handleMessageOpened(RemoteMessage message) {
+    rememberPush(message);
     _navigateFromData(message.data);
+  }
+
+  void openFromData(Map<String, String> data) {
+    _navigateFromData(data);
   }
 
   void _navigateFromData(Map<String, dynamic> data) {

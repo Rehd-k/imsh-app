@@ -52,7 +52,7 @@ class MedicalRecordsBody extends ConsumerWidget {
               hasScrollBody: true,
               child: ResponsiveBody(
                 center: false,
-                bottomPadding: 24,
+                bottomPadding: 88,
                 builder: (context, bp) {
                   final showRail = bp.isDesktop;
                   final useSnapKpis = bp.maxWidth < 520;

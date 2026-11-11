@@ -143,11 +143,26 @@ class _CreateEmergencyRequestScreenState
   Duration _recordElapsed = Duration.zero;
   Timer? _recordTimer;
   bool _submitting = false;
+  _EmergencyUploadPhase _uploadPhase = _EmergencyUploadPhase.idle;
+  double? _uploadProgress;
 
   @override
   void initState() {
     super.initState();
     _captureLocation();
+  }
+
+  void _onUploadProgress(int sent, int total) {
+    if (!mounted || !_submitting) return;
+    final hasTotal = total > 0;
+    final next = hasTotal ? (sent / total).clamp(0.0, 1.0) : null;
+    final finishing = hasTotal && sent >= total;
+    setState(() {
+      _uploadProgress = next;
+      _uploadPhase = finishing
+          ? _EmergencyUploadPhase.finishing
+          : _EmergencyUploadPhase.uploading;
+    });
   }
 
   @override
@@ -267,6 +282,20 @@ class _CreateEmergencyRequestScreenState
       maxDuration: const Duration(seconds: 30),
     );
     if (file == null) return;
+    // Backend multer cap is 25 MB; reject early so submit doesn't fail mid-upload.
+    const maxVideoBytes = 25 * 1024 * 1024;
+    final bytes = await file.length();
+    if (bytes > maxVideoBytes) {
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text(
+            'Video is too large (max 25 MB). Record a shorter clip.',
+          ),
+        ),
+      );
+      return;
+    }
     setState(() => _videoPath = file.path);
   }
 
@@ -300,26 +329,66 @@ class _CreateEmergencyRequestScreenState
       return;
     }
 
-    setState(() => _submitting = true);
+    setState(() {
+      _submitting = true;
+      _uploadPhase = _EmergencyUploadPhase.uploading;
+      _uploadProgress = payload.videoPath != null || payload.voicePath != null
+          ? 0
+          : null;
+    });
     try {
+      // Call the service directly (same pattern as Helty long uploads).
+      // An autoDispose AsyncNotifier can be disposed mid-upload on slow
+      // networks when nothing is watching it, which surfaces as
+      // "Cannot use the Ref … after it has been disposed".
+      final service = ref.read(emergencyServiceProvider);
       if (widget.guestMode) {
-        await ref.read(submitGuestEmergencyProvider.notifier).submit(payload);
+        await service.createGuestRequest(
+          payload,
+          onSendProgress: _onUploadProgress,
+        );
+        if (!mounted) return;
+        setState(() {
+          _uploadPhase = _EmergencyUploadPhase.done;
+          _uploadProgress = 1;
+        });
+        await Future<void>.delayed(const Duration(milliseconds: 700));
         if (!mounted) return;
         context.router.replaceAll([const GuestEmergencySubmittedRoute()]);
       } else {
-        final saved = await ref
-            .read(submitEmergencyProvider.notifier)
-            .submit(payload);
+        final saved = await service.createRequest(
+          payload,
+          onSendProgress: _onUploadProgress,
+        );
+        if (!mounted) return;
+        invalidateEmergencyLists(ref);
+        setState(() {
+          _uploadPhase = _EmergencyUploadPhase.done;
+          _uploadProgress = 1;
+        });
+        await Future<void>.delayed(const Duration(milliseconds: 700));
         if (!mounted) return;
         context.router.replace(EmergencyRequestDetailRoute(id: saved.id));
       }
     } catch (error) {
       if (!mounted) return;
+      setState(() {
+        _uploadPhase = _EmergencyUploadPhase.idle;
+        _uploadProgress = null;
+      });
       ScaffoldMessenger.of(
         context,
       ).showSnackBar(SnackBar(content: Text(emergencyErrorMessage(error))));
     } finally {
-      if (mounted) setState(() => _submitting = false);
+      if (mounted) {
+        setState(() {
+          _submitting = false;
+          if (_uploadPhase != _EmergencyUploadPhase.done) {
+            _uploadPhase = _EmergencyUploadPhase.idle;
+            _uploadProgress = null;
+          }
+        });
+      }
     }
   }
 
@@ -586,28 +655,213 @@ class _CreateEmergencyRequestScreenState
               top: false,
               child: Padding(
                 padding: const EdgeInsets.only(bottom: 12),
-                child: FilledButton.icon(
-                  style: FilledButton.styleFrom(
-                    backgroundColor: colorScheme.error,
-                    foregroundColor: colorScheme.onError,
-                    minimumSize: const Size.fromHeight(52),
-                  ),
-                  onPressed: _submitting ? null : _submit,
-                  icon: _submitting
-                      ? SizedBox(
-                          width: 18,
-                          height: 18,
-                          child: CircularProgressIndicator(
-                            strokeWidth: 2,
-                            color: colorScheme.onError,
-                          ),
-                        )
-                      : const Icon(Icons.send_outlined),
-                  label: Text(
-                    _submitting ? 'Sending…' : 'Send emergency request',
-                  ),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    AnimatedSize(
+                      duration: const Duration(milliseconds: 280),
+                      curve: Curves.easeOutCubic,
+                      alignment: Alignment.topCenter,
+                      child: _uploadPhase == _EmergencyUploadPhase.idle
+                          ? const SizedBox.shrink()
+                          : Padding(
+                              padding: const EdgeInsets.only(bottom: 12),
+                              child: _EmergencyUploadProgressCard(
+                                phase: _uploadPhase,
+                                progress: _uploadProgress,
+                              ),
+                            ),
+                    ),
+                    FilledButton.icon(
+                      style: FilledButton.styleFrom(
+                        backgroundColor: _uploadPhase ==
+                                _EmergencyUploadPhase.done
+                            ? ImshAccentColors.green
+                            : colorScheme.error,
+                        foregroundColor: Colors.white,
+                        minimumSize: const Size.fromHeight(52),
+                      ),
+                      onPressed: _submitting ? null : _submit,
+                      icon: _uploadPhase == _EmergencyUploadPhase.done
+                          ? const Icon(Icons.check_circle_outline)
+                          : _submitting
+                          ? const SizedBox(
+                              width: 18,
+                              height: 18,
+                              child: CircularProgressIndicator(
+                                strokeWidth: 2,
+                                color: Colors.white,
+                              ),
+                            )
+                          : const Icon(Icons.send_outlined),
+                      label: Text(switch (_uploadPhase) {
+                        _EmergencyUploadPhase.idle =>
+                          'Send emergency request',
+                        _EmergencyUploadPhase.uploading => 'Uploading…',
+                        _EmergencyUploadPhase.finishing => 'Finishing…',
+                        _EmergencyUploadPhase.done => 'Request sent',
+                      }),
+                    ),
+                  ],
                 ),
               ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+enum _EmergencyUploadPhase { idle, uploading, finishing, done }
+
+class _EmergencyUploadProgressCard extends StatefulWidget {
+  const _EmergencyUploadProgressCard({
+    required this.phase,
+    required this.progress,
+  });
+
+  final _EmergencyUploadPhase phase;
+  final double? progress;
+
+  @override
+  State<_EmergencyUploadProgressCard> createState() =>
+      _EmergencyUploadProgressCardState();
+}
+
+class _EmergencyUploadProgressCardState
+    extends State<_EmergencyUploadProgressCard> {
+  double _displayProgress = 0;
+
+  @override
+  void didUpdateWidget(covariant _EmergencyUploadProgressCard oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    final next = widget.phase == _EmergencyUploadPhase.done
+        ? 1.0
+        : widget.progress;
+    if (next != null && next >= _displayProgress) {
+      _displayProgress = next;
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final colorScheme = context.colorScheme;
+    final phase = widget.phase;
+    final done = phase == _EmergencyUploadPhase.done;
+    final finishing = phase == _EmergencyUploadPhase.finishing;
+    final known = widget.progress != null || done || finishing;
+    final value = done
+        ? 1.0
+        : finishing
+        ? (_displayProgress <= 0 ? 1.0 : _displayProgress)
+        : widget.progress;
+    final percent = !known || value == null
+        ? null
+        : (value * 100).round().clamp(0, 100);
+    final title = switch (phase) {
+      _EmergencyUploadPhase.uploading =>
+        percent == null ? 'Uploading your request…' : 'Uploading… $percent%',
+      _EmergencyUploadPhase.finishing =>
+        'Almost done — confirming with hospital…',
+      _EmergencyUploadPhase.done => 'Sent — help is on the way',
+      _EmergencyUploadPhase.idle => '',
+    };
+    final accent = done ? ImshAccentColors.green : ImshAccentColors.amber;
+
+    return ImshSurfaceCard(
+      padding: const EdgeInsets.fromLTRB(14, 12, 14, 14),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              AnimatedSwitcher(
+                duration: const Duration(milliseconds: 220),
+                child: Icon(
+                  done
+                      ? Icons.check_circle_rounded
+                      : Icons.cloud_upload_outlined,
+                  key: ValueKey(done),
+                  color: accent,
+                  size: 22,
+                ),
+              ),
+              const Gap(10),
+              Expanded(
+                child: AnimatedDefaultTextStyle(
+                  duration: const Duration(milliseconds: 220),
+                  style: TextStyle(
+                    fontWeight: FontWeight.w700,
+                    fontSize: 14,
+                    color: done
+                        ? ImshAccentColors.green
+                        : colorScheme.onSurface,
+                  ),
+                  child: Text(title),
+                ),
+              ),
+              if (percent != null && !done)
+                Text(
+                  '$percent%',
+                  style: TextStyle(
+                    fontWeight: FontWeight.w700,
+                    color: colorScheme.onSurfaceVariant,
+                  ),
+                ),
+            ],
+          ),
+          const Gap(12),
+          if (!known)
+            ClipRRect(
+              borderRadius: BorderRadius.circular(999),
+              child: LinearProgressIndicator(
+                minHeight: 10,
+                backgroundColor: colorScheme.surfaceContainerHighest,
+                color: accent,
+              ),
+            )
+          else
+            LayoutBuilder(
+              builder: (context, constraints) {
+                final width =
+                    constraints.maxWidth * (value ?? _displayProgress);
+                return ClipRRect(
+                  borderRadius: BorderRadius.circular(999),
+                  child: SizedBox(
+                    height: 10,
+                    width: constraints.maxWidth,
+                    child: Stack(
+                      children: [
+                        ColoredBox(
+                          color: colorScheme.surfaceContainerHighest,
+                          child: const SizedBox.expand(),
+                        ),
+                        AnimatedContainer(
+                          duration: const Duration(milliseconds: 280),
+                          curve: Curves.easeOutCubic,
+                          width: width.clamp(0.0, constraints.maxWidth),
+                          decoration: BoxDecoration(
+                            color: accent,
+                            borderRadius: BorderRadius.circular(999),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                );
+              },
+            ),
+          const Gap(8),
+          Text(
+            done
+                ? 'Your emergency request was received.'
+                : finishing
+                ? 'Upload complete. Waiting for confirmation…'
+                : 'Keep this screen open until upload finishes.',
+            style: TextStyle(
+              fontSize: 12,
+              color: colorScheme.onSurfaceVariant,
             ),
           ),
         ],

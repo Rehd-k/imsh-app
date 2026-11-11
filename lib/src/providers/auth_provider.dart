@@ -1,8 +1,12 @@
+import 'package:dio/dio.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_riverpod/legacy.dart';
 
 import '../core/auth/biometric_auth.dart';
+import '../core/auth/pending_login.dart';
+import '../core/auth/remembered_phone.dart';
 import '../core/constants/test_accounts.dart';
+import '../core/errors/app_exception.dart';
 import '../core/storage/token_storage.dart';
 import '../core/utils/user_error_message.dart';
 import '../models/device_model.dart';
@@ -27,12 +31,16 @@ class PatientAuthState {
     this.patient,
     this.device,
     this.isLoading = false,
+    this.needsDeviceCode = false,
+    this.needsActivation = false,
     this.error,
   });
 
   final Patient? patient;
   final PatientDevice? device;
   final bool isLoading;
+  final bool needsDeviceCode;
+  final bool needsActivation;
   final String? error;
 
   bool get isAuthenticated => patient != null;
@@ -54,6 +62,8 @@ class PatientAuthState {
     PatientDevice? device,
     bool clearDevice = false,
     bool? isLoading,
+    bool? needsDeviceCode,
+    bool? needsActivation,
     String? error,
     bool clearError = false,
   }) =>
@@ -61,6 +71,8 @@ class PatientAuthState {
         patient: clearPatient ? null : patient ?? this.patient,
         device: clearDevice ? null : device ?? this.device,
         isLoading: isLoading ?? this.isLoading,
+        needsDeviceCode: needsDeviceCode ?? this.needsDeviceCode,
+        needsActivation: needsActivation ?? this.needsActivation,
         error: clearError ? null : error ?? this.error,
       );
 }
@@ -81,18 +93,35 @@ class PatientAuthNotifier extends StateNotifier<PatientAuthState> {
     required String phoneNumber,
     required String password,
   }) async {
-    state = state.copyWith(isLoading: true, clearError: true);
+    state = state.copyWith(
+      isLoading: true,
+      clearError: true,
+      needsDeviceCode: false,
+      needsActivation: false,
+    );
     try {
       final response = await _authService.login(
         phoneNumber: phoneNumber,
         password: password,
         fcmToken: await TokenStorage.getFcmToken(),
       );
+      PendingLogin.clear();
       await _adopt(response);
+      DeviceBinding.lockPhone(phoneNumber);
       return true;
     } catch (e) {
+      final needsCode = _isDeviceVerificationRequired(e);
+      final needsActivation = _isAccountNotActivated(e);
+      if (needsCode) {
+        DeviceBinding.clear();
+        PendingLogin.remember(phone: phoneNumber, password: password);
+      } else if (needsActivation) {
+        PendingLogin.remember(phone: phoneNumber, activateOnly: true);
+      }
       state = state.copyWith(
         isLoading: false,
+        needsDeviceCode: needsCode,
+        needsActivation: needsActivation,
         error: authFlowErrorMessage(e),
       );
       return false;
@@ -108,6 +137,10 @@ class PatientAuthNotifier extends StateNotifier<PatientAuthState> {
       isLoading: false,
       clearError: true,
     );
+    final phone = response.patient.phoneNumber;
+    if (phone != null && phone.trim().isNotEmpty) {
+      DeviceBinding.lockPhone(phone);
+    }
     await _fcmPushService.registerAfterAuth();
   }
 
@@ -128,9 +161,14 @@ class PatientAuthNotifier extends StateNotifier<PatientAuthState> {
         final patient = await _authService.getMe();
         final device = await _deviceService.getStatus();
         state = state.copyWith(patient: patient, device: device);
+        final phone = patient.phoneNumber;
+        if (phone != null && phone.trim().isNotEmpty) {
+          DeviceBinding.lockPhone(phone);
+        }
         await _fcmPushService.registerAfterAuth();
         return;
-      } catch (_) {
+      } catch (e) {
+        if (_isDeviceRevokedError(e)) DeviceBinding.clear();
         // Access token may have expired. Try the refresh token next.
       }
     }
@@ -141,8 +179,13 @@ class PatientAuthNotifier extends StateNotifier<PatientAuthState> {
       final patient = await _authService.getMe();
       final device = await _deviceService.getStatus();
       state = state.copyWith(patient: patient, device: device);
+      final phone = patient.phoneNumber;
+      if (phone != null && phone.trim().isNotEmpty) {
+        DeviceBinding.lockPhone(phone);
+      }
       await _fcmPushService.registerAfterAuth();
-    } catch (_) {
+    } catch (e) {
+      if (_isDeviceRevokedError(e)) DeviceBinding.clear();
       await _fcmPushService.unregisterOnLogout();
       await _authService.clearLocalSession();
       state = const PatientAuthState();
@@ -167,7 +210,18 @@ class PatientAuthNotifier extends StateNotifier<PatientAuthState> {
 
   Future<void> logout() async {
     await _fcmPushService.unregisterOnLogout();
-    await _authService.logout();
+    try {
+      await _authService.logout();
+    } finally {
+      DeviceBinding.clear();
+      state = const PatientAuthState();
+    }
+  }
+
+  /// Log out of the phone number on this device without a session token.
+  Future<void> releasePhoneNumber() async {
+    await _authService.releaseDevice();
+    DeviceBinding.clear();
     state = const PatientAuthState();
   }
 
@@ -175,6 +229,7 @@ class PatientAuthNotifier extends StateNotifier<PatientAuthState> {
   /// Skips the logout API call since the token is already unusable.
   Future<void> handleDeviceRevoked() async {
     await TokenStorage.deleteFcmToken();
+    DeviceBinding.clear();
     await _authService.clearLocalSession();
     state = const PatientAuthState();
   }
@@ -183,7 +238,27 @@ class PatientAuthNotifier extends StateNotifier<PatientAuthState> {
     state = state.copyWith(patient: patient);
   }
 
-  void clearError() => state = state.copyWith(clearError: true);
+  void clearError() => state = state.copyWith(
+        clearError: true,
+        needsDeviceCode: false,
+        needsActivation: false,
+      );
+}
+
+bool _isDeviceVerificationRequired(Object error) {
+  final resolved = error is DioException ? error.error : error;
+  return resolved is ForbiddenException &&
+      resolved.code == 'DEVICE_VERIFICATION_REQUIRED';
+}
+
+bool _isAccountNotActivated(Object error) {
+  final resolved = error is DioException ? error.error : error;
+  return resolved is ValidationException && resolved.isAccountNotActivated;
+}
+
+bool _isDeviceRevokedError(Object error) {
+  final resolved = error is DioException ? error.error : error;
+  return resolved is UnauthorizedException && resolved.isDeviceRevoked;
 }
 
 final patientAuthProvider =

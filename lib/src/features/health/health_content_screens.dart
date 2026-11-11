@@ -14,8 +14,8 @@ import '../../shared/widgets/imsh_app_bar.dart';
 import '../../shared/widgets/imsh_empty_state.dart';
 import '../../shared/widgets/imsh_error_panel.dart';
 import '../../shared/widgets/imsh_page_header.dart';
-import '../../shared/widgets/imsh_solid_icon.dart';
 import '../../shared/widgets/imsh_surface_card.dart';
+import 'widgets/health_content_carousel.dart';
 
 @RoutePage()
 class HealthCampaignsScreen extends ConsumerWidget {
@@ -110,7 +110,16 @@ class _HealthContentListBody extends StatelessWidget {
           child: ResponsiveBody(
             expand: false,
             builder: (context, bp) {
-              if (response.data.isEmpty) {
+              final items = response.data
+                  .where((item) => item.isCurrent)
+                  .toList();
+              final carouselHeight =
+                  (MediaQuery.sizeOf(context).height * 0.62).clamp(
+                    340.0,
+                    640.0,
+                  );
+
+              if (items.isEmpty) {
                 return ListView(
                   physics: const AlwaysScrollableScrollPhysics(),
                   children: [
@@ -130,118 +139,28 @@ class _HealthContentListBody extends StatelessWidget {
                 );
               }
 
-              return ListView.separated(
+              return ListView(
                 physics: const AlwaysScrollableScrollPhysics(),
-                itemCount: response.data.length + 1,
-                separatorBuilder: (_, index) =>
-                    SizedBox(height: index == 0 ? 12 : 10),
-                itemBuilder: (context, index) {
-                  if (index == 0) {
-                    return ImshPageHeader(
-                      title: title,
-                      subtitle: subtitle,
-                      icon: icon,
-                      iconColor: iconColor,
-                    );
-                  }
-                  final item = response.data[index - 1];
-                  return _HealthContentCard(
-                    item: item,
+                children: [
+                  ImshPageHeader(
+                    title: title,
+                    subtitle: subtitle,
+                    icon: icon,
+                    iconColor: iconColor,
+                  ),
+                  const SizedBox(height: 8),
+                  HealthContentCarousel(
+                    items: items,
                     accent: iconColor,
-                    onTap: () => onOpen(item),
-                  );
-                },
+                    height: carouselHeight,
+                    onOpen: onOpen,
+                  ),
+                ],
               );
             },
           ),
         );
       },
-    );
-  }
-}
-
-class _HealthContentCard extends StatelessWidget {
-  const _HealthContentCard({
-    required this.item,
-    required this.accent,
-    required this.onTap,
-  });
-
-  final HealthContentItem item;
-  final Color accent;
-  final VoidCallback onTap;
-
-  @override
-  Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    final cs = theme.colorScheme;
-    final imageUrl = resolveApiMediaUrl(item.imageUrl);
-    final title = item.title.trim().isEmpty ? '—' : item.title;
-    final excerpt = item.excerpt.trim().isEmpty ? '—' : item.excerpt;
-
-    return ImshSurfaceCard(
-      padding: const EdgeInsets.all(12),
-      onTap: onTap,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          if (imageUrl != null) ...[
-            ClipRRect(
-              borderRadius: BorderRadius.circular(AppDesignTokens.radiusMd),
-              child: AspectRatio(
-                aspectRatio: 16 / 7,
-                child: Image.network(imageUrl, fit: BoxFit.cover),
-              ),
-            ),
-            const SizedBox(height: 10),
-          ],
-          Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              ImshSolidIcon(
-                icon: Icons.article_outlined,
-                color: accent,
-                size: 34,
-                iconSize: 18,
-                radius: AppDesignTokens.radiusMd,
-              ),
-              const SizedBox(width: 10),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    ImshEllipsisText(
-                      text: title,
-                      style: theme.textTheme.titleSmall?.copyWith(
-                        fontWeight: FontWeight.w700,
-                      ),
-                      maxLines: 2,
-                    ),
-                    const SizedBox(height: 4),
-                    Text(
-                      excerpt,
-                      maxLines: 3,
-                      overflow: TextOverflow.ellipsis,
-                      style: theme.textTheme.bodyMedium?.copyWith(
-                        color: cs.onSurfaceVariant,
-                      ),
-                    ),
-                    if (item.publishedAt != null) ...[
-                      const SizedBox(height: 8),
-                      ImshEllipsisText(
-                        text: DateFormatter.medicalDate(item.publishedAt!),
-                        style: theme.textTheme.labelSmall?.copyWith(
-                          color: cs.onSurfaceVariant,
-                        ),
-                      ),
-                    ],
-                  ],
-                ),
-              ),
-            ],
-          ),
-        ],
-      ),
     );
   }
 }
@@ -335,8 +254,10 @@ class _HealthContentDetailScaffold extends StatelessWidget {
           }
 
           final imageUrl = resolveApiMediaUrl(item!.imageUrl);
-          final headline = item!.title.trim().isEmpty ? '—' : item!.title;
-          final body = item!.body.trim().isEmpty ? '—' : item!.body;
+          final headline = item!.hasTitle ? item!.title.trim() : title;
+          final published = item!.publishedAt == null
+              ? null
+              : DateFormatter.medicalDate(item!.publishedAt!);
 
           return ResponsiveBody(
             expand: false,
@@ -345,33 +266,57 @@ class _HealthContentDetailScaffold extends StatelessWidget {
                 children: [
                   ImshPageHeader(
                     title: headline,
-                    subtitle: item!.publishedAt != null
-                        ? DateFormatter.medicalDate(item!.publishedAt!)
-                        : '—',
+                    subtitle: published ?? (item!.hasImage ? 'Infographic' : null),
                     icon: icon,
                     iconColor: iconColor,
                   ),
                   const SizedBox(height: 12),
                   if (imageUrl != null) ...[
                     ClipRRect(
-                      borderRadius:
-                          BorderRadius.circular(AppDesignTokens.radiusMd),
-                      child: AspectRatio(
-                        aspectRatio: 16 / 9,
-                        child: Image.network(imageUrl, fit: BoxFit.cover),
+                      borderRadius: BorderRadius.circular(
+                        AppDesignTokens.radiusXl,
+                      ),
+                      child: ColoredBox(
+                        color: iconColor.withValues(alpha: 0.08),
+                        child: InteractiveViewer(
+                          panEnabled: false,
+                          minScale: 1,
+                          maxScale: 4,
+                          child: Image.network(
+                            imageUrl,
+                            fit: BoxFit.fitWidth,
+                            width: double.infinity,
+                            loadingBuilder: (context, child, progress) {
+                              if (progress == null) return child;
+                              return const SizedBox(
+                                height: 240,
+                                child: Center(
+                                  child: CircularProgressIndicator(),
+                                ),
+                              );
+                            },
+                            errorBuilder: (_, _, _) => const SizedBox(
+                              height: 160,
+                              child: Center(
+                                child: Text('Could not load image'),
+                              ),
+                            ),
+                          ),
+                        ),
                       ),
                     ),
                     const SizedBox(height: 12),
                   ],
-                  ImshSurfaceCard(
-                    padding: const EdgeInsets.all(12),
-                    child: Text(
-                      body,
-                      style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                        height: 1.45,
+                  if (item!.hasBody)
+                    ImshSurfaceCard(
+                      padding: const EdgeInsets.all(12),
+                      child: Text(
+                        item!.body.trim(),
+                        style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                          height: 1.45,
+                        ),
                       ),
                     ),
-                  ),
                 ],
               );
             },

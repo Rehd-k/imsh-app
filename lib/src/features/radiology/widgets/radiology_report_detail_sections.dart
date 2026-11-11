@@ -122,15 +122,6 @@ class RadiologyReportDetailSections extends ConsumerWidget {
             body: detail.findings!,
           ),
         ],
-        if (detail.impression?.isNotEmpty == true) ...[
-          const SizedBox(height: 10),
-          _TextSection(
-            title: 'Impression',
-            icon: Icons.psychology_outlined,
-            iconColor: ImshAccentColors.indigo,
-            body: detail.impression!,
-          ),
-        ],
         if (detail.recommendations?.isNotEmpty == true) ...[
           const SizedBox(height: 10),
           _TextSection(
@@ -174,7 +165,6 @@ class RadiologyReportDetailSections extends ConsumerWidget {
         ],
         if (!detail.paymentRequired &&
             detail.findings == null &&
-            detail.impression == null &&
             detail.recommendations == null &&
             detail.reportBody == null &&
             detail.images.isEmpty &&

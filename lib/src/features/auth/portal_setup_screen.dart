@@ -4,6 +4,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:imsh/app_router.gr.dart';
 
 import '../../core/auth/biometric_auth.dart';
+import '../../core/auth/pending_login.dart';
+import '../../core/auth/remembered_phone.dart';
 import '../../core/storage/token_storage.dart';
 import '../../core/utils/user_error_message.dart';
 import '../../helper/date_formatter.dart';
@@ -31,9 +33,34 @@ class _PortalSetupScreenState extends ConsumerState<PortalSetupScreen> {
   String? _error;
   String? _instructions;
   String? _setupToken;
+  String? _deviceProof;
+  String? _keptPassword;
+  bool _hasPassword = false;
+  bool _phoneLocked = false;
   bool _obscure = true;
 
   bool get _reset => widget.reset;
+
+  @override
+  void initState() {
+    super.initState();
+    final locked = DeviceBinding.lockedPhoneNumber?.trim();
+    if (_reset && locked != null && locked.isNotEmpty) {
+      PendingLogin.clear();
+      _phone.text = locked;
+      _phoneLocked = true;
+      return;
+    }
+    final pendingPhone = PendingLogin.phone?.trim();
+    if (pendingPhone != null && pendingPhone.isNotEmpty) {
+      _phone.text = pendingPhone;
+      _phoneLocked = true;
+      if (!PendingLogin.activateOnly) {
+        _keptPassword = PendingLogin.password;
+        _hasPassword = _keptPassword != null;
+      }
+    }
+  }
 
   @override
   void dispose() {
@@ -77,6 +104,10 @@ class _PortalSetupScreenState extends ConsumerState<PortalSetupScreen> {
       if (!mounted) return;
       setState(() {
         _instructions = result.instructions;
+        if (!_reset) {
+          _hasPassword = result.hasPassword;
+          if (!result.hasPassword) _keptPassword = null;
+        }
         _step = 1;
         _busy = false;
       });
@@ -107,13 +138,30 @@ class _PortalSetupScreenState extends ConsumerState<PortalSetupScreen> {
       _error = null;
     });
     try {
-      final token = await ref.read(patientAuthServiceProvider).verifyActivation(
+      final result = await ref.read(patientAuthServiceProvider).verifyActivation(
         phoneNumber: _phone.text.trim(),
         code: code,
+        fcmToken: await TokenStorage.getFcmToken(),
       );
       if (!mounted) return;
+      if (result.hasPassword) {
+        _deviceProof = result.deviceProof;
+        final kept = _keptPassword;
+        if (kept != null && kept.isNotEmpty) {
+          await _signInWithProof(kept);
+          return;
+        }
+        setState(() {
+          _hasPassword = true;
+          _step = 2;
+          _busy = false;
+        });
+        return;
+      }
       setState(() {
-        _setupToken = token;
+        _setupToken = result.setupToken;
+        _hasPassword = false;
+        _keptPassword = null;
         _step = 2;
         _busy = false;
       });
@@ -128,6 +176,14 @@ class _PortalSetupScreenState extends ConsumerState<PortalSetupScreen> {
 
   Future<void> _savePassword() async {
     final password = _password.text;
+    if (_hasPassword && !_reset) {
+      if (password.length < 8) {
+        setState(() => _error = 'Password must be at least 8 characters.');
+        return;
+      }
+      await _signInWithProof(password);
+      return;
+    }
     if (password.length < 8) {
       setState(() => _error = 'Password must be at least 8 characters.');
       return;
@@ -156,6 +212,8 @@ class _PortalSetupScreenState extends ConsumerState<PortalSetupScreen> {
               fcmToken: fcm,
             );
       await ref.read(patientAuthProvider.notifier).adoptSession(session);
+      DeviceBinding.lockPhone(_phone.text.trim());
+      PendingLogin.clear();
       if (!mounted) return;
       if (!_reset) await _offerBiometric();
       if (!mounted) return;
@@ -164,6 +222,44 @@ class _PortalSetupScreenState extends ConsumerState<PortalSetupScreen> {
       if (!mounted) return;
       setState(() {
         _busy = false;
+        _error = userFacingErrorMessage(e);
+      });
+    }
+  }
+
+  Future<void> _signInWithProof(String password) async {
+    final proof = _deviceProof;
+    if (proof == null || proof.isEmpty) {
+      setState(() {
+        _busy = false;
+        _error = 'Request a new code and try again.';
+        _step = 1;
+      });
+      return;
+    }
+    setState(() {
+      _busy = true;
+      _error = null;
+    });
+    try {
+      final session = await ref.read(patientAuthServiceProvider).login(
+            phoneNumber: _phone.text.trim(),
+            password: password,
+            deviceProof: proof,
+            fcmToken: await TokenStorage.getFcmToken(),
+          );
+      await ref.read(patientAuthProvider.notifier).adoptSession(session);
+      DeviceBinding.lockPhone(_phone.text.trim());
+      PendingLogin.clear();
+      if (!mounted) return;
+      await context.router.replaceAll([const PatientShellRoute()]);
+    } catch (e) {
+      if (!mounted) return;
+      setState(() {
+        _busy = false;
+        _keptPassword = null;
+        _hasPassword = true;
+        _step = 2;
         _error = userFacingErrorMessage(e);
       });
     }
@@ -196,13 +292,44 @@ class _PortalSetupScreenState extends ConsumerState<PortalSetupScreen> {
     if (ok) await TokenStorage.setBiometricEnabled(true);
   }
 
+  String get _title {
+    if (_reset) return 'Reset password';
+    if (_hasPassword) return 'Verify this phone';
+    return 'Activate account';
+  }
+
+  String get _intro {
+    if (_step == 1) {
+      return _instructions ??
+          'Collect your code from front desk or medical records.';
+    }
+    if (_step >= 2) {
+      if (_reset) return 'Choose a new password for this number.';
+      if (_hasPassword) return 'Enter the password for this account.';
+      return 'You will use this password with your phone number next time.';
+    }
+    if (_reset && _phoneLocked) {
+      return 'This phone stays verified for this number. Enter the date of birth on the hospital file.';
+    }
+    if (_keptPassword != null) {
+      return 'Confirm this phone with a code. The password you just entered will be used after the code.';
+    }
+    if (_phoneLocked) {
+      return 'Enter the date of birth on your hospital file to finish setting up this number.';
+    }
+    return 'Use the phone number and date of birth on your hospital file. Each phone confirms this once.';
+  }
+
   @override
   Widget build(BuildContext context) {
-    final title = _reset ? 'Reset password' : 'Activate account';
     final stepTitle = switch (_step) {
       0 => 'Confirm your details',
       1 => 'Enter your code',
-      _ => _reset ? 'Choose a new password' : 'Create your password',
+      _ => _reset
+          ? 'Choose a new password'
+          : _hasPassword
+          ? 'Enter your password'
+          : 'Create your password',
     };
 
     return Scaffold(
@@ -210,7 +337,10 @@ class _PortalSetupScreenState extends ConsumerState<PortalSetupScreen> {
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         foregroundColor: Colors.white,
-        title: Text(title),
+        titleTextStyle: Theme.of(context).textTheme.titleMedium?.copyWith(
+          color: Colors.white,
+        ),
+        title: Text(_title),
       ),
       body: SafeArea(
         child: ListView(
@@ -225,12 +355,7 @@ class _PortalSetupScreenState extends ConsumerState<PortalSetupScreen> {
             ),
             const SizedBox(height: 8),
             Text(
-              _step == 0
-                  ? 'Use the phone number and date of birth on your hospital file.'
-                  : _step == 1
-                  ? (_instructions ??
-                        'Collect your code from front desk or medical records.')
-                  : 'You will use this password with your phone number next time.',
+              _intro,
               style: TextStyle(color: Colors.white.withValues(alpha: 0.72)),
             ),
             const SizedBox(height: 24),
@@ -239,7 +364,17 @@ class _PortalSetupScreenState extends ConsumerState<PortalSetupScreen> {
                 controller: _phone,
                 label: 'Phone number',
                 keyboard: TextInputType.phone,
+                readOnly: _phoneLocked,
               ),
+              if (_phoneLocked) ...[
+                const SizedBox(height: 8),
+                Text(
+                  _reset
+                      ? 'To use a different number, go back and choose Log out of this number.'
+                      : 'This code is for the number you just entered.',
+                  style: TextStyle(color: Colors.white.withValues(alpha: 0.72)),
+                ),
+              ],
               const SizedBox(height: 12),
               OutlinedButton(
                 onPressed: _busy ? null : _pickDob,
@@ -261,7 +396,14 @@ class _PortalSetupScreenState extends ConsumerState<PortalSetupScreen> {
                 label: '6-digit code',
                 keyboard: TextInputType.number,
               ),
-            if (_step == 2) ...[
+            if (_step == 2 && _hasPassword && !_reset)
+              _field(
+                controller: _password,
+                label: 'Password',
+                obscure: _obscure,
+                toggleObscure: () => setState(() => _obscure = !_obscure),
+              ),
+            if (_step == 2 && (!_hasPassword || _reset)) ...[
               _field(
                 controller: _password,
                 label: 'Password',
@@ -301,14 +443,39 @@ class _PortalSetupScreenState extends ConsumerState<PortalSetupScreen> {
                       switch (_step) {
                         0 => 'Continue',
                         1 => 'Confirm code',
-                        _ => _reset ? 'Save password' : 'Activate',
+                        _ => _reset
+                            ? 'Save password'
+                            : _hasPassword
+                            ? 'Sign in'
+                            : 'Activate',
                       },
                     ),
             ),
+            if (_step == 0 && !_reset && !_phoneLocked)
+              TextButton(
+                onPressed: _busy
+                    ? null
+                    : () {
+                        PendingLogin.clear();
+                        context.router.replace(const LoginRoute());
+                      },
+                child: const Text('Already activated? Sign in'),
+              ),
             if (_step == 1)
               TextButton(
                 onPressed: _busy ? null : _requestCode,
                 child: const Text('Send a new code'),
+              ),
+            if (_step == 2 && _hasPassword && !_reset)
+              TextButton(
+                onPressed: _busy
+                    ? null
+                    : () => setState(() {
+                        _step = 0;
+                        _deviceProof = null;
+                        _error = null;
+                      }),
+                child: const Text('Request a new code'),
               ),
           ],
         ),
@@ -321,32 +488,30 @@ class _PortalSetupScreenState extends ConsumerState<PortalSetupScreen> {
     required String label,
     TextInputType? keyboard,
     bool obscure = false,
+    bool readOnly = false,
     VoidCallback? toggleObscure,
   }) {
+    final cs = Theme.of(context).colorScheme;
     return TextField(
       controller: controller,
       keyboardType: keyboard,
       obscureText: obscure,
-      style: const TextStyle(color: Colors.white),
-      cursorColor: Colors.white,
+      readOnly: readOnly,
+      style: TextStyle(color: cs.onSurface),
+      cursorColor: cs.primary,
       decoration: InputDecoration(
         labelText: label,
-        labelStyle: TextStyle(color: Colors.white.withValues(alpha: 0.7)),
-        enabledBorder: OutlineInputBorder(
-          borderSide: BorderSide(color: Colors.white.withValues(alpha: 0.28)),
-          borderRadius: BorderRadius.circular(12),
-        ),
-        focusedBorder: OutlineInputBorder(
-          borderSide: const BorderSide(color: Colors.white),
-          borderRadius: BorderRadius.circular(12),
-        ),
+        labelStyle: TextStyle(color: cs.onSurfaceVariant),
+        floatingLabelStyle: TextStyle(color: cs.primary),
         suffixIcon: toggleObscure == null
             ? null
             : IconButton(
                 onPressed: toggleObscure,
                 icon: Icon(
-                  obscure ? Icons.visibility_outlined : Icons.visibility_off_outlined,
-                  color: Colors.white70,
+                  obscure
+                      ? Icons.visibility_outlined
+                      : Icons.visibility_off_outlined,
+                  color: cs.onSurfaceVariant,
                 ),
               ),
       ),

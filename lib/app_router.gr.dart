@@ -15,7 +15,6 @@ import 'package:flutter/material.dart' as _i25;
 import 'package:imsh/src/features/appointments/appointments_screen.dart' as _i2;
 import 'package:imsh/src/features/appointments/book_appointment_screen.dart'
     as _i4;
-import 'package:imsh/src/features/auth/device_pending_screen.dart' as _i8;
 import 'package:imsh/src/features/auth/login_screen.dart' as _i17;
 import 'package:imsh/src/features/auth/portal_setup_screen.dart' as _i21;
 import 'package:imsh/src/features/billing/billing_screen.dart' as _i3;
@@ -363,22 +362,6 @@ class CycleTrackerRoute extends _i24.PageRouteInfo<void> {
     name,
     builder: (data) {
       return const _i7.CycleTrackerScreen();
-    },
-  );
-}
-
-/// generated route for
-/// [_i8.DevicePendingScreen]
-class DevicePendingRoute extends _i24.PageRouteInfo<void> {
-  const DevicePendingRoute({List<_i24.PageRouteInfo>? children})
-    : super(DevicePendingRoute.name, initialChildren: children);
-
-  static const String name = 'DevicePendingRoute';
-
-  static _i24.PageInfo page = _i24.PageInfo(
-    name,
-    builder: (data) {
-      return const _i8.DevicePendingScreen();
     },
   );
 }

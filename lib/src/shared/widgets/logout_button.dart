@@ -12,7 +12,7 @@ Future<void> confirmAndLogout(BuildContext context, WidgetRef ref) async {
     builder: (context) => AlertDialog(
       title: const Text('Log out?'),
       content: const Text(
-        'You will need to sign in again to access your records.',
+        'You will sign in again with your password. This phone stays verified for your number.',
       ),
       actions: [
         TextButton(

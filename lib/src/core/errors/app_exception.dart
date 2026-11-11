@@ -82,11 +82,16 @@ final class ValidationException extends AppException {
   const ValidationException(
     super.message, {
     this.errors,
+    this.code,
     super.statusCode = 422,
   });
 
   /// Map of field → list of error strings (e.g. from NestJS class-validator).
   final Map<String, List<String>>? errors;
+
+  final String? code;
+
+  bool get isAccountNotActivated => code == 'ACCOUNT_NOT_ACTIVATED';
 }
 
 /// Unexpected / unparseable response.

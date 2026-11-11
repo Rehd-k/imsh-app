@@ -19,6 +19,13 @@ const kApiConnectTimeout = Duration(seconds: 15);
 const kApiReceiveTimeout = Duration(seconds: 15);
 const kApiSendTimeout = Duration(seconds: 15);
 
+/// Multipart media uploads (emergency video/voice, profile photo).
+/// Keep these generous — bad mobile networks + a short clip routinely exceed
+/// a couple of minutes, and aborting mid-upload drops the emergency request.
+const kApiUploadConnectTimeout = Duration(seconds: 45);
+const kApiUploadSendTimeout = Duration(minutes: 10);
+const kApiUploadReceiveTimeout = Duration(minutes: 5);
+
 void debugLogApi(String message) {
   if (kDebugMode) {
     // ignore: avoid_print

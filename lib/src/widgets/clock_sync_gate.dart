@@ -73,7 +73,14 @@ class _ClockSyncGateState extends ConsumerState<ClockSyncGate> {
       if (!kIsWeb) {
         await ref.read(patientAuthProvider.notifier).restoreSession();
         if (!mounted) return;
-        NavigationService.configure(ref.read(patientAuthProvider));
+        if (ref.read(patientAuthProvider).isDevicePending) {
+          await ref.read(patientAuthProvider.notifier).handleDeviceRevoked();
+          if (!mounted) return;
+        }
+        await NavigationService.configure(
+          ref.read(patientAuthProvider),
+          authService: ref.read(patientAuthServiceProvider),
+        );
       }
       setState(() => _phase = _GatePhase.ok);
     } catch (e) {

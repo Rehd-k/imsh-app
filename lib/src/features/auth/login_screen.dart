@@ -37,8 +37,9 @@ class _LoginScreenState extends ConsumerState<LoginScreen>
   final _passwordController = TextEditingController();
   final _phoneFocus = FocusNode();
   final _passwordFocus = FocusNode();
-  var _rememberMe = false;
   var _obscurePassword = true;
+  var _phoneLocked = false;
+  var _releasing = false;
 
   late final AnimationController _enter;
   late final AnimationController _shake;
@@ -64,7 +65,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen>
       TweenSequenceItem(tween: Tween(begin: -7, end: 4), weight: 2),
       TweenSequenceItem(tween: Tween(begin: 4, end: 0), weight: 1),
     ]).animate(_shake);
-    Future<void>.microtask(_loadRememberedPhone);
+    Future<void>.microtask(_loadLockedPhone);
   }
 
   @override
@@ -78,37 +79,102 @@ class _LoginScreenState extends ConsumerState<LoginScreen>
     super.dispose();
   }
 
-  Future<void> _loadRememberedPhone() async {
-    final phone = await RememberedPhone.read();
-    if (!mounted || phone == null) return;
-    _phoneController.text = phone;
-    setState(() => _rememberMe = true);
+  Future<void> _loadLockedPhone() async {
+    final locked = DeviceBinding.lockedPhoneNumber?.trim();
+    if (locked != null && locked.isNotEmpty) {
+      if (!mounted) return;
+      setState(() {
+        _phoneController.text = locked;
+        _phoneLocked = true;
+      });
+      return;
+    }
+    try {
+      final binding = await ref
+          .read(patientAuthServiceProvider)
+          .lookupDevice();
+      DeviceBinding.apply(
+        verified: binding.verified,
+        phoneNumber: binding.phoneNumber,
+      );
+      if (!mounted) return;
+      if (binding.verified && binding.phoneNumber != null) {
+        setState(() {
+          _phoneController.text = binding.phoneNumber!;
+          _phoneLocked = true;
+        });
+      } else {
+        await context.router.replace(PortalSetupRoute());
+      }
+    } catch (_) {
+      if (!mounted) return;
+      await context.router.replace(PortalSetupRoute());
+    }
+  }
+
+  Future<void> _releasePhoneNumber() async {
+    final confirmed = await showDialog<bool>(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Log out of this number?'),
+        content: const Text(
+          'This phone will need a new code before anyone can sign in. '
+          'Use this when another person wants to use this device.',
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(false),
+            child: const Text('Cancel'),
+          ),
+          FilledButton(
+            onPressed: () => Navigator.of(context).pop(true),
+            child: const Text('Log out'),
+          ),
+        ],
+      ),
+    );
+    if (confirmed != true || !mounted) return;
+
+    setState(() => _releasing = true);
+    try {
+      await ref.read(patientAuthProvider.notifier).releasePhoneNumber();
+      if (!mounted) return;
+      await context.router.replace(PortalSetupRoute());
+    } catch (e) {
+      if (!mounted) return;
+      setState(() => _releasing = false);
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(authFlowErrorMessage(e))),
+      );
+    }
   }
 
   Future<void> _submit() async {
     FocusScope.of(context).unfocus();
     ref.read(patientAuthProvider.notifier).clearError();
 
-    final valid = ref.read(loginDraftProvider.notifier).validate(
-      phone: _phoneController.text,
-      password: _passwordController.text,
-    );
+    final valid = ref
+        .read(loginDraftProvider.notifier)
+        .validate(
+          phone: _phoneController.text,
+          password: _passwordController.text,
+        );
     if (!valid) {
       await _shake.forward(from: 0);
       return;
     }
 
     final phone = _phoneController.text.trim();
-    final success = await ref.read(patientAuthProvider.notifier).login(
-      phoneNumber: phone,
-      password: _passwordController.text,
-    );
+    final success = await ref
+        .read(patientAuthProvider.notifier)
+        .login(phoneNumber: phone, password: _passwordController.text);
 
-    if (!mounted || !success) return;
-    if (_rememberMe) {
-      await RememberedPhone.save(phone);
-    } else {
-      await RememberedPhone.clear();
+    if (!mounted || !success) {
+      final auth = ref.read(patientAuthProvider);
+      if (mounted && (auth.needsDeviceCode || auth.needsActivation)) {
+        await context.router.replace(PortalSetupRoute());
+      }
+      return;
     }
     if (!mounted) return;
     await context.router.replace(const PatientShellRoute());
@@ -363,7 +429,9 @@ class _LoginScreenState extends ConsumerState<LoginScreen>
                     ),
                     const SizedBox(height: 2),
                     Text(
-                      'Sign in with your phone number and password',
+                      _phoneLocked
+                          ? 'Enter your password for this verified number'
+                          : 'Sign in with your phone number and password',
                       style: theme.textTheme.bodyMedium?.copyWith(
                         fontSize: 14,
                         height: 1.3,
@@ -401,10 +469,16 @@ class _LoginScreenState extends ConsumerState<LoginScreen>
                             child: TextField(
                               controller: _phoneController,
                               focusNode: _phoneFocus,
+                              readOnly: _phoneLocked,
+                              enableInteractiveSelection: !_phoneLocked,
                               keyboardType: TextInputType.phone,
                               autocorrect: false,
                               enableSuggestions: false,
-                              autofillHints: const [AutofillHints.telephoneNumber],
+                              autofillHints: _phoneLocked
+                                  ? null
+                                  : const [
+                                      AutofillHints.telephoneNumber,
+                                    ],
                               textInputAction: TextInputAction.next,
                               cursorColor: _kSystemBlue,
                               scrollPadding: const EdgeInsets.only(bottom: 24),
@@ -438,6 +512,15 @@ class _LoginScreenState extends ConsumerState<LoginScreen>
                               onSubmitted: (_) => _passwordFocus.requestFocus(),
                             ),
                           ),
+                          if (_phoneLocked)
+                            Padding(
+                              padding: const EdgeInsets.only(right: 8),
+                              child: Icon(
+                                CupertinoIcons.lock_fill,
+                                size: 16,
+                                color: Colors.white.withValues(alpha: 0.7),
+                              ),
+                            ),
                         ],
                       ),
                     ),
@@ -515,59 +598,19 @@ class _LoginScreenState extends ConsumerState<LoginScreen>
                     ),
                   ),
                   _InlineError(message: draft.passwordError),
-                  const SizedBox(height: 4),
-                  Align(
-                    alignment: Alignment.centerLeft,
-                    child: InkWell(
-                      onTap: () => setState(() => _rememberMe = !_rememberMe),
-                      borderRadius: BorderRadius.circular(8),
-                      child: Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 6),
-                        child: Row(
-                          children: [
-                            Icon(
-                              _rememberMe
-                                  ? CupertinoIcons.checkmark_square_fill
-                                  : CupertinoIcons.square,
-                              size: 20,
-                              color: _rememberMe
-                                  ? _kSystemBlue
-                                  : Colors.white.withValues(alpha: 0.7),
-                            ),
-                            const SizedBox(width: 8),
-                            Text(
-                              'Remember me',
-                              style: theme.textTheme.bodyMedium?.copyWith(
-                                color: Colors.white.withValues(alpha: 0.84),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                  ),
                 ],
               ),
             ),
           ),
           _InlineError(message: auth.error),
           const SizedBox(height: 16),
-          _SignInButton(loading: loading, onPressed: _submit),
+          _SignInButton(
+            loading: loading || _releasing,
+            onPressed: _submit,
+          ),
           const SizedBox(height: 8),
           TextButton(
-            onPressed: loading
-                ? null
-                : () => context.router.push(PortalSetupRoute()),
-            child: Text(
-              'First time? Activate your account',
-              style: theme.textTheme.bodyMedium?.copyWith(
-                color: Colors.white,
-                fontWeight: FontWeight.w600,
-              ),
-            ),
-          ),
-          TextButton(
-            onPressed: loading
+            onPressed: loading || _releasing
                 ? null
                 : () => context.router.push(PortalSetupRoute(reset: true)),
             child: Text(
@@ -577,6 +620,16 @@ class _LoginScreenState extends ConsumerState<LoginScreen>
               ),
             ),
           ),
+          if (_phoneLocked)
+            TextButton(
+              onPressed: loading || _releasing ? null : _releasePhoneNumber,
+              child: Text(
+                'Log out of this number',
+                style: theme.textTheme.bodySmall?.copyWith(
+                  color: Colors.white.withValues(alpha: 0.72),
+                ),
+              ),
+            ),
         ],
       ),
     );
@@ -707,11 +760,7 @@ class _PhoneBadge extends StatelessWidget {
         color: _kSystemBlue.withValues(alpha: 0.16),
         borderRadius: BorderRadius.circular(8),
       ),
-      child: const Icon(
-        CupertinoIcons.phone,
-        size: 15,
-        color: _kSystemBlue,
-      ),
+      child: const Icon(CupertinoIcons.phone, size: 15, color: _kSystemBlue),
     );
   }
 }
@@ -729,11 +778,7 @@ class _PasswordBadge extends StatelessWidget {
         color: _kSystemBlue.withValues(alpha: 0.16),
         borderRadius: BorderRadius.circular(8),
       ),
-      child: const Icon(
-        CupertinoIcons.lock,
-        size: 15,
-        color: _kSystemBlue,
-      ),
+      child: const Icon(CupertinoIcons.lock, size: 15, color: _kSystemBlue),
     );
   }
 }

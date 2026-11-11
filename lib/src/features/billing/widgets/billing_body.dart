@@ -83,7 +83,7 @@ class _BillingBodyState extends ConsumerState<BillingBody> {
                 child: ResponsiveBody(
                   expand: false,
                   center: false,
-                  bottomPadding: 24,
+                  bottomPadding: 88,
                   builder: (context, bp) {
                     final useSnap = bp.maxWidth < 520;
                     return SingleChildScrollView(

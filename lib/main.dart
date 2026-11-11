@@ -4,6 +4,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:image_picker_android/image_picker_android.dart';
 import 'package:image_picker_platform_interface/image_picker_platform_interface.dart';
@@ -17,7 +18,6 @@ import 'src/core/theme/app_theme.dart';
 import 'src/features/onboarding/onboarding_tips.dart';
 import 'src/features/onboarding/patient_onboarding_host.dart';
 import 'src/helper/app_timezone.dart';
-import 'src/models/device_model.dart';
 import 'src/providers/auth_provider.dart';
 import 'src/providers/family_provider.dart';
 import 'src/providers/theme_mode_provider.dart';
@@ -30,6 +30,7 @@ import 'src/widgets/imsh_android_update_layer.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersiveSticky);
   if (!kIsWeb && Platform.isWindows) {
     WindowsVideoPlayer.registerWith();
   }
@@ -90,12 +91,8 @@ class _ImshAppState extends ConsumerState<ImshApp> {
       ref.read(patientAuthProvider.notifier).handleDeviceRevoked();
     };
     AuthSessionHooks.onDevicePendingApproval = () {
-      final device = ref.read(patientAuthProvider).device;
-      if (device != null) {
-        ref
-            .read(patientAuthProvider.notifier)
-            .updateDevice(device.copyWith(status: PatientDeviceStatus.pending));
-      }
+      ref.read(familyViewProvider.notifier).clear();
+      ref.read(patientAuthProvider.notifier).handleDeviceRevoked();
     };
   }
 

@@ -1,25 +1,26 @@
-import 'package:shared_preferences/shared_preferences.dart';
+/// Server-backed binding for the current install's device key.
+/// Set after [PatientAuthService.lookupDevice]; cleared when the number is released.
+class DeviceBinding {
+  DeviceBinding._();
 
-/// Phone number kept on the device when Remember me is checked.
-class RememberedPhone {
-  RememberedPhone._();
+  static var verified = false;
+  static String? lockedPhoneNumber;
 
-  static const _key = 'remembered_phone';
-
-  static Future<String?> read() async {
-    final prefs = await SharedPreferences.getInstance();
-    final value = prefs.getString(_key)?.trim();
-    if (value == null || value.isEmpty) return null;
-    return value;
+  static void apply({required bool verified, String? phoneNumber}) {
+    final phone = phoneNumber?.trim();
+    DeviceBinding.verified = verified && phone != null && phone.isNotEmpty;
+    lockedPhoneNumber = DeviceBinding.verified ? phone : null;
   }
 
-  static Future<void> save(String phone) async {
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.setString(_key, phone.trim());
+  static void lockPhone(String phone) {
+    final value = phone.trim();
+    if (value.isEmpty) return;
+    verified = true;
+    lockedPhoneNumber = value;
   }
 
-  static Future<void> clear() async {
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.remove(_key);
+  static void clear() {
+    verified = false;
+    lockedPhoneNumber = null;
   }
 }

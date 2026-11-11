@@ -22,6 +22,7 @@ class PatientShellScreen extends StatelessWidget {
 
     return AutoTabsScaffold(
       backgroundColor: cs.surface,
+      extendBody: true,
       homeIndex: 2,
       animationDuration: const Duration(milliseconds: 460),
       animationCurve: Curves.easeOutCubic,
@@ -135,66 +136,63 @@ class _ShellNavBarState extends State<_ShellNavBar> {
     final cs = Theme.of(context).colorScheme;
     final index = widget.tabsRouter.activeIndex;
 
-    return ColoredBox(
-      color: cs.surfaceContainerLowest,
-      child: SafeArea(
-        top: false,
-        child: CurvedNavigationBar(
-          key: _barKey,
-          index: _homeIndex,
-          color: cs.surfaceContainerLowest,
-          buttonBackgroundColor: cs.primary,
-          backgroundColor: cs.surface,
-          animationCurve: Curves.easeOutBack,
-          animationDuration: const Duration(milliseconds: 460),
-          onTap: _onTap,
-          items: [
-            _ShellNavIcon(
-              icon: Icons.folder_outlined,
-              selectedIcon: Icons.folder,
-              accent: ImshAccentColors.blue,
-              selected: index == 0,
+    return SafeArea(
+      top: false,
+      child: CurvedNavigationBar(
+        key: _barKey,
+        index: _homeIndex,
+        color: cs.surfaceContainerHigh,
+        buttonBackgroundColor: cs.primary,
+        backgroundColor: Colors.transparent,
+        animationCurve: Curves.easeOutBack,
+        animationDuration: const Duration(milliseconds: 460),
+        onTap: _onTap,
+        items: [
+          _ShellNavIcon(
+            icon: Icons.folder_outlined,
+            selectedIcon: Icons.folder,
+            accent: ImshAccentColors.blue,
+            selected: index == 0,
+            selectedColor: cs.onPrimary,
+            label: 'Records',
+          ),
+          _ShellNavIcon(
+            icon: Icons.calendar_month_outlined,
+            selectedIcon: Icons.calendar_month,
+            accent: ImshAccentColors.teal,
+            selected: index == 1,
+            selectedColor: cs.onPrimary,
+            label: 'Booking',
+          ),
+          OnboardingAnchor(
+            tip: OnboardingTip.home,
+            deferWhileViewingFamily: true,
+            child: _ShellNavIcon(
+              icon: Icons.home_outlined,
+              selectedIcon: Icons.home,
+              accent: ImshAccentColors.indigo,
+              selected: index == 2,
               selectedColor: cs.onPrimary,
-              label: 'Records',
+              label: 'Home',
             ),
-            _ShellNavIcon(
-              icon: Icons.calendar_month_outlined,
-              selectedIcon: Icons.calendar_month,
-              accent: ImshAccentColors.teal,
-              selected: index == 1,
-              selectedColor: cs.onPrimary,
-              label: 'Booking',
-            ),
-            OnboardingAnchor(
-              tip: OnboardingTip.home,
-              deferWhileViewingFamily: true,
-              child: _ShellNavIcon(
-                icon: Icons.home_outlined,
-                selectedIcon: Icons.home,
-                accent: ImshAccentColors.indigo,
-                selected: index == 2,
-                selectedColor: cs.onPrimary,
-                label: 'Home',
-              ),
-            ),
-            _ShellNavIcon(
-              icon: Icons.receipt_long_outlined,
-              selectedIcon: Icons.receipt_long,
-              accent: ImshAccentColors.amber,
-              selected: index == 3,
-              selectedColor: cs.onPrimary,
-              label: 'Billing',
-            ),
-            _ShellNavIcon(
-              icon: Icons.person_outline,
-              selectedIcon: Icons.person,
-              accent: ImshAccentColors.purple,
-              selected: index == 4,
-              selectedColor: cs.onPrimary,
-              label: 'Account',
-            ),
-          ],
-        ),
+          ),
+          _ShellNavIcon(
+            icon: Icons.receipt_long_outlined,
+            selectedIcon: Icons.receipt_long,
+            accent: ImshAccentColors.amber,
+            selected: index == 3,
+            selectedColor: cs.onPrimary,
+            label: 'Billing',
+          ),
+          _ShellNavIcon(
+            icon: Icons.person_outline,
+            selectedIcon: Icons.person,
+            accent: ImshAccentColors.purple,
+            selected: index == 4,
+            selectedColor: cs.onPrimary,
+            label: 'Account',
+          ),
+        ],
       ),
     );
   }

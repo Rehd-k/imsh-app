@@ -111,8 +111,8 @@ class DevicesScreen extends ConsumerWidget {
         title: Text(isCurrent ? 'Sign out this device?' : 'Remove device?'),
         content: Text(
           isCurrent
-              ? 'You will need frontdesk approval again the next time you sign in on this device.'
-              : 'That device will need frontdesk approval again before it can access the portal.',
+              ? 'You will sign in again with your password. This phone stays verified for your number.'
+              : 'That phone will need a new code before it can sign in.',
         ),
         actions: [
           TextButton(

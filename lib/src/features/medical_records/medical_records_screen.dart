@@ -51,7 +51,7 @@ class EncounterDetailScreen extends ConsumerWidget {
         ),
         data: (encounter) => ResponsiveBody(
           expand: false,
-          bottomPadding: 24,
+          bottomPadding: 88,
           builder: (context, bp) => SingleChildScrollView(
             child: EncounterDetailSections(encounter: encounter),
           ),

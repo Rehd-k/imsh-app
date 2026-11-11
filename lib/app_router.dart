@@ -3,7 +3,7 @@ import 'package:imsh/app_router.gr.dart';
 import 'package:imsh/src/core/guards/auth_guard.dart';
 import 'package:imsh/src/core/navigation/zoom_from_source.dart';
 
-enum AppStartRoute { login, devicePending, shell }
+enum AppStartRoute { login, activate, shell }
 
 @AutoRouterConfig(replaceInRouteName: 'Screen|Page,Route')
 class AppRouter extends RootStackRouter {
@@ -21,13 +21,12 @@ class AppRouter extends RootStackRouter {
       path: '/login',
       initial: start == AppStartRoute.login,
     ),
-    AutoRoute(page: PortalSetupRoute.page, path: '/activate'),
-    AutoRoute(page: SessionExpiredRoute.page, path: '/session-expired'),
     AutoRoute(
-      page: DevicePendingRoute.page,
-      path: '/device-pending',
-      initial: start == AppStartRoute.devicePending,
+      page: PortalSetupRoute.page,
+      path: '/activate',
+      initial: start == AppStartRoute.activate,
     ),
+    AutoRoute(page: SessionExpiredRoute.page, path: '/session-expired'),
 
     AutoRoute(
       page: PatientShellRoute.page,

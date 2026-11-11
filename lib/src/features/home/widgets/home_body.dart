@@ -19,6 +19,7 @@ import '../../../shared/widgets/imsh_error_panel.dart';
 import '../../../shared/widgets/imsh_sliver_app_bar.dart';
 import '../../../shared/widgets/imsh_solid_icon.dart';
 import '../../../shared/widgets/imsh_surface_card.dart';
+import '../../health/widgets/health_content_carousel.dart';
 import '../../onboarding/onboarding_anchor.dart';
 import '../../onboarding/onboarding_tips.dart';
 import 'home_billing_snippet.dart';
@@ -51,11 +52,11 @@ class HomeBody extends ConsumerWidget {
       ),
       data: (dashboard) {
         final campaigns = campaignsAsync.maybeWhen(
-          data: (r) => r.data.take(2).toList(),
+          data: (r) => r.data.where((item) => item.isCurrent).toList(),
           orElse: () => const <HealthContentItem>[],
         );
         final news = newsAsync.maybeWhen(
-          data: (r) => r.data.take(2).toList(),
+          data: (r) => r.data.where((item) => item.isCurrent).toList(),
           orElse: () => const <HealthContentItem>[],
         );
 
@@ -81,7 +82,7 @@ class HomeBody extends ConsumerWidget {
                 hasScrollBody: true,
                 child: ResponsiveBody(
                   center: false,
-                  bottomPadding: 24,
+                  bottomPadding: 88,
                   builder: (context, bp) {
                     final width = bp.maxWidth;
                     final showRail = width >= AppBreakpoints.desktopMin;
@@ -247,7 +248,7 @@ class _HomeMainColumn extends StatelessWidget {
         ),
         _Spaced(
           show: campaigns.isNotEmpty,
-          child: _HomeHealthFeed(
+          child: HealthContentCarouselSection(
             title: 'Campaigns',
             icon: Icons.campaign_outlined,
             accent: ImshAccentColors.purple,
@@ -259,7 +260,7 @@ class _HomeMainColumn extends StatelessWidget {
         ),
         _Spaced(
           show: news.isNotEmpty,
-          child: _HomeHealthFeed(
+          child: HealthContentCarouselSection(
             title: 'Health news',
             icon: Icons.newspaper_outlined,
             accent: ImshAccentColors.teal,
@@ -305,91 +306,6 @@ class _Spaced extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.only(top: HomeBody.sectionGap),
       child: child,
-    );
-  }
-}
-
-class _HomeHealthFeed extends StatelessWidget {
-  const _HomeHealthFeed({
-    required this.title,
-    required this.icon,
-    required this.accent,
-    required this.items,
-    required this.onViewAll,
-    required this.onOpen,
-  });
-
-  final String title;
-  final IconData icon;
-  final Color accent;
-  final List<HealthContentItem> items;
-  final VoidCallback onViewAll;
-  final void Function(HealthContentItem item) onOpen;
-
-  @override
-  Widget build(BuildContext context) {
-    if (items.isEmpty) return const SizedBox.shrink();
-    final theme = Theme.of(context);
-    final cs = theme.colorScheme;
-
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.stretch,
-      children: [
-        Row(
-          children: [
-            ImshSolidIcon(
-              icon: icon,
-              color: accent,
-              size: 26,
-              iconSize: 14,
-              radius: 7,
-            ),
-            const SizedBox(width: 8),
-            Text(
-              title,
-              style: theme.textTheme.titleSmall?.copyWith(
-                fontWeight: FontWeight.w800,
-              ),
-            ),
-            const Spacer(),
-            TextButton(onPressed: onViewAll, child: const Text('View all')),
-          ],
-        ),
-        const SizedBox(height: 8),
-        for (var i = 0; i < items.length; i++) ...[
-          if (i > 0) const SizedBox(height: 6),
-          Material(
-            color: Colors.transparent,
-            child: InkWell(
-              onTap: () => onOpen(items[i]),
-              borderRadius: BorderRadius.circular(AppDesignTokens.radiusLg),
-              child: ImshSurfaceCard(
-                padding: const EdgeInsets.all(10),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    ImshEllipsisText(
-                      text: items[i].title,
-                      style: theme.textTheme.titleSmall?.copyWith(
-                        fontWeight: FontWeight.w700,
-                      ),
-                    ),
-                    const SizedBox(height: 4),
-                    Text(
-                      items[i].excerpt,
-                      maxLines: 2,
-                      overflow: TextOverflow.ellipsis,
-                      style: theme.textTheme.bodySmall?.copyWith(
-                        color: cs.onSurfaceVariant,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-          ),
-        ],
-      ],
     );
   }
 }

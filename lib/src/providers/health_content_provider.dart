@@ -7,13 +7,13 @@ import 'service_providers.dart';
 final healthCampaignsProvider =
     FutureProvider.autoDispose<HealthContentListResponse>((ref) async {
   final service = ref.watch(healthContentServiceProvider);
-  return service.listCampaigns(take: 20);
+  return service.listCampaigns();
 });
 
 final healthNewsProvider =
     FutureProvider.autoDispose<HealthContentListResponse>((ref) async {
   final service = ref.watch(healthContentServiceProvider);
-  return service.listNews(take: 20);
+  return service.listNews();
 });
 
 final healthCampaignDetailProvider =

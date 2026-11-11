@@ -24,6 +24,9 @@ final emergencyDetailProvider = FutureProvider.autoDispose
       return service.getRequest(id);
     });
 
+/// Kept for callers that still prefer a notifier; prefer calling
+/// [EmergencyService] directly for long media uploads so an autoDispose
+/// provider cannot be torn down mid-request on slow networks.
 final submitEmergencyProvider =
     AsyncNotifierProvider.autoDispose<SubmitEmergencyNotifier, bool>(
       SubmitEmergencyNotifier.new,
@@ -33,17 +36,29 @@ class SubmitEmergencyNotifier extends AsyncNotifier<bool> {
   @override
   Future<bool> build() async => false;
 
-  Future<EmergencyRequest> submit(CreateEmergencyRequestPayload payload) async {
+  Future<EmergencyRequest> submit(
+    CreateEmergencyRequestPayload payload, {
+    void Function(int sent, int total)? onSendProgress,
+  }) async {
+    final link = ref.keepAlive();
     state = const AsyncLoading();
     try {
       final service = ref.read(emergencyServiceProvider);
-      final result = await service.createRequest(payload);
+      final result = await service.createRequest(
+        payload,
+        onSendProgress: onSendProgress,
+      );
+      if (!ref.mounted) return result;
       _invalidateEmergency(ref);
       state = const AsyncData(false);
       return result;
     } catch (error, stackTrace) {
-      state = AsyncError(error, stackTrace);
+      if (ref.mounted) {
+        state = AsyncError(error, stackTrace);
+      }
       rethrow;
+    } finally {
+      link.close();
     }
   }
 }
@@ -57,16 +72,28 @@ class SubmitGuestEmergencyNotifier extends AsyncNotifier<bool> {
   @override
   Future<bool> build() async => false;
 
-  Future<EmergencyRequest> submit(CreateEmergencyRequestPayload payload) async {
+  Future<EmergencyRequest> submit(
+    CreateEmergencyRequestPayload payload, {
+    void Function(int sent, int total)? onSendProgress,
+  }) async {
+    final link = ref.keepAlive();
     state = const AsyncLoading();
     try {
       final service = ref.read(emergencyServiceProvider);
-      final result = await service.createGuestRequest(payload);
+      final result = await service.createGuestRequest(
+        payload,
+        onSendProgress: onSendProgress,
+      );
+      if (!ref.mounted) return result;
       state = const AsyncData(false);
       return result;
     } catch (error, stackTrace) {
-      state = AsyncError(error, stackTrace);
+      if (ref.mounted) {
+        state = AsyncError(error, stackTrace);
+      }
       rethrow;
+    } finally {
+      link.close();
     }
   }
 }
@@ -100,6 +127,14 @@ class CancelEmergencyNotifier extends AsyncNotifier<Set<String>> {
 }
 
 void _invalidateEmergency(Ref ref) {
+  final status = ref.read(emergencyStatusFilterProvider);
+  ref.invalidate(emergencyListProvider(status));
+  ref.invalidate(emergencyListProvider(null));
+}
+
+/// Public helper for screens that submit via [EmergencyService] directly.
+/// Takes [WidgetRef] because screen `ref` is not assignable to notifier [Ref].
+void invalidateEmergencyLists(WidgetRef ref) {
   final status = ref.read(emergencyStatusFilterProvider);
   ref.invalidate(emergencyListProvider(status));
   ref.invalidate(emergencyListProvider(null));

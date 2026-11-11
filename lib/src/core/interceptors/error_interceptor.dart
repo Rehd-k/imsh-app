@@ -2,6 +2,7 @@ import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 import 'package:imsh/app_router.gr.dart';
 
+import '../auth/remembered_phone.dart';
 import '../errors/app_exception.dart';
 import '../storage/token_storage.dart';
 import '../../services/navigation_service.dart';
@@ -47,8 +48,13 @@ class ErrorInterceptor extends Interceptor {
       Future<void>(() async {
         try {
           await TokenStorage.clearAll();
+          final revoked = appEx.isDeviceRevoked;
+          if (revoked) DeviceBinding.clear();
           AuthSessionHooks.onDeviceRevoked?.call();
-          NavigationService.router.replaceAll([const LoginRoute()]);
+          if (!NavigationService.isConfigured) return;
+          NavigationService.router.replaceAll(
+            revoked ? [PortalSetupRoute()] : [const LoginRoute()],
+          );
         } catch (e, st) {
           debugPrint('Unauthorized session handling failed: $e\n$st');
         } finally {
@@ -61,7 +67,8 @@ class ErrorInterceptor extends Interceptor {
       Future<void>(() async {
         try {
           AuthSessionHooks.onDevicePendingApproval?.call();
-          NavigationService.router.replaceAll([const DevicePendingRoute()]);
+          if (!NavigationService.isConfigured) return;
+          NavigationService.router.replaceAll([PortalSetupRoute()]);
         } catch (e, st) {
           debugPrint('DEVICE_PENDING_APPROVAL handling failed: $e\n$st');
         }
@@ -73,7 +80,9 @@ class ErrorInterceptor extends Interceptor {
     return path.contains('/patient-auth/login') ||
         path.contains('/patient-auth/refresh') ||
         path.contains('/patient-auth/activate') ||
-        path.contains('/patient-auth/forgot-password');
+        path.contains('/patient-auth/forgot-password') ||
+        path.contains('/patient-auth/device-lookup') ||
+        path.contains('/patient-auth/release-device');
   }
 
   AppException _mapError(DioException err) {
@@ -114,6 +123,7 @@ class ErrorInterceptor extends Interceptor {
         return ValidationException(
           message,
           errors: errors,
+          code: code,
           statusCode: statusCode,
         );
       case 401:

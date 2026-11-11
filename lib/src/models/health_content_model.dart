@@ -33,9 +33,24 @@ abstract class HealthContentListResponse with _$HealthContentListResponse {
 }
 
 extension HealthContentItemDisplay on HealthContentItem {
+  bool get hasTitle => title.trim().isNotEmpty;
+
+  bool get hasBody => body.trim().isNotEmpty;
+
+  bool get hasImage => imageUrl != null && imageUrl!.trim().isNotEmpty;
+
+  /// Published items stay visible until [expiresAt]. Null means they do not expire.
+  bool get isCurrent {
+    final expiry = expiresAt;
+    if (expiry == null) return true;
+    return expiry.isAfter(DateTime.now());
+  }
+
   String get excerpt {
     final trimmed = body.trim();
     if (trimmed.length <= 140) return trimmed;
     return '${trimmed.substring(0, 140).trimRight()}…';
   }
+
+  String get displayTitle => hasTitle ? title.trim() : 'Infographic';
 }
