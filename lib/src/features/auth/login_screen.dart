@@ -103,13 +103,14 @@ class _LoginScreenState extends ConsumerState<LoginScreen>
           _phoneController.text = binding.phoneNumber!;
           _phoneLocked = true;
         });
-      } else {
-        await context.router.replace(PortalSetupRoute());
       }
     } catch (_) {
-      if (!mounted) return;
-      await context.router.replace(PortalSetupRoute());
+      // Stay on login; user can open verification when they choose.
     }
+  }
+
+  Future<void> _openVerification({bool reset = false}) async {
+    await context.router.push(PortalSetupRoute(reset: reset));
   }
 
   Future<void> _releasePhoneNumber() async {
@@ -139,7 +140,12 @@ class _LoginScreenState extends ConsumerState<LoginScreen>
     try {
       await ref.read(patientAuthProvider.notifier).releasePhoneNumber();
       if (!mounted) return;
-      await context.router.replace(PortalSetupRoute());
+      setState(() {
+        _phoneLocked = false;
+        _releasing = false;
+        _phoneController.clear();
+        _passwordController.clear();
+      });
     } catch (e) {
       if (!mounted) return;
       setState(() => _releasing = false);
@@ -170,10 +176,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen>
         .login(phoneNumber: phone, password: _passwordController.text);
 
     if (!mounted || !success) {
-      final auth = ref.read(patientAuthProvider);
-      if (mounted && (auth.needsDeviceCode || auth.needsActivation)) {
-        await context.router.replace(PortalSetupRoute());
-      }
+      // Keep the user on login. They can open verification themselves.
       return;
     }
     if (!mounted) return;
@@ -472,6 +475,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen>
                               readOnly: _phoneLocked,
                               enableInteractiveSelection: !_phoneLocked,
                               keyboardType: TextInputType.phone,
+                              keyboardAppearance: Brightness.dark,
                               autocorrect: false,
                               enableSuggestions: false,
                               autofillHints: _phoneLocked
@@ -482,7 +486,11 @@ class _LoginScreenState extends ConsumerState<LoginScreen>
                               textInputAction: TextInputAction.next,
                               cursorColor: _kSystemBlue,
                               scrollPadding: const EdgeInsets.only(bottom: 24),
-                              style: valueStyle,
+                              style: valueStyle?.copyWith(
+                                color: Colors.white,
+                                fontSize: 16,
+                                fontWeight: FontWeight.w600,
+                              ),
                               decoration: InputDecoration(
                                 isDense: true,
                                 filled: false,
@@ -545,13 +553,18 @@ class _LoginScreenState extends ConsumerState<LoginScreen>
                               controller: _passwordController,
                               focusNode: _passwordFocus,
                               obscureText: _obscurePassword,
+                              keyboardAppearance: Brightness.dark,
                               autocorrect: false,
                               enableSuggestions: false,
                               autofillHints: const [AutofillHints.password],
                               textInputAction: TextInputAction.done,
                               cursorColor: _kSystemBlue,
                               scrollPadding: const EdgeInsets.only(bottom: 24),
-                              style: valueStyle,
+                              style: valueStyle?.copyWith(
+                                color: Colors.white,
+                                fontSize: 16,
+                                fontWeight: FontWeight.w600,
+                              ),
                               decoration: InputDecoration(
                                 isDense: true,
                                 filled: false,
@@ -603,16 +616,45 @@ class _LoginScreenState extends ConsumerState<LoginScreen>
             ),
           ),
           _InlineError(message: auth.error),
+          if (auth.needsDeviceCode || auth.needsActivation) ...[
+            const SizedBox(height: 8),
+            TextButton(
+              onPressed: loading || _releasing
+                  ? null
+                  : () => _openVerification(),
+              child: Text(
+                auth.needsActivation
+                    ? 'Activate this account'
+                    : 'Verify this phone',
+                style: theme.textTheme.labelLarge?.copyWith(
+                  color: Colors.white,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+            ),
+          ],
           const SizedBox(height: 16),
           _SignInButton(
             loading: loading || _releasing,
             onPressed: _submit,
           ),
           const SizedBox(height: 8),
+          if (!_phoneLocked)
+            TextButton(
+              onPressed: loading || _releasing
+                  ? null
+                  : () => _openVerification(),
+              child: Text(
+                'First time on this phone? Verify device',
+                style: theme.textTheme.bodySmall?.copyWith(
+                  color: Colors.white.withValues(alpha: 0.72),
+                ),
+              ),
+            ),
           TextButton(
             onPressed: loading || _releasing
                 ? null
-                : () => context.router.push(PortalSetupRoute(reset: true)),
+                : () => _openVerification(reset: true),
             child: Text(
               'Forgot password?',
               style: theme.textTheme.bodySmall?.copyWith(

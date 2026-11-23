@@ -52,9 +52,8 @@ class ErrorInterceptor extends Interceptor {
           if (revoked) DeviceBinding.clear();
           AuthSessionHooks.onDeviceRevoked?.call();
           if (!NavigationService.isConfigured) return;
-          NavigationService.router.replaceAll(
-            revoked ? [PortalSetupRoute()] : [const LoginRoute()],
-          );
+          // Always return to login; verification is reached by choice from there.
+          NavigationService.router.replaceAll([const LoginRoute()]);
         } catch (e, st) {
           debugPrint('Unauthorized session handling failed: $e\n$st');
         } finally {
@@ -68,7 +67,7 @@ class ErrorInterceptor extends Interceptor {
         try {
           AuthSessionHooks.onDevicePendingApproval?.call();
           if (!NavigationService.isConfigured) return;
-          NavigationService.router.replaceAll([PortalSetupRoute()]);
+          NavigationService.router.replaceAll([const LoginRoute()]);
         } catch (e, st) {
           debugPrint('DEVICE_PENDING_APPROVAL handling failed: $e\n$st');
         }

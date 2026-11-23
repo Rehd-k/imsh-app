@@ -9,6 +9,9 @@ class HealthCardData {
     required this.hmo,
     required this.allergies,
     required this.qrPayload,
+    this.avatarUrl,
+    this.firstName,
+    this.surname,
   });
 
   final String patientName;
@@ -19,6 +22,9 @@ class HealthCardData {
   final String hmo;
   final String allergies;
   final String qrPayload;
+  final String? avatarUrl;
+  final String? firstName;
+  final String? surname;
 
   static String _dash(String? value) {
     final t = value?.trim();
@@ -117,6 +123,10 @@ class HealthCardData {
       hmo: _dash(_pick(patient, ['hmo', 'insurance', 'payer'])),
       allergies: _allergiesFrom(patient),
       qrPayload: qr,
+      avatarUrl: _pick(patient, ['avatarUrl', 'avatar_url', 'photoUrl']) ??
+          _pick(root, ['avatarUrl', 'avatar_url', 'photoUrl']),
+      firstName: _pick(patient, ['firstName', 'first_name']),
+      surname: _pick(patient, ['surname', 'lastName', 'last_name']),
     );
   }
 }

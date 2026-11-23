@@ -9,6 +9,7 @@ import '../../core/theme/app_design_tokens.dart';
 import '../../core/theme/imsh_accent_colors.dart';
 import '../../core/utils/user_error_message.dart';
 import '../../models/health_card_model.dart';
+import '../../models/patient_model.dart';
 import '../../providers/health_card_provider.dart';
 import '../../shared/widgets/imsh_empty_state.dart';
 import '../../shared/widgets/imsh_error_panel.dart';
@@ -16,6 +17,7 @@ import '../../shared/widgets/imsh_page_header.dart';
 import '../../shared/widgets/imsh_semantic_badge.dart';
 import '../../shared/widgets/imsh_solid_icon.dart';
 import '../../shared/widgets/imsh_surface_card.dart';
+import '../../shared/widgets/patient_avatar.dart';
 
 @RoutePage()
 class HealthCardScreen extends ConsumerWidget {
@@ -201,38 +203,79 @@ class _HealthPassCard extends StatelessWidget {
                 borderRadius: BorderRadius.circular(AppDesignTokens.radiusMd),
                 border: Border.all(color: cs.outlineVariant),
               ),
-              child: QrImageView(
-                data: card.qrPayload,
-                version: QrVersions.auto,
-                size: 200,
-                backgroundColor: Colors.white,
-                eyeStyle: const QrEyeStyle(
-                  eyeShape: QrEyeShape.square,
-                  color: Color(0xFF191C1E),
-                ),
-                dataModuleStyle: const QrDataModuleStyle(
-                  dataModuleShape: QrDataModuleShape.square,
-                  color: Color(0xFF191C1E),
-                ),
-                errorStateBuilder: (context, _) => const SizedBox(
-                  width: 200,
-                  height: 200,
-                  child: ImshEmptyState(
-                    message: 'Unable to render QR code.',
-                    icon: Icons.qr_code_2_outlined,
-                    iconColor: ImshAccentColors.amber,
-                  ),
-                ),
-              ),
+              child: _PatientIdQr(card: card),
             ),
           ),
           const Gap(10),
           Text(
-            'Show this at frontdesk, pharmacy, lab, and the ward.',
+            card.patientId != '—'
+                ? 'Scan for patient ID ${card.patientId}'
+                : 'Show this at frontdesk, pharmacy, lab, and the ward.',
             textAlign: TextAlign.center,
             style: theme.textTheme.bodySmall?.copyWith(
               color: cs.onSurfaceVariant,
             ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _PatientIdQr extends StatelessWidget {
+  const _PatientIdQr({required this.card});
+
+  final HealthCardData card;
+  static const double _size = 200;
+  static const double _avatarRadius = 22;
+
+  @override
+  Widget build(BuildContext context) {
+    final avatarPatient = Patient(
+      id: card.patientId,
+      patientId: card.patientId == '—' ? null : card.patientId,
+      firstName: card.firstName,
+      surname: card.surname,
+      avatarUrl: card.avatarUrl,
+    );
+
+    return SizedBox(
+      width: _size,
+      height: _size,
+      child: Stack(
+        alignment: Alignment.center,
+        children: [
+          QrImageView(
+            data: card.qrPayload,
+            version: QrVersions.auto,
+            size: _size,
+            backgroundColor: Colors.white,
+            errorCorrectionLevel: QrErrorCorrectLevel.H,
+            eyeStyle: const QrEyeStyle(
+              eyeShape: QrEyeShape.square,
+              color: Color(0xFF191C1E),
+            ),
+            dataModuleStyle: const QrDataModuleStyle(
+              dataModuleShape: QrDataModuleShape.square,
+              color: Color(0xFF191C1E),
+            ),
+            errorStateBuilder: (context, _) => const SizedBox(
+              width: _size,
+              height: _size,
+              child: ImshEmptyState(
+                message: 'Unable to render QR code.',
+                icon: Icons.qr_code_2_outlined,
+                iconColor: ImshAccentColors.amber,
+              ),
+            ),
+          ),
+          Container(
+            padding: const EdgeInsets.all(3),
+            decoration: const BoxDecoration(
+              color: Colors.white,
+              shape: BoxShape.circle,
+            ),
+            child: PatientAvatar(patient: avatarPatient, radius: _avatarRadius),
           ),
         ],
       ),

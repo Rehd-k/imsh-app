@@ -59,7 +59,19 @@ class _PortalSetupScreenState extends ConsumerState<PortalSetupScreen> {
         _keptPassword = PendingLogin.password;
         _hasPassword = _keptPassword != null;
       }
+    } else if (locked != null && locked.isNotEmpty) {
+      _phone.text = locked;
+      _phoneLocked = true;
+      _hasPassword = true;
     }
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (!mounted) return;
+      // Surface the login-screen reason for landing here (e.g. device not verified).
+      final authError = ref.read(patientAuthProvider).error?.trim();
+      if (authError == null || authError.isEmpty) return;
+      setState(() => _error = authError);
+      ref.read(patientAuthProvider.notifier).clearError();
+    });
   }
 
   @override
@@ -146,6 +158,8 @@ class _PortalSetupScreenState extends ConsumerState<PortalSetupScreen> {
       if (!mounted) return;
       if (result.hasPassword) {
         _deviceProof = result.deviceProof;
+        // Backend approves this install on a correct code for existing accounts.
+        DeviceBinding.lockPhone(_phone.text.trim());
         final kept = _keptPassword;
         if (kept != null && kept.isNotEmpty) {
           await _signInWithProof(kept);
@@ -155,6 +169,7 @@ class _PortalSetupScreenState extends ConsumerState<PortalSetupScreen> {
           _hasPassword = true;
           _step = 2;
           _busy = false;
+          _error = null;
         });
         return;
       }
@@ -164,6 +179,7 @@ class _PortalSetupScreenState extends ConsumerState<PortalSetupScreen> {
         _keptPassword = null;
         _step = 2;
         _busy = false;
+        _error = null;
       });
     } catch (e) {
       if (!mounted) return;
@@ -228,24 +244,17 @@ class _PortalSetupScreenState extends ConsumerState<PortalSetupScreen> {
   }
 
   Future<void> _signInWithProof(String password) async {
-    final proof = _deviceProof;
-    if (proof == null || proof.isEmpty) {
-      setState(() {
-        _busy = false;
-        _error = 'Request a new code and try again.';
-        _step = 1;
-      });
-      return;
-    }
     setState(() {
       _busy = true;
       _error = null;
     });
     try {
+      // Prefer the short-lived proof when present; after a successful code the
+      // install is already approved, so password-only login also works.
       final session = await ref.read(patientAuthServiceProvider).login(
             phoneNumber: _phone.text.trim(),
             password: password,
-            deviceProof: proof,
+            deviceProof: _deviceProof,
             fcmToken: await TokenStorage.getFcmToken(),
           );
       await ref.read(patientAuthProvider.notifier).adoptSession(session);
@@ -259,6 +268,7 @@ class _PortalSetupScreenState extends ConsumerState<PortalSetupScreen> {
         _busy = false;
         _keptPassword = null;
         _hasPassword = true;
+        // Stay on the password step — do not reset to phone + DOB.
         _step = 2;
         _error = userFacingErrorMessage(e);
       });
@@ -341,6 +351,19 @@ class _PortalSetupScreenState extends ConsumerState<PortalSetupScreen> {
           color: Colors.white,
         ),
         title: Text(_title),
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back),
+          onPressed: _busy
+              ? null
+              : () {
+                  if (context.router.canPop()) {
+                    context.router.pop();
+                  } else {
+                    PendingLogin.clear();
+                    context.router.replace(const LoginRoute());
+                  }
+                },
+        ),
       ),
       body: SafeArea(
         child: ListView(
@@ -451,15 +474,22 @@ class _PortalSetupScreenState extends ConsumerState<PortalSetupScreen> {
                       },
                     ),
             ),
-            if (_step == 0 && !_reset && !_phoneLocked)
+            if (_step == 0 && !_reset)
               TextButton(
                 onPressed: _busy
                     ? null
                     : () {
                         PendingLogin.clear();
-                        context.router.replace(const LoginRoute());
+                        if (context.router.canPop()) {
+                          context.router.pop();
+                        } else {
+                          context.router.replace(const LoginRoute());
+                        }
                       },
-                child: const Text('Already activated? Sign in'),
+                child: const Text(
+                  'Back to sign in',
+                  style: TextStyle(color: Colors.white70),
+                ),
               ),
             if (_step == 1)
               TextButton(
@@ -491,18 +521,50 @@ class _PortalSetupScreenState extends ConsumerState<PortalSetupScreen> {
     bool readOnly = false,
     VoidCallback? toggleObscure,
   }) {
-    final cs = Theme.of(context).colorScheme;
+    // This screen is always dark; do not inherit theme onSurface (light theme
+    // makes digits near-invisible, and number keyboards often paint a pale fill).
+    const textColor = Colors.white;
+    const muted = Color(0xB3FFFFFF);
+    const fill = Color(0xFF1E293B);
+    const border = Color(0x59FFFFFF);
+    final isNumberPad =
+        keyboard == TextInputType.number ||
+        keyboard == TextInputType.phone ||
+        keyboard == const TextInputType.numberWithOptions();
+
     return TextField(
       controller: controller,
       keyboardType: keyboard,
       obscureText: obscure,
       readOnly: readOnly,
-      style: TextStyle(color: cs.onSurface),
-      cursorColor: cs.primary,
+      keyboardAppearance: Brightness.dark,
+      autocorrect: false,
+      enableSuggestions: false,
+      style: TextStyle(
+        color: textColor,
+        fontSize: 16,
+        fontWeight: FontWeight.w500,
+        letterSpacing: isNumberPad ? 0.6 : 0.2,
+      ),
+      cursorColor: const Color(0xFF7DD3FC),
       decoration: InputDecoration(
         labelText: label,
-        labelStyle: TextStyle(color: cs.onSurfaceVariant),
-        floatingLabelStyle: TextStyle(color: cs.primary),
+        labelStyle: const TextStyle(color: muted),
+        floatingLabelStyle: const TextStyle(color: Color(0xFF7DD3FC)),
+        filled: true,
+        fillColor: fill,
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(12),
+          borderSide: const BorderSide(color: border),
+        ),
+        enabledBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(12),
+          borderSide: const BorderSide(color: border),
+        ),
+        focusedBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(12),
+          borderSide: const BorderSide(color: Color(0xFF7DD3FC), width: 2),
+        ),
         suffixIcon: toggleObscure == null
             ? null
             : IconButton(
@@ -511,7 +573,7 @@ class _PortalSetupScreenState extends ConsumerState<PortalSetupScreen> {
                   obscure
                       ? Icons.visibility_outlined
                       : Icons.visibility_off_outlined,
-                  color: cs.onSurfaceVariant,
+                  color: muted,
                 ),
               ),
       ),

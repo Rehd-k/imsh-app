@@ -135,6 +135,8 @@ class PatientAuthNotifier extends StateNotifier<PatientAuthState> {
       patient: response.patient,
       device: response.device,
       isLoading: false,
+      needsDeviceCode: false,
+      needsActivation: false,
       clearError: true,
     );
     final phone = response.patient.phoneNumber;

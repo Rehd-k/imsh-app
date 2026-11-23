@@ -1,7 +1,7 @@
 name: imsh
 description: "IMSH Patient Portal — hospital patient mobile and web app."
 publish_to: 'none'
-version: 0.1.0+6
+version: 0.1.1
 
 environment:
   sdk: ^3.9.2
@@ -61,6 +61,8 @@ dependencies:
   uuid: ^4.6.0
   curved_navigation_bar: ^1.0.6
   onboarding_overlay: ^3.2.3
+  upgrader: ^13.8.0
+  in_app_update: ^4.2.3
 
 dev_dependencies:
   flutter_test:

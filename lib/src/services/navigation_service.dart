@@ -32,16 +32,16 @@ class NavigationService {
   }) async {
     if (auth.canAccessApp) return AppStartRoute.shell;
 
+    // Always open login. Device verification is opt-in from that screen.
     try {
       final binding = await (authService ?? PatientAuthService()).lookupDevice();
       DeviceBinding.apply(
         verified: binding.verified,
         phoneNumber: binding.phoneNumber,
       );
-      if (binding.verified) return AppStartRoute.login;
     } catch (_) {
       DeviceBinding.clear();
     }
-    return AppStartRoute.activate;
+    return AppStartRoute.login;
   }
 }
