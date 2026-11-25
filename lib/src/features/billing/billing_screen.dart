@@ -12,6 +12,7 @@ import '../../helper/currency_formatter.dart';
 import '../../models/invoice_model.dart';
 import '../../providers/auth_provider.dart';
 import '../../providers/billing_provider.dart';
+import '../../shared/widgets/family_subject_banner.dart';
 import '../../shared/widgets/imsh_app_bar.dart';
 import '../../shared/widgets/imsh_empty_state.dart';
 import '../../shared/widgets/imsh_error_panel.dart';
@@ -31,7 +32,11 @@ class BillsScreen extends ConsumerWidget {
 
     return Scaffold(
       appBar: ImshAppBar(title: const Text('Unpaid bills')),
-      body: ResponsiveBody(
+      body: Column(
+        children: [
+          const FamilySubjectBanner(),
+          Expanded(
+            child: ResponsiveBody(
         expand: false,
         builder: (context, bp) => RefreshIndicator(
           onRefresh: () async => pagingController.refresh(),
@@ -83,6 +88,9 @@ class BillsScreen extends ConsumerWidget {
             ),
           ),
         ),
+            ),
+          ),
+        ],
       ),
     );
   }
@@ -103,7 +111,11 @@ class BillDetailScreen extends ConsumerWidget {
 
     return Scaffold(
       appBar: ImshAppBar(title: const Text('Bill breakdown')),
-      body: detailAsync.when(
+      body: Column(
+        children: [
+          const FamilySubjectBanner(),
+          Expanded(
+            child: detailAsync.when(
         loading: () => const Center(child: CircularProgressIndicator()),
         error: (error, _) => ImshErrorPanel(
           message: authFlowErrorMessage(error),
@@ -115,6 +127,9 @@ class BillDetailScreen extends ConsumerWidget {
             child: BillDetailBody(detail: detail),
           ),
         ),
+            ),
+          ),
+        ],
       ),
     );
   }

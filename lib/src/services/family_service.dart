@@ -8,24 +8,26 @@ class FamilyService {
 
   final Dio _dio;
 
-  /// Frontdesk-linked children for the authenticated parent.
+  /// Dependents the logged-in primary may open. Never the reverse.
   Future<List<FamilyMember>> listFamily() async {
     final resp = await _dio.get<dynamic>('/patient/family');
     final list = _extractList(resp.data);
     return list.map((e) {
       final map = Map<String, dynamic>.from(e as Map);
-      // Nested patient object if API wraps it.
-      if (map['patient'] is Map) {
-        final patient = Map<String, dynamic>.from(map['patient'] as Map);
+      final nested = map['child'] ?? map['dependent'] ?? map['patient'];
+      if (nested is Map) {
+        final person = Map<String, dynamic>.from(nested);
         return FamilyMember.fromJson({
-          ...patient,
-          'id': patient['id'] ?? map['id'] ?? map['patientId'],
-          'relationship': map['relationship'] ?? patient['relationship'],
+          ...person,
+          'id': person['id'] ?? map['childPatientId'],
+          'patientId': person['patientId'],
+          'displayName': person['displayName'],
+          'relationship': map['relationship'] ?? person['relationship'],
         });
       }
       return FamilyMember.fromJson({
         ...map,
-        'id': map['id'] ?? map['patientId'] ?? map['childId'],
+        'id': map['childPatientId'] ?? map['patientId'] ?? map['id'],
       });
     }).toList();
   }

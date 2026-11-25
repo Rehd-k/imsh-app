@@ -64,7 +64,7 @@ final homeDashboardProvider =
     ),
     medicationService.getDashboard(forPatientId: forPatientId),
     medicalRecordService.getDashboard(forPatientId: forPatientId),
-    billingService.getBillingSummary(),
+    billingService.getBillingSummary(forPatientId: forPatientId),
   ]);
 
   return HomeDashboardData(

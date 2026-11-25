@@ -22,7 +22,7 @@ extension OnboardingTipCopy on OnboardingTip {
     OnboardingTip.home => 'Home',
     OnboardingTip.checkIn => 'Self check-in',
     OnboardingTip.dose => 'Mark a dose',
-    OnboardingTip.family => 'Viewing a family member',
+    OnboardingTip.family => 'Viewing a dependent',
   };
 
   String get body => switch (this) {

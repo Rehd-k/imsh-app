@@ -16,7 +16,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$FamilyMember {
 
- String get id; String? get patientId; String? get surname; String? get firstName; String? get otherName; String? get relationship; DateTime? get dob; String? get avatarUrl;
+ String get id; String? get patientId; String? get surname; String? get firstName; String? get otherName; String? get relationship; DateTime? get dob; String? get avatarUrl;@JsonKey(name: 'displayName') String? get listedName;
 /// Create a copy of FamilyMember
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -30,20 +30,20 @@ $FamilyMemberCopyWith<FamilyMember> get copyWith => _$FamilyMemberCopyWithImpl<F
 @override
 bool operator ==(Object other) {
   final _this = this as FamilyMember;
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is FamilyMember&&(identical(other.id, _this.id) || other.id == _this.id)&&(identical(other.patientId, _this.patientId) || other.patientId == _this.patientId)&&(identical(other.surname, _this.surname) || other.surname == _this.surname)&&(identical(other.firstName, _this.firstName) || other.firstName == _this.firstName)&&(identical(other.otherName, _this.otherName) || other.otherName == _this.otherName)&&(identical(other.relationship, _this.relationship) || other.relationship == _this.relationship)&&(identical(other.dob, _this.dob) || other.dob == _this.dob)&&(identical(other.avatarUrl, _this.avatarUrl) || other.avatarUrl == _this.avatarUrl));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is FamilyMember&&(identical(other.id, _this.id) || other.id == _this.id)&&(identical(other.patientId, _this.patientId) || other.patientId == _this.patientId)&&(identical(other.surname, _this.surname) || other.surname == _this.surname)&&(identical(other.firstName, _this.firstName) || other.firstName == _this.firstName)&&(identical(other.otherName, _this.otherName) || other.otherName == _this.otherName)&&(identical(other.relationship, _this.relationship) || other.relationship == _this.relationship)&&(identical(other.dob, _this.dob) || other.dob == _this.dob)&&(identical(other.avatarUrl, _this.avatarUrl) || other.avatarUrl == _this.avatarUrl)&&(identical(other.listedName, _this.listedName) || other.listedName == _this.listedName));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
 int get hashCode {
   final _this = this as FamilyMember;
-  return Object.hash(runtimeType,_this.id,_this.patientId,_this.surname,_this.firstName,_this.otherName,_this.relationship,_this.dob,_this.avatarUrl);
+  return Object.hash(runtimeType,_this.id,_this.patientId,_this.surname,_this.firstName,_this.otherName,_this.relationship,_this.dob,_this.avatarUrl,_this.listedName);
 }
 
 @override
 String toString() {
   final _this = this as FamilyMember;
-  return 'FamilyMember(id: ${_this.id}, patientId: ${_this.patientId}, surname: ${_this.surname}, firstName: ${_this.firstName}, otherName: ${_this.otherName}, relationship: ${_this.relationship}, dob: ${_this.dob}, avatarUrl: ${_this.avatarUrl})';
+  return 'FamilyMember(id: ${_this.id}, patientId: ${_this.patientId}, surname: ${_this.surname}, firstName: ${_this.firstName}, otherName: ${_this.otherName}, relationship: ${_this.relationship}, dob: ${_this.dob}, avatarUrl: ${_this.avatarUrl}, listedName: ${_this.listedName})';
 }
 
 
@@ -54,7 +54,7 @@ abstract mixin class $FamilyMemberCopyWith<$Res>  {
   factory $FamilyMemberCopyWith(FamilyMember value, $Res Function(FamilyMember) _then) = _$FamilyMemberCopyWithImpl;
 @useResult
 $Res call({
- String id, String? patientId, String? surname, String? firstName, String? otherName, String? relationship, DateTime? dob, String? avatarUrl
+ String id, String? patientId, String? surname, String? firstName, String? otherName, String? relationship, DateTime? dob, String? avatarUrl,@JsonKey(name: 'displayName') String? listedName
 });
 
 
@@ -71,7 +71,7 @@ class _$FamilyMemberCopyWithImpl<$Res>
 
 /// Create a copy of FamilyMember
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? patientId = freezed,Object? surname = freezed,Object? firstName = freezed,Object? otherName = freezed,Object? relationship = freezed,Object? dob = freezed,Object? avatarUrl = freezed,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? patientId = freezed,Object? surname = freezed,Object? firstName = freezed,Object? otherName = freezed,Object? relationship = freezed,Object? dob = freezed,Object? avatarUrl = freezed,Object? listedName = freezed,}) {
   return _then(FamilyMember(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,patientId: freezed == patientId ? _self.patientId : patientId // ignore: cast_nullable_to_non_nullable
@@ -81,9 +81,11 @@ as String?,otherName: freezed == otherName ? _self.otherName : otherName // igno
 as String?,relationship: freezed == relationship ? _self.relationship : relationship // ignore: cast_nullable_to_non_nullable
 as String?,dob: freezed == dob ? _self.dob : dob // ignore: cast_nullable_to_non_nullable
 as DateTime?,avatarUrl: freezed == avatarUrl ? _self.avatarUrl : avatarUrl // ignore: cast_nullable_to_non_nullable
+as String?,listedName: freezed == listedName ? _self.listedName : listedName // ignore: cast_nullable_to_non_nullable
 as String?,
   ));
 }
+
 
 }
 
@@ -166,10 +168,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String id,  String? patientId,  String? surname,  String? firstName,  String? otherName,  String? relationship,  DateTime? dob,  String? avatarUrl)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String id,  String? patientId,  String? surname,  String? firstName,  String? otherName,  String? relationship,  DateTime? dob,  String? avatarUrl, @JsonKey(name: 'displayName')  String? listedName)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _FamilyMember() when $default != null:
-return $default(_that.id,_that.patientId,_that.surname,_that.firstName,_that.otherName,_that.relationship,_that.dob,_that.avatarUrl);case _:
+return $default(_that.id,_that.patientId,_that.surname,_that.firstName,_that.otherName,_that.relationship,_that.dob,_that.avatarUrl,_that.listedName);case _:
   return orElse();
 
 }
@@ -187,10 +189,10 @@ return $default(_that.id,_that.patientId,_that.surname,_that.firstName,_that.oth
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String id,  String? patientId,  String? surname,  String? firstName,  String? otherName,  String? relationship,  DateTime? dob,  String? avatarUrl)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String id,  String? patientId,  String? surname,  String? firstName,  String? otherName,  String? relationship,  DateTime? dob,  String? avatarUrl, @JsonKey(name: 'displayName')  String? listedName)  $default,) {final _that = this;
 switch (_that) {
 case _FamilyMember():
-return $default(_that.id,_that.patientId,_that.surname,_that.firstName,_that.otherName,_that.relationship,_that.dob,_that.avatarUrl);case _:
+return $default(_that.id,_that.patientId,_that.surname,_that.firstName,_that.otherName,_that.relationship,_that.dob,_that.avatarUrl,_that.listedName);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -207,10 +209,10 @@ return $default(_that.id,_that.patientId,_that.surname,_that.firstName,_that.oth
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String id,  String? patientId,  String? surname,  String? firstName,  String? otherName,  String? relationship,  DateTime? dob,  String? avatarUrl)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String id,  String? patientId,  String? surname,  String? firstName,  String? otherName,  String? relationship,  DateTime? dob,  String? avatarUrl, @JsonKey(name: 'displayName')  String? listedName)?  $default,) {final _that = this;
 switch (_that) {
 case _FamilyMember() when $default != null:
-return $default(_that.id,_that.patientId,_that.surname,_that.firstName,_that.otherName,_that.relationship,_that.dob,_that.avatarUrl);case _:
+return $default(_that.id,_that.patientId,_that.surname,_that.firstName,_that.otherName,_that.relationship,_that.dob,_that.avatarUrl,_that.listedName);case _:
   return null;
 
 }
@@ -222,7 +224,7 @@ return $default(_that.id,_that.patientId,_that.surname,_that.firstName,_that.oth
 @JsonSerializable()
 
 class _FamilyMember extends FamilyMember {
-  const _FamilyMember({required this.id, this.patientId, this.surname, this.firstName, this.otherName, this.relationship, this.dob, this.avatarUrl}): super._();
+  const _FamilyMember({required this.id, this.patientId, this.surname, this.firstName, this.otherName, this.relationship, this.dob, this.avatarUrl, @JsonKey(name: 'displayName') this.listedName}): super._();
   factory _FamilyMember.fromJson(Map<String, dynamic> json) => _$FamilyMemberFromJson(json);
 
 @override final  String id;
@@ -233,6 +235,7 @@ class _FamilyMember extends FamilyMember {
 @override final  String? relationship;
 @override final  DateTime? dob;
 @override final  String? avatarUrl;
+@override@JsonKey(name: 'displayName') final  String? listedName;
 
 /// Create a copy of FamilyMember
 /// with the given fields replaced by the non-null parameter values.
@@ -247,18 +250,18 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-    return identical(this, other) || (other.runtimeType == runtimeType&&other is _FamilyMember&&(identical(other.id, id) || other.id == id)&&(identical(other.patientId, patientId) || other.patientId == patientId)&&(identical(other.surname, surname) || other.surname == surname)&&(identical(other.firstName, firstName) || other.firstName == firstName)&&(identical(other.otherName, otherName) || other.otherName == otherName)&&(identical(other.relationship, relationship) || other.relationship == relationship)&&(identical(other.dob, dob) || other.dob == dob)&&(identical(other.avatarUrl, avatarUrl) || other.avatarUrl == avatarUrl));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _FamilyMember&&(identical(other.id, id) || other.id == id)&&(identical(other.patientId, patientId) || other.patientId == patientId)&&(identical(other.surname, surname) || other.surname == surname)&&(identical(other.firstName, firstName) || other.firstName == firstName)&&(identical(other.otherName, otherName) || other.otherName == otherName)&&(identical(other.relationship, relationship) || other.relationship == relationship)&&(identical(other.dob, dob) || other.dob == dob)&&(identical(other.avatarUrl, avatarUrl) || other.avatarUrl == avatarUrl)&&(identical(other.listedName, listedName) || other.listedName == listedName));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
 int get hashCode {
-    return Object.hash(runtimeType,id,patientId,surname,firstName,otherName,relationship,dob,avatarUrl);
+    return Object.hash(runtimeType,id,patientId,surname,firstName,otherName,relationship,dob,avatarUrl,listedName);
 }
 
 @override
 String toString() {
-    return 'FamilyMember(id: $id, patientId: $patientId, surname: $surname, firstName: $firstName, otherName: $otherName, relationship: $relationship, dob: $dob, avatarUrl: $avatarUrl)';
+    return 'FamilyMember(id: $id, patientId: $patientId, surname: $surname, firstName: $firstName, otherName: $otherName, relationship: $relationship, dob: $dob, avatarUrl: $avatarUrl, listedName: $listedName)';
 }
 
 
@@ -269,7 +272,7 @@ abstract mixin class _$FamilyMemberCopyWith<$Res> implements $FamilyMemberCopyWi
   factory _$FamilyMemberCopyWith(_FamilyMember value, $Res Function(_FamilyMember) _then) = __$FamilyMemberCopyWithImpl;
 @override @useResult
 $Res call({
- String id, String? patientId, String? surname, String? firstName, String? otherName, String? relationship, DateTime? dob, String? avatarUrl
+ String id, String? patientId, String? surname, String? firstName, String? otherName, String? relationship, DateTime? dob, String? avatarUrl,@JsonKey(name: 'displayName') String? listedName
 });
 
 
@@ -286,7 +289,7 @@ class __$FamilyMemberCopyWithImpl<$Res>
 
 /// Create a copy of FamilyMember
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? patientId = freezed,Object? surname = freezed,Object? firstName = freezed,Object? otherName = freezed,Object? relationship = freezed,Object? dob = freezed,Object? avatarUrl = freezed,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? patientId = freezed,Object? surname = freezed,Object? firstName = freezed,Object? otherName = freezed,Object? relationship = freezed,Object? dob = freezed,Object? avatarUrl = freezed,Object? listedName = freezed,}) {
   return _then(_FamilyMember(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,patientId: freezed == patientId ? _self.patientId : patientId // ignore: cast_nullable_to_non_nullable
@@ -296,6 +299,7 @@ as String?,otherName: freezed == otherName ? _self.otherName : otherName // igno
 as String?,relationship: freezed == relationship ? _self.relationship : relationship // ignore: cast_nullable_to_non_nullable
 as String?,dob: freezed == dob ? _self.dob : dob // ignore: cast_nullable_to_non_nullable
 as DateTime?,avatarUrl: freezed == avatarUrl ? _self.avatarUrl : avatarUrl // ignore: cast_nullable_to_non_nullable
+as String?,listedName: freezed == listedName ? _self.listedName : listedName // ignore: cast_nullable_to_non_nullable
 as String?,
   ));
 }

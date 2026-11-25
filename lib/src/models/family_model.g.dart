@@ -16,6 +16,7 @@ _FamilyMember _$FamilyMemberFromJson(Map<String, dynamic> json) =>
       relationship: json['relationship'] as String?,
       dob: json['dob'] == null ? null : DateTime.parse(json['dob'] as String),
       avatarUrl: json['avatarUrl'] as String?,
+      listedName: json['displayName'] as String?,
     );
 
 Map<String, dynamic> _$FamilyMemberToJson(_FamilyMember instance) =>
@@ -28,4 +29,5 @@ Map<String, dynamic> _$FamilyMemberToJson(_FamilyMember instance) =>
       'relationship': instance.relationship,
       'dob': instance.dob?.toIso8601String(),
       'avatarUrl': instance.avatarUrl,
+      'displayName': instance.listedName,
     };

@@ -7,7 +7,7 @@ import '../../features/onboarding/onboarding_anchor.dart';
 import '../../features/onboarding/onboarding_tips.dart';
 import '../../providers/family_provider.dart';
 
-/// Banner shown when viewing a linked child's records.
+/// Banner shown when the primary is viewing a linked dependent.
 class FamilySubjectBanner extends ConsumerWidget {
   const FamilySubjectBanner({super.key, this.anchorOnboarding = false});
 

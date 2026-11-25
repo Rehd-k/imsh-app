@@ -139,6 +139,7 @@ class _PortalSetupScreenState extends ConsumerState<PortalSetupScreen> {
       return;
     }
     if (_reset) {
+      _releaseNumberPad();
       setState(() {
         _error = null;
         _step = 2;
@@ -165,6 +166,7 @@ class _PortalSetupScreenState extends ConsumerState<PortalSetupScreen> {
           await _signInWithProof(kept);
           return;
         }
+        _releaseNumberPad();
         setState(() {
           _hasPassword = true;
           _step = 2;
@@ -173,6 +175,7 @@ class _PortalSetupScreenState extends ConsumerState<PortalSetupScreen> {
         });
         return;
       }
+      _releaseNumberPad();
       setState(() {
         _setupToken = result.setupToken;
         _hasPassword = false;
@@ -513,6 +516,13 @@ class _PortalSetupScreenState extends ConsumerState<PortalSetupScreen> {
     );
   }
 
+  /// Drop the code field's number-pad connection before the password field
+  /// is built. Android keeps the previous input type when the same text input
+  /// client is updated, and that pad has no key to switch to letters.
+  void _releaseNumberPad() {
+    FocusManager.instance.primaryFocus?.unfocus();
+  }
+
   Widget _field({
     required TextEditingController controller,
     required String label,
@@ -532,9 +542,14 @@ class _PortalSetupScreenState extends ConsumerState<PortalSetupScreen> {
         keyboard == TextInputType.phone ||
         keyboard == const TextInputType.numberWithOptions();
 
+    // Password fields must request the visible-password keyboard. With
+    // obscureText alone, Android uses a password variation that stays on the
+    // number pad opened by the code field and hides the letter switch.
+    final isPassword = obscure || toggleObscure != null;
     return TextField(
+      key: ValueKey(label),
       controller: controller,
-      keyboardType: keyboard,
+      keyboardType: isPassword ? TextInputType.visiblePassword : keyboard,
       obscureText: obscure,
       readOnly: readOnly,
       keyboardAppearance: Brightness.dark,

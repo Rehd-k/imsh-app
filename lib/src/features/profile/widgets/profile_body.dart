@@ -238,7 +238,7 @@ class _ProfileContent extends StatelessWidget {
             icon: Icons.family_restroom_outlined,
             accent: ImshAccentColors.teal,
             title: 'Family accounts',
-            subtitle: 'View linked dependents records.',
+            subtitle: 'Open a linked dependent\'s records. They cannot open yours.',
             onTap: () => context.router.push(const FamilyAccountsRoute()),
           ),
           _HubTile(

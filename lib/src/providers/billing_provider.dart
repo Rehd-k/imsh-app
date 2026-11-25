@@ -2,6 +2,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 
 import '../models/invoice_model.dart';
+import 'family_provider.dart';
 import 'service_providers.dart';
 
 const billingPaymentsPageSize = 5;
@@ -11,15 +12,18 @@ final billingDashboardProvider = FutureProvider.autoDispose<BillingDashboard>((
   ref,
 ) async {
   final service = ref.watch(billingServiceProvider);
-  final summary = await service.getBillingSummary();
+  final forPatientId = watchForPatientId(ref);
+  final summary = await service.getBillingSummary(forPatientId: forPatientId);
   final unpaid = await service.listInvoices(
     page: 1,
     limit: 5,
     status: 'UNPAID',
+    forPatientId: forPatientId,
   );
   final payments = await service.listPayments(
     page: 1,
     limit: billingPaymentsPageSize,
+    forPatientId: forPatientId,
   );
 
   final paymentsTotal = payments.total > 0
@@ -38,18 +42,21 @@ final billingDashboardProvider = FutureProvider.autoDispose<BillingDashboard>((
 final invoiceDetailProvider = FutureProvider.autoDispose
     .family<InvoiceDetail, String>((ref, id) async {
   final service = ref.watch(billingServiceProvider);
-  return service.getInvoice(id);
+  final forPatientId = watchForPatientId(ref);
+  return service.getInvoice(id, forPatientId: forPatientId);
 });
 
 final receiptProvider = FutureProvider.autoDispose.family<ReceiptResponse, String>(
   (ref, paymentId) async {
     final service = ref.watch(billingServiceProvider);
-    return service.getReceipt(paymentId);
+    final forPatientId = watchForPatientId(ref);
+    return service.getReceipt(paymentId, forPatientId: forPatientId);
   },
 );
 
 final billingPaymentsPagingControllerProvider = Provider.autoDispose((ref) {
   final service = ref.watch(billingServiceProvider);
+  final forPatientId = watchForPatientId(ref);
   final controller = PagingController<int, PaymentHistoryItem>(
     getNextPageKey: (state) {
       final pages = state.pages;
@@ -62,6 +69,7 @@ final billingPaymentsPagingControllerProvider = Provider.autoDispose((ref) {
       final response = await service.listPayments(
         page: pageKey,
         limit: billingPaymentsPageSize,
+        forPatientId: forPatientId,
       );
       return response.data;
     },
@@ -73,6 +81,7 @@ final billingPaymentsPagingControllerProvider = Provider.autoDispose((ref) {
 
 final unpaidInvoicesPagingControllerProvider = Provider.autoDispose((ref) {
   final service = ref.watch(billingServiceProvider);
+  final forPatientId = watchForPatientId(ref);
   final controller = PagingController<int, InvoiceSummary>(
     getNextPageKey: (state) {
       final pages = state.pages;
@@ -86,6 +95,7 @@ final unpaidInvoicesPagingControllerProvider = Provider.autoDispose((ref) {
         page: pageKey,
         limit: billingInvoicesPageSize,
         status: 'UNPAID',
+        forPatientId: forPatientId,
       );
       return response.data;
     },

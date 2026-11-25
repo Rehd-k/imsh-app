@@ -14,7 +14,9 @@ import '../../../helper/currency_formatter.dart';
 import '../../../models/invoice_model.dart';
 import '../../../providers/auth_provider.dart';
 import '../../../providers/billing_provider.dart';
+import '../../../providers/family_provider.dart';
 import '../../../providers/service_providers.dart';
+import '../../../shared/widgets/family_subject_banner.dart';
 import '../../../shared/widgets/imsh_error_panel.dart';
 import '../../../shared/widgets/imsh_kpi_tile.dart';
 import '../../../shared/widgets/imsh_sliver_app_bar.dart';
@@ -39,9 +41,21 @@ class _BillingBodyState extends ConsumerState<BillingBody> {
   int _paymentsPage = 1;
   int _paymentsTotal = 0;
   bool _loadingMorePayments = false;
+  String? _paymentsSubjectId;
+  bool _paymentsSubjectReady = false;
+
+  void _syncPaymentSubject(String? subjectId) {
+    if (_paymentsSubjectReady && _paymentsSubjectId == subjectId) return;
+    _paymentsSubjectReady = true;
+    _paymentsSubjectId = subjectId;
+    _payments = null;
+    _paymentsPage = 1;
+    _paymentsTotal = 0;
+  }
 
   @override
   Widget build(BuildContext context) {
+    _syncPaymentSubject(ref.watch(familyViewProvider).forPatientId);
     final dashboardAsync = ref.watch(billingDashboardProvider);
 
     return dashboardAsync.when(
@@ -50,6 +64,7 @@ class _BillingBodyState extends ConsumerState<BillingBody> {
         physics: const AlwaysScrollableScrollPhysics(),
         slivers: [
           const ImshSliverAppBar(),
+          const SliverToBoxAdapter(child: FamilySubjectBanner()),
           SliverFillRemaining(
             hasScrollBody: false,
             child: ImshErrorPanel(
@@ -78,6 +93,7 @@ class _BillingBodyState extends ConsumerState<BillingBody> {
             physics: const AlwaysScrollableScrollPhysics(),
             slivers: [
               const ImshSliverAppBar(),
+              const SliverToBoxAdapter(child: FamilySubjectBanner()),
               SliverFillRemaining(
                 hasScrollBody: true,
                 child: ResponsiveBody(
@@ -230,10 +246,12 @@ class _BillingBodyState extends ConsumerState<BillingBody> {
 
     try {
       final service = ref.read(billingServiceProvider);
+      final forPatientId = ref.read(familyViewProvider).forPatientId;
       final nextPage = _paymentsPage + 1;
       final response = await service.listPayments(
         page: nextPage,
         limit: billingPaymentsPageSize,
+        forPatientId: forPatientId,
       );
       if (!mounted) return;
       setState(() {
@@ -265,6 +283,7 @@ class _BillingSkeleton extends StatelessWidget {
       child: CustomScrollView(
         slivers: [
           const ImshSliverAppBar(),
+          const SliverToBoxAdapter(child: FamilySubjectBanner()),
           SliverFillRemaining(
             hasScrollBody: true,
             child: ResponsiveBody(

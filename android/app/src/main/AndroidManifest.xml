@@ -9,6 +9,12 @@
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
     <uses-permission android:name="android.permission.VIBRATE" />
 
+    <!-- Portrait lock on UCropActivity implies this feature. Keep it optional so
+         devices without a portrait screen (tablets, desktop, Android XR) can install. -->
+    <uses-feature
+        android:name="android.hardware.screen.portrait"
+        android:required="false" />
+
     <!-- Play policy: gallery/video use system pickers, not broad media access. -->
     <uses-permission android:name="android.permission.READ_MEDIA_IMAGES" tools:node="remove" />
     <uses-permission android:name="android.permission.READ_MEDIA_VIDEO" tools:node="remove" />

@@ -56,7 +56,7 @@ class FamilyAccountsScreen extends ConsumerWidget {
                   const ImshPageHeader(
                     title: 'Family accounts',
                     subtitle:
-                        'Children linked by frontdesk — select to view their records',
+                        'Dependents linked by frontdesk — select to view their records',
                     icon: Icons.family_restroom_outlined,
                     iconColor: ImshAccentColors.pink,
                   ),
@@ -90,9 +90,9 @@ class FamilyAccountsScreen extends ConsumerWidget {
                   const Gap(_kSectionGap),
                   if (members.isEmpty)
                     const ImshEmptyState(
-                      title: 'No linked family members yet',
+                      title: 'No linked dependents yet',
                       message:
-                          'Ask frontdesk to link a child to your account.',
+                          'Ask frontdesk to link a dependent to your account.',
                       icon: Icons.family_restroom_outlined,
                       iconColor: ImshAccentColors.pink,
                     )
@@ -106,7 +106,7 @@ class FamilyAccountsScreen extends ConsumerWidget {
                           child: ListTile(
                             contentPadding: EdgeInsets.zero,
                             leading: ImshSolidIcon(
-                              icon: Icons.child_care_outlined,
+                              icon: Icons.person_outline,
                               color: selected
                                   ? ImshAccentColors.teal
                                   : ImshAccentColors.indigo,

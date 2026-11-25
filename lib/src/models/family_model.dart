@@ -16,12 +16,16 @@ abstract class FamilyMember with _$FamilyMember {
     String? relationship,
     DateTime? dob,
     String? avatarUrl,
+    /// Name already formatted by the API (`displayName`).
+    @JsonKey(name: 'displayName') String? listedName,
   }) = _FamilyMember;
 
   factory FamilyMember.fromJson(Map<String, dynamic> json) =>
       _$FamilyMemberFromJson(json);
 
   String get displayName {
+    final listed = listedName?.trim();
+    if (listed != null && listed.isNotEmpty) return listed;
     final parts = [firstName, surname]
         .whereType<String>()
         .map((s) => s.trim())
