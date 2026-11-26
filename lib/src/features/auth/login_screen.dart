@@ -90,9 +90,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen>
       return;
     }
     try {
-      final binding = await ref
-          .read(patientAuthServiceProvider)
-          .lookupDevice();
+      final binding = await ref.read(patientAuthServiceProvider).lookupDevice();
       DeviceBinding.apply(
         verified: binding.verified,
         phoneNumber: binding.phoneNumber,
@@ -149,9 +147,9 @@ class _LoginScreenState extends ConsumerState<LoginScreen>
     } catch (e) {
       if (!mounted) return;
       setState(() => _releasing = false);
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(authFlowErrorMessage(e))),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text(authFlowErrorMessage(e))));
     }
   }
 
@@ -422,7 +420,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen>
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      'Welcome back',
+                      'Welcome To IMSH',
                       style: theme.textTheme.titleLarge?.copyWith(
                         fontSize: 20,
                         fontWeight: FontWeight.w500,
@@ -480,9 +478,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen>
                               enableSuggestions: false,
                               autofillHints: _phoneLocked
                                   ? null
-                                  : const [
-                                      AutofillHints.telephoneNumber,
-                                    ],
+                                  : const [AutofillHints.telephoneNumber],
                               textInputAction: TextInputAction.next,
                               cursorColor: _kSystemBlue,
                               scrollPadding: const EdgeInsets.only(bottom: 24),
@@ -634,10 +630,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen>
             ),
           ],
           const SizedBox(height: 16),
-          _SignInButton(
-            loading: loading || _releasing,
-            onPressed: _submit,
-          ),
+          _SignInButton(loading: loading || _releasing, onPressed: _submit),
           const SizedBox(height: 8),
           if (!_phoneLocked)
             TextButton(
