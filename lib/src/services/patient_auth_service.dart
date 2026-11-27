@@ -1,5 +1,6 @@
 import 'package:dio/dio.dart';
 
+import '../core/auth/session_refresh.dart';
 import '../core/errors/app_exception.dart';
 import '../core/storage/token_storage.dart';
 import '../core/utils/device_platform.dart';
@@ -200,19 +201,20 @@ class PatientAuthService {
   }
 
   Future<void> refresh() async {
-    final refreshToken = await TokenStorage.getRefreshToken();
-    if (refreshToken == null || refreshToken.isEmpty) {
-      throw const UnauthorizedException('Session expired. Please sign in again.');
+    final outcome = await SessionRefresh.tryRefresh();
+    switch (outcome) {
+      case RefreshOutcome.refreshed:
+        return;
+      case RefreshOutcome.revoked:
+        throw const UnauthorizedException.withCode(
+          'This phone is no longer verified. Request a new code.',
+          code: 'DEVICE_REVOKED',
+        );
+      case RefreshOutcome.failed:
+        throw const UnauthorizedException(
+          'Session expired. Please sign in again.',
+        );
     }
-    final deviceKey = await TokenStorage.getOrCreateDeviceKey();
-    final resp = await _dio.post<Map<String, dynamic>>(
-      refreshPath,
-      data: {
-        'refreshToken': refreshToken,
-        'deviceKey': deviceKey,
-      },
-    );
-    await _storeSession(resp.data);
   }
 
   Future<Patient> getMe() async {

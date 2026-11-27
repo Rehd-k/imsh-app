@@ -2,6 +2,7 @@ import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 
 import '../config/api_config.dart';
+import '../core/auth/session_refresh.dart';
 import '../core/interceptors/auth_interceptor.dart';
 import '../core/interceptors/decimal_normalize_interceptor.dart';
 import '../core/interceptors/error_interceptor.dart';
@@ -29,9 +30,10 @@ class ApiService {
       ),
     );
 
+    SessionRefresh.bind(dio);
     dio.interceptors.addAll([
       AuthInterceptor(),
-      ErrorInterceptor(),
+      ErrorInterceptor(dio),
       if (kDebugMode)
         LogInterceptor(
           requestBody: true,

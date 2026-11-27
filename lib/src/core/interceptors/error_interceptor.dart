@@ -3,6 +3,7 @@ import 'package:flutter/foundation.dart';
 import 'package:imsh/app_router.gr.dart';
 
 import '../auth/remembered_phone.dart';
+import '../auth/session_refresh.dart';
 import '../errors/app_exception.dart';
 import '../storage/token_storage.dart';
 import '../../services/navigation_service.dart';
@@ -18,10 +19,33 @@ class AuthSessionHooks {
 }
 
 class ErrorInterceptor extends Interceptor {
+  ErrorInterceptor(this._dio);
+
+  final Dio _dio;
   static bool _handlingUnauthorized = false;
 
   @override
-  void onError(DioException err, ErrorInterceptorHandler handler) {
+  Future<void> onError(DioException err, ErrorInterceptorHandler handler) async {
+    try {
+      final recovered = await _retryWithRefresh(err);
+      if (recovered != null) {
+        handler.resolve(recovered);
+        return;
+      }
+    } on DioException catch (retryError) {
+      final retryEx = _mapError(retryError);
+      handler.reject(
+        DioException(
+          requestOptions: retryError.requestOptions,
+          response: retryError.response,
+          type: retryError.type,
+          error: retryEx,
+          message: retryEx.message,
+        ),
+      );
+      return;
+    }
+
     final appEx = _mapError(err);
     _handleSessionCodes(appEx, path: err.requestOptions.path);
     handler.reject(
@@ -35,11 +59,49 @@ class ErrorInterceptor extends Interceptor {
     );
   }
 
+  Future<Response<dynamic>?> _retryWithRefresh(DioException err) async {
+    final options = err.requestOptions;
+    final attempt = shouldAttemptTokenRefresh(
+      statusCode: err.response?.statusCode,
+      path: options.path,
+      alreadyRetried: options.extra[authRetriedExtra] == true,
+      skipAuthRefresh: options.extra[skipAuthRefreshExtra] == true,
+      errorCode: _extractCode(err.response?.data),
+    );
+    if (!attempt) return null;
+
+    final outcome = await SessionRefresh.tryRefresh();
+    if (outcome == RefreshOutcome.revoked) {
+      _handleSessionCodes(
+        const UnauthorizedException.withCode(
+          'This phone is no longer verified. Request a new code.',
+          code: 'DEVICE_REVOKED',
+        ),
+        path: options.path,
+      );
+      return null;
+    }
+    if (outcome != RefreshOutcome.refreshed) return null;
+
+    final access = await TokenStorage.getAccessToken();
+    if (access == null || access.isEmpty) return null;
+    final next = options.copyWith(
+      extra: {...options.extra, authRetriedExtra: true},
+      headers: {...options.headers, 'Authorization': 'Bearer $access'},
+    );
+    try {
+      return await _dio.fetch<dynamic>(next);
+    } on DioException catch (retryError) {
+      if (retryError.response?.statusCode == 401) return null;
+      rethrow;
+    }
+  }
+
   void _handleSessionCodes(AppException appEx, {String? path}) {
     if (appEx is UnauthorizedException) {
       // Credential and refresh failures are 401 — do not treat them as a dead session
       // while the app is still deciding how to sign in.
-      if (path != null && _isCredentialPath(path)) {
+      if (path != null && isCredentialAuthPath(path)) {
         return;
       }
       if (_handlingUnauthorized) return;
@@ -73,15 +135,6 @@ class ErrorInterceptor extends Interceptor {
         }
       });
     }
-  }
-
-  bool _isCredentialPath(String path) {
-    return path.contains('/patient-auth/login') ||
-        path.contains('/patient-auth/refresh') ||
-        path.contains('/patient-auth/activate') ||
-        path.contains('/patient-auth/forgot-password') ||
-        path.contains('/patient-auth/device-lookup') ||
-        path.contains('/patient-auth/release-device');
   }
 
   AppException _mapError(DioException err) {

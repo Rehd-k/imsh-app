@@ -2,6 +2,7 @@ import 'package:dio/dio.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_riverpod/legacy.dart';
 
+import '../core/auth/access_token_expiry.dart';
 import '../core/auth/biometric_auth.dart';
 import '../core/auth/pending_login.dart';
 import '../core/auth/remembered_phone.dart';
@@ -158,40 +159,46 @@ class PatientAuthNotifier extends StateNotifier<PatientAuthState> {
       if (!unlocked) return;
     }
 
-    if (await _authService.isAuthenticated()) {
+    final access = await TokenStorage.getAccessToken();
+    final accessUsable =
+        access != null && access.isNotEmpty && !isAccessTokenExpired(access);
+    if (accessUsable) {
       try {
-        final patient = await _authService.getMe();
-        final device = await _deviceService.getStatus();
-        state = state.copyWith(patient: patient, device: device);
-        final phone = patient.phoneNumber;
-        if (phone != null && phone.trim().isNotEmpty) {
-          DeviceBinding.lockPhone(phone);
-        }
-        await _fcmPushService.registerAfterAuth();
+        await _restoreProfile();
         return;
       } catch (e) {
-        if (_isDeviceRevokedError(e)) DeviceBinding.clear();
-        // Access token may have expired. Try the refresh token next.
+        if (_isDeviceRevokedError(e)) {
+          DeviceBinding.clear();
+          await _authService.clearLocalSession();
+          state = const PatientAuthState();
+          return;
+        }
+        if (!_isUnauthorized(e)) rethrow;
       }
     }
 
     if (refresh == null || refresh.isEmpty) return;
     try {
       await _authService.refresh();
-      final patient = await _authService.getMe();
-      final device = await _deviceService.getStatus();
-      state = state.copyWith(patient: patient, device: device);
-      final phone = patient.phoneNumber;
-      if (phone != null && phone.trim().isNotEmpty) {
-        DeviceBinding.lockPhone(phone);
-      }
-      await _fcmPushService.registerAfterAuth();
+      await _restoreProfile();
     } catch (e) {
+      if (!_isUnauthorized(e)) rethrow;
       if (_isDeviceRevokedError(e)) DeviceBinding.clear();
       await _fcmPushService.unregisterOnLogout();
       await _authService.clearLocalSession();
       state = const PatientAuthState();
     }
+  }
+
+  Future<void> _restoreProfile() async {
+    final patient = await _authService.getMe();
+    final device = await _deviceService.getStatus();
+    state = state.copyWith(patient: patient, device: device);
+    final phone = patient.phoneNumber;
+    if (phone != null && phone.trim().isNotEmpty) {
+      DeviceBinding.lockPhone(phone);
+    }
+    await _fcmPushService.registerAfterAuth();
   }
 
   Future<void> refreshDeviceStatus() async {
@@ -256,6 +263,11 @@ bool _isDeviceVerificationRequired(Object error) {
 bool _isAccountNotActivated(Object error) {
   final resolved = error is DioException ? error.error : error;
   return resolved is ValidationException && resolved.isAccountNotActivated;
+}
+
+bool _isUnauthorized(Object error) {
+  final resolved = error is DioException ? error.error : error;
+  return resolved is UnauthorizedException;
 }
 
 bool _isDeviceRevokedError(Object error) {
